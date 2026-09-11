@@ -1,0 +1,2248 @@
+openapi: 3.0.3
+
+info:
+  title: Stripe Payment Gateway & Double-Entry Ledger API
+  version: 0.1.0-PR00
+  description: |
+    首批业务接口的完整契约（PR00 冻结设计，尚未实施）。
+
+    范围说明：
+    - `/v1/**` 为业务应用接口，身份来自应用凭据解析出的 TenantContext。
+    - `/webhooks/stripe` 无 Bearer 认证，身份来自对原始请求字节的 Stripe 签名校验。
+    - `/ops/**` 为运营接口，归属 PR16；本文件冻结其权限、审批与幂等语义。
+
+    强制约定：
+    - 金额一律为最小货币单位的 64 位整数（USD 指数 2，JPY 指数 0），禁止浮点。
+    - 请求中出现的 organization/environment/provider account 等归属字段一律不作为授权依据。
+    - 每个错误响应都包含 `code`、`retryable`、`requestId`。
+    - `UNKNOWN` 表示结果确定性未知，不等于失败。
+
+    详见 [AccountScope 契约](account-scope.md)、[Provider 端口](provider.md)、[需求映射](../spec/requirements-map.md)。
+  contact:
+    name: Payments Ledger Platform
+  license:
+    name: Proprietary
+
+servers:
+  - url: http://localhost:8080
+    description: 本地开发（API 运行角色）
+
+tags:
+  - name: payments
+    description: 支付创建、查询与取消（PR06）
+  - name: refunds
+    description: 退款预占、执行与查询（PR11）
+  - name: webhooks
+    description: Stripe 回调接收（PR08）
+  - name: ops-read
+    description: 运营只读查询（PR16）
+  - name: ops-write
+    description: 运营写命令，含权限、审批与幂等语义（PR16）
+
+security:
+  - ApplicationBearer: []
+
+paths:
+
+  /v1/payments:
+    post:
+      tags: [payments]
+      summary: 创建支付
+      operationId: createPayment
+      description: |
+        以受控价格与业务订单建立权威金额，持久化订单、支付、请求指纹、Provider 操作与执行义务后，
+        才在数据库事务外调用 Stripe 创建托管 Checkout 会话。
+
+        幂等语义（AC-V1-04）：
+        - 幂等作用域为 `(organization, environment, application, PAYMENT_CREATE, Idempotency-Key)`。
+        - 同作用域同键同内容 → 返回同一支付资源（200）。
+        - 同键不同语义内容 → `409 IDEMPOTENCY_CONFLICT`。
+        - 业务订单唯一键 `(org, env, application, orderKey)` 是**独立**的第二重约束：
+          更换 `Idempotency-Key` 也不能为同一订单创建第二笔支付，冲突返回 `409 ORDER_INTENT_CONFLICT`。
+        - 本地唯一键持久化在 PostgreSQL，不随 Redis 缓存过期失效。
+
+        金额校验（AC-V1-03）：请求金额必须与 `productRef` + `priceVersion` 解析出的受控价格一致，
+        否则 `422 AMOUNT_MISMATCH`。客户端不能覆盖商品价格、渠道账户或订单金额。
+
+        返回 201 仅表示托管会话已创建，**不表示已扣款**。
+      security:
+        - ApplicationBearer: [payments:write]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCreateRequest'
+            examples:
+              usdSingleItem:
+                summary: USD 一次性卡支付
+                value:
+                  orderKey: "order-2026-0001"
+                  productRef: "course-basic"
+                  priceVersion: 3
+                  amountMinor: 10000
+                  currency: "USD"
+                  quantity: 1
+                  successUrl: "https://merchant.example.com/return?o=order-2026-0001"
+                  cancelUrl: "https://merchant.example.com/cancel?o=order-2026-0001"
+                  customerRef: "cust-8891"
+                  metadata:
+                    channel: "web"
+      responses:
+        '201':
+          description: 支付已创建，返回托管入口
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+            Location:
+              description: 新建支付资源地址
+              schema: { type: string, format: uri-reference }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResource'
+              examples:
+                awaitingCustomer:
+                  $ref: '#/components/examples/PaymentAwaitingCustomer'
+        '200':
+          description: 幂等重放，返回既有支付资源
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+            Idempotent-Replay:
+              description: 固定为 true，表示本次为幂等重放
+              schema: { type: boolean }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResource'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/PaymentCreateConflict' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '500': { $ref: '#/components/responses/InternalError' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /v1/payments/{paymentId}:
+    get:
+      tags: [payments]
+      summary: 查询支付
+      operationId: getPayment
+      description: |
+        只按可信身份读取；跨组织访问返回 404，避免通过状态码枚举他人资源。
+
+        返回四个**互相独立**的维度（PRD §13）：
+        - `paymentStatus`：本地业务状态
+        - `providerStatus`：Stripe 原值，原样保留
+        - `resolutionStatus`：结果确定性（KNOWN / UNKNOWN / CONFLICT）
+        - `financialStatus`：账务确认程度（PENDING_EVIDENCE 表示已确认成功但尚无 BT）
+
+        `UNKNOWN` 不得被渲染成失败，也不得引导客户重复支付（AC-V1-32）。
+      security:
+        - ApplicationBearer: [payments:read]
+      parameters:
+        - $ref: '#/components/parameters/PaymentIdPath'
+      responses:
+        '200':
+          description: 支付详情
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResource'
+              examples:
+                succeededPendingEvidence:
+                  $ref: '#/components/examples/PaymentSucceededPendingEvidence'
+                unknownResult:
+                  $ref: '#/components/examples/PaymentUnknown'
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '500': { $ref: '#/components/responses/InternalError' }
+
+  /v1/payments/{paymentId}/cancel:
+    post:
+      tags: [payments]
+      summary: 提交取消意图
+      operationId: cancelPayment
+      description: |
+        先持久化取消意图，再按 Checkout 的真实语义执行（PRD FR-PAY-03）：
+
+        - 仅当会话 `status=OPEN` 时才调用官方 expire 接口。
+        - 已成功 capture → `409 PAYMENT_NOT_CANCELABLE`，原成功事实不被抹掉。
+        - 处理中或已受理 → 保持 `UNKNOWN`/`CONFLICT` 并留证，由恢复流程收敛。
+
+        取消意图、客户回跳或本地超时**均不能**直接推断未付款；会话过期证据也要与已有支付
+        与资金事实核对。本接口**不是**通用的 PI 取消，也**不是**退款。
+      security:
+        - ApplicationBearer: [payments:write]
+      parameters:
+        - $ref: '#/components/parameters/PaymentIdPath'
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCancelRequest'
+            examples:
+              customerAbandoned:
+                value:
+                  reason: "CUSTOMER_ABANDONED"
+                  note: "客户在结账页放弃"
+      responses:
+        '200':
+          description: 取消意图已受理，返回当前支付事实
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResource'
+              examples:
+                canceled:
+                  $ref: '#/components/examples/PaymentCanceled'
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/PaymentNotCancelable' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '500': { $ref: '#/components/responses/InternalError' }
+
+  /v1/refunds:
+    post:
+      tags: [refunds]
+      summary: 申请退款（原子预占）
+      operationId: createRefund
+      description: |
+        在同一短事务内：锁定支付控制行 → 校验状态、争议阻断与金额 → 增加预占 H →
+        写退款单、Provider 操作意图与执行义务 → 按分润政策原子调整 → 提交。
+        **提交之后**才在事务外调用 Stripe（PRD FR-REF-01）。
+
+        额度约束（I-03，AC-V1-19）：`NORMAL` 控制行中始终 `0 <= R + H <= C`，
+        且 C、R、H 各自非负。超额 → `422 REFUND_LIMIT_EXCEEDED`，且不留下任何
+        Provider 操作、分润凭证或 Outbox 残留。
+
+        阻断（AC-V1-25）：存在开放争议或未解决资金矛盾时 → `409 REFUND_BLOCKED`。
+        控制行为 `EXTERNAL_CONFLICT`（已摄入 Dashboard 外部退款且尚未完成映射）时同样阻断。
+
+        预占**不产生** PSP 分录；实际资金影响一律以 BT 为准（AC-V1-21）。
+      security:
+        - ApplicationBearer: [refunds:write]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundCreateRequest'
+            examples:
+              partialRefund:
+                summary: 部分退款 4000
+                value:
+                  paymentId: "pay_01HZX9K2M4N6P8Q0R2S4T6V8W0"
+                  amountMinor: 4000
+                  currency: "USD"
+                  reason: "REQUESTED_BY_CUSTOMER"
+                  note: "客户申请部分退款"
+      responses:
+        '201':
+          description: 退款已预占并提交执行义务
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+            Location:
+              description: 新建退款资源地址
+              schema: { type: string, format: uri-reference }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResource'
+              examples:
+                reserved:
+                  $ref: '#/components/examples/RefundReserved'
+        '200':
+          description: 幂等重放，返回既有退款资源
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+            Idempotent-Replay:
+              description: 固定为 true
+              schema: { type: boolean }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResource'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/RefundConflict' }
+        '422': { $ref: '#/components/responses/RefundUnprocessable' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '500': { $ref: '#/components/responses/InternalError' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /v1/refunds/{refundId}:
+    get:
+      tags: [refunds]
+      summary: 查询退款
+      operationId: getRefund
+      description: |
+        以**双维度**呈现（AC-V1-21）：退款业务/提供方状态与资金证据各自独立。
+        退款状态为 SUCCEEDED 但退款 BT 尚未到达时，`financialStatus=PENDING_EVIDENCE`，
+        不得据此虚构 PSP 分录或按比例退回原处理费。
+      security:
+        - ApplicationBearer: [refunds:read]
+      parameters:
+        - $ref: '#/components/parameters/RefundIdPath'
+      responses:
+        '200':
+          description: 退款详情
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResource'
+              examples:
+                succeededWithBt:
+                  $ref: '#/components/examples/RefundSucceeded'
+                unknownHeld:
+                  $ref: '#/components/examples/RefundUnknownHeld'
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+        '500': { $ref: '#/components/responses/InternalError' }
+
+  /webhooks/stripe:
+    post:
+      tags: [webhooks]
+      summary: 接收 Stripe 回调
+      operationId: receiveStripeWebhook
+      description: |
+        处理顺序不可调换（AC-V1-11、F-04）：
+
+        1. 以**原始请求字节**配合 `Stripe-Signature` 验签，禁止先反序列化再重新序列化。
+        2. 校验事件的 account/livemode 与该 endpoint 绑定的 ProviderScope 一致。
+        3. 在短事务内唯一写入 `webhook_inbox`（去重键 `(org, provider_account, livemode, eventId)`）。
+        4. **持久化成功之后**才返回 2xx。
+
+        持久化失败必须返回可重试错误（5xx），**不得**返回 200 假装已接收。
+        验签失败返回 400，且无任何业务与财务副作用。
+        重复投递的已持久化事件返回 200（传输层去重）。
+
+        本接口**不做**复杂账务：Inbox 落库后异步进入统一规范化管道。
+        一个 Webhook 可以不记账，也可以引出多个尚未见过的 BT（PRD §4.2）。
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/StripeSignatureHeader'
+      requestBody:
+        required: true
+        description: |
+          Stripe 事件原始 JSON。服务端保留原始字节用于验签与取证；
+          此处的 schema 仅描述验签后解析所依赖的最小字段，不代表服务端信任请求内容。
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StripeEventEnvelope'
+            examples:
+              checkoutCompleted:
+                summary: checkout.session.completed
+                value:
+                  id: "evt_1PxxxxxxxxxxxxxxxxxxxxxA"
+                  object: "event"
+                  api_version: "2024-06-20"
+                  created: 1789000000
+                  livemode: false
+                  account: "acct_1Pxxxxxxxxxxxxxx"
+                  type: "checkout.session.completed"
+                  data:
+                    object:
+                      id: "cs_test_a1xxxxxxxxxxxxxxxxxxxxxxxx"
+                      object: "checkout.session"
+                      payment_intent: "pi_3Pxxxxxxxxxxxxxxxxxxxxxx"
+                      payment_status: "paid"
+                      status: "complete"
+      responses:
+        '200':
+          description: |
+            已完成验签并持久化到 Inbox（或识别为已持久化的重复事件）。
+            返回 200 **不表示**已完成账务处理。
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookAck'
+              examples:
+                accepted:
+                  value: { received: true, duplicate: false }
+                duplicate:
+                  value: { received: true, duplicate: true }
+        '400':
+          description: 验签失败、负载不可解析或 endpoint 范围不匹配；无业务副作用
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                badSignature:
+                  value:
+                    code: "SIGNATURE_VERIFICATION_FAILED"
+                    message: "Signature verification failed for raw payload"
+                    retryable: false
+                    requestId: "req_01HZXA0000000000000000"
+        '503':
+          description: 无法持久化 Inbox；Stripe 应重试。**不得**改为返回 200
+          headers:
+            X-Request-Id:
+              $ref: '#/components/headers/XRequestId'
+            Retry-After:
+              description: 建议重试间隔（秒）
+              schema: { type: integer }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                persistenceFailed:
+                  value:
+                    code: "PERSISTENCE_FAILED"
+                    message: "Inbox persistence unavailable; retry"
+                    retryable: true
+                    requestId: "req_01HZXA0000000000000001"
+
+  /ops/payments/{paymentId}:
+    get:
+      tags: [ops-read]
+      summary: 运营支付详情与关联时间线
+      operationId: opsGetPayment
+      description: |
+        沿 payment → Checkout Session / PI / Charge attempt → BT → Journal → 银行证据完整追踪。
+        必须同时展示 providerStatus、resolutionStatus、financialStatus、PENDING_EVIDENCE、
+        UNKNOWN 与 INCOMPLETE，**不得**把 HTTP 成功解释为资金成功。
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - $ref: '#/components/parameters/PaymentIdPath'
+      responses:
+        '200':
+          description: 运营支付详情
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OpsPaymentDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ops/refunds/{refundId}:
+    get:
+      tags: [ops-read]
+      summary: 运营退款详情
+      operationId: opsGetRefund
+      description: 展示预占、C/R/H 轨迹、Provider 操作与恢复状态、退款 BT 与失败返还 BT。
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - $ref: '#/components/parameters/RefundIdPath'
+      responses:
+        '200':
+          description: 运营退款详情
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OpsRefundDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ops/disputes/{disputeId}:
+    get:
+      tags: [ops-read]
+      summary: 运营争议详情
+      operationId: opsGetDispute
+      description: 展示 providerStatus 原值、localHandling、金额、截止时间、扣款/返还/损失分录与分润冻结原因。
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - name: disputeId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/ResourceId' }
+      responses:
+        '200':
+          description: 运营争议详情
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OpsDisputeDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ops/payouts/{payoutId}:
+    get:
+      tags: [ops-read]
+      summary: 运营出款详情
+      operationId: opsGetPayout
+      description: |
+        展示 providerStatus、扣减 BT、银行匹配状态、在途本金、返还与差额。
+        `payout.paid` 只是提供方状态，**不等于**银行现金已确认（AC-V1-26）。
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - name: payoutId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/ResourceId' }
+      responses:
+        '200':
+          description: 运营出款详情
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OpsPayoutDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ops/revenue-shares/{paymentId}:
+    get:
+      tags: [ops-read]
+      summary: 运营分润明细
+      operationId: opsGetRevenueShare
+      description: |
+        展示下单政策快照比例、当前 eligibleBase、各合作方 cap、累计计提与撤回及原因。
+        `PARTNER_VIEWER` 角色只能看到自身 `partnerId` 的行。
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - $ref: '#/components/parameters/PaymentIdPath'
+      responses:
+        '200':
+          description: 分润明细
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OpsRevenueShareDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ops/ledger/journals:
+    get:
+      tags: [ops-read]
+      summary: 凭证检索
+      operationId: opsListJournals
+      description: 按业务号、BT ID、eventId、财务事件键或时间窗检索已封存凭证。
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - { name: businessOrderId, in: query, required: false, schema: { type: string } }
+        - { name: balanceTransactionId, in: query, required: false, schema: { type: string } }
+        - { name: eventKey, in: query, required: false, schema: { type: string } }
+        - { name: postedFrom, in: query, required: false, schema: { type: string, format: date-time } }
+        - { name: postedTo, in: query, required: false, schema: { type: string, format: date-time } }
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/CursorQuery'
+      responses:
+        '200':
+          description: 凭证列表
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/JournalList' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /ops/ledger/journals/{journalId}:
+    get:
+      tags: [ops-read]
+      summary: 凭证详情与分录
+      operationId: opsGetJournal
+      description: 返回借贷分录、借贷总额、来源财务事件与冲正/调整关联链。
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - name: journalId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/ResourceId' }
+      responses:
+        '200':
+          description: 凭证详情
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/JournalDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ops/balances:
+    get:
+      tags: [ops-read]
+      summary: 账户余额与维度
+      operationId: opsListBalances
+      description: |
+        按 AccountScope 返回余额投影，并标注是否通过独立重建核对。
+        余额投影**只**由 LedgerPostingService 写入；本接口只读，不存在改余额入口。
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - { name: currency, in: query, required: false, schema: { $ref: '#/components/schemas/Currency' } }
+        - { name: accountPurpose, in: query, required: false, schema: { type: string } }
+        - { name: asOf, in: query, required: false, schema: { type: string, format: date-time } }
+      responses:
+        '200':
+          description: 余额列表
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BalanceList' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /ops/reconciliation-runs/{runId}:
+    get:
+      tags: [ops-read]
+      summary: 对账运行进度与结果
+      operationId: opsGetReconciliationRun
+      description: |
+        返回窗口、游标、页面完成度、高水位、证据版本、残差与 INCOMPLETE 原因。
+        `COMPLETED` **不等于**无差异，另有 matched/unresolved 计数。
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - name: runId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/ResourceId' }
+      responses:
+        '200':
+          description: 对账运行
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReconciliationRun' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /ops/exceptions:
+    get:
+      tags: [ops-read]
+      summary: 差错工单列表
+      operationId: opsListExceptions
+      description: 按类型、状态、账户范围与年龄检索差错工单及其证据。
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - { name: type, in: query, required: false, schema: { $ref: '#/components/schemas/ExceptionType' } }
+        - { name: status, in: query, required: false, schema: { $ref: '#/components/schemas/ExceptionStatus' } }
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/CursorQuery'
+      responses:
+        '200':
+          description: 差错列表
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExceptionList' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /ops/tasks:
+    get:
+      tags: [ops-read]
+      summary: 恢复任务列表
+      operationId: opsListTasks
+      description: 展示恢复任务、租约持有者、到期时间、重试次数与年龄告警。
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - { name: taskType, in: query, required: false, schema: { type: string } }
+        - { name: status, in: query, required: false, schema: { type: string } }
+        - $ref: '#/components/parameters/LimitQuery'
+        - $ref: '#/components/parameters/CursorQuery'
+      responses:
+        '200':
+          description: 任务列表
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TaskList' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /ops/reconciliation-runs:
+    post:
+      tags: [ops-write]
+      summary: 发起指定范围对账/回补
+      operationId: opsCreateReconciliationRun
+      description: |
+        权限：`ops:reconcile`（`OPS_OPERATOR` / `OPS_ADMIN`）。
+        幂等：`(org, env, provider_account, runType, windowStart, windowEnd, Idempotency-Key)`；
+        重复提交返回原 run，不重复抓取。
+        **返回 HTTP 成功不代表资金匹配**——必须读取 run 的 `dataCompleteness` 与残差。
+      security:
+        - OpsBearer: [ops:reconcile]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReconciliationRunCreateRequest' }
+            examples:
+              backfillOneDay:
+                value:
+                  runType: "BALANCE_LEVEL"
+                  businessDate: "2026-09-09"
+                  currency: "USD"
+                  reason: "疑似缺页，手动回补"
+      responses:
+        '202':
+          description: 已受理，异步执行
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReconciliationRun' }
+        '200':
+          description: 幂等重放，返回既有 run
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReconciliationRun' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+
+  /ops/bank-statements/import:
+    post:
+      tags: [ops-write]
+      summary: 导入模拟银行对账文件
+      operationId: opsImportBankStatement
+      description: |
+        权限：`ops:import`。
+        文件为**明确标注的模拟银行证据**（simulated bank evidence），不是真实银行直连。
+        必须保存 `fixtureId`、文件摘要与 schema 版本；**重复导入同一摘要不重复匹配**
+        （返回原批次并标记 `duplicate=true`）。
+        银行行一经消耗即受累计分配约束，一行不能被两个 payout 各算满额（I-06）。
+      security:
+        - OpsBearer: [ops:import]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BankStatementImportRequest' }
+      responses:
+        '201':
+          description: 导入完成
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BankStatementImportResult' }
+        '200':
+          description: 重复文件，返回原批次
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BankStatementImportResult' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/ImportConflict' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+
+  /ops/exceptions/{exceptionId}/actions:
+    post:
+      tags: [ops-write]
+      summary: 对差错工单执行调查动作
+      operationId: opsCreateExceptionAction
+      description: |
+        权限：`ops:exception:act`。
+        幂等：`(exceptionId, actionType, Idempotency-Key)`。
+        **不允许**仅把状态改为 `RESOLVED` 就清零差额：`RESOLVE` 动作必须携带
+        `evidenceRefs` 或 `resolutionJournalId`，否则 `422 ADJUSTMENT_EVIDENCE_REQUIRED`。
+      security:
+        - OpsBearer: [ops:exception:act]
+      parameters:
+        - name: exceptionId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/ResourceId' }
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ExceptionActionRequest' }
+      responses:
+        '200':
+          description: 动作已记录
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExceptionActionResult' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+
+  /ops/tasks/{taskId}/retry:
+    post:
+      tags: [ops-write]
+      summary: 重驱恢复任务
+      operationId: opsRetryTask
+      description: |
+        权限：`ops:task:retry`。
+        幂等：`(taskId, Idempotency-Key)`；重复调用只唤醒同一任务，不创建第二个执行义务。
+        **只创建或唤醒既有任务**，不绕过 UNKNOWN 判定、账户范围或幂等键过期规则；
+        不得借本接口对已过期且无法排除已受理的操作重发资金请求。
+      security:
+        - OpsBearer: [ops:task:retry]
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/ResourceId' }
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskRetryRequest' }
+      responses:
+        '200':
+          description: 任务已重新调度
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TaskRetryResult' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/TaskNotRetryable' }
+
+  /ops/adjustments:
+    post:
+      tags: [ops-write]
+      summary: 创建人工调整申请
+      operationId: opsCreateAdjustment
+      description: |
+        权限：`ops:adjustment:create`（`OPS_OPERATOR` / `OPS_ADMIN`）。
+        幂等：`(org, env, targetType, targetId, Idempotency-Key)`。
+
+        本接口**只创建申请**，不入账。必须携带 `reason` 与 `evidenceRefs`，
+        缺证据返回 `422 ADJUSTMENT_EVIDENCE_REQUIRED`。
+        只有审批完成后才会通过 LedgerPostingService 追加 reversal/adjustment 凭证；
+        **绝不**更新、删除或向已封存 Journal 补插 Entry。
+      security:
+        - OpsBearer: [ops:adjustment:create]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AdjustmentCreateRequest' }
+      responses:
+        '201':
+          description: 申请已创建，等待独立审批
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdjustmentResource' }
+        '200':
+          description: 幂等重放
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdjustmentResource' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+
+  /ops/adjustments/{adjustmentId}/approve:
+    post:
+      tags: [ops-write]
+      summary: 审批人工调整
+      operationId: opsApproveAdjustment
+      description: |
+        权限：`ops:adjustment:approve`（仅 `OPS_REVIEWER`）。
+
+        **审批分离是硬约束**：`adjustment.createdBy == approver` 时返回
+        `403 APPROVAL_SELF_NOT_ALLOWED`，由数据库 CHECK 与应用双重强制；
+        `OPS_ADMIN` 拥有其他全部写权限也**不能**审批自己的申请。
+
+        幂等：审批为条件更新，重复审批返回原结果且**不重复生成凭证**。
+        审批通过后在同一事务内追加调整凭证并更新申请状态。
+      security:
+        - OpsBearer: [ops:adjustment:approve]
+      parameters:
+        - name: adjustmentId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/ResourceId' }
+        - $ref: '#/components/parameters/IdempotencyKeyRequired'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AdjustmentApproveRequest' }
+      responses:
+        '200':
+          description: 审批完成（或幂等重放），含追加凭证 ID
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdjustmentResource' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/SelfApprovalForbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/UnprocessableEntity' }
+
+components:
+
+  securitySchemes:
+    ApplicationBearer:
+      type: http
+      scheme: bearer
+      description: |
+        业务应用凭据。服务端据此解析出**不可覆盖**的 TenantContext
+        （organization / environment / application / provider account / livemode / currency / scopes）。
+        请求体或 Header 中的归属字段一律不作为授权依据（AC-V1-01）。
+        凭据只存安全摘要；`livemode=true` 的配置在**启动时**即被拒绝。
+    OpsBearer:
+      type: http
+      scheme: bearer
+      description: |
+        运营身份凭据，与业务应用凭据分属不同表、不同 scope 命名空间，不可互相复用。
+        角色：OPS_VIEWER / OPS_OPERATOR / OPS_REVIEWER / OPS_ADMIN / PARTNER_VIEWER。
+        跨组织与跨环境访问默认拒绝。
+
+  parameters:
+    IdempotencyKeyRequired:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: |
+        客户端生成的幂等键。作用域为
+        `(organization, environment, application, operationType, key)`，
+        持久化在 PostgreSQL，**不随 Redis 缓存过期失效**。
+        同键同内容重放返回原资源；同键不同语义内容返回 409。
+      schema:
+        type: string
+        minLength: 8
+        maxLength: 255
+      example: "idem-2026-09-10-7f3a9c21"
+    PaymentIdPath:
+      name: paymentId
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/ResourceId' }
+    RefundIdPath:
+      name: refundId
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/ResourceId' }
+    StripeSignatureHeader:
+      name: Stripe-Signature
+      in: header
+      required: true
+      description: Stripe 签名头，对**原始请求字节**校验。
+      schema: { type: string }
+    LimitQuery:
+      name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 200, default: 50 }
+    CursorQuery:
+      name: cursor
+      in: query
+      required: false
+      schema: { type: string }
+
+  headers:
+    XRequestId:
+      description: 本次请求的关联 ID，与日志、trace 及错误响应中的 `requestId` 一致。
+      schema: { type: string }
+
+  responses:
+    BadRequest:
+      description: 请求格式非法或缺少必填字段
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            validation:
+              value:
+                code: "VALIDATION_ERROR"
+                message: "amountMinor must be a positive integer"
+                retryable: false
+                requestId: "req_01HZXB0000000000000001"
+                details:
+                  - field: "amountMinor"
+                    issue: "must be > 0"
+    Unauthorized:
+      description: 凭据缺失、格式错误、已过期或已吊销
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            missing:
+              value:
+                code: "UNAUTHORIZED"
+                message: "Missing or invalid credential"
+                retryable: false
+                requestId: "req_01HZXB0000000000000002"
+    Forbidden:
+      description: 凭据有效但缺少所需 scope，或试图访问授权范围外的组织/环境/账户
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            scopeMismatch:
+              value:
+                code: "FORBIDDEN"
+                message: "Credential is not authorized for the requested provider account"
+                retryable: false
+                requestId: "req_01HZXB0000000000000003"
+    NotFound:
+      description: |
+        资源不存在，**或**存在但不属于调用方范围。
+        跨组织访问一律返回 404，避免通过状态码差异枚举他人资源 ID。
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            notFound:
+              value:
+                code: "NOT_FOUND"
+                message: "Resource not found in caller scope"
+                retryable: false
+                requestId: "req_01HZXB0000000000000004"
+    PaymentCreateConflict:
+      description: 幂等键冲突或业务订单意图冲突
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            idempotencyConflict:
+              summary: 同键不同语义内容
+              value:
+                code: "IDEMPOTENCY_CONFLICT"
+                message: "Idempotency-Key was already used with a different request body"
+                retryable: false
+                requestId: "req_01HZXB0000000000000005"
+                details:
+                  - field: "amountMinor"
+                    issue: "original=10000 current=12000"
+            orderIntentConflict:
+              summary: 换键但同一订单已有支付
+              value:
+                code: "ORDER_INTENT_CONFLICT"
+                message: "Business order already has a payment; a new idempotency key cannot create a second one"
+                retryable: false
+                requestId: "req_01HZXB0000000000000006"
+                details:
+                  - field: "orderKey"
+                    issue: "existing paymentId=pay_01HZX9K2M4N6P8Q0R2S4T6V8W0"
+    PaymentNotCancelable:
+      description: 支付已成功 capture 或处于不可取消状态
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            alreadySucceeded:
+              value:
+                code: "PAYMENT_NOT_CANCELABLE"
+                message: "Payment already captured; cancel is not a refund"
+                retryable: false
+                requestId: "req_01HZXB0000000000000007"
+    RefundConflict:
+      description: 退款被争议阻断，或控制行处于外部冲突状态
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            disputeBlocked:
+              value:
+                code: "REFUND_BLOCKED"
+                message: "An open dispute blocks new refunds for this payment"
+                retryable: false
+                requestId: "req_01HZXB0000000000000008"
+            externalConflict:
+              value:
+                code: "EVIDENCE_CONFLICT"
+                message: "Refund control is in EXTERNAL_CONFLICT; investigate external refund mapping first"
+                retryable: false
+                requestId: "req_01HZXB0000000000000009"
+    RefundUnprocessable:
+      description: 退款金额超出可退额度或语义不合法
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            limitExceeded:
+              value:
+                code: "REFUND_LIMIT_EXCEEDED"
+                message: "R + H would exceed C"
+                retryable: false
+                requestId: "req_01HZXB0000000000000010"
+                details:
+                  - field: "amountMinor"
+                    issue: "capturedMinor=10000 refundedMinor=4000 reservedMinor=4000 requested=4000"
+    UnprocessableEntity:
+      description: 语义校验失败（金额不符受控价格、币种未启用、缺少证据等）
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            amountMismatch:
+              value:
+                code: "AMOUNT_MISMATCH"
+                message: "Requested amount does not match the controlled price version"
+                retryable: false
+                requestId: "req_01HZXB0000000000000011"
+                details:
+                  - field: "amountMinor"
+                    issue: "authoritative=10000 requested=9000"
+            evidenceRequired:
+              value:
+                code: "ADJUSTMENT_EVIDENCE_REQUIRED"
+                message: "Adjustment requires reason and evidenceRefs"
+                retryable: false
+                requestId: "req_01HZXB0000000000000012"
+    ImportConflict:
+      description: 同一银行文件摘要已被导入且内容不一致
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            duplicateConflict:
+              value:
+                code: "IMPORT_DUPLICATE_CONFLICT"
+                message: "A different file was already imported under this fixtureId"
+                retryable: false
+                requestId: "req_01HZXB0000000000000013"
+    TaskNotRetryable:
+      description: 任务处于不可重驱状态（例如已过幂等窗口且无法排除已受理）
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            escalated:
+              value:
+                code: "PROVIDER_UNKNOWN_RESULT"
+                message: "Operation is ESCALATED; manual investigation required before any resend"
+                retryable: false
+                requestId: "req_01HZXB0000000000000014"
+    SelfApprovalForbidden:
+      description: 申请人试图审批自己创建的调整
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            selfApproval:
+              value:
+                code: "APPROVAL_SELF_NOT_ALLOWED"
+                message: "The creator of an adjustment cannot approve it"
+                retryable: false
+                requestId: "req_01HZXB0000000000000015"
+    RateLimited:
+      description: 触发账户级限流
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+        Retry-After:
+          description: 建议重试间隔（秒）
+          schema: { type: integer }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            rateLimited:
+              value:
+                code: "RATE_LIMITED"
+                message: "Too many requests for this account scope"
+                retryable: true
+                requestId: "req_01HZXB0000000000000016"
+    InternalError:
+      description: |
+        服务端内部错误。对**资金写操作**而言，收到 500 **不表示**远端未执行：
+        调用方应以查询收敛，不得据此判定失败或换键重发（F-05）。
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            unknownResult:
+              value:
+                code: "PROVIDER_UNKNOWN_RESULT"
+                message: "Result determinacy unknown; recovery in progress. Do not retry with a new key."
+                retryable: false
+                requestId: "req_01HZXB0000000000000017"
+    ServiceUnavailable:
+      description: 依赖不可用，可安全重试（**未**产生资金写操作）
+      headers:
+        X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+        Retry-After:
+          description: 建议重试间隔（秒）
+          schema: { type: integer }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          examples:
+            unavailable:
+              value:
+                code: "SERVICE_UNAVAILABLE"
+                message: "Dependency unavailable before any provider call was issued"
+                retryable: true
+                requestId: "req_01HZXB0000000000000018"
+
+  schemas:
+
+    ResourceId:
+      type: string
+      description: 本地资源 ID（ULID 前缀形式）
+      pattern: '^[a-z]+_[0-9A-HJKMNP-TV-Z]{26}$'
+      example: "pay_01HZX9K2M4N6P8Q0R2S4T6V8W0"
+
+    Currency:
+      type: string
+      description: ISO 4217 三字母币种；必须在该组织/环境下已启用
+      pattern: '^[A-Z]{3}$'
+      example: "USD"
+
+    AmountMinor:
+      type: integer
+      format: int64
+      minimum: 0
+      description: |
+        最小货币单位整数（USD 指数 2：10000 = USD 100.00；JPY 指数 0：10000 = JPY 10000）。
+        禁止浮点；实现须做溢出检查。
+      example: 10000
+
+    ErrorCode:
+      type: string
+      description: |
+        稳定错误码目录。`retryable` 的取值在下表固定，客户端据此决策，不解析 message 文案。
+
+        | code | HTTP | retryable | 含义 |
+        |---|---|---|---|
+        | `VALIDATION_ERROR` | 400 | false | 格式/必填校验失败 |
+        | `IDEMPOTENCY_KEY_REQUIRED` | 400 | false | 缺少 Idempotency-Key |
+        | `SIGNATURE_VERIFICATION_FAILED` | 400 | false | Webhook 原始字节验签失败 |
+        | `UNAUTHORIZED` | 401 | false | 凭据缺失/无效/过期 |
+        | `FORBIDDEN` | 403 | false | scope 不足或越权 |
+        | `APPROVAL_SELF_NOT_ALLOWED` | 403 | false | 申请人不可自审 |
+        | `NOT_FOUND` | 404 | false | 资源不存在或不在调用方范围 |
+        | `IDEMPOTENCY_CONFLICT` | 409 | false | 同键不同语义内容 |
+        | `ORDER_INTENT_CONFLICT` | 409 | false | 同订单已有支付 |
+        | `PAYMENT_NOT_CANCELABLE` | 409 | false | 已 capture 或状态不允许取消 |
+        | `REFUND_BLOCKED` | 409 | false | 争议阻断或外部冲突 |
+        | `EVIDENCE_CONFLICT` | 409 | false | 证据冲突，需人工调查 |
+        | `IMPORT_DUPLICATE_CONFLICT` | 409 | false | 同摘要文件内容不一致 |
+        | `AMOUNT_MISMATCH` | 422 | false | 与受控价格不一致 |
+        | `CURRENCY_NOT_ENABLED` | 422 | false | 币种未在该范围启用 |
+        | `REFUND_LIMIT_EXCEEDED` | 422 | false | R+H 将超过 C |
+        | `ADJUSTMENT_EVIDENCE_REQUIRED` | 422 | false | 调整缺少理由或证据 |
+        | `RATE_LIMITED` | 429 | true | 账户级限流 |
+        | `PROVIDER_UNKNOWN_RESULT` | 500 | false | 结果确定性未知，**禁止**换键重发 |
+        | `INTERNAL_ERROR` | 500 | false | 未分类内部错误 |
+        | `PERSISTENCE_FAILED` | 503 | true | 持久化失败（Webhook 场景应重投） |
+        | `SERVICE_UNAVAILABLE` | 503 | true | 依赖不可用且未发出资金请求 |
+      enum:
+        - VALIDATION_ERROR
+        - IDEMPOTENCY_KEY_REQUIRED
+        - SIGNATURE_VERIFICATION_FAILED
+        - UNAUTHORIZED
+        - FORBIDDEN
+        - APPROVAL_SELF_NOT_ALLOWED
+        - NOT_FOUND
+        - IDEMPOTENCY_CONFLICT
+        - ORDER_INTENT_CONFLICT
+        - PAYMENT_NOT_CANCELABLE
+        - REFUND_BLOCKED
+        - EVIDENCE_CONFLICT
+        - IMPORT_DUPLICATE_CONFLICT
+        - AMOUNT_MISMATCH
+        - CURRENCY_NOT_ENABLED
+        - REFUND_LIMIT_EXCEEDED
+        - ADJUSTMENT_EVIDENCE_REQUIRED
+        - RATE_LIMITED
+        - PROVIDER_UNKNOWN_RESULT
+        - INTERNAL_ERROR
+        - PERSISTENCE_FAILED
+        - SERVICE_UNAVAILABLE
+
+    ErrorDetail:
+      type: object
+      required: [field, issue]
+      properties:
+        field: { type: string }
+        issue: { type: string }
+
+    Error:
+      type: object
+      description: 统一错误响应。**每个错误都必须有 `code`、`retryable`、`requestId`。**
+      required: [code, message, retryable, requestId]
+      properties:
+        code: { $ref: '#/components/schemas/ErrorCode' }
+        message:
+          type: string
+          description: 面向开发者的英文描述；**不得**包含密钥、卡号或客户敏感字段
+        retryable:
+          type: boolean
+          description: |
+            是否可安全重试。对资金写操作，`false` **不等于**"远端未执行"——
+            `PROVIDER_UNKNOWN_RESULT` 即为 retryable=false 但结果未知，须以查询收敛。
+        requestId:
+          type: string
+          description: 与 `X-Request-Id` 响应头及服务端日志一致
+        details:
+          type: array
+          items: { $ref: '#/components/schemas/ErrorDetail' }
+        docUrl:
+          type: string
+          format: uri
+
+    PaymentStatus:
+      type: string
+      description: 本地业务状态。一次 attempt 被拒绝**不必**终结整个 Payment。
+      enum: [CREATED, AWAITING_CUSTOMER, REQUIRES_ACTION, PROCESSING, SUCCEEDED, CANCELED]
+
+    ResolutionStatus:
+      type: string
+      description: |
+        结果确定性，与业务状态**正交**。
+        `UNKNOWN` 不覆盖最后已知的 providerStatus，也**不等于**失败。
+      enum: [KNOWN, UNKNOWN, CONFLICT]
+
+    FinancialStatus:
+      type: string
+      description: |
+        账务确认程度，与业务状态**分开**。
+        PI 成功但 BT 尚未取得时为 `PENDING_EVIDENCE`：支付可确认成功，
+        但**不虚构**手续费或银行资产（PRD §4.2）。
+      enum: [NOT_APPLICABLE, PENDING_EVIDENCE, PARTIALLY_POSTED, POSTED, CONFLICT]
+
+    RefundStatus:
+      type: string
+      enum: [RESERVED, SUBMITTED, PENDING, REQUIRES_ACTION, SUCCEEDED, FAILED, CANCELED]
+
+    RefundControlState:
+      type: string
+      description: |
+        `NORMAL` 时保证 `0 <= R + H <= C`。
+        `EXTERNAL_CONFLICT` 表示已摄入外部（Dashboard）退款且映射未解决，**停止新退款**。
+        `DISPUTE_BLOCKED` 表示争议阻断。
+      enum: [NORMAL, EXTERNAL_CONFLICT, DISPUTE_BLOCKED]
+
+    NextAction:
+      type: object
+      description: 需要客户动作时的托管入口；**不得**用于诱导重复支付
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [REDIRECT_TO_HOSTED_CHECKOUT, WAIT_FOR_CONFIRMATION, NONE]
+        hostedUrl: { type: string, format: uri }
+        expiresAt: { type: string, format: date-time }
+
+    PaymentAttempt:
+      type: object
+      description: 一次渠道尝试。多 attempt **不等于**多次成功 capture。
+      required: [attemptId, providerObjectType, providerObjectId, providerStatus]
+      properties:
+        attemptId: { type: string }
+        providerObjectType: { type: string, enum: [CHARGE, PAYMENT_INTENT] }
+        providerObjectId: { type: string }
+        providerStatus: { type: string, description: Stripe 原值，原样保留 }
+        failureCode: { type: string, nullable: true }
+        captured: { type: boolean }
+        amountMinor: { $ref: '#/components/schemas/AmountMinor' }
+        balanceTransactionId: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+
+    ProviderRefs:
+      type: object
+      description: 外部对象引用。创建会话时 `paymentIntentId` 可能尚不存在，由后续查询/事件补齐。
+      properties:
+        checkoutSessionId: { type: string, nullable: true }
+        paymentIntentId: { type: string, nullable: true }
+        latestChargeId: { type: string, nullable: true }
+        attempts:
+          type: array
+          items: { $ref: '#/components/schemas/PaymentAttempt' }
+
+    RevenueShareLine:
+      type: object
+      description: |
+        分润明细。`capMinor = floor(eligibleBaseMinor * rateBps / 10000)`，
+        `netAccruedMinor = accruedMinor - reversedMinor` 且始终 `0 <= netAccruedMinor <= capMinor`（I-04）。
+      required: [partnerId, rateBps, eligibleBaseMinor, capMinor, netAccruedMinor]
+      properties:
+        partnerId: { type: string }
+        rateBps:
+          type: integer
+          minimum: 0
+          maximum: 10000
+          description: 下单时快照的基点比例；各合作方合计 <= 10000
+        policyVersion: { type: integer }
+        eligibleBaseMinor:
+          allOf: [{ $ref: '#/components/schemas/AmountMinor' }]
+          description: '`max(0, C - R - H)`；存在阻断争议时为 0'
+        capMinor: { $ref: '#/components/schemas/AmountMinor' }
+        accruedMinor: { $ref: '#/components/schemas/AmountMinor' }
+        reversedMinor: { $ref: '#/components/schemas/AmountMinor' }
+        netAccruedMinor: { $ref: '#/components/schemas/AmountMinor' }
+        blockedReason:
+          type: string
+          nullable: true
+          enum: [null, OPEN_DISPUTE, LOST_DISPUTE, UNRESOLVED_FUNDS_CONFLICT, NO_POSTING_EVIDENCE]
+
+    PaymentCreateRequest:
+      type: object
+      required: [orderKey, productRef, priceVersion, amountMinor, currency, successUrl, cancelUrl]
+      additionalProperties: false
+      description: |
+        **不接受**任何归属字段（organization_id / provider_account_id / livemode 等）作为授权依据。
+        `amountMinor` 必须与 `productRef` + `priceVersion` 解析出的受控价格一致。
+      properties:
+        orderKey:
+          type: string
+          minLength: 1
+          maxLength: 128
+          description: 业务订单唯一键，作用域 `(org, env, application)`
+        productRef:
+          type: string
+          description: 受控商品引用（PR02 fixture）
+        priceVersion:
+          type: integer
+          minimum: 1
+          description: 受控价格版本；服务端据此解析权威金额
+        amountMinor: { $ref: '#/components/schemas/AmountMinor' }
+        currency: { $ref: '#/components/schemas/Currency' }
+        quantity: { type: integer, minimum: 1, default: 1 }
+        successUrl: { type: string, format: uri }
+        cancelUrl: { type: string, format: uri }
+        customerRef: { type: string, nullable: true, description: 商户侧客户标识；不接收原始卡号 }
+        metadata:
+          type: object
+          additionalProperties: { type: string }
+          description: |
+            业务附加信息。服务端会分别设置 Checkout 顶层 metadata 与
+            `payment_intent_data.metadata`，**不假设**自动传播。
+            可信订单映射以本地持久化为准，不单独信任任意 metadata 字符串。
+
+    PaymentCancelRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        reason:
+          type: string
+          enum: [CUSTOMER_ABANDONED, MERCHANT_CANCELED, TIMEOUT, OTHER]
+        note: { type: string, maxLength: 500 }
+
+    PaymentResource:
+      type: object
+      required:
+        - id
+        - orderKey
+        - amountMinor
+        - currency
+        - paymentStatus
+        - resolutionStatus
+        - financialStatus
+        - createdAt
+      properties:
+        id: { $ref: '#/components/schemas/ResourceId' }
+        businessOrderId: { $ref: '#/components/schemas/ResourceId' }
+        orderKey: { type: string }
+        amountMinor:
+          allOf: [{ $ref: '#/components/schemas/AmountMinor' }]
+          description: 订单权威金额（**不是**已收款金额）
+        currency: { $ref: '#/components/schemas/Currency' }
+        paymentStatus: { $ref: '#/components/schemas/PaymentStatus' }
+        providerStatus:
+          type: string
+          nullable: true
+          description: Stripe 原值，原样保留；`UNKNOWN` **不覆盖**它
+        resolutionStatus: { $ref: '#/components/schemas/ResolutionStatus' }
+        financialStatus: { $ref: '#/components/schemas/FinancialStatus' }
+        capturedAmountMinor:
+          allOf: [{ $ref: '#/components/schemas/AmountMinor' }]
+          description: 来自最终 capture 事实（C），**不是**最初请求金额
+        refundedAmountMinor:
+          allOf: [{ $ref: '#/components/schemas/AmountMinor' }]
+          description: 成功退款累计（R）
+        reservedAmountMinor:
+          allOf: [{ $ref: '#/components/schemas/AmountMinor' }]
+          description: 已批准未明确结束的退款预占（H）
+        refundableAmountMinor:
+          allOf: [{ $ref: '#/components/schemas/AmountMinor' }]
+          description: '`C - R - H`'
+        refundControlState: { $ref: '#/components/schemas/RefundControlState' }
+        nextAction: { $ref: '#/components/schemas/NextAction' }
+        provider: { $ref: '#/components/schemas/ProviderRefs' }
+        revenueShares:
+          type: array
+          items: { $ref: '#/components/schemas/RevenueShareLine' }
+          description: PR12 启用后填充；未启用时为空数组
+        lastProviderConfirmedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: 最近一次由权威查询或已验证事件确认的时间
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    RefundCreateRequest:
+      type: object
+      required: [paymentId, amountMinor, currency]
+      additionalProperties: false
+      properties:
+        paymentId: { $ref: '#/components/schemas/ResourceId' }
+        amountMinor:
+          allOf: [{ $ref: '#/components/schemas/AmountMinor' }]
+          minimum: 1
+          description: 必须为正整数；`R + H + amountMinor <= C`
+        currency:
+          allOf: [{ $ref: '#/components/schemas/Currency' }]
+          description: 必须与原支付币种一致
+        reason:
+          type: string
+          enum: [REQUESTED_BY_CUSTOMER, DUPLICATE, FRAUDULENT, MERCHANT_DECISION, OTHER]
+        note: { type: string, maxLength: 500 }
+        clientRefundKey:
+          type: string
+          nullable: true
+          description: 商户侧退款业务键，用于本地唯一性（与 Idempotency-Key 独立）
+
+    ReservationSummary:
+      type: object
+      description: |
+        C/R/H 三元组。`NORMAL` 状态下三者**各自非负**且 `0 <= R + H <= C`
+        （不能只检查和而允许负数抵消超额）。
+      required: [capturedMinor, refundedMinor, reservedMinor]
+      properties:
+        capturedMinor: { $ref: '#/components/schemas/AmountMinor' }
+        refundedMinor: { $ref: '#/components/schemas/AmountMinor' }
+        reservedMinor: { $ref: '#/components/schemas/AmountMinor' }
+        availableMinor: { $ref: '#/components/schemas/AmountMinor' }
+
+    RefundEvidence:
+      type: object
+      description: 资金证据维度，与退款业务状态**独立**呈现
+      properties:
+        refundBalanceTransactionId: { type: string, nullable: true }
+        failureBalanceTransactionId:
+          type: string
+          nullable: true
+          description: 失败返还 BT；作为**新事实**反向入账，不删除旧账
+        actualFeeRefundMinor:
+          allOf: [{ $ref: '#/components/schemas/AmountMinor' }]
+          description: |
+            仅在有证据支持时填写。原支付处理费**不自动**随退款按比例退回。
+        postedJournalIds:
+          type: array
+          items: { type: string }
+
+    RefundResource:
+      type: object
+      required: [id, paymentId, amountMinor, currency, refundStatus, resolutionStatus, financialStatus, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/ResourceId' }
+        paymentId: { $ref: '#/components/schemas/ResourceId' }
+        amountMinor: { $ref: '#/components/schemas/AmountMinor' }
+        currency: { $ref: '#/components/schemas/Currency' }
+        refundStatus: { $ref: '#/components/schemas/RefundStatus' }
+        providerStatus: { type: string, nullable: true }
+        resolutionStatus: { $ref: '#/components/schemas/ResolutionStatus' }
+        financialStatus: { $ref: '#/components/schemas/FinancialStatus' }
+        controlState: { $ref: '#/components/schemas/RefundControlState' }
+        reservation: { $ref: '#/components/schemas/ReservationSummary' }
+        providerRefundId: { type: string, nullable: true }
+        evidence: { $ref: '#/components/schemas/RefundEvidence' }
+        reason: { type: string, nullable: true }
+        lastProviderConfirmedAt: { type: string, format: date-time, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    StripeEventEnvelope:
+      type: object
+      description: |
+        验签**之后**解析所依赖的最小字段。服务端始终以原始字节为验签输入，
+        并以 endpoint 绑定的 ProviderScope 校验 `account` / `livemode`。
+      required: [id, type, data]
+      properties:
+        id: { type: string, description: Stripe event id；传输层去重键的一部分 }
+        object: { type: string, enum: [event] }
+        api_version: { type: string, nullable: true }
+        created: { type: integer, format: int64 }
+        livemode: { type: boolean }
+        account: { type: string, nullable: true }
+        type: { type: string, example: "checkout.session.completed" }
+        data:
+          type: object
+          required: [object]
+          properties:
+            object:
+              type: object
+              additionalProperties: true
+          additionalProperties: true
+      additionalProperties: true
+
+    WebhookAck:
+      type: object
+      required: [received]
+      properties:
+        received:
+          type: boolean
+          description: 已验签并持久化到 Inbox；**不表示**已完成账务处理
+        duplicate:
+          type: boolean
+          description: 该 eventId 在同 ProviderScope 下已存在（传输层去重命中）
+
+    DataCompleteness:
+      type: string
+      description: 与执行状态**分开**的数据完整性维度；`INCOMPLETE` 既不是通过也不是已发现资金错误
+      enum: [COMPLETE, INCOMPLETE, NOT_APPLICABLE]
+
+    CheckResult:
+      type: string
+      description: 被测产品的业务检查结果；缺证据为 `INCOMPLETE`，**不得**记为 `PASS`
+      enum: [PASS, FAIL, INCOMPLETE]
+
+    ExceptionType:
+      type: string
+      enum:
+        - MISSING_PAYMENT
+        - UNKNOWN_SOURCE
+        - STATUS_CONFLICT
+        - AMOUNT_MISMATCH
+        - FEE_VARIANCE
+        - BALANCE_RESIDUAL
+        - PAYOUT_WAITING
+        - SHORT_RECEIPT
+        - DUPLICATE_BANK_MATCH
+        - UNSUPPORTED_BALANCE_DOMAIN
+
+    ExceptionStatus:
+      type: string
+      enum: [OPEN, INVESTIGATING, WAITING_EVIDENCE, RESOLVED, REOPENED]
+
+    JournalEntryLine:
+      type: object
+      required: [entryId, ledgerAccountId, accountPurpose, direction, amountMinor, currency]
+      properties:
+        entryId: { type: string }
+        ledgerAccountId: { type: string }
+        accountPurpose: { type: string }
+        direction: { type: string, enum: [DEBIT, CREDIT] }
+        amountMinor: { $ref: '#/components/schemas/AmountMinor' }
+        currency: { $ref: '#/components/schemas/Currency' }
+
+    JournalSummary:
+      type: object
+      required: [journalId, status, totalDebitMinor, totalCreditMinor, currency, postedAt]
+      properties:
+        journalId: { type: string }
+        status:
+          type: string
+          enum: [POSTED]
+          description: 已提交凭证**只有** POSTED 一个状态；草稿只存在于构建/观察层
+        financialEventKey: { type: string }
+        totalDebitMinor: { $ref: '#/components/schemas/AmountMinor' }
+        totalCreditMinor: { $ref: '#/components/schemas/AmountMinor' }
+        currency: { $ref: '#/components/schemas/Currency' }
+        postedAt: { type: string, format: date-time }
+
+    JournalDetail:
+      allOf:
+        - $ref: '#/components/schemas/JournalSummary'
+        - type: object
+          properties:
+            entries:
+              type: array
+              minItems: 2
+              items: { $ref: '#/components/schemas/JournalEntryLine' }
+            sourceBalanceTransactionId: { type: string, nullable: true }
+            reversalOfJournalId:
+              type: string
+              nullable: true
+              description: 冲正/调整关联；修正一律追加新凭证，**不改旧账**
+            reversedByJournalIds:
+              type: array
+              items: { type: string }
+
+    JournalList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/JournalSummary' }
+        nextCursor: { type: string, nullable: true }
+
+    BalanceLine:
+      type: object
+      required: [ledgerAccountId, accountPurpose, currency, balanceMinor]
+      properties:
+        ledgerAccountId: { type: string }
+        accountPurpose: { type: string }
+        providerAccountId: { type: string, nullable: true, description: 银行/内部分润科目为 null }
+        sourceDomain: { type: string, enum: [PROVIDER, SIMULATED_BANK, INTERNAL] }
+        balanceDomain: { type: string, nullable: true }
+        currency: { $ref: '#/components/schemas/Currency' }
+        balanceMinor: { type: integer, format: int64, description: PSP 控制账户**允许**为负 }
+        rebuildMatches:
+          type: boolean
+          nullable: true
+          description: 独立重建是否与投影一致；null 表示本次未做重建
+
+    BalanceList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/BalanceLine' }
+        asOf: { type: string, format: date-time }
+
+    ReconciliationRun:
+      type: object
+      required: [runId, runType, status, dataCompleteness]
+      properties:
+        runId: { type: string }
+        runType: { type: string, enum: [TRANSACTION_LEVEL, BALANCE_LEVEL, PAYOUT_BANK_LEVEL, NIGHTLY_ALL] }
+        status: { type: string, enum: [CREATED, FETCHING, VALIDATING, COMPLETED, INCOMPLETE, FAILED] }
+        checkResult: { $ref: '#/components/schemas/CheckResult' }
+        dataCompleteness: { $ref: '#/components/schemas/DataCompleteness' }
+        businessDate: { type: string, format: date }
+        businessTimezone: { type: string, example: "UTC" }
+        windowStartUtc: { type: string, format: date-time }
+        windowEndUtc: { type: string, format: date-time }
+        currency: { $ref: '#/components/schemas/Currency' }
+        providerCursor: { type: string, nullable: true }
+        allPagesFetched: { type: boolean }
+        inputHighWatermark: { type: string, nullable: true }
+        ruleVersion: { type: string }
+        externalEvidenceVersion: { type: string, nullable: true }
+        residualMinor: { type: integer, format: int64, nullable: true }
+        matchedCount: { type: integer }
+        unresolvedCount: { type: integer }
+        incompleteReason:
+          type: string
+          nullable: true
+          description: 缺页、游标缺失、范围不一致或独立期末不可比时必填
+
+    ExceptionItem:
+      type: object
+      required: [exceptionId, type, status, createdAt]
+      properties:
+        exceptionId: { type: string }
+        type: { $ref: '#/components/schemas/ExceptionType' }
+        status: { $ref: '#/components/schemas/ExceptionStatus' }
+        currency: { $ref: '#/components/schemas/Currency' }
+        amountMinor: { type: integer, format: int64, nullable: true }
+        relatedPaymentId: { type: string, nullable: true }
+        relatedBalanceTransactionId: { type: string, nullable: true }
+        evidenceRefs: { type: array, items: { type: string } }
+        resolutionJournalId: { type: string, nullable: true }
+        ageSeconds: { type: integer }
+        createdAt: { type: string, format: date-time }
+
+    ExceptionList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/ExceptionItem' }
+        nextCursor: { type: string, nullable: true }
+
+    TaskItem:
+      type: object
+      required: [taskId, taskType, status]
+      properties:
+        taskId: { type: string }
+        taskType: { type: string, example: "PAYMENT_RECOVERY" }
+        status: { type: string, enum: [PENDING, LEASED, SUCCEEDED, FAILED, ESCALATED] }
+        resourceType: { type: string, enum: [PAYMENT, REFUND, FINANCIAL] }
+        resourceId: { type: string }
+        leaseOwner: { type: string, nullable: true }
+        leaseUntil: { type: string, format: date-time, nullable: true }
+        attemptCount: { type: integer }
+        nextScheduledAt: { type: string, format: date-time, nullable: true }
+        ageSeconds: { type: integer }
+
+    TaskList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/TaskItem' }
+        nextCursor: { type: string, nullable: true }
+
+    OpsPaymentDetail:
+      allOf:
+        - $ref: '#/components/schemas/PaymentResource'
+        - type: object
+          properties:
+            journals:
+              type: array
+              items: { $ref: '#/components/schemas/JournalSummary' }
+            balanceTransactionIds: { type: array, items: { type: string } }
+            operations: { type: array, items: { $ref: '#/components/schemas/TaskItem' } }
+            exceptions: { type: array, items: { $ref: '#/components/schemas/ExceptionItem' } }
+            timeline:
+              type: array
+              items:
+                type: object
+                properties:
+                  at: { type: string, format: date-time }
+                  kind: { type: string }
+                  summary: { type: string }
+                  evidenceRef: { type: string, nullable: true }
+
+    OpsRefundDetail:
+      allOf:
+        - $ref: '#/components/schemas/RefundResource'
+        - type: object
+          properties:
+            journals:
+              type: array
+              items: { $ref: '#/components/schemas/JournalSummary' }
+            operations: { type: array, items: { $ref: '#/components/schemas/TaskItem' } }
+            externalConflictNote: { type: string, nullable: true }
+
+    OpsDisputeDetail:
+      type: object
+      required: [disputeId, providerStatus, localHandling, amountMinor, currency]
+      properties:
+        disputeId: { type: string }
+        chargeId: { type: string }
+        paymentId: { type: string, nullable: true }
+        providerStatus: { type: string, description: Stripe 原值；`lost` **不永久禁止** `won` }
+        localHandling: { type: string, enum: [NEEDS_REVIEW, WAITING_EVIDENCE, RESOLVED] }
+        reason: { type: string }
+        amountMinor: { $ref: '#/components/schemas/AmountMinor' }
+        currency: { $ref: '#/components/schemas/Currency' }
+        evidenceDueBy: { type: string, format: date-time, nullable: true }
+        outstandingReceivableMinor: { $ref: '#/components/schemas/AmountMinor' }
+        confirmedLossMinor: { $ref: '#/components/schemas/AmountMinor' }
+        disputeFeeMinor: { $ref: '#/components/schemas/AmountMinor' }
+        blocksRefunds: { type: boolean }
+        revenueShareBlocked: { type: boolean }
+        journals: { type: array, items: { $ref: '#/components/schemas/JournalSummary' } }
+
+    OpsPayoutDetail:
+      type: object
+      required: [payoutId, providerStatus, amountMinor, currency, bankMatchState]
+      properties:
+        payoutId: { type: string }
+        providerStatus: { type: string, enum: [pending, in_transit, paid, failed, canceled] }
+        automatic: { type: boolean }
+        amountMinor: { $ref: '#/components/schemas/AmountMinor' }
+        currency: { $ref: '#/components/schemas/Currency' }
+        deductionBalanceTransactionId: { type: string, nullable: true }
+        failureBalanceTransactionId: { type: string, nullable: true }
+        bankMatchState: { type: string, enum: [UNMATCHED, PARTIAL, MATCHED, CONFLICT] }
+        inTransitPrincipalMinor: { $ref: '#/components/schemas/AmountMinor' }
+        confirmedBankPrincipalMinor: { $ref: '#/components/schemas/AmountMinor' }
+        returnedPrincipalMinor: { $ref: '#/components/schemas/AmountMinor' }
+        bankFeeMinor: { $ref: '#/components/schemas/AmountMinor' }
+        evidenceSource:
+          type: string
+          enum: [SIMULATED_BANK_EVIDENCE]
+          description: 本期银行证据一律为模拟，**不得**表述为真实银行直连
+        shortReceiptState: { type: string, enum: [NONE, WAITING_EVIDENCE, SHORT_RECEIPT, UNMODELED_FEE] }
+
+    OpsRevenueShareDetail:
+      type: object
+      required: [paymentId, lines]
+      properties:
+        paymentId: { type: string }
+        policyVersion: { type: integer }
+        policySnapshot: { type: object, additionalProperties: true, description: 下单时不可变 JSON 快照 }
+        lines: { type: array, items: { $ref: '#/components/schemas/RevenueShareLine' } }
+        journals: { type: array, items: { $ref: '#/components/schemas/JournalSummary' } }
+
+    ReconciliationRunCreateRequest:
+      type: object
+      required: [runType, businessDate, currency, reason]
+      additionalProperties: false
+      properties:
+        runType: { type: string, enum: [TRANSACTION_LEVEL, BALANCE_LEVEL, PAYOUT_BANK_LEVEL, NIGHTLY_ALL] }
+        businessDate: { type: string, format: date, description: 按业务时区转换为明确 UTC 区间 }
+        currency: { $ref: '#/components/schemas/Currency' }
+        overlapLookbackDays: { type: integer, minimum: 0, default: 7 }
+        reason: { type: string, minLength: 1, maxLength: 500 }
+
+    BankStatementImportRequest:
+      type: object
+      required: [fixtureId, schemaVersion, contentDigest, lines, reason]
+      additionalProperties: false
+      properties:
+        fixtureId: { type: string, description: 模拟银行 fixture 稳定标识 }
+        schemaVersion: { type: string }
+        contentDigest: { type: string, description: 文件内容 SHA-256；重复摘要不重复匹配 }
+        reason: { type: string }
+        lines:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [lineNo, valueDate, amountMinor, currency, bankRef]
+            properties:
+              lineNo: { type: integer, minimum: 1 }
+              valueDate: { type: string, format: date }
+              amountMinor: { type: integer, format: int64 }
+              currency: { $ref: '#/components/schemas/Currency' }
+              bankRef: { type: string }
+              feeMinor: { type: integer, format: int64, default: 0 }
+              description: { type: string, nullable: true }
+
+    BankStatementImportResult:
+      type: object
+      required: [bankStatementId, duplicate, lineCount]
+      properties:
+        bankStatementId: { type: string }
+        fixtureId: { type: string }
+        duplicate: { type: boolean, description: true 表示同摘要已导入，未重复匹配 }
+        lineCount: { type: integer }
+        matchedCount: { type: integer }
+        conflictCount: { type: integer }
+        evidenceSource: { type: string, enum: [SIMULATED_BANK_EVIDENCE] }
+
+    ExceptionActionRequest:
+      type: object
+      required: [actionType, reason]
+      additionalProperties: false
+      properties:
+        actionType: { type: string, enum: [INVESTIGATE, WAIT_EVIDENCE, RESOLVE, REOPEN] }
+        reason: { type: string, minLength: 1, maxLength: 1000 }
+        evidenceRefs:
+          type: array
+          items: { type: string }
+          description: '`RESOLVE` 时必须非空，或提供 `resolutionJournalId`'
+        resolutionJournalId: { type: string, nullable: true }
+
+    ExceptionActionResult:
+      type: object
+      required: [exceptionId, status]
+      properties:
+        exceptionId: { type: string }
+        status: { $ref: '#/components/schemas/ExceptionStatus' }
+        actionId: { type: string }
+        auditLogId: { type: string }
+
+    TaskRetryRequest:
+      type: object
+      required: [reason]
+      additionalProperties: false
+      properties:
+        reason: { type: string, minLength: 1, maxLength: 500 }
+
+    TaskRetryResult:
+      type: object
+      required: [taskId, status]
+      properties:
+        taskId: { type: string }
+        status: { type: string, enum: [PENDING, LEASED, ESCALATED] }
+        nextScheduledAt: { type: string, format: date-time, nullable: true }
+        note:
+          type: string
+          nullable: true
+          description: 若操作已 ESCALATED，说明为何不会自动重发资金请求
+
+    AdjustmentCreateRequest:
+      type: object
+      required: [targetType, targetId, reason, evidenceRefs, proposedEntries]
+      additionalProperties: false
+      properties:
+        targetType: { type: string, enum: [PAYMENT, REFUND, DISPUTE, PAYOUT, BALANCE, EXCEPTION] }
+        targetId: { type: string }
+        reason: { type: string, minLength: 1, maxLength: 1000 }
+        evidenceRefs:
+          type: array
+          minItems: 1
+          items: { type: string }
+        proposedEntries:
+          type: array
+          minItems: 2
+          description: 申请中的分录草案；审批前**不入账**，借贷必须平衡
+          items: { $ref: '#/components/schemas/JournalEntryLine' }
+
+    AdjustmentApproveRequest:
+      type: object
+      required: [decision, reason]
+      additionalProperties: false
+      properties:
+        decision: { type: string, enum: [APPROVE, REJECT] }
+        reason: { type: string, minLength: 1, maxLength: 1000 }
+
+    AdjustmentResource:
+      type: object
+      required: [adjustmentId, status, createdBy, createdAt]
+      properties:
+        adjustmentId: { type: string }
+        status: { type: string, enum: [PENDING_APPROVAL, APPROVED, REJECTED] }
+        targetType: { type: string }
+        targetId: { type: string }
+        createdBy: { type: string }
+        approvedBy:
+          type: string
+          nullable: true
+          description: 必须与 `createdBy` 不同（数据库 CHECK + 应用双重强制）
+        approvedAt: { type: string, format: date-time, nullable: true }
+        postedJournalId:
+          type: string
+          nullable: true
+          description: 审批通过后追加的调整凭证；**绝不**更新或补插旧 Journal
+        auditLogId: { type: string }
+        createdAt: { type: string, format: date-time }
+
+  examples:
+
+    PaymentAwaitingCustomer:
+      summary: 已创建托管会话，等待客户支付（尚未扣款）
+      value:
+        id: "pay_01HZX9K2M4N6P8Q0R2S4T6V8W0"
+        businessOrderId: "bor_01HZX9K2M4N6P8Q0R2S4T6V8W1"
+        orderKey: "order-2026-0001"
+        amountMinor: 10000
+        currency: "USD"
+        paymentStatus: "AWAITING_CUSTOMER"
+        providerStatus: "unpaid"
+        resolutionStatus: "KNOWN"
+        financialStatus: "NOT_APPLICABLE"
+        capturedAmountMinor: 0
+        refundedAmountMinor: 0
+        reservedAmountMinor: 0
+        refundableAmountMinor: 0
+        refundControlState: "NORMAL"
+        nextAction:
+          type: "REDIRECT_TO_HOSTED_CHECKOUT"
+          hostedUrl: "https://checkout.stripe.com/c/pay/cs_test_a1xxxxxxxxxxxxxxxxxxxxxxxx"
+          expiresAt: "2026-09-10T12:30:00Z"
+        provider:
+          checkoutSessionId: "cs_test_a1xxxxxxxxxxxxxxxxxxxxxxxx"
+          paymentIntentId: null
+          latestChargeId: null
+          attempts: []
+        revenueShares: []
+        lastProviderConfirmedAt: "2026-09-10T11:30:02Z"
+        createdAt: "2026-09-10T11:30:00Z"
+        updatedAt: "2026-09-10T11:30:02Z"
+
+    PaymentSucceededPendingEvidence:
+      summary: 支付已确认成功，但 BT 尚未取得（financialStatus=PENDING_EVIDENCE）
+      value:
+        id: "pay_01HZX9K2M4N6P8Q0R2S4T6V8W0"
+        businessOrderId: "bor_01HZX9K2M4N6P8Q0R2S4T6V8W1"
+        orderKey: "order-2026-0001"
+        amountMinor: 10000
+        currency: "USD"
+        paymentStatus: "SUCCEEDED"
+        providerStatus: "succeeded"
+        resolutionStatus: "KNOWN"
+        financialStatus: "PENDING_EVIDENCE"
+        capturedAmountMinor: 10000
+        refundedAmountMinor: 0
+        reservedAmountMinor: 0
+        refundableAmountMinor: 10000
+        refundControlState: "NORMAL"
+        nextAction: { type: "NONE" }
+        provider:
+          checkoutSessionId: "cs_test_a1xxxxxxxxxxxxxxxxxxxxxxxx"
+          paymentIntentId: "pi_3Pxxxxxxxxxxxxxxxxxxxxxx"
+          latestChargeId: "ch_3Pxxxxxxxxxxxxxxxxxxxxxx"
+          attempts:
+            - attemptId: "att_01HZX9K2M4N6P8Q0R2S4T6V8W2"
+              providerObjectType: "CHARGE"
+              providerObjectId: "ch_3PxxxxxxxxxxxxxxxxxxxxxA"
+              providerStatus: "failed"
+              failureCode: "card_declined"
+              captured: false
+              amountMinor: 10000
+              balanceTransactionId: null
+              createdAt: "2026-09-10T11:31:00Z"
+            - attemptId: "att_01HZX9K2M4N6P8Q0R2S4T6V8W3"
+              providerObjectType: "CHARGE"
+              providerObjectId: "ch_3Pxxxxxxxxxxxxxxxxxxxxxx"
+              providerStatus: "succeeded"
+              failureCode: null
+              captured: true
+              amountMinor: 10000
+              balanceTransactionId: null
+              createdAt: "2026-09-10T11:32:10Z"
+        revenueShares: []
+        lastProviderConfirmedAt: "2026-09-10T11:32:12Z"
+        createdAt: "2026-09-10T11:30:00Z"
+        updatedAt: "2026-09-10T11:32:12Z"
+
+    PaymentUnknown:
+      summary: 结果确定性未知，保留最后已知 provider 事实并由恢复流程收敛
+      value:
+        id: "pay_01HZX9K2M4N6P8Q0R2S4T6V8W4"
+        businessOrderId: "bor_01HZX9K2M4N6P8Q0R2S4T6V8W5"
+        orderKey: "order-2026-0002"
+        amountMinor: 10000
+        currency: "USD"
+        paymentStatus: "PROCESSING"
+        providerStatus: "processing"
+        resolutionStatus: "UNKNOWN"
+        financialStatus: "NOT_APPLICABLE"
+        capturedAmountMinor: 0
+        refundedAmountMinor: 0
+        reservedAmountMinor: 0
+        refundableAmountMinor: 0
+        refundControlState: "NORMAL"
+        nextAction: { type: "WAIT_FOR_CONFIRMATION" }
+        provider:
+          checkoutSessionId: "cs_test_b2xxxxxxxxxxxxxxxxxxxxxxxx"
+          paymentIntentId: "pi_3Pyyyyyyyyyyyyyyyyyyyyyy"
+          latestChargeId: null
+          attempts: []
+        revenueShares: []
+        lastProviderConfirmedAt: "2026-09-10T11:40:00Z"
+        createdAt: "2026-09-10T11:39:00Z"
+        updatedAt: "2026-09-10T11:41:00Z"
+
+    PaymentCanceled:
+      summary: 会话在 OPEN 状态下被过期，且无任何已受理的资金事实
+      value:
+        id: "pay_01HZX9K2M4N6P8Q0R2S4T6V8W6"
+        businessOrderId: "bor_01HZX9K2M4N6P8Q0R2S4T6V8W7"
+        orderKey: "order-2026-0003"
+        amountMinor: 10000
+        currency: "USD"
+        paymentStatus: "CANCELED"
+        providerStatus: "expired"
+        resolutionStatus: "KNOWN"
+        financialStatus: "NOT_APPLICABLE"
+        capturedAmountMinor: 0
+        refundedAmountMinor: 0
+        reservedAmountMinor: 0
+        refundableAmountMinor: 0
+        refundControlState: "NORMAL"
+        nextAction: { type: "NONE" }
+        provider:
+          checkoutSessionId: "cs_test_c3xxxxxxxxxxxxxxxxxxxxxxxx"
+          paymentIntentId: null
+          latestChargeId: null
+          attempts: []
+        revenueShares: []
+        lastProviderConfirmedAt: "2026-09-10T12:31:00Z"
+        createdAt: "2026-09-10T11:50:00Z"
+        updatedAt: "2026-09-10T12:31:00Z"
+
+    RefundReserved:
+      summary: 已原子预占 4000（H=4000），尚未调用 Stripe
+      value:
+        id: "ref_01HZX9K2M4N6P8Q0R2S4T6V8X0"
+        paymentId: "pay_01HZX9K2M4N6P8Q0R2S4T6V8W0"
+        amountMinor: 4000
+        currency: "USD"
+        refundStatus: "RESERVED"
+        providerStatus: null
+        resolutionStatus: "KNOWN"
+        financialStatus: "NOT_APPLICABLE"
+        controlState: "NORMAL"
+        reservation:
+          capturedMinor: 10000
+          refundedMinor: 0
+          reservedMinor: 4000
+          availableMinor: 6000
+        providerRefundId: null
+        evidence:
+          refundBalanceTransactionId: null
+          failureBalanceTransactionId: null
+          actualFeeRefundMinor: 0
+          postedJournalIds: []
+        reason: "REQUESTED_BY_CUSTOMER"
+        lastProviderConfirmedAt: null
+        createdAt: "2026-09-10T13:00:00Z"
+        updatedAt: "2026-09-10T13:00:00Z"
+
+    RefundSucceeded:
+      summary: 退款成功且退款 BT 已入账（H 转 R，PSP 依 BT 减少）
+      value:
+        id: "ref_01HZX9K2M4N6P8Q0R2S4T6V8X0"
+        paymentId: "pay_01HZX9K2M4N6P8Q0R2S4T6V8W0"
+        amountMinor: 4000
+        currency: "USD"
+        refundStatus: "SUCCEEDED"
+        providerStatus: "succeeded"
+        resolutionStatus: "KNOWN"
+        financialStatus: "POSTED"
+        controlState: "NORMAL"
+        reservation:
+          capturedMinor: 10000
+          refundedMinor: 4000
+          reservedMinor: 0
+          availableMinor: 6000
+        providerRefundId: "re_3Pxxxxxxxxxxxxxxxxxxxxxx"
+        evidence:
+          refundBalanceTransactionId: "txn_3Pxxxxxxxxxxxxxxxxxxxxxx"
+          failureBalanceTransactionId: null
+          actualFeeRefundMinor: 0
+          postedJournalIds: ["jnl_01HZX9K2M4N6P8Q0R2S4T6V8X1"]
+        reason: "REQUESTED_BY_CUSTOMER"
+        lastProviderConfirmedAt: "2026-09-10T13:05:00Z"
+        createdAt: "2026-09-10T13:00:00Z"
+        updatedAt: "2026-09-10T13:05:00Z"
+
+    RefundUnknownHeld:
+      summary: 远端受理后响应丢失；保留 H，不释放额度、不重发
+      value:
+        id: "ref_01HZX9K2M4N6P8Q0R2S4T6V8X2"
+        paymentId: "pay_01HZX9K2M4N6P8Q0R2S4T6V8W0"
+        amountMinor: 4000
+        currency: "USD"
+        refundStatus: "SUBMITTED"
+        providerStatus: null
+        resolutionStatus: "UNKNOWN"
+        financialStatus: "NOT_APPLICABLE"
+        controlState: "NORMAL"
+        reservation:
+          capturedMinor: 10000
+          refundedMinor: 0
+          reservedMinor: 4000
+          availableMinor: 6000
+        providerRefundId: null
+        evidence:
+          refundBalanceTransactionId: null
+          failureBalanceTransactionId: null
+          actualFeeRefundMinor: 0
+          postedJournalIds: []
+        reason: "REQUESTED_BY_CUSTOMER"
+        lastProviderConfirmedAt: null
+        createdAt: "2026-09-10T13:00:00Z"
+        updatedAt: "2026-09-10T13:02:00Z"

@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Java / Maven（PR01 起适用）
+target/
+*.class
+*.log
+
+# 本地环境与密钥：绝不进版本库
+.env
+.env.*
+*.local
