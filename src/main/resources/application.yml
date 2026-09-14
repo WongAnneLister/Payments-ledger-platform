@@ -1,0 +1,90 @@
+spring:
+  application:
+    name: payments-ledger-platform
+
+  # 运行角色必须显式指定：--spring.profiles.active=api 或 =worker
+  # 未指定时 RunRoleConfig 会快速失败，不猜测角色。
+  profiles:
+    default: none
+
+  datasource:
+    # 应用运行角色的连接：对账本表只有 INSERT，无 UPDATE/DELETE（见 docs/runbook/database-roles.md）
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:payments_ledger}
+    username: ${DB_APP_USER:payments_app}
+    password: ${DB_APP_PASSWORD:}
+    hikari:
+      pool-name: payments-ledger-pool
+      maximum-pool-size: ${DB_POOL_MAX:10}
+      minimum-idle: ${DB_POOL_MIN:2}
+      connection-timeout: 10000
+      # 资金正确性依赖显式事务边界，禁止隐式自动提交语义混入
+      auto-commit: false
+
+  flyway:
+    enabled: true
+    # 迁移角色与应用运行角色分离：迁移持有 DDL 权限，应用运行时没有
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:payments_ledger}
+    user: ${DB_MIGRATION_USER:payments_migrator}
+    password: ${DB_MIGRATION_PASSWORD:}
+    locations: classpath:db/migration
+    # 业务对象与 Flyway 历史表都放在 platform schema（属主为迁移角色）。
+    # 不使用 public：PostgreSQL 15+ 起 public 不再默认授予 PUBLIC 的 CREATE 权限，
+    # 迁移角色并非其属主，把历史表建在 public 会被拒绝。
+    schemas: platform
+    default-schema: platform
+    create-schemas: true
+    baseline-on-migrate: false
+    validate-on-migrate: true
+    # 已发布迁移不原地重写；需要改约束时追加新迁移（路线图 §5.5）
+    clean-disabled: true
+
+  jackson:
+    default-property-inclusion: non_null
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      # 不对外泄露依赖拓扑与版本细节
+      show-details: never
+      show-components: never
+  health:
+    defaults:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.paymentsledger: ${LOG_LEVEL_APP:INFO}
+    # 连接池与迁移在启动阶段有用，但不应长期刷屏
+    com.zaxxer.hikari: WARN
+    org.flywaydb: INFO
+  pattern:
+    # requestId 来自 MDC（RequestIdFilter 写入），使日志、trace 与错误响应三者可关联
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%X{requestId:--}] %logger{36} - %msg%n"
+
+# 结构化 JSON 日志：Spring Boot 内置支持，无需额外依赖。
+# 这里刻意不设默认值（空值会被当作非法格式名），需要时在启动命令上显式开启：
+#   java -jar app.jar --spring.profiles.active=api --logging.structured.format.console=ecs
+# 可选格式：ecs / logstash / gelf
+---
+spring:
+  config:
+    activate:
+      on-profile: api
+server:
+  port: ${API_PORT:8080}
+  shutdown: graceful
+
+---
+spring:
+  config:
+    activate:
+      on-profile: worker
+server:
+  # Worker 角色的端口只承载受控健康检查，不暴露业务写入口
+  port: ${WORKER_PORT:8081}
+  shutdown: graceful

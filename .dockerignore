@@ -1,0 +1,19 @@
+# 构建上下文最小化：只保留镜像构建真正需要的文件
+target/
+.git/
+.github/
+.idea/
+*.iml
+
+# 文档不进镜像
+docs/
+
+# 本地环境与密钥绝不进镜像
+.env
+.env.*
+!.env.example
+
+# 测试与脚本
+scripts/ci/
+
+.DS_Store

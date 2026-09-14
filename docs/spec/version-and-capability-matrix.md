@@ -1,36 +1,73 @@
 # 版本与测试账户能力矩阵
 
-版本：PR00 · 日期：2026-09-10 · 状态：**候选清单，全部待验证**
+版本：PR01 · 日期：2026-09-11 · 状态：**运行时与框架已在 PR01 实际验证并锁定；Stripe 相关与测试账户能力仍全部待验证**
 
 关联：[需求映射](requirements-map.md) · [Provider 端口](../contracts/provider.md) · [路线图 §1](../product/payment-platform-roadmap.md) · [验收 §1](../product/payment-platform-acceptance.md)
 
 ## 0. 本文件的诚实边界
 
-> **本次 PR00 未联网核实任何版本号，也未访问任何 Stripe 测试账户。**
+状态来源分四种：
+
+- `BASELINE`：由 PRD/路线图直接规定的工程基线（如 Java 21）
+- `LOCKED`：**PR01 已实际解析依赖并跑通构建与测试**，版本串来自真实命令输出
+- `CANDIDATE_LINE`：候选版本**线**，精确版本待负责 PR 记录
+- `TBD`：连候选线都未确定，必须由负责 PR 调查后填写
+
+> **PR01 的验证边界**：运行时、框架、基础设施镜像已在本机实测锁定（§1）。
+> **Stripe 相关版本与测试账户能力仍全部未验证**（§2、§3），归属 PR05。
 >
-> 下表中**没有一项**是"已验证"。所有条目只有三种来源：
-> - `BASELINE`：由 PRD/路线图直接规定的工程基线（如 Java 21）
-> - `CANDIDATE_LINE`：候选版本**线**（主版本系列），精确版本由 PR01 实际解析依赖后记录
-> - `TBD`：连候选线都未确定，必须由负责 PR 调查后填写
->
-> **禁止**在本文件写入"最新版本"字样。"最新"不是版本号，且会随时间失效。
+> **禁止**在本文件写入"最新版本"字样——"最新"不是版本号，且会随时间失效。
 > **禁止**为测试账户能力预填 `PASS` 或"支持"。
+
+### PR01 验证环境
+
+| 项 | 值 |
+|---|---|
+| 日期 | 2026-09-11 |
+| 宿主 | macOS（Darwin 22.6.0）、arm64 |
+| JDK | Amazon Corretto `21.0.12.9.1`（`openjdk version "21.0.12.1" 2026-08-18 LTS`） |
+| Maven | `3.9.16`（经 Maven Wrapper `only-script` 模式自举） |
+| Docker | Server `27.4.0`；Compose `v2.31.0-desktop.2` |
+| 构建结果 | `./mvnw -B verify` → **BUILD SUCCESS** |
+| 测试结果 | 单元/上下文 14 项 + 集成 6 项 = **20 项全部通过，0 失败** |
+
+> JDK 采用官方 tarball 解压到用户目录（`~/.jdks/`）的方式安装，
+> 不改动系统默认 JDK，也不需要 sudo。
 
 ## 1. 运行时与框架
 
-| 组件 | 候选 | 来源 | 状态 | 验证 PR | 备注 |
+| 组件 | 锁定版本 | 来源 | 状态 | 证据 | 备注 |
 |---|---|---|---|---|---|
-| Java | **21（LTS）** | `BASELINE`（PRD §3.4、路线图 §1） | 已冻结为基线，**具体发行版与补丁号待定** | PR01 | 需记录发行版（Temurin / Corretto / Zulu 等）与完整版本串 |
-| Spring Boot | 3.x 线 | `CANDIDATE_LINE` | 待验证 | PR01 | 精确版本由 PR01 解析依赖树后锁定；须与 Java 21 兼容 |
-| Maven Wrapper | 随 PR01 生成 | `BASELINE` | 待验证 | PR01 | 必须同时提供 `mvnw` 与 `mvnw.cmd`（Windows/Unix） |
-| PostgreSQL | 16.x 线 | `CANDIDATE_LINE` | 待验证 | PR01 | 需支持 `DEFERRABLE INITIALLY DEFERRED` 约束触发器、`num_nonnulls()`、`gen_random_uuid()` |
-| Flyway | 10.x 或 11.x 线 | `CANDIDATE_LINE` | 待验证 | PR01 | 须与所选 PostgreSQL 主版本兼容；迁移角色与运行角色分离 |
-| Apache Kafka | 3.x 线 | `CANDIDATE_LINE` | 待验证 | PR01 | 仅作消息传递，**不担任账本** |
-| Redis | 7.x 线 | `CANDIDATE_LINE` | 待验证 | PR01 | 仅缓存与限流，**不是**资金或幂等正确性依据 |
-| Testcontainers | `TBD` | — | 待验证 | PR01 | 真实 PostgreSQL / Kafka 集成测试所需 |
-| 属性测试库 | jqwik（候选） | `CANDIDATE_LINE` | 待验证 | PR01 / PR18 | 验收 §7.1 记为"候选工具"，版本在 PR01 固定 |
+| Java | **Corretto 21.0.12.9.1**（`21.0.12.1+9-LTS`） | `BASELINE` + `LOCKED` | ✅ 已验证 | `java -version`；20 项测试通过 | 基线为 Java 21；本机发行版为 Amazon Corretto |
+| Maven | **3.9.16** | `LOCKED` | ✅ 已验证 | `./mvnw -N help:evaluate` → `3.9.16` | 经 Wrapper 自举，无需预装 |
+| Maven Wrapper | **3.3.4**（`only-script`） | `LOCKED` | ✅ 已验证 | `mvnw` + `mvnw.cmd` 均已交付 | **仓库内不含 jar 二进制** |
+| Spring Boot | **3.5.16** | `LOCKED` | ✅ 已验证 | 上下文加载成功；Tomcat 10.1.55 | `spring-boot-starter-parent` |
+| PostgreSQL（服务端） | **16.14**（镜像 `postgres:16`） | `LOCKED` | ✅ 已验证 | Flyway 日志 `(PostgreSQL 16.14)`；Compose healthy | 支持 `DEFERRABLE` 约束触发器、`num_nonnulls()`、`gen_random_uuid()`（PR03 将实际使用） |
+| PostgreSQL JDBC | **42.7.13** | `LOCKED` | ✅ 已验证 | 集成测试连接成功 | `runtime` scope |
+| Flyway | **11.20.3** | `LOCKED` | ✅ 已验证 | 空库迁移 + 二次迁移幂等均通过 | `flyway-core` + `flyway-database-postgresql` |
+| Apache Kafka | **3.9.0**（镜像 `apache/kafka:3.9.0`） | `LOCKED`（基础设施） | ✅ 容器 healthy | `docker compose ps` | **客户端未接入**，PR09 引入 `spring-kafka` |
+| Redis | **7-alpine** | `LOCKED`（基础设施） | ✅ 容器 healthy | `docker compose ps` | **客户端未接入**，PR07 引入 |
+| Testcontainers | **1.21.4** | `LOCKED` | ✅ 已验证 | 3 个 IT 均用一次性容器跑通 | 仅 `test` scope |
+| 属性测试库 | jqwik | `CANDIDATE_LINE` | ⏳ 待验证 | — | PR18 才实际引入，届时锁定版本 |
 
-**PR01 必须记录的内容**：实际解析到的完整版本串、依赖树冲突与解决方式、锁定方式（`dependencyManagement` / BOM）、以及 `mvn -v` / `java -version` / 容器镜像 tag 的真实输出。
+### 1.1 刻意未引入的依赖
+
+为避免「未接通的组件」与启动期无谓的连接尝试，以下依赖 PR01 **不引入**：
+
+| 依赖 | 引入 PR | 理由 |
+|---|---|---|
+| `spring-kafka` | PR09 | Outbox / 消费者接线时才需要 |
+| `spring-boot-starter-data-redis` | PR07 | 限流 / 缓存时才需要 |
+| `stripe-java` | PR05 | 真实适配器时才需要 |
+
+基础设施（Kafka / Redis 容器）已在 Compose 中就绪，后续 PR 无需改动基础设施即可接入。
+
+### 1.2 依赖解析说明
+
+所有版本由 PR01 查询 Maven Central 的 `maven-metadata.xml` 实际获得，并经 `./mvnw -B verify` 跑通。
+未出现需要手工干预的依赖树冲突；第三方版本除显式声明的四个属性
+（`flyway.version`、`postgresql.version`、`testcontainers.version` 与父 POM）外，
+均由 `spring-boot-starter-parent` 的 BOM 统一管理。
 
 ## 2. Stripe 相关
 
@@ -95,7 +132,7 @@
 
 | # | 待验证项 | 负责 PR | 阻塞什么 |
 |---|---|---|---|
-| V1 | 全部运行时/框架精确版本 | PR01 | 工程门槛；所有后续 AC |
+| ~~V1~~ | ~~全部运行时/框架精确版本~~ | ~~PR01~~ | **✅ 已完成（2026-09-11），见 §1** |
 | V2 | `stripe-java` + Stripe API 版本冻结 | PR05 | AC-V1-05、06、07 |
 | V3 | 幂等键实际保留窗口 | PR05 | AC-V1-09 的真实契约部分 |
 | V4 | Checkout create/query/expire 实测 | PR05 | AC-V1-05、07 |

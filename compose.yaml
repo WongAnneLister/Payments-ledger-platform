@@ -1,0 +1,86 @@
+# 本地开发基础设施（PR01）
+#
+# 隔离性：所有卷都显式命名并带项目前缀，不复用宿主机已有数据目录。
+# `docker compose down` 不会删除卷；确需清理用 `docker compose down -v`
+# （只影响本项目的命名卷）。
+#
+# 启动：  docker compose up -d
+# 健康：  docker compose ps          （等待全部 healthy）
+# 停止：  docker compose down
+
+name: payments-ledger-platform
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: pl-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-payments_ledger}
+      # 容器超级用户仅用于本地初始化；应用与迁移使用受限角色，
+      # 角色分离方案见 docs/runbook/database-roles.md
+      POSTGRES_USER: ${DB_SUPERUSER:-postgres}
+      POSTGRES_PASSWORD: ${DB_SUPERUSER_PASSWORD:-postgres}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pl-postgres-data:/var/lib/postgresql/data
+      - ./scripts/db/init-roles.sql:/docker-entrypoint-initdb.d/10-init-roles.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_SUPERUSER:-postgres} -d ${DB_NAME:-payments_ledger}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    container_name: pl-redis
+    # Redis 只承担可重建的缓存与限流，不是资金或幂等正确性的依据（ADR-0001）
+    command: ["redis-server", "--appendonly", "no", "--save", ""]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+  kafka:
+    image: apache/kafka:3.9.0
+    container_name: pl-kafka
+    # KRaft 单节点，仅用于本地开发。Kafka 负责传递消息，不担任账本。
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      # 监听器用空主机名（绑定全部网卡）。不要写 0.0.0.0：
+      # 它会被带进 advertised.listeners，而 Kafka 拒绝不可路由的元地址。
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,PLAINTEXT_HOST://:29092
+      # 容器内用服务名互访；宿主机走 PLAINTEXT_HOST
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:${KAFKA_PORT:-9092}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      CLUSTER_ID: pl-local-cluster-00001
+    ports:
+      - "${KAFKA_PORT:-9092}:29092"
+    volumes:
+      - pl-kafka-data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 20s
+
+volumes:
+  pl-postgres-data:
+    name: pl-postgres-data
+  pl-kafka-data:
+    name: pl-kafka-data

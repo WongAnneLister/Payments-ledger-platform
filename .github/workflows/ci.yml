@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # 运行角色、版本与环境条件在日志中固定记录，便于把测试结论追溯到具体环境
+  JAVA_VERSION: '21'
+  JAVA_DISTRIBUTION: 'corretto'
+
+jobs:
+  build:
+    name: Build and test (JDK ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ['21']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: Record environment
+        run: |
+          echo "commit=${GITHUB_SHA}"
+          java -version
+          ./mvnw -v
+          docker version --format '{{.Server.Version}}'
+
+      - name: Verify Maven Wrapper is usable
+        run: ./mvnw -B -N help:evaluate -Dexpression=maven.version -DforceStdout -q
+
+      # verify 会依次执行单元/上下文测试（surefire）与集成测试（failsafe）。
+      # 集成测试由 Testcontainers 启动一次性 PostgreSQL 容器，
+      # 使用唯一命名的新库，从不触碰已有数据库。
+      - name: Build, test and integration test
+        run: ./mvnw -B verify
+
+      - name: Whitespace and diff check
+        run: git diff --check
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports-jdk${{ matrix.java }}
+          path: |
+            target/surefire-reports/**
+            target/failsafe-reports/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  docs:
+    name: Contract and docs checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PyYAML
+        run: pip install --quiet pyyaml
+
+      # PR00 冻结的契约必须始终可解析；首批 schema 不得退化为占位
+      - name: Validate OpenAPI parses and refs resolve
+        run: python scripts/ci/check_openapi.py
+
+      - name: Validate relative documentation links
+        run: python scripts/ci/check_doc_links.py
