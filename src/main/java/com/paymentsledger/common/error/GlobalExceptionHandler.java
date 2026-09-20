@@ -56,6 +56,21 @@ public class GlobalExceptionHandler {
                 .body(ApiError.of(code, "Resource not found in caller scope", RequestContext.currentRequestId()));
     }
 
+    @ExceptionHandler(org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleInvalidParameter() {
+        ErrorCode code = ErrorCode.VALIDATION_ERROR;
+        return ResponseEntity.status(code.httpStatus())
+                .body(ApiError.of(code, "Invalid request parameter", RequestContext.currentRequestId()));
+    }
+
+    @ExceptionHandler({org.springframework.dao.DataAccessException.class,
+            org.springframework.transaction.TransactionException.class})
+    public ResponseEntity<ApiError> handlePersistenceUnavailable() {
+        ErrorCode code = ErrorCode.SERVICE_UNAVAILABLE;
+        return ResponseEntity.status(code.httpStatus())
+                .body(ApiError.of(code, "Persistence service unavailable", RequestContext.currentRequestId()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleUnexpected(Exception ex) {
         String requestId = RequestContext.currentRequestId();

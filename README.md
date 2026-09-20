@@ -2,7 +2,8 @@
 
 Stripe 支付网关与复式账本。模块化单体，API / Worker 分角色运行，共享同一个 PostgreSQL 事务域。
 
-**当前状态：PR01 工程骨架。** 没有业务功能，没有 Stripe 调用，只有健康检查。
+**当前状态：PR02 身份与账户范围。** 已实现应用/运营独立认证、范围隔离、受控价格读取和测试环境启动校验。
+尚未实现支付、复式账本、Stripe 调用或页面。PR02 演示与验证见 [身份配置运行手册](docs/runbook/identity-and-fixtures.md)。
 设计基线见 [`docs/`](docs/)；本 README 只讲怎么跑起来。
 
 > 本项目完全从零实现，只使用 Stripe 测试环境。`livemode=true` 的配置会在**启动时**被拒绝。
@@ -85,7 +86,17 @@ curl -s localhost:8081/actuator/health    # Worker 角色
 # 期望：{"status":"UP"}
 ```
 
-`GET /actuator/health` 是 PR01 **唯一**对外暴露的接口。
+健康检查公开；PR02 新增以下 API 角色只读入口：
+
+| 接口 | 权限 |
+|---|---|
+| `GET /v1/identity` | 有效业务应用 Bearer |
+| `GET /v1/applications/{id}` | 只能读取当前凭据绑定的应用 |
+| `GET /v1/prices/{id}` | `payments:read` + 同组织/环境 + 已授权币种 |
+| `GET /ops/identity` | 独立 OpsBearer |
+
+业务凭据格式为 `app_<credential-uuid>.<43字符随机secret>`，运营凭据使用 `ops_` 前缀。
+默认没有凭据或种子数据。开启本地 fixture 的方法见[运行手册](docs/runbook/identity-and-fixtures.md)。
 
 ## 运行角色
 
@@ -121,6 +132,7 @@ curl -s localhost:8081/actuator/health    # Worker 角色
 ## 数据库角色分离
 
 应用运行角色与迁移角色是两个不同的数据库角色。账本表将保持 INSERT-only。
+PR02 身份与配置表对默认运行角色 `payments_app` 仅授予 SELECT；配置写入使用受控迁移角色。
 详见 [docs/runbook/database-roles.md](docs/runbook/database-roles.md)。
 
 ## 文档

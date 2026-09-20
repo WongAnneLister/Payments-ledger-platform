@@ -21,6 +21,10 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 SPEC = REPO_ROOT / "docs" / "contracts" / "openapi.yaml"
 
 BATCH_ONE = [
+    ("/v1/identity", "get", False),
+    ("/v1/applications/{id}", "get", False),
+    ("/v1/prices/{id}", "get", False),
+    ("/ops/identity", "get", False),
     ("/v1/payments", "post", True),
     ("/v1/payments/{paymentId}", "get", False),
     ("/v1/payments/{paymentId}/cancel", "post", False),
@@ -30,6 +34,9 @@ BATCH_ONE = [
 ]
 
 NON_EMPTY_SCHEMAS = [
+    "TenantContext",
+    "OpsIdentity",
+    "ControlledPrice",
     "PaymentCreateRequest",
     "PaymentResource",
     "RefundCreateRequest",

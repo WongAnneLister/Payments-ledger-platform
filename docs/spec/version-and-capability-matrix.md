@@ -73,7 +73,7 @@
 
 | 项 | 候选 | 状态 | 验证 PR | 说明 |
 |---|---|---|---|---|
-| `stripe-java` SDK 版本 | `TBD` | **待验证** | PR01 引入 / PR05 冻结 | 不预填版本号。PR05 必须记录实际生效版本 |
+| `stripe-java` SDK 版本 | `TBD` | **待验证** | PR05 引入并冻结 | 不预填版本号。PR05 必须记录实际生效版本 |
 | Stripe API 版本（pinned） | `TBD` | **待验证** | PR05 | 必须是**显式固定**的日期版本串，不使用账户默认版本随时间漂移 |
 | Webhook endpoint API 版本 | `TBD` | **待验证** | PR05 | 可能与 SDK 请求版本不同，需分别记录 |
 | 幂等键实际保留窗口 | `TBD` | **待验证** | PR05 | 官方语义已读（[S2](https://docs.stripe.com/api/idempotent_requests)）；**在实测前按"不可依赖永久去重"设计** |

@@ -2,9 +2,9 @@ openapi: 3.0.3
 
 info:
   title: Stripe Payment Gateway & Double-Entry Ledger API
-  version: 0.1.0-PR00
+  version: 0.1.0-PR02
   description: |
-    首批业务接口的完整契约（PR00 冻结设计，尚未实施）。
+    PR02 已实现身份、应用与受控价格只读接口；支付、退款、回调及运营业务接口仍为后续 PR 的冻结设计。
 
     范围说明：
     - `/v1/**` 为业务应用接口，身份来自应用凭据解析出的 TenantContext。
@@ -28,6 +28,8 @@ servers:
     description: 本地开发（API 运行角色）
 
 tags:
+  - name: identity
+    description: 身份、账户范围与受控配置只读入口（PR02）
   - name: payments
     description: 支付创建、查询与取消（PR06）
   - name: refunds
@@ -43,6 +45,94 @@ security:
   - ApplicationBearer: []
 
 paths:
+
+  /v1/identity:
+    get:
+      tags: [identity]
+      summary: 当前业务应用可信身份（PR02）
+      operationId: getApplicationIdentity
+      security: [{ ApplicationBearer: [] }]
+      responses:
+        '200':
+          description: 仅由已验证凭据生成的上下文；Cache-Control 为 no-store
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TenantContext' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /v1/applications/{id}:
+    get:
+      tags: [identity]
+      summary: 读取自身应用（PR02）
+      operationId: getOwnApplication
+      description: 仅允许当前凭据绑定的应用；跨组织、跨环境、同组织其他应用均返回 404。
+      security: [{ ApplicationBearer: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: 应用标识与代码
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, code]
+                properties:
+                  id: { type: string, format: uuid }
+                  code: { type: string }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /v1/prices/{id}:
+    get:
+      tags: [identity]
+      summary: 读取受控价格与分润政策 fixture（PR02）
+      operationId: getControlledPrice
+      description: 要求 payments:read、同组织/环境及已授权币种；价格与政策必须启用且处于有效期。币种未授权返回 422。
+      security: [{ ApplicationBearer: [] }]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: 服务端受控金额及单合作方政策版本，不代表已产生支付或分润
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ControlledPrice' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/UnprocessableEntity' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
+  /ops/identity:
+    get:
+      tags: [identity]
+      summary: 当前运营身份（PR02）
+      operationId: getOpsIdentity
+      security: [{ OpsBearer: [] }]
+      responses:
+        '200':
+          description: 独立运营身份；动作权限与审批接口在 PR16 实现
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OpsIdentity' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
 
   /v1/payments:
     post:
@@ -911,9 +1001,11 @@ components:
         请求体或 Header 中的归属字段一律不作为授权依据（AC-V1-01）。
         凭据只存安全摘要；`livemode=true` 的配置在**启动时**即被拒绝。
     OpsBearer:
-      type: http
-      scheme: bearer
+      type: apiKey
+      in: header
+      name: Authorization
       description: |
+        Header 格式：Authorization: OpsBearer ops_<credential-uuid>.<43字符随机secret>。
         运营身份凭据，与业务应用凭据分属不同表、不同 scope 命名空间，不可互相复用。
         角色：OPS_VIEWER / OPS_OPERATOR / OPS_REVIEWER / OPS_ADMIN / PARTNER_VIEWER。
         跨组织与跨环境访问默认拒绝。
@@ -1223,6 +1315,48 @@ components:
                 requestId: "req_01HZXB0000000000000018"
 
   schemas:
+
+    TenantContext:
+      type: object
+      required: [organizationId, environmentId, applicationId, allowedProviderAccountId, allowedCurrencies, livemode, grantedScopes]
+      properties:
+        organizationId: { type: string, format: uuid }
+        environmentId: { type: string, format: uuid }
+        applicationId: { type: string, format: uuid }
+        allowedProviderAccountId: { type: string, format: uuid }
+        allowedCurrencies:
+          type: array
+          uniqueItems: true
+          items: { type: string, pattern: '^[A-Z]{3}$' }
+        livemode: { type: boolean, enum: [false] }
+        grantedScopes:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: ['payments:read', 'payments:write', 'refunds:read', 'refunds:write'] }
+
+    OpsIdentity:
+      type: object
+      required: [identityId, organizationId, environmentId, role]
+      properties:
+        identityId: { type: string, format: uuid }
+        organizationId: { type: string, format: uuid }
+        environmentId: { type: string, format: uuid }
+        role: { type: string, enum: [OPS_VIEWER, OPS_OPERATOR, OPS_REVIEWER, OPS_ADMIN, PARTNER_VIEWER] }
+        partnerId: { type: string, format: uuid, description: 仅合作方身份返回 }
+
+    ControlledPrice:
+      type: object
+      required: [id, productRef, priceVersion, currency, minorUnitExponent, amountMinor, policyVersion, partnerRef, shareBasisPoints]
+      properties:
+        id: { type: string, format: uuid }
+        productRef: { type: string }
+        priceVersion: { type: integer, minimum: 1 }
+        currency: { type: string, pattern: '^[A-Z]{3}$' }
+        minorUnitExponent: { type: integer, minimum: 0, maximum: 4 }
+        amountMinor: { type: integer, format: int64, minimum: 1 }
+        policyVersion: { type: integer, minimum: 1 }
+        partnerRef: { type: string }
+        shareBasisPoints: { type: integer, minimum: 0, maximum: 10000 }
 
     ResourceId:
       type: string

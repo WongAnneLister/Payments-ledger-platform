@@ -59,7 +59,7 @@ class FlywayBaselineIT {
 
         // 2) 空库首次迁移
         MigrateResult first = flyway().migrate();
-        assertThat(first.migrationsExecuted).isEqualTo(1);
+        assertThat(first.migrationsExecuted).isEqualTo(2);
 
         // 3) 二次迁移：幂等，不再执行任何迁移（等价于「第二次启动」）
         MigrateResult second = flyway().migrate();

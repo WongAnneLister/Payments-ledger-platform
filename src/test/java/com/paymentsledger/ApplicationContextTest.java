@@ -27,6 +27,9 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("api")
 class ApplicationContextTest {
 
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    private com.paymentsledger.identity.IdentityRepository identityRepository;
+
     @Autowired
     private ApplicationContext context;
 
@@ -45,7 +48,7 @@ class ApplicationContextTest {
     }
 
     @Test
-    @DisplayName("PR01 不创建任何业务服务 bean")
+    @DisplayName("PR02 不提前实现支付、退款或账本服务")
     void noBusinessBeansYet() {
         // 骨架阶段的显式断言：避免「悄悄提前实现未来模块」
         assertThat(context.getBeanDefinitionNames())

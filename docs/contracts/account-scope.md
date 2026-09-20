@@ -1,6 +1,6 @@
 # AccountScope 契约：可信绑定、唯一键与外键规则
 
-版本：PR00 · 日期：2026-09-10 · 状态：冻结设计，未实施
+版本：PR02 · 日期：2026-09-20 · 状态：身份与配置部分已实施；资金对象约束按后续 PR 落地
 
 关联：[PRD §14.2](../product/payment-platform-prd.md) · [需求映射](../spec/requirements-map.md) · [OpenAPI](openapi.yaml) · [Provider 端口](provider.md) · [账本科目](../ledger/accounts.md) · [ADR-0006 认证边界](../adr/0006-authentication-and-tenant-boundary.md)
 

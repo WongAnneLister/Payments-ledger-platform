@@ -56,12 +56,12 @@ class ApiRoleHealthIT {
     }
 
     @Test
-    @DisplayName("未实现的业务路径返回统一错误体，且带 code/retryable/requestId")
+    @DisplayName("未认证业务路径先返回 401，且带 code/retryable/requestId")
     void unknownPathReturnsContractError() {
         ResponseEntity<String> response = restTemplate.getForEntity("/v1/payments/does-not-exist", String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(response.getBody())
-                .contains("\"code\":\"NOT_FOUND\"")
+                .contains("\"code\":\"UNAUTHORIZED\"")
                 .contains("\"retryable\":false")
                 .contains("\"requestId\":");
         assertThat(response.getHeaders().getFirst("X-Request-Id")).isNotBlank();

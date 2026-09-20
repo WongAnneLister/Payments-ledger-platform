@@ -29,6 +29,11 @@
   </properties>
 
   <dependencies>
+    <!-- Only password hashing; request authentication remains explicit in identity. -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-crypto</artifactId>
+    </dependency>
     <!-- API 运行角色：HTTP 入口。Worker 角色同样启用 web 以提供受控健康检查。 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
