@@ -1,6 +1,6 @@
 # Provider 端口契约
 
-版本：PR00 · 日期：2026-09-10 · 状态：冻结设计，未实施
+版本：PR04 · 日期：2026-09-21 · 状态：端口与持久 Fake 已实施；真实 Stripe 适配待 PR05
 
 关联：[PRD §2/§5/§14](../product/payment-platform-prd.md) · [AccountScope](account-scope.md) · [操作状态机](../state-machines/provider-operation.md) · [版本与能力矩阵](../spec/version-and-capability-matrix.md) · [ADR-0003 未知结果](../adr/0003-provider-unknown-result.md)
 
@@ -38,7 +38,7 @@
 ```java
 record ProviderCallResult<T>(
     ProviderCallClassification classification,  // §5
-    T payload,                                  // 成功时的事实；否则 null
+    T payload,                                  // SUCCESS/AUTH_REQUIRED 可携带事实；其他分类为 null
     ProviderEvidence evidence                   // 始终存在，即使失败
 ) {}
 
@@ -252,3 +252,7 @@ UNKNOWN 结果
 | Webhook 原始字节验签 | 真实接收 fixture + 本地签名 fixture **分别标注来源** | 不得把本地伪造签名说成 Stripe 实测 |
 
 PR05 的报告必须保存：冻结版本、运行时间、脱敏对象引用、**实测/fixture 矩阵**。`fixture-only` 不能冒充真实联调（PRD §18、路线图 §4.1）。
+
+## 8. PR04 实现与使用
+
+端口与 DTO 位于 `com.paymentsledger.provider`，Fake 位于 `provider.fake`。有限窗口、持久故障脚本、独立效果计数及 fixture 使用方式见[模拟器运行手册](../runbook/provider-simulator.md)。API 版本标记为 `FAKE-PR04-v1`，来源为 `PROVIDER_SIMULATOR`；不代表真实 Stripe 契约已通过。

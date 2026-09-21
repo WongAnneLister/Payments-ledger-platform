@@ -1,0 +1,179 @@
+{
+  "sourceMode" : "PROVIDER_SIMULATOR",
+  "ruleVersion" : "PR04-1",
+  "seed" : 42,
+  "executionStatus" : "PASS",
+  "dataCompleteness" : "NOT_APPLICABLE",
+  "initialTime" : "2026-01-01T00:00:00Z",
+  "finalTime" : "2026-01-01T00:10:00Z",
+  "retention" : "PT10M",
+  "scopeExplanation" : "Local fixture, no real Stripe account",
+  "assertion" : "Within-window replay refunds once; expired key can produce a second independent refund effect",
+  "scope" : {
+    "organizationId" : "00000000-0000-0000-0000-000000000001",
+    "environmentId" : "00000000-0000-0000-0000-000000000002",
+    "providerAccountId" : "00000000-0000-0000-0000-000000000003",
+    "livemode" : false
+  },
+  "counters" : {
+    "requestCount" : 6,
+    "acceptedCount" : 3,
+    "sessionCreatedCount" : 1,
+    "paymentEffectCount" : 1,
+    "refundEffectCount" : 2
+  },
+  "effects" : [ {
+    "type" : "PAYMENT",
+    "objectId" : "ch_fake_aa2c1db40ec8343bbd472d7aab2e0fa2",
+    "amountMinor" : 10000,
+    "currency" : "USD",
+    "occurredAt" : "2026-01-01T00:00:00Z"
+  }, {
+    "type" : "REFUND",
+    "objectId" : "re_fake_d043e3cc10e73311b2ac0f3e59be97e2",
+    "amountMinor" : 1000,
+    "currency" : "USD",
+    "occurredAt" : "2026-01-01T00:00:00Z"
+  }, {
+    "type" : "REFUND",
+    "objectId" : "re_fake_f838a32457e339fd85e56c40ee6da7be",
+    "amountMinor" : 1000,
+    "currency" : "USD",
+    "occurredAt" : "2026-01-01T00:10:00Z"
+  } ],
+  "calls" : [ {
+    "classification" : "TIMEOUT_UNKNOWN",
+    "payload" : null,
+    "evidence" : {
+      "providerRequestId" : "req_fake_d9e9cb3f044e370dbe20ebe378558e70",
+      "idempotencyKeyUsed" : "checkout:1",
+      "requestedAt" : "2026-01-01T00:00:00Z",
+      "respondedAt" : null,
+      "httpStatus" : null,
+      "providerErrorCode" : "fake_timeout_unknown",
+      "rawDigest" : "8d025b35166ab5c8822655723ddb0db7be04072c88bdb96d487a89fd5781efb1",
+      "apiVersion" : "FAKE-PR04-v1"
+    },
+    "operation" : "CREATE_SESSION",
+    "target" : "checkout:1",
+    "replayed" : false
+  }, {
+    "classification" : "SUCCESS",
+    "payload" : {
+      "sessionId" : "cs_fake_ca1fa971623b36b19d44ef399cc3a7a8",
+      "status" : "OPEN",
+      "hostedUrl" : "https://checkout.fake.invalid/cs_fake_ca1fa971623b36b19d44ef399cc3a7a8",
+      "paymentIntentId" : "pi_fake_04fb0e756a863d6f96b14c17ea48b0da",
+      "paymentStatus" : "unpaid",
+      "expiresAt" : "2026-01-01T00:30:00Z",
+      "metadata" : { }
+    },
+    "evidence" : {
+      "providerRequestId" : "req_fake_abd308ec86f4338db290b3a402d996d2",
+      "idempotencyKeyUsed" : "checkout:1",
+      "requestedAt" : "2026-01-01T00:00:00Z",
+      "respondedAt" : "2026-01-01T00:00:00Z",
+      "httpStatus" : 200,
+      "providerErrorCode" : null,
+      "rawDigest" : "1989eada1d2740e12c31791e848c98e97ff279ceccfc6c43f620094b3fe66e14",
+      "apiVersion" : "FAKE-PR04-v1"
+    },
+    "operation" : "CREATE_SESSION",
+    "target" : "checkout:1",
+    "replayed" : true
+  }, {
+    "classification" : "TIMEOUT_UNKNOWN",
+    "payload" : null,
+    "evidence" : {
+      "providerRequestId" : "req_fake_3db70d5bb0ba37e5b8e0c234df4e3677",
+      "idempotencyKeyUsed" : "refund:1",
+      "requestedAt" : "2026-01-01T00:00:00Z",
+      "respondedAt" : null,
+      "httpStatus" : null,
+      "providerErrorCode" : "fake_timeout_unknown",
+      "rawDigest" : "8d025b35166ab5c8822655723ddb0db7be04072c88bdb96d487a89fd5781efb1",
+      "apiVersion" : "FAKE-PR04-v1"
+    },
+    "operation" : "CREATE_REFUND",
+    "target" : "refund:1",
+    "replayed" : false
+  }, {
+    "classification" : "SUCCESS",
+    "payload" : {
+      "refundId" : "re_fake_d043e3cc10e73311b2ac0f3e59be97e2",
+      "chargeId" : "ch_fake_aa2c1db40ec8343bbd472d7aab2e0fa2",
+      "status" : "pending",
+      "amountMinor" : 1000,
+      "currency" : "USD",
+      "balanceTransactionId" : null,
+      "failureReason" : null,
+      "failureBalanceTransactionId" : null,
+      "createdAt" : "2026-01-01T00:00:00Z"
+    },
+    "evidence" : {
+      "providerRequestId" : "req_fake_787cac7dd8603de1985705886fe3e067",
+      "idempotencyKeyUsed" : "refund:1",
+      "requestedAt" : "2026-01-01T00:00:00Z",
+      "respondedAt" : "2026-01-01T00:00:00Z",
+      "httpStatus" : 200,
+      "providerErrorCode" : null,
+      "rawDigest" : "10841eb2a2c8525a7f6ed75d8a235d1c08444394843c212dae57edb8f18f8495",
+      "apiVersion" : "FAKE-PR04-v1"
+    },
+    "operation" : "CREATE_REFUND",
+    "target" : "refund:1",
+    "replayed" : true
+  }, {
+    "classification" : "SUCCESS",
+    "payload" : {
+      "refundId" : "re_fake_d043e3cc10e73311b2ac0f3e59be97e2",
+      "chargeId" : "ch_fake_aa2c1db40ec8343bbd472d7aab2e0fa2",
+      "status" : "pending",
+      "amountMinor" : 1000,
+      "currency" : "USD",
+      "balanceTransactionId" : null,
+      "failureReason" : null,
+      "failureBalanceTransactionId" : null,
+      "createdAt" : "2026-01-01T00:00:00Z"
+    },
+    "evidence" : {
+      "providerRequestId" : "req_fake_1025a3172c4c34349de4f9165a047a03",
+      "idempotencyKeyUsed" : "refund:1",
+      "requestedAt" : "2026-01-01T00:00:00Z",
+      "respondedAt" : "2026-01-01T00:00:00Z",
+      "httpStatus" : 200,
+      "providerErrorCode" : null,
+      "rawDigest" : "10841eb2a2c8525a7f6ed75d8a235d1c08444394843c212dae57edb8f18f8495",
+      "apiVersion" : "FAKE-PR04-v1"
+    },
+    "operation" : "CREATE_REFUND",
+    "target" : "refund:1",
+    "replayed" : true
+  }, {
+    "classification" : "SUCCESS",
+    "payload" : {
+      "refundId" : "re_fake_f838a32457e339fd85e56c40ee6da7be",
+      "chargeId" : "ch_fake_aa2c1db40ec8343bbd472d7aab2e0fa2",
+      "status" : "pending",
+      "amountMinor" : 1000,
+      "currency" : "USD",
+      "balanceTransactionId" : null,
+      "failureReason" : null,
+      "failureBalanceTransactionId" : null,
+      "createdAt" : "2026-01-01T00:10:00Z"
+    },
+    "evidence" : {
+      "providerRequestId" : "req_fake_c5fbcf5c08ec3bd39b21b66df2e900c1",
+      "idempotencyKeyUsed" : "refund:1",
+      "requestedAt" : "2026-01-01T00:10:00Z",
+      "respondedAt" : "2026-01-01T00:10:00Z",
+      "httpStatus" : 200,
+      "providerErrorCode" : null,
+      "rawDigest" : "717db793732b7774a630e525718d5b23d2a9328c75bd47ea0137cc0210e48744",
+      "apiVersion" : "FAKE-PR04-v1"
+    },
+    "operation" : "CREATE_REFUND",
+    "target" : "refund:1",
+    "replayed" : false
+  } ]
+}

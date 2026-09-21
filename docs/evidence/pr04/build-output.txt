@@ -1,0 +1,379 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- clean:3.4.1:clean (default-clean) @ payments-ledger-platform ---
+[INFO] Deleting /Users/anne_lister/proj/Payments-ledger-platform/target
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 67 source files with javac [debug parameters release 21] to target/classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ???????????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ??????, ??? -Xlint:deprecation ?????
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 21 source files with javac [debug parameters release 21] to target/test-classes
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.ledger.LedgerRulesTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.145 s -- in com.paymentsledger.ledger.LedgerRulesTest
+[INFO] Running com.paymentsledger.identity.AuthenticationFilterTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+22:28:30.308 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+22:28:30.698 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+22:28:31.045 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+22:28:31.358 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=WORKER
+22:28:31.671 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+22:28:32.010 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.778 s -- in com.paymentsledger.identity.AuthenticationFilterTest
+[INFO] Running com.paymentsledger.identity.TestModeGuardTest
+22:28:32.284 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live mode is forbidden
+22:28:32.324 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live provider credentials are forbidden
+22:28:32.330 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live provider credentials are forbidden
+22:28:32.339 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live configuration is forbidden
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.323 s -- in com.paymentsledger.identity.TestModeGuardTest
+[INFO] Running com.paymentsledger.identity.IdentityRulesTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.paymentsledger.identity.IdentityRulesTest
+[INFO] Running com.paymentsledger.ApplicationContextTest
+22:28:32.398 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.paymentsledger.ApplicationContextTest]: ApplicationContextTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:28:32.536 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ApplicationContextTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-21T22:28:32.973+08:00 INFO  [-] c.p.ApplicationContextTest - Starting ApplicationContextTest using Java 21.0.12.1 with PID 56134 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform)
+2026-09-21T22:28:32.974+08:00 INFO  [-] c.p.ApplicationContextTest - The following 1 profile is active: "api"
+2026-09-21T22:28:34.227+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-21T22:28:35.001+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-21T22:28:35.034+08:00 INFO  [-] c.p.ApplicationContextTest - Started ApplicationContextTest in 2.357 seconds (process running for 6.264)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.790 s -- in com.paymentsledger.ApplicationContextTest
+[INFO] Running com.paymentsledger.config.RunRoleConfigTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.paymentsledger.config.RunRoleConfigTest
+[INFO] Running com.paymentsledger.provider.ProviderModelsTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.016 s -- in com.paymentsledger.provider.ProviderModelsTest
+[INFO] Running com.paymentsledger.provider.fake.FakeProviderConfigurationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.035 s -- in com.paymentsledger.provider.fake.FakeProviderConfigurationTest
+[INFO] Running com.paymentsledger.provider.fake.FakeStateStoreTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.894 s -- in com.paymentsledger.provider.fake.FakeStateStoreTest
+[INFO] Running com.paymentsledger.provider.fake.FakeStripeProviderTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.799 s -- in com.paymentsledger.provider.fake.FakeStripeProviderTest
+[INFO] Running com.paymentsledger.provider.fake.FakeEvidenceTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.572 s -- in com.paymentsledger.provider.fake.FakeEvidenceTest
+[INFO] Running com.paymentsledger.provider.fake.ProviderSimulatorReplayTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.090 s -- in com.paymentsledger.provider.fake.ProviderSimulatorReplayTest
+[INFO] Running com.paymentsledger.common.request.RequestIdFilterTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.paymentsledger.common.request.RequestIdFilterTest
+[INFO] Running com.paymentsledger.common.error.ErrorContractTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.paymentsledger.common.error.ErrorContractTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 73, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- jar:3.4.2:jar (default-jar) @ payments-ledger-platform ---
+[INFO] Building jar: /Users/anne_lister/proj/Payments-ledger-platform/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- spring-boot:3.5.16:repackage (repackage) @ payments-ledger-platform ---
+[INFO] Replacing main artifact /Users/anne_lister/proj/Payments-ledger-platform/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /Users/anne_lister/proj/Payments-ledger-platform/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar.original
+[INFO]
+[INFO] --- failsafe:3.5.6:integration-test (default) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.ledger.LedgerDatabaseIT
+22:28:39.497 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+22:28:39.499 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+22:28:39.524 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+22:28:39.828 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+22:28:39.829 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+22:28:39.854 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+22:28:39.891 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+22:28:39.974 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+22:28:40.096 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: edcd8336ae78db78adb19825df681665185e36111bb62406006ea36be40c74fd
+22:28:40.897 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT1.006105S
+22:28:40.929 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+22:28:40.929 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+22:28:40.930 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+22:28:40.930 [main] INFO tc.postgres:16-alpine -- Creating container for image: postgres:16-alpine
+22:28:40.983 [main] INFO tc.postgres:16-alpine -- Container postgres:16-alpine is starting: 474bce5499b5c4d2ed517fc62705861c1c37a2cd3f4f8225a84ec1153a017317
+22:28:43.170 [main] INFO tc.postgres:16-alpine -- Container postgres:16-alpine started in PT2.239652S
+22:28:43.171 [main] INFO tc.postgres:16-alpine -- Container is started (JDBC URL: jdbc:postgresql://localhost:59944/test?loggerLevel=OFF)
+22:28:43.469 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:59944/test?loggerLevel=OFF (PostgreSQL 16.15)
+22:28:43.545 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "public"."flyway_schema_history" does not exist yet
+22:28:43.547 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 3 migrations (execution time 00:00.021s)
+22:28:43.566 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "public"."flyway_schema_history" ...
+22:28:43.611 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "public": << Empty Schema >>
+22:28:43.620 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "public" to version "1 - baseline"
+22:28:43.662 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "public" to version "2 - identity and scoped configuration"
+22:28:43.762 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "public" to version "3 - immutable ledger"
+22:28:43.862 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 3 migrations to schema "public", now at version v3 (execution time 00:00.166s)
+22:28:45.055 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:59944/ledger_upgrade?loggerLevel=OFF (PostgreSQL 16.15)
+22:28:45.070 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "public"."flyway_schema_history" does not exist yet
+22:28:45.071 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 3 migrations (execution time 00:00.003s)
+22:28:45.083 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "public"."flyway_schema_history" ...
+22:28:45.109 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "public": << Empty Schema >>
+22:28:45.112 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "public" to version "1 - baseline"
+22:28:45.152 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "public" to version "2 - identity and scoped configuration"
+22:28:45.209 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 2 migrations to schema "public", now at version v2 (execution time 00:00.076s)
+22:28:45.236 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:59944/ledger_upgrade?loggerLevel=OFF (PostgreSQL 16.15)
+22:28:45.254 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 3 migrations (execution time 00:00.009s)
+22:28:45.266 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "public": 2
+22:28:45.273 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "public" to version "3 - immutable ledger"
+22:28:45.327 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 1 migration to schema "public", now at version v3 (execution time 00:00.046s)
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.590 s -- in com.paymentsledger.ledger.LedgerDatabaseIT
+[INFO] Running com.paymentsledger.ledger.LedgerServiceIT
+22:28:46.048 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+22:28:46.150 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 0dc49b413a74432750b66178057974ea2c818c606b61e7b8e8d24b29c7f10910
+22:28:48.100 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT2.052132S
+22:28:48.101 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:60029/pr03_isolated_services?loggerLevel=OFF)
+22:28:48.117 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+22:28:48.157 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 39 ms.
+22:28:48.227 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.paymentsledger.ledger.LedgerServiceIT]: LedgerServiceIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:28:48.285 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ledger.LedgerServiceIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-21T22:28:48.535+08:00 INFO  [-] c.p.ledger.LedgerServiceIT - Starting LedgerServiceIT using Java 21.0.12.1 with PID 56226 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform)
+2026-09-21T22:28:48.536+08:00 INFO  [-] c.p.ledger.LedgerServiceIT - The following 1 profile is active: "api"
+2026-09-21T22:28:49.226+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-21T22:28:49.295+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:60029/pr03_isolated_services?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-21T22:28:49.313+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-21T22:28:49.314+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.005s)
+2026-09-21T22:28:49.328+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-21T22:28:49.356+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-21T22:28:49.360+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-21T22:28:49.364+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-21T22:28:49.388+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-21T22:28:49.453+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-21T22:28:49.502+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 3 migrations to schema "platform", now at version v3 (execution time 00:00.106s)
+2026-09-21T22:28:50.220+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-21T22:28:50.260+08:00 INFO  [-] c.p.ledger.LedgerServiceIT - Started LedgerServiceIT in 1.893 seconds (process running for 11.108)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.281 s -- in com.paymentsledger.ledger.LedgerServiceIT
+[INFO] Running com.paymentsledger.identity.IdentityIT
+2026-09-21T22:28:53.424+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-21T22:28:53.489+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 23e7d9c4764c4fd4ac98a87698d8f7d8a3ba701a8379b7b0859e6352ff4106ec
+2026-09-21T22:28:54.723+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.298943S
+2026-09-21T22:28:54.724+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:60293/pr02_isolated_identity?loggerLevel=OFF)
+2026-09-21T22:28:54.725+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-21T22:28:54.742+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 17 ms.
+2026-09-21T22:28:54.744+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.identity.IdentityIT]: IdentityIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-21T22:28:54.755+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.identity.IdentityIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-21T22:28:54.782+08:00 INFO  [-] c.paymentsledger.identity.IdentityIT - Starting IdentityIT using Java 21.0.12.1 with PID 56226 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform)
+2026-09-21T22:28:54.782+08:00 INFO  [-] c.paymentsledger.identity.IdentityIT - The following 1 profile is active: "api"
+2026-09-21T22:28:55.001+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-09-21T22:28:55.009+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-21T22:28:55.009+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-09-21T22:28:55.027+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-21T22:28:55.027+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 243 ms
+2026-09-21T22:28:55.061+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:60293/pr02_isolated_identity?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-21T22:28:55.070+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-21T22:28:55.070+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 3 migrations (execution time 00:00.002s)
+2026-09-21T22:28:55.077+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-21T22:28:55.112+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-21T22:28:55.115+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-21T22:28:55.116+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-21T22:28:55.133+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-21T22:28:55.177+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-21T22:28:55.209+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 3 migrations to schema "platform", now at version v3 (execution time 00:00.064s)
+2026-09-21T22:28:55.533+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-21T22:28:55.637+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-21T22:28:55.752+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 60307 (http) with context path '/'
+2026-09-21T22:28:55.755+08:00 INFO  [-] c.paymentsledger.identity.IdentityIT - Started IdentityIT in 0.998 seconds (process running for 16.603)
+2026-09-21T22:28:55.966+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-21T22:28:55.966+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-09-21T22:28:55.967+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-09-21T22:28:56.382+08:00 WARN  [req_8f24ec0490804e08ab96305003b761c8] c.p.c.error.GlobalExceptionHandler - api_error code=CURRENCY_NOT_ENABLED status=422 retryable=false
+2026-09-21T22:28:56.772+08:00 WARN  [req_3225646e0db046bf90fda5117f12577f] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-09-21T22:28:57.003+08:00 WARN  [req_9a2ba36809a24214be8a0bced4329277] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-21T22:28:57.088+08:00 WARN  [req_1a8e03754a444e45b45c62fd24d1aa2e] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-21T22:28:57.184+08:00 WARN  [req_10236f01569547c1a6e271c78542b249] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-21T22:28:57.276+08:00 WARN  [req_3f1b322299e842f7bbcac33793dafd9b] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.05 s -- in com.paymentsledger.identity.IdentityIT
+[INFO] Running com.paymentsledger.ApiRoleHealthIT
+2026-09-21T22:29:05.391+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-21T22:29:05.521+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 03cf11b5372a0404d04ab09115c28b60c89f4396c326f335d3651d49dee33822
+2026-09-21T22:29:06.960+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.569022S
+2026-09-21T22:29:06.962+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:60397/pr01_isolated_api_role_check?loggerLevel=OFF)
+2026-09-21T22:29:06.973+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.ApiRoleHealthIT]: ApiRoleHealthIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-21T22:29:06.986+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ApiRoleHealthIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-21T22:29:07.020+08:00 INFO  [-] com.paymentsledger.ApiRoleHealthIT - Starting ApiRoleHealthIT using Java 21.0.12.1 with PID 56226 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform)
+2026-09-21T22:29:07.021+08:00 INFO  [-] com.paymentsledger.ApiRoleHealthIT - The following 1 profile is active: "api"
+2026-09-21T22:29:07.301+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-09-21T22:29:07.302+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-21T22:29:07.302+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-09-21T22:29:07.313+08:00 INFO  [-] o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-21T22:29:07.313+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 290 ms
+2026-09-21T22:29:07.374+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:60397/pr01_isolated_api_role_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-21T22:29:07.387+08:00 INFO  [-] o.f.c.internal.database.base.Schema - Creating schema "platform" ...
+2026-09-21T22:29:07.396+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-21T22:29:07.424+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": null
+2026-09-21T22:29:07.427+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-21T22:29:07.429+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-21T22:29:07.445+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-21T22:29:07.507+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-21T22:29:07.567+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 3 migrations to schema "platform", now at version v3 (execution time 00:00.114s)
+2026-09-21T22:29:07.904+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-21T22:29:07.958+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-21T22:29:07.966+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 60409 (http) with context path '/'
+2026-09-21T22:29:07.970+08:00 INFO  [-] com.paymentsledger.ApiRoleHealthIT - Started ApiRoleHealthIT in 0.979 seconds (process running for 28.818)
+2026-09-21T22:29:07.975+08:00 INFO  [-] o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-21T22:29:07.975+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-09-21T22:29:07.976+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.845 s -- in com.paymentsledger.ApiRoleHealthIT
+[INFO] Running com.paymentsledger.provider.fake.FakeTransactionBoundaryIT
+2026-09-21T22:29:08.236+08:00 INFO  [-] tc.postgres:16-alpine - Creating container for image: postgres:16-alpine
+2026-09-21T22:29:08.330+08:00 INFO  [-] tc.postgres:16-alpine - Container postgres:16-alpine is starting: c29943e699d932dd3359e692a22a486611d568909e17aa1ef9bdbfd03dfb2271
+2026-09-21T22:29:09.999+08:00 INFO  [-] tc.postgres:16-alpine - Container postgres:16-alpine started in PT1.762505S
+2026-09-21T22:29:10.000+08:00 INFO  [-] tc.postgres:16-alpine - Container is started (JDBC URL: jdbc:postgresql://localhost:60422/test?loggerLevel=OFF)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.240 s -- in com.paymentsledger.provider.fake.FakeTransactionBoundaryIT
+[INFO] Running com.paymentsledger.FlywayBaselineIT
+2026-09-21T22:29:10.481+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-21T22:29:10.571+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 61e65b74340bb42e424eeed64855236dcbfdce393bf3790b65f648cef7517add
+2026-09-21T22:29:13.099+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT2.61779S
+2026-09-21T22:29:13.101+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:60441/pr01_isolated_migration_check?loggerLevel=OFF)
+2026-09-21T22:29:13.155+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:60441/pr01_isolated_migration_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-21T22:29:13.167+08:00 INFO  [-] o.f.c.internal.database.base.Schema - Creating schema "platform" ...
+2026-09-21T22:29:13.170+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-21T22:29:13.199+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": null
+2026-09-21T22:29:13.202+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-21T22:29:13.203+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-21T22:29:13.213+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 1 migration to schema "platform", now at version v1 (execution time 00:00.006s)
+2026-09-21T22:29:13.226+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:60441/pr01_isolated_migration_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-21T22:29:13.236+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 4 migrations (execution time 00:00.003s)
+2026-09-21T22:29:13.256+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 1
+2026-09-21T22:29:13.257+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-21T22:29:13.287+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:60441/pr01_isolated_migration_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-21T22:29:13.300+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 4 migrations (execution time 00:00.004s)
+2026-09-21T22:29:13.320+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 1
+2026-09-21T22:29:13.325+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-21T22:29:13.404+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-21T22:29:13.448+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 2 migrations to schema "platform", now at version v3 (execution time 00:00.095s)
+2026-09-21T22:29:13.464+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:60441/pr01_isolated_migration_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-21T22:29:13.475+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 4 migrations (execution time 00:00.004s)
+2026-09-21T22:29:13.505+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 3
+2026-09-21T22:29:13.506+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.407 s -- in com.paymentsledger.FlywayBaselineIT
+[INFO] Running com.paymentsledger.WorkerRoleHealthIT
+2026-09-21T22:29:13.887+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-21T22:29:13.995+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 9b43abdb956526a257efffa1c233360c9bc7fb252fc2add8e92e5967d67c9577
+2026-09-21T22:29:15.274+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.386712S
+2026-09-21T22:29:15.274+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:60463/pr01_isolated_worker_role_check?loggerLevel=OFF)
+2026-09-21T22:29:15.277+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.WorkerRoleHealthIT]: WorkerRoleHealthIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-21T22:29:15.279+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.WorkerRoleHealthIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-21T22:29:15.296+08:00 INFO  [-] c.paymentsledger.WorkerRoleHealthIT - Starting WorkerRoleHealthIT using Java 21.0.12.1 with PID 56226 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform)
+2026-09-21T22:29:15.296+08:00 INFO  [-] c.paymentsledger.WorkerRoleHealthIT - The following 1 profile is active: "worker"
+2026-09-21T22:29:15.438+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-09-21T22:29:15.439+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-21T22:29:15.439+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-09-21T22:29:15.450+08:00 INFO  [-] o.a.c.c.C.[Tomcat-2].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-21T22:29:15.450+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 154 ms
+2026-09-21T22:29:15.485+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:60463/pr01_isolated_worker_role_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-21T22:29:15.496+08:00 INFO  [-] o.f.c.internal.database.base.Schema - Creating schema "platform" ...
+2026-09-21T22:29:15.509+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-21T22:29:15.546+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": null
+2026-09-21T22:29:15.550+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-21T22:29:15.552+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-21T22:29:15.569+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-21T22:29:15.605+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-21T22:29:15.648+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 3 migrations to schema "platform", now at version v3 (execution time 00:00.075s)
+2026-09-21T22:29:16.006+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=WORKER
+2026-09-21T22:29:16.204+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-21T22:29:16.213+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 60476 (http) with context path '/'
+2026-09-21T22:29:16.216+08:00 INFO  [-] c.paymentsledger.WorkerRoleHealthIT - Started WorkerRoleHealthIT in 0.934 seconds (process running for 37.065)
+2026-09-21T22:29:16.251+08:00 INFO  [-] o.a.c.c.C.[Tomcat-2].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-21T22:29:16.251+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-09-21T22:29:16.252+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.806 s -- in com.paymentsledger.WorkerRoleHealthIT
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- failsafe:3.5.6:verify (default) @ payments-ledger-platform ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  53.420 s
+[INFO] Finished at: 2026-09-21T22:29:18+08:00
+[INFO] ------------------------------------------------------------------------
