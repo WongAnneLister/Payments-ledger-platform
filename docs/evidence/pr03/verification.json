@@ -1,0 +1,201 @@
+{
+  "runId": "426f8e07-62a0-445a-a1ce-16b2a7363847",
+  "baselineCommit": "beb1938",
+  "testedRevision": "PR03 working tree; exact source hashes below",
+  "sourceMode": "LOCAL_MODEL",
+  "ruleVersion": "PR03-1",
+  "executionStatus": "PASS",
+  "dataCompleteness": "NOT_APPLICABLE",
+  "environment": {
+    "java": "Corretto 21.0.12.1",
+    "database": "PostgreSQL 16 Testcontainers",
+    "host": "macOS arm64",
+    "timezone": "Asia/Shanghai"
+  },
+  "command": "JAVA_HOME=/Users/anne_lister/.jdks/amazon-corretto-21.jdk/Contents/Home ./mvnw -B clean verify",
+  "currencies": [
+    "USD",
+    "JPY"
+  ],
+  "tests": 69,
+  "suites": [
+    {
+      "name": "com.paymentsledger.ApplicationContextTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.614"
+    },
+    {
+      "name": "com.paymentsledger.common.error.ErrorContractTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.006"
+    },
+    {
+      "name": "com.paymentsledger.common.request.RequestIdFilterTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.003"
+    },
+    {
+      "name": "com.paymentsledger.config.RunRoleConfigTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.004"
+    },
+    {
+      "name": "com.paymentsledger.identity.AuthenticationFilterTest",
+      "tests": "4",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "2.498"
+    },
+    {
+      "name": "com.paymentsledger.identity.IdentityRulesTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.007"
+    },
+    {
+      "name": "com.paymentsledger.identity.TestModeGuardTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.202"
+    },
+    {
+      "name": "com.paymentsledger.ledger.LedgerRulesTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.145"
+    },
+    {
+      "name": "com.paymentsledger.ApiRoleHealthIT",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "2.438"
+    },
+    {
+      "name": "com.paymentsledger.FlywayBaselineIT",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.761"
+    },
+    {
+      "name": "com.paymentsledger.WorkerRoleHealthIT",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "2.135"
+    },
+    {
+      "name": "com.paymentsledger.identity.IdentityIT",
+      "tests": "14",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "11.121"
+    },
+    {
+      "name": "com.paymentsledger.ledger.LedgerDatabaseIT",
+      "tests": "13",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "4.759"
+    },
+    {
+      "name": "com.paymentsledger.ledger.LedgerServiceIT",
+      "tests": "11",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "7.401"
+    }
+  ],
+  "sourceSha256": {
+    "src/main/java/com/paymentsledger/PaymentsLedgerApplication.java": "28918eed117f1459ca23d09f0c63a133160e461baf644ac0314b4ad65e058cb3",
+    "src/main/java/com/paymentsledger/common/error/ApiError.java": "96b0f1766fafb085cfa2ad627bc54d5eecf662604fa24284b39ffe58bc363d4e",
+    "src/main/java/com/paymentsledger/common/error/ApiException.java": "bbb7f8cff46e7085924e67aae049fb53699bb00b13f930e3ffb9aa1c98a651a6",
+    "src/main/java/com/paymentsledger/common/error/ErrorCode.java": "df428288fe5a089f494ed72a77c39d07e5b6fdb96d8cc3962cb7b5eeca35061a",
+    "src/main/java/com/paymentsledger/common/error/GlobalExceptionHandler.java": "50ae9efa9ea9149c50287766206a4fd3494fd0a86b7d62ea826eb3723951257e",
+    "src/main/java/com/paymentsledger/common/logging/Masking.java": "827568e90bea69331f7f5ec570ed40178569308ac663316d214aec7fc33fba21",
+    "src/main/java/com/paymentsledger/common/money/Money.java": "581630825f60f3e6b4cd0d9e308febf5e7d3deb4bbca240437d9e270a9d1b123",
+    "src/main/java/com/paymentsledger/common/request/RequestContext.java": "6326734fc87c3a1c6904b4804d6326c34b64b8faabb05d077b113c13127c1b99",
+    "src/main/java/com/paymentsledger/common/request/RequestIdFilter.java": "67b0add98bff732aedf7825d0cc8442f6c35250e7a47643034c1dd13ce099ee5",
+    "src/main/java/com/paymentsledger/common/time/ClockConfig.java": "ced0d424b5505707e55b89075209f4716ba3ca082cb3fc215429548a793a11e7",
+    "src/main/java/com/paymentsledger/config/RunRole.java": "3b3c3ecef55e6c844cf1ab07b5d227388e495f249b46ae196cb6638541e6c76f",
+    "src/main/java/com/paymentsledger/config/RunRoleConfig.java": "e86693cebcd98a53415c8a219f92a78a29229fd7ee4af3fe9eb86cb2e6989725",
+    "src/main/java/com/paymentsledger/dispute/package-info.java": "8d06479b365b42d2cabffc00c209724474327c236efc1d7b428cf08ed48adc61",
+    "src/main/java/com/paymentsledger/financialingestion/package-info.java": "9de8f954c77af3187d86de98a2bf223b97128a84294bf5340a7910d7bfa5dc10",
+    "src/main/java/com/paymentsledger/identity/AuthenticationFilter.java": "d0db3b9e9782f77cf4c44f35fd0380fd47e57a818ec7ad2064375029a3349769",
+    "src/main/java/com/paymentsledger/identity/CredentialTokens.java": "b3ea553ad43d95f7d60d2ffc3b2c6d18c2ad859ebc8067912baaeadf849db8c7",
+    "src/main/java/com/paymentsledger/identity/IdentityController.java": "1a65a66c4898715ade624d242558a7c26674c75c7c83255d775064f3ea5281d1",
+    "src/main/java/com/paymentsledger/identity/IdentityRepository.java": "c57f92d6d44edcae71a2b71031b2bf15b18a9ef3d5bcf1fc73f76c8d097cbfa8",
+    "src/main/java/com/paymentsledger/identity/LocalFixtureInitializer.java": "9670f5bcfdd107831f2bcf456e3b68228234d1d6d0b883491696a33056041956",
+    "src/main/java/com/paymentsledger/identity/OpsContext.java": "9d8bb6cc8d4391370e7c966d58ab0b41645d4c5741ac3120ec5f3df41eabe634",
+    "src/main/java/com/paymentsledger/identity/ReplayableJsonRequest.java": "f8ef46889d4f1647d66cfcea544f2ffb69d02070ad64df769cc391b6726b4889",
+    "src/main/java/com/paymentsledger/identity/ScopeAssertions.java": "7151584aad3f5e7de9b18e936e5b57ab9796c0e24234c760c77a48e1508fd8fc",
+    "src/main/java/com/paymentsledger/identity/TenantAccessGuard.java": "d3a88153f0a1e6766d562a5c2e0b9acc14952ace7d78d07fad4ed6d67edcd2e0",
+    "src/main/java/com/paymentsledger/identity/TenantContext.java": "00ee506503e1fb63a9657942d2a2b441da9356d99eac8155799d45a1261367c1",
+    "src/main/java/com/paymentsledger/identity/TestModeGuard.java": "8ce8d16b4c39ea18730cec8524d6b4c308f5578a323cb871b31b73dd6078c594",
+    "src/main/java/com/paymentsledger/identity/package-info.java": "dd2e6ccd816178826cdf62ba50d5f8f378a5a5cd6ea414d15b256e03c5d95338",
+    "src/main/java/com/paymentsledger/ledger/BalanceRebuildService.java": "ab0e815f79a985ce165f1319cbe52e093973d61b0a765ecd770eed4f245817c5",
+    "src/main/java/com/paymentsledger/ledger/JournalQueryService.java": "f06a1e04b0aa5adfd1c72e35ee15c21f3006c2b743c1622ce09e07be99ee2347",
+    "src/main/java/com/paymentsledger/ledger/LedgerPostingService.java": "c901b6784329c8a092c67e648b9b4baeb14b320d45a433b7458b04dc4d7632e4",
+    "src/main/java/com/paymentsledger/ledger/LedgerScope.java": "ff2c113b0d9495d3fee3ff529180ae66af148cc9e78c0f00e2fdef33e662790c",
+    "src/main/java/com/paymentsledger/ledger/PostingCommand.java": "4282cbf88f486351fedbf7adb9901c24eb7ec901c60257d46f9d7303f7f98794",
+    "src/main/java/com/paymentsledger/ledger/PostingLine.java": "38f08c43f3de7830855d0aaf645ac895d2a46151ca700ce5e7926aaf10209b21",
+    "src/main/java/com/paymentsledger/ledger/ReversalService.java": "153d6b0fa80cc70f2a5cc0ef68ab54d7a7cc64e230fc99814c54031d037f22d7",
+    "src/main/java/com/paymentsledger/ledger/Side.java": "05b8915ed0e361453a39b7d3409341ea3ad82ffad363af57debc06aa587c8234",
+    "src/main/java/com/paymentsledger/ledger/package-info.java": "7f9773b9f831ae4af34a95272ff7f0c6b183e2fbed896fb10d0f2a7222aae4fb",
+    "src/main/java/com/paymentsledger/messaging/package-info.java": "78560f8f3279753a007debf7ebcc9f0c09a2f03696eb018147e80bd881fc2290",
+    "src/main/java/com/paymentsledger/ops/package-info.java": "2178e92910503b89eb0cde0fddf86a7884268940813c98065741aa7d0b3ce1f7",
+    "src/main/java/com/paymentsledger/payment/package-info.java": "a254d1854fabc9e5f3f346647208e431dea4e2591c8699abeb03a1fc2669f81a",
+    "src/main/java/com/paymentsledger/payout/package-info.java": "ff9c0fe3374a135f3190176c668a44af18720361d3fa05fdac0a548706f91cb1",
+    "src/main/java/com/paymentsledger/provider/package-info.java": "7407ac897c42f01e30d62b4b37246c4c188191b7bb639b8d5dd8dc8bd2e1388d",
+    "src/main/java/com/paymentsledger/reconciliation/package-info.java": "cb520de14b4989d5ed9f58357ab5ec8f116f4d3a828a142ff37ee5092b8cb8cc",
+    "src/main/java/com/paymentsledger/refund/package-info.java": "b5c100a4d23583323207c15c1312314e393e60f9a6e9cb1b0abcbc6b97480e17",
+    "src/main/java/com/paymentsledger/revenueshare/package-info.java": "e1366fffcab8e26009b5c688a7d66dc6737d0d05fc97c7033c7e72a1d9e20bca",
+    "src/main/resources/application.yml": "bae781eacaf37132390da65e9c64834f942d6408e7f70b898a9a1cf04ff0e45a",
+    "src/main/resources/db/migration/V1__baseline.sql": "19cbb778fdd48f296080ea78a712725f9aaa5e5414e015618bb7ba9aa54579b7",
+    "src/main/resources/db/migration/V2__identity_and_scoped_configuration.sql": "b6905bedf87da6baae9adae0d52025c7ba0a5ef3513baa8c4cd289829235e670",
+    "src/main/resources/db/migration/V3__immutable_ledger.sql": "7eed9f683059d2eee374e6378b551d8308922e55432e209e36cffd5d5edfc13a",
+    "src/test/java/com/paymentsledger/ApiRoleHealthIT.java": "42e7b1a08b1da199d908d63110c79c98fedfbe3a3c9b82656403cf18ac05088e",
+    "src/test/java/com/paymentsledger/ApplicationContextTest.java": "bf35568aac9babc4634cdef02b95e9c1cac7f110522a9eec013fdd1e47b77203",
+    "src/test/java/com/paymentsledger/FlywayBaselineIT.java": "6baf9a371f4a5b53ea094226a02a62517d65077be0a412cf02611b03cadcbe88",
+    "src/test/java/com/paymentsledger/WorkerRoleHealthIT.java": "d82980d7435e8841f1c0a625a01d387afca28aee82051fcf1083effcacb6cd2a",
+    "src/test/java/com/paymentsledger/common/error/ErrorContractTest.java": "6c43e44b45d541d5041af93f65c25f6902f120e6c361551ebd121cd07f5707ab",
+    "src/test/java/com/paymentsledger/common/request/RequestIdFilterTest.java": "723fd788658d6d794033f9db85e776cfdb99f4daa49cec904b80a84c0b15429e",
+    "src/test/java/com/paymentsledger/config/RunRoleConfigTest.java": "5da2516c480cb4d03a77f1995fa88d494015c2631ef185e22b2b8c82e2c71039",
+    "src/test/java/com/paymentsledger/identity/AuthenticationFilterTest.java": "ac3e551c70b555db4b4a3eb4e6f7069ed2a727b3b319ee5422afd33f4ea4bc46",
+    "src/test/java/com/paymentsledger/identity/IdentityIT.java": "6b6ff33558b33cce7591337d9a96be0b8aa5f4516047bc987719ecccb85713e8",
+    "src/test/java/com/paymentsledger/identity/IdentityRulesTest.java": "79fd722768ac04b5e432d22ec9a2f21f421af9b301bafd20f44076c9bd2bc591",
+    "src/test/java/com/paymentsledger/identity/TestModeGuardTest.java": "fdd5160f7312154cc029699f604a2c0fc1e44ad9f928257f7a50efa911a85e57",
+    "src/test/java/com/paymentsledger/ledger/LedgerDatabaseIT.java": "c3f0ab6282e83180523f0b322327075645b0cedc333772bdc111f6afae8591db",
+    "src/test/java/com/paymentsledger/ledger/LedgerRulesTest.java": "2e61ce563003f623fc6a83cc91ebb2ac94e73f83096d031980ce740170dc0774",
+    "src/test/java/com/paymentsledger/ledger/LedgerServiceIT.java": "2a2e25de360903b2ae84811ede72b99ad7cd271299fffd5e9a4e30f0e548b71c",
+    "src/test/resources/db/pr02-runtime-role.sql": "a1981524ebee49d39d98bc63ab22fdaf7b5df7bd2aae450a424a46810cb535c6",
+    "pom.xml": "39f5d2e1fef29d19de419a4649f92ee7fd06527464fb2aa689ae407f9c8e9af8"
+  },
+  "fixtureSourceDigest": "3cd5f02e6139173cd9f6c3e0ccb9391946d437b6aa676803aebb97ed21ce4dea"
+}

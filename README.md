@@ -2,8 +2,8 @@
 
 Stripe 支付网关与复式账本。模块化单体，API / Worker 分角色运行，共享同一个 PostgreSQL 事务域。
 
-**当前状态：PR02 身份与账户范围。** 已实现应用/运营独立认证、范围隔离、受控价格读取和测试环境启动校验。
-尚未实现支付、复式账本、Stripe 调用或页面。PR02 演示与验证见 [身份配置运行手册](docs/runbook/identity-and-fixtures.md)。
+**当前状态：PR03 不可变复式账本。** 已实现身份与账户隔离，以及幂等过账、封存凭证、冲正和独立余额重建。
+尚未实现支付流程、Stripe 调用或页面。运行说明见 [身份配置](docs/runbook/identity-and-fixtures.md)与[账本核心](docs/runbook/ledger-core.md)。
 设计基线见 [`docs/`](docs/)；本 README 只讲怎么跑起来。
 
 > 本项目完全从零实现，只使用 Stripe 测试环境。`livemode=true` 的配置会在**启动时**被拒绝。
@@ -131,7 +131,8 @@ curl -s localhost:8081/actuator/health    # Worker 角色
 
 ## 数据库角色分离
 
-应用运行角色与迁移角色是两个不同的数据库角色。账本表将保持 INSERT-only。
+应用运行角色与迁移角色是两个不同的数据库角色。账本事件、凭证及分录对运行角色保持 INSERT-only；封存后连追加分录也会拒绝。
+余额投影只通过内部过账服务调用的受控数据库函数更新，运行角色不能直接改余额。
 PR02 身份与配置表对默认运行角色 `payments_app` 仅授予 SELECT；配置写入使用受控迁移角色。
 详见 [docs/runbook/database-roles.md](docs/runbook/database-roles.md)。
 

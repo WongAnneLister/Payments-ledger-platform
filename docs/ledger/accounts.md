@@ -1,6 +1,6 @@
 # 账本科目与会计政策
 
-版本：PR00 · 状态：冻结设计，未实施
+版本：PR03 · 状态：账本核心已实施；业务分录映射按后续 PR 接线
 
 关联：[PRD §9](../product/payment-platform-prd.md) · [AccountScope](../contracts/account-scope.md) · [七项不变量](invariants.md) · [手算示例](posting-examples.md) · [ADR-0004 不可变账本](../adr/0004-immutable-ledger.md)
 
@@ -114,10 +114,12 @@
 
   ✗ Importer 不得在调用之后再累加一次 PSP 投影
   ✗ 任何服务不得直接 UPDATE balance_projection
-  ✗ 应用运行角色不得直接 INSERT/UPDATE/DELETE journal / journal_entry
+  ✗ 应用代码不得绕过过账服务构建可提交的 journal / journal_entry
 ```
 
 **余额投影只由 `LedgerPostingService` 在过账事务内更新。** 这是 AC-V1-17 与 I-05 的核心断言：Webhook、Importer、恢复任务、对账重跑同时接受同一个 BT 时，PSP 投影**只变化一次**（验收 §3.1 第 7 条）。
+
+PR03 通过受控 `platform.post_ledger` 函数承载实际写入；运行角色仍有下面约定的 INSERT 权限，但无法自行封存或更新投影，直接构建的未封存凭证在提交时被拒绝。完整实现边界见[账本运行手册](../runbook/ledger-core.md)。
 
 ## 6. 数据库角色分离
 

@@ -1,6 +1,6 @@
 # 运行说明：数据库角色与权限分离
 
-版本：PR01 · 状态：角色与默认权限已落地；账本表的 INSERT-only 授予随 PR03 建表迁移落地
+版本：PR03 · 状态：角色分离、账本 INSERT-only、受控封存与投影写入已落地
 
 关联：[ADR-0004 不可变账本](../adr/0004-immutable-ledger.md) · [账本科目 §6](../ledger/accounts.md) · [七项不变量](../ledger/invariants.md) · [本地开发](local-development.md)
 
@@ -17,7 +17,7 @@
 |---|---|---|---|---|
 | 容器超级用户（本地 `postgres`） | 仅本地容器初始化 | ✅ | — | Compose 初始化脚本 |
 | `payments_migrator` | 执行 Flyway 迁移 | ✅ | 建表者 | `spring.flyway.*` |
-| `payments_app` | 应用运行时连接 | ❌ | **只有 SELECT + INSERT** | `spring.datasource.*` |
+| `payments_app` | 应用运行时连接 | ❌ | 事件/凭证/分录 SELECT + INSERT；科目/投影 SELECT；受控过账函数 EXECUTE | `spring.datasource.*` |
 
 配置上的体现（`src/main/resources/application.yml`）：
 
@@ -58,6 +58,8 @@ S | payments_app=rU/payments_migrator     -- 序列：SELECT + USAGE
 ```
 
 没有 `w`(UPDATE)、没有 `d`(DELETE)。
+
+V2 对身份配置表进一步撤销 INSERT。V3 对 ledger_account 与 balance_projection 仅保留 SELECT，事件/Journal/Entry 保留 SELECT + INSERT；封存更新和投影写入由迁移角色拥有的 `platform.post_ledger` 函数执行。该函数固定 search_path、撤销 PUBLIC EXECUTE；运行角色不能直接更新 sealed_at，也不能提交未封存凭证。见[账本核心](ledger-core.md)。
 
 ### 3.1 为什么所有对象都放在 `platform` 而不是 `public`
 
