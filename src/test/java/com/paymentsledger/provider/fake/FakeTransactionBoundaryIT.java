@@ -26,7 +26,7 @@ class FakeTransactionBoundaryIT {
         var scope=new ProviderScope(new UUID(0,1),new UUID(0,2),new UUID(0,3),false);
         var start=Instant.parse("2026-01-01T00:00:00Z");
         var fake=new FakeStripeProvider(directory,42,start,Duration.ofMinutes(10));
-        var command=new CreateCheckoutSessionCommand(scope,"pay",10000,"USD","https://example.test/ok","https://example.test/no",Map.of(),Map.of(),Duration.ofHours(1));
+        var command=new CreateCheckoutSessionCommand(scope,"pay",10000,"USD","https://example.test/ok","https://example.test/no",Map.of(),Map.of(),start.plusSeconds(3600));
         assertThatThrownBy(() -> tx.executeWithoutResult(status -> fake.createSession(command))).isInstanceOf(IllegalStateException.class);
         assertThat(fake.counters(scope).requestCount()).isZero();
         var session=fake.createSession(command).payload();

@@ -1,6 +1,6 @@
 # Provider 端口契约
 
-版本：PR04 · 日期：2026-09-21 · 状态：端口与持久 Fake 已实施；真实 Stripe 适配待 PR05
+版本：PR05 · 日期：2026-09-22 · 状态：端口、持久 Fake 与 Stripe SDK 适配已实施；真实账户验证仍受凭据/fixture 阻塞
 
 关联：[PRD §2/§5/§14](../product/payment-platform-prd.md) · [AccountScope](account-scope.md) · [操作状态机](../state-machines/provider-operation.md) · [版本与能力矩阵](../spec/version-and-capability-matrix.md) · [ADR-0003 未知结果](../adr/0003-provider-unknown-result.md)
 
@@ -66,7 +66,7 @@ record CreateCheckoutSessionCommand(
     String successUrl, String cancelUrl,
     Map<String,String> sessionMetadata,        // 顶层 metadata
     Map<String,String> paymentIntentMetadata,  // 必须经 payment_intent_data.metadata 显式设置
-    Duration expiresAfter
+    Instant expiresAt                        // 整秒；与操作键一起持久化，重试不重新计算
 ) {}
 
 record CheckoutSessionFact(
@@ -256,3 +256,19 @@ PR05 的报告必须保存：冻结版本、运行时间、脱敏对象引用、
 ## 8. PR04 实现与使用
 
 端口与 DTO 位于 `com.paymentsledger.provider`，Fake 位于 `provider.fake`。有限窗口、持久故障脚本、独立效果计数及 fixture 使用方式见[模拟器运行手册](../runbook/provider-simulator.md)。API 版本标记为 `FAKE-PR04-v1`，来源为 `PROVIDER_SIMULATOR`；不代表真实 Stripe 契约已通过。
+
+## 9. PR05 适配边界
+
+`provider.adapter.stripe` 独占 Stripe SDK 依赖。每组适配器绑定一个可信本地 scope 和一个直接 Stripe 测试账户；首次 HTTP 调用先用 `/v1/account` 核对凭据所属账户，不接受请求 metadata 选择账户，不启用 Connect 路由。显式开关、测试凭据、endpoint API 版本均为必需配置。
+
+Checkout 的 `expiresAt` 改为绝对整秒时间（PR04 的相对 Duration 在延迟重试时会改变请求参数）。PR06 必须与 operation key 一起持久化。Fake 同步采用绝对时间；新建时校验 30 分钟至 24 小时范围，保留键重放先于时间检查。旧 Fake 状态中的相对参数不会自动迁移，新命令同键返回参数冲突；本地开发应使用新的模拟器目录，不覆盖原证据。
+
+所有 SDK 调用关闭自动重试。Checkout/refund 使用调用者操作键；expire 使用 scope+session 派生的固定键并记录实际发送值，Stripe 的 POST 默认随机键不会被误记为 null。SDK API 请求固定 `2026-07-29.dahlia`，本地 SDK `33.3.0`。远端 endpoint 版本和账户能力尚未冻结。
+
+`idempotency_key_in_use`/409、424、5xx 为暂态未知；只有同键不同参数的 idempotency error 才是 CONFLICT。连接无响应为 TIMEOUT_UNKNOWN（无 httpStatus/respondedAt）；明确 resource_missing 的 404 为 NOT_FOUND；空 Charge 枚举为 TRANSIENT_EMPTY，空财务窗口列表是成功观察，均不能推导资金操作未发生。`authentication_required` 可返回 AUTH_REQUIRED 且无 payload，调用者仍须按已有对象关联取证。
+
+Charge 尝试显式逐页读取；重复页/关联错误/上限截断不能返回成功。财务流水读取 `balance_type`，缺失或不识别时 CONTRACT_MISMATCH，不猜 PAYMENTS。手动 payout 归属返回 CAPABILITY_UNAVAILABLE。Balance 仅支持当前 PAYMENTS 域；未验证域与历史报告均显式不可用。没有下载报告 CSV 或用空 balances 冒充历史期末证据。
+
+证据摘要只含 scope、账户引用、请求引用、事实字段摘要；metadata、托管 URL、描述在 hash 前移除。复合读取的 providerRequestId 是最后一次调用，rawDigest 覆盖调用序列；调用者仍负责持久化输入 scope、对象引用与结果。SDK 原始错误文案/响应不返回、不记录。Spring guard 拒绝活跃事务/事务同步；任意自定义业务锁仍由调用者遵守“调用前释放”的约束。
+
+来源：Stripe 官方 [幂等请求](https://docs.stripe.com/api/idempotent_requests)、[错误类型](https://docs.stripe.com/api/errors)、[会话过期](https://docs.stripe.com/api/checkout/sessions/expire)、[BT 余额类型](https://docs.stripe.com/changelog/basil/2025-05-28/add-balance-type-to-balance-transactions)、[Report Runs](https://docs.stripe.com/api/reporting/report_run)。幂等文档说键可在至少 24 小时后清理；这不是账户实测保留期，尚未启用任何自动恢复窗口配置。

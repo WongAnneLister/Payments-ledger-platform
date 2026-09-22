@@ -2,8 +2,8 @@
 
 Stripe 支付网关与复式账本。模块化单体，API / Worker 分角色运行，共享同一个 PostgreSQL 事务域。
 
-**当前状态：PR04 Provider 端口与持久故障模拟器。** 已实现身份与账户隔离、不可变账本，以及可控时钟、有限幂等窗口和独立资金效果计数的 FakeStripeProvider。
-尚未实现业务支付流程、真实 Stripe 调用或页面。运行说明见 [身份配置](docs/runbook/identity-and-fixtures.md)、[账本核心](docs/runbook/ledger-core.md)与[Provider 模拟器](docs/runbook/provider-simulator.md)。
+**当前状态：PR05 Stripe 适配器与本地契约测试已接入，真实账户验证仍 BLOCKED。** 已实现身份隔离、不可变账本、持久 Fake，以及 Checkout/退款/财务读取/验签适配器；尚未实现业务支付 API 或页面。
+运行说明见 [身份配置](docs/runbook/identity-and-fixtures.md)、[账本核心](docs/runbook/ledger-core.md)、[Provider 模拟器](docs/runbook/provider-simulator.md)和[Stripe 契约验证](docs/runbook/stripe-contract-check.md)。本地 fixture 通过不代表真实 Stripe 契约通过。
 设计基线见 [`docs/`](docs/)；本 README 只讲怎么跑起来。
 
 > 本项目完全从零实现，只使用 Stripe 测试环境。`livemode=true` 的配置会在**启动时**被拒绝。

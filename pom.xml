@@ -26,9 +26,15 @@
     <flyway.version>11.20.3</flyway.version>
     <postgresql.version>42.7.13</postgresql.version>
     <testcontainers.version>1.21.4</testcontainers.version>
+    <stripe-java.version>33.3.0</stripe-java.version>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.stripe</groupId>
+      <artifactId>stripe-java</artifactId>
+      <version>${stripe-java.version}</version>
+    </dependency>
     <!-- Only password hashing; request authentication remains explicit in identity. -->
     <dependency>
       <groupId>org.springframework.security</groupId>
@@ -75,7 +81,6 @@
       刻意未引入的依赖（避免未接通的组件与启动期连接尝试）：
         spring-kafka              -> PR09 Outbox/消费者接线时引入
         spring-boot-starter-data-redis -> PR07 限流/缓存时引入
-        stripe-java               -> PR05 真实适配器时引入
       Compose 已提供 Kafka/Redis 基础设施，但本 PR 不建立客户端连接。
     -->
 

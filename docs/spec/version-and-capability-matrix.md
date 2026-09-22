@@ -1,6 +1,6 @@
 # 版本与测试账户能力矩阵
 
-版本：PR01 · 日期：2026-09-11 · 状态：**运行时与框架已在 PR01 实际验证并锁定；Stripe 相关与测试账户能力仍全部待验证**
+版本：PR05 · 日期：2026-09-22 · 状态：**运行时已锁定；Stripe SDK/API 配对已本地验证，真实账户与 endpoint 验证待配置**
 
 关联：[需求映射](requirements-map.md) · [Provider 端口](../contracts/provider.md) · [路线图 §1](../product/payment-platform-roadmap.md) · [验收 §1](../product/payment-platform-acceptance.md)
 
@@ -14,7 +14,7 @@
 - `TBD`：连候选线都未确定，必须由负责 PR 调查后填写
 
 > **PR01 的验证边界**：运行时、框架、基础设施镜像已在本机实测锁定（§1）。
-> **Stripe 相关版本与测试账户能力仍全部未验证**（§2、§3），归属 PR05。
+> **Stripe SDK/API 的本地契约与真实账户能力分开记录**（§2、§3）。本地通过不解锁 R0 真实门槛。
 >
 > **禁止**在本文件写入"最新版本"字样——"最新"不是版本号，且会随时间失效。
 > **禁止**为测试账户能力预填 `PASS` 或"支持"。
@@ -73,14 +73,14 @@
 
 | 项 | 候选 | 状态 | 验证 PR | 说明 |
 |---|---|---|---|---|
-| `stripe-java` SDK 版本 | `TBD` | **待验证** | PR05 引入并冻结 | 不预填版本号。PR05 必须记录实际生效版本 |
-| Stripe API 版本（pinned） | `TBD` | **待验证** | PR05 | 必须是**显式固定**的日期版本串，不使用账户默认版本随时间漂移 |
-| Webhook endpoint API 版本 | `TBD` | **待验证** | PR05 | 可能与 SDK 请求版本不同，需分别记录 |
-| 幂等键实际保留窗口 | `TBD` | **待验证** | PR05 | 官方语义已读（[S2](https://docs.stripe.com/api/idempotent_requests)）；**在实测前按"不可依赖永久去重"设计** |
+| `stripe-java` SDK 版本 | `33.3.0` | **LOCAL_LOCKED** | PR05 | Maven 实际解析；真实 SDK HTTP fixture 测试，非真实账户结论 |
+| Stripe API 版本（pinned） | `2026-07-29.dahlia` | **LOCAL_LOCKED / 远端 BLOCKED** | PR05 | SDK 33.3.0 生成版本，测试验证请求头；不使用账户默认版本 |
+| Webhook endpoint API 版本 | 期望 `2026-07-29.dahlia`；远端 `TBD` | **BLOCKED** | PR05 | 本地验签强制精确版本；尚无远端 endpoint 记录 |
+| 幂等键实际保留窗口 | 实测 `TBD` | **BLOCKED；官方契约已核对** | PR05 | [官方契约](https://docs.stripe.com/api/idempotent_requests)：至少 24 小时后可清理；非精确 TTL，不启用未验证的自动恢复窗口 |
 | 测试账户 ID（脱敏） | `TBD` | 待填 | PR05 | 只记录脱敏引用，不记录密钥 |
 | 运行币种 | USD（默认） | 待确认 | PR02 / PR05 | JPY 作为独立零小数 fixture，不替换全部示例 |
 
-**版本冻结的含义**：PR05 完成后，`stripe-java` 版本、Stripe API 版本、endpoint 版本三者一并记入本表并标为 `FROZEN`，后续变更需新 PR 并重跑契约测试。
+**版本冻结的含义**：仅本地 LOCAL_LOCKED 不代表远端 FROZEN。PR05 真实验证完成后，`stripe-java` 版本、Stripe API 版本、endpoint 版本三者一并记入本表并标为 `FROZEN`，后续变更需新 PR 并重跑契约测试。
 
 ## 3. 测试账户能力矩阵
 
@@ -144,3 +144,11 @@
 | V10 | Webhook 真实接收路径 | PR05 / PR08 | AC-V1-11 的真实来源标注 |
 
 **R0 阶段门槛**：PR05 账户能力不足时，可继续 Fake 模式的独立开发，但 **R0 的真实契约门槛保持 `BLOCKED`**，不能把阶段标为全通过（PRD §18）。
+
+## 6. PR05 当前验证边界
+
+本地：Checkout/refund 参数及对象映射、全部 Charge attempts、错误分类与未知结果、财务分页与余额域、原始字节签名使用真实 SDK 加确定性 HTTP/签名 fixture。来源标记 `LOCAL_SDK_HTTP_FIXTURE` / `LOCAL_SIGNATURE_FIXTURE`；PR04 仍是 `PROVIDER_SIMULATOR`。
+
+真实账户：当前没有完成一次账户契约运行，§3 所有真实能力仍未知，R0 为 BLOCKED；验收 ID 不得据本地测试变为 PASS。ReportPort 历史报告与非 PAYMENTS 域余额快照尚未验证契约，明确返回 CAPABILITY_UNAVAILABLE。公开 ReportRun 的 succeeded 状态不能代替下载并校验历史财务报告。
+
+运行方法与分项证据见[真实契约测试手册](../runbook/stripe-contract-check.md)；本次本地验证结果见[PR05 证据](../evidence/pr05/README.md)。版本依据：[Stripe 33.3.0 官方发布](https://github.com/stripe/stripe-java/releases/tag/v33.3.0)，及对应源码 `ApiVersion.CURRENT`。

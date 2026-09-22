@@ -112,9 +112,10 @@ public final class FakeStripeProvider implements CheckoutPort, PaymentIntentPort
     }
     @Override public ProviderCallResult<CheckoutSessionFact> createSession(CreateCheckoutSessionCommand command) {
         return call(command.scope(),Operation.CREATE_SESSION,command.operationIdempotencyKey(),command,true,true,CheckoutSessionFact.class,s -> {
+            if(command.expiresAt().isBefore(s.now.plusSeconds(1800)) || command.expiresAt().isAfter(s.now.plusSeconds(86400))) return reject();
             String session=s.id("cs"),pi=s.id("pi");
             var intent=new PaymentIntentFact(pi,"requires_payment_method",command.amountMinor(),0L,command.currency(),List.of(),null,null,command.paymentIntentMetadata(),s.now);
-            var fact=new CheckoutSessionFact(session,CheckoutSessionStatus.OPEN,"https://checkout.fake.invalid/"+session,pi,"unpaid",s.now.plus(command.expiresAfter()),command.sessionMetadata());
+            var fact=new CheckoutSessionFact(session,CheckoutSessionStatus.OPEN,"https://checkout.fake.invalid/"+session,pi,"unpaid",command.expiresAt(),command.sessionMetadata());
             s.put("paymentIntents",pi,intent,s.now); s.put("sessions",session,fact,s.now); s.increment("sessionCreatedCount");
             return success(fact);
         });

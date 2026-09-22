@@ -1,6 +1,5 @@
 package com.paymentsledger.provider;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,7 @@ public final class ProviderModels {
             ProviderScope scope, String operationIdempotencyKey,
             long amountMinor, String currency, String successUrl, String cancelUrl,
             Map<String, String> sessionMetadata, Map<String, String> paymentIntentMetadata,
-            Duration expiresAfter) {
+            Instant expiresAt) {
         public CreateCheckoutSessionCommand {
             Objects.requireNonNull(scope, "scope");
             requireText(operationIdempotencyKey, "operationIdempotencyKey");
@@ -26,9 +25,9 @@ public final class ProviderModels {
             requireText(cancelUrl, "cancelUrl");
             sessionMetadata = Map.copyOf(sessionMetadata);
             paymentIntentMetadata = Map.copyOf(paymentIntentMetadata);
-            Objects.requireNonNull(expiresAfter, "expiresAfter");
-            if (expiresAfter.isNegative() || expiresAfter.isZero())
-                throw new IllegalArgumentException("expiresAfter must be positive");
+            Objects.requireNonNull(expiresAt, "expiresAt");
+            if (expiresAt.getNano() != 0)
+                throw new IllegalArgumentException("expiresAt must have whole-second precision");
         }
     }
 

@@ -48,7 +48,7 @@ var fake = new FakeStripeProvider(Path.of("/tmp/pr04-example"), 42,
     Instant.parse("2026-01-01T00:00:00Z"), Duration.ofMinutes(10));
 var command = new CreateCheckoutSessionCommand(scope, "checkout:order:1", 10000, "USD",
     "https://example.test/success", "https://example.test/cancel",
-    Map.of("sessionOnly", "s"), Map.of("order", "1"), Duration.ofMinutes(30));
+    Map.of("sessionOnly", "s"), Map.of("order", "1"), fake.clock().instant().plusSeconds(3600));
 fake.controls().enqueue(scope, FailureScript.Operation.CREATE_SESSION,
     command.operationIdempotencyKey(), FailureScript.Outcome.RESPONSE_LOST);
 var unknown = fake.createSession(command); // TIMEOUT_UNKNOWN; payload is null

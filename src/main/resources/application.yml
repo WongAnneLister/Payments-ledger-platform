@@ -42,6 +42,8 @@ spring:
     default-property-inclusion: non_null
 
 platform:
+  stripe:
+    enabled: ${STRIPE_ENABLED:false}
   fixtures:
     enabled: ${LOCAL_FIXTURES_ENABLED:false}
     app-secret: ${LOCAL_APP_SECRET:}

@@ -17,7 +17,7 @@ class ProviderSimulatorReplayTest {
         var start=Instant.parse("2026-01-01T00:00:00Z");
         var scope=new ProviderScope(new UUID(0,1),new UUID(0,2),new UUID(0,3),false);
         var fake=new FakeStripeProvider(directory,42,start,Duration.ofMinutes(10));
-        var checkout=new CreateCheckoutSessionCommand(scope,"checkout:1",10000,"USD","https://example.test/success","https://example.test/cancel",Map.of(),Map.of("order","1"),Duration.ofMinutes(30));
+        var checkout=new CreateCheckoutSessionCommand(scope,"checkout:1",10000,"USD","https://example.test/success","https://example.test/cancel",Map.of(),Map.of("order","1"),start.plusSeconds(3600));
         fake.controls().enqueue(scope,FailureScript.Operation.CREATE_SESSION,"checkout:1",FailureScript.Outcome.RESPONSE_LOST);
         assertThat(fake.createSession(checkout).classification()).isEqualTo(TIMEOUT_UNKNOWN);
         fake=new FakeStripeProvider(directory,42,start,Duration.ofMinutes(10));

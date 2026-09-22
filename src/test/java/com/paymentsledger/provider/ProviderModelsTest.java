@@ -44,7 +44,7 @@ class ProviderModelsTest {
     @Test void checkoutCopiesBothMetadataMapsWithoutImplicitPropagation() {
         var sessionMetadata = new HashMap<>(Map.of("order", "a"));
         var piMetadata = new HashMap<>(Map.of("operation", "b"));
-        var command = checkout(100, "USD", sessionMetadata, piMetadata, Duration.ofMinutes(30));
+        var command = checkout(100, "USD", sessionMetadata, piMetadata, now.plusSeconds(1800));
         sessionMetadata.put("order", "changed");
         piMetadata.clear();
         assertThat(command.sessionMetadata()).containsExactlyEntriesOf(Map.of("order", "a"));
@@ -55,14 +55,14 @@ class ProviderModelsTest {
 
     @Test void rejectsInvalidCreateAmountsCurrenciesAndExpiry() {
         for (long amount : new long[] {0, -1}) {
-            assertThatThrownBy(() -> checkout(amount, "USD", Map.of(), Map.of(), Duration.ofMinutes(30)))
+            assertThatThrownBy(() -> checkout(amount, "USD", Map.of(), Map.of(), now.plusSeconds(1800)))
                     .isInstanceOf(IllegalArgumentException.class);
             assertThatThrownBy(() -> new CreateRefundCommand(scope, "refund", "ch_1", null, amount, null))
                     .isInstanceOf(IllegalArgumentException.class);
         }
-        assertThatThrownBy(() -> checkout(100, "US", Map.of(), Map.of(), Duration.ofMinutes(30)))
+        assertThatThrownBy(() -> checkout(100, "US", Map.of(), Map.of(), now.plusSeconds(1800)))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> checkout(100, "USD", Map.of(), Map.of(), Duration.ZERO))
+        assertThatThrownBy(() -> checkout(100, "USD", Map.of(), Map.of(), now.plusNanos(1)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -126,9 +126,9 @@ class ProviderModelsTest {
     }
 
     private CreateCheckoutSessionCommand checkout(long amount, String currency, Map<String, String> session,
-                                                   Map<String, String> pi, Duration expiresAfter) {
+                                                   Map<String, String> pi, Instant expiresAt) {
         return new CreateCheckoutSessionCommand(scope, "checkout", amount, currency, "https://fixture.invalid/success",
-                "https://fixture.invalid/cancel", session, pi, expiresAfter);
+                "https://fixture.invalid/cancel", session, pi, expiresAt);
     }
 
     private BalanceTransactionFact bt(long amount, long fee, long net, List<FeeDetail> fees) {

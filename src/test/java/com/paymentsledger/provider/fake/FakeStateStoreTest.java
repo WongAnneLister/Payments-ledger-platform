@@ -100,7 +100,7 @@ class FakeStateStoreTest {
             var fake=new FakeStripeProvider(Path.of(args[0]),42,Instant.EPOCH,Duration.ofMinutes(10));
             var scope=new com.paymentsledger.provider.ProviderScope(new UUID(0,1),new UUID(0,2),new UUID(0,3),false);
             var command=new com.paymentsledger.provider.ProviderModels.CreateCheckoutSessionCommand(scope,"key",100,"USD",
-                "https://example.test/ok","https://example.test/no",Map.of("a","1","b","2","c","3","d","4"),Map.of(),Duration.ofMinutes(30));
+                "https://example.test/ok","https://example.test/no",Map.of("a","1","b","2","c","3","d","4"),Map.of(),Instant.EPOCH.plusSeconds(3600));
             Files.writeString(Path.of(args[1]),fake.createSession(command).evidence().rawDigest());
         }
     }

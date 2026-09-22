@@ -76,7 +76,7 @@ class FakeEvidenceTest {
         assertThatThrownBy(() -> fake.controls().putBalanceTransaction(scope,conflict,START,null)).isInstanceOf(IllegalStateException.class);
     }
     @Test void refundStatusAndFinancialEvidenceCanArriveInEitherOrder() {
-        var session=fake.createSession(new CreateCheckoutSessionCommand(scope,"pay",10000,"USD","https://example.test/ok","https://example.test/no",Map.of(),Map.of(),Duration.ofHours(1))).payload();
+        var session=fake.createSession(new CreateCheckoutSessionCommand(scope,"pay",10000,"USD","https://example.test/ok","https://example.test/no",Map.of(),Map.of(),START.plusSeconds(3600))).payload();
         var pi=fake.controls().attemptPayment(scope,session.sessionId(),FakeControls.AttemptOutcome.SUCCEED);
         var refund=fake.createRefund(new CreateRefundCommand(scope,"refund",pi.latestChargeId(),null,1000,"requested_by_customer")).payload();
         assertThat(refund.status()).isEqualTo("pending");assertThat(refund.balanceTransactionId()).isNull();

@@ -22,7 +22,7 @@ class FakeStripeProviderTest {
     FakeStripeProvider open() { return new FakeStripeProvider(directory,42,START,Duration.ofMinutes(10)); }
     CreateCheckoutSessionCommand command(String key) {
         return new CreateCheckoutSessionCommand(scope,key,10000,"USD","https://example.test/success","https://example.test/cancel",
-                Map.of("sessionOnly","s"),Map.of("order","o"),Duration.ofMinutes(30));
+                Map.of("sessionOnly","s"),Map.of("order","o"),START.plusSeconds(3600));
     }
     CheckoutSessionFact session(String key) { return fake.createSession(command(key)).payload(); }
     ChargeFact captured(String key) {
@@ -44,12 +44,32 @@ class FakeStripeProviderTest {
     @Test void retainedKeyReplaysConflictingKeyRejectsExpiredKeyCreatesNewSession() {
         var a=session("key"); assertThat(session("key")).isEqualTo(a);
         var c=command("key");
-        var changed=new CreateCheckoutSessionCommand(scope,"key",10001,"USD",c.successUrl(),c.cancelUrl(),c.sessionMetadata(),c.paymentIntentMetadata(),c.expiresAfter());
+        var changed=new CreateCheckoutSessionCommand(scope,"key",10001,"USD",c.successUrl(),c.cancelUrl(),c.sessionMetadata(),c.paymentIntentMetadata(),c.expiresAt());
         assertThat(fake.createSession(changed).classification()).isEqualTo(IDEMPOTENCY_CONFLICT);
         fake.clock().advance(Duration.ofMinutes(10));
         assertThat(session("key").sessionId()).isNotEqualTo(a.sessionId());
         assertThat(fake.counters(scope).sessionCreatedCount()).isEqualTo(2);
         assertThat(fake.counters(scope).acceptedCount()).isEqualTo(2);
+    }
+    @Test void newExpiryMustBeInProviderWindowButRetainedReplayIgnoresElapsedClock() {
+        fake=new FakeStripeProvider(directory.resolve("long-retention"),42,START,Duration.ofHours(2));
+        var original=session("expiry-replay");
+        fake.clock().advance(Duration.ofHours(1));
+        assertThat(session("expiry-replay")).isEqualTo(original);
+        assertThat(fake.createSession(command("new-expired")).classification()).isEqualTo(DEFINITIVE_REJECT);
+        assertThat(fake.counters(scope).sessionCreatedCount()).isEqualTo(1);
+    }
+    @Test void absoluteExpirySurvivesDelayedReplayAndRestart() {
+        var original=session("expiry-key");
+        fake.clock().advance(Duration.ofMinutes(5));
+        fake=open();
+        assertThat(session("expiry-key")).isEqualTo(original);
+        assertThat(original.expiresAt()).isEqualTo(START.plusSeconds(3600));
+        assertThat(fake.counters(scope).sessionCreatedCount()).isEqualTo(1);
+        var c=command("expiry-key");
+        var changed=new CreateCheckoutSessionCommand(scope,c.operationIdempotencyKey(),c.amountMinor(),c.currency(),
+                c.successUrl(),c.cancelUrl(),c.sessionMetadata(),c.paymentIntentMetadata(),c.expiresAt().plusSeconds(1));
+        assertThat(fake.createSession(changed).classification()).isEqualTo(IDEMPOTENCY_CONFLICT);
     }
     @Test void acceptedResponseLossPersistsObjectAndReplayReturnsOriginal() {
         fake.controls().enqueue(scope,Operation.CREATE_SESSION,"key",Outcome.RESPONSE_LOST);
@@ -110,7 +130,7 @@ class FakeStripeProviderTest {
         var s=session("expire");
         assertThat(fake.expireSession(scope,s.sessionId()).payload().status()).isEqualTo(CheckoutSessionStatus.EXPIRED);
         assertThatThrownBy(() -> fake.controls().attemptPayment(scope,s.sessionId(),FakeControls.AttemptOutcome.SUCCEED)).isInstanceOf(IllegalStateException.class);
-        var t=session("timed"); fake.clock().advance(Duration.ofMinutes(30));
+        var t=session("timed"); fake.clock().advance(Duration.ofHours(1));
         assertThat(fake.querySession(scope,t.sessionId()).payload().status()).isEqualTo(CheckoutSessionStatus.EXPIRED);
         assertThat(fake.counters(scope).paymentEffectCount()).isZero();
     }
