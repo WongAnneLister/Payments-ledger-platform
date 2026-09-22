@@ -4,7 +4,7 @@
 
 The smoke sends distinct, non-secret metadata markers: Session metadata `pr05_session=<run-id>` and PaymentIntent metadata `pr05_payment=<run-id>`. `metadataSession` becomes VERIFIED only after both the created and queried Session contain the Session marker and exclude the PaymentIntent marker. `metadataPaymentIntent` remains BLOCKED: the smoke expires without completing payment, and an externally supplied completed Session cannot prove this run's creation parameters.
 
-No real Stripe execution is claimed by this change. Deterministic adapter tests and a skipped integration test do not verify a Stripe account's capabilities. Reports remain **unverified / `CAPABILITY_UNAVAILABLE` by design**.
+A first real test-account smoke is now recorded in [PR05 evidence](../evidence/pr05/README.md); only its named VERIFIED cases have execution evidence. Deterministic adapter tests and a skipped integration test do not verify a Stripe account's capabilities. Reports remain **unverified / `CAPABILITY_UNAVAILABLE` by design**.
 
 ## Default and explicit execution
 
@@ -45,7 +45,7 @@ Absent optional IDs produce **BLOCKED**, not verified. A supplied session must a
 
 The completed-session chain requires at least one succeeded Charge and checks that every succeeded Charge has `captured=true` and `amountCapturedMinor=amountMinor`. This observes the capture result; it does **not** prove the original PaymentIntent `capture_method` was `automatic`. The separate `automaticCapture` case therefore remains BLOCKED pending verified creation-parameter evidence.
 
-The run also requests the current USD `PAYMENTS` balance and one Balance Transaction page with a limit of five and a fixed one-day window ending just after the run begins. A currency/account capability unavailable to the credential is BLOCKED. An empty transaction window is BLOCKED for transaction-fact verification; a nonempty page only verifies that bounded page. `hasMore` is preserved, but `balanceTransactionContinuation` remains explicitly BLOCKED because one page cannot verify pagination. This is not a complete reconciliation or historical balance proof.
+The run also requests the current `PAYMENTS` balance in `STRIPE_CONTRACT_BALANCE_CURRENCY` (defaults to `usd`; set it to an observed account balance currency such as `jpy`) and one Balance Transaction page with a limit of five and a fixed one-day window ending just after the run begins. A currency/account capability unavailable to the credential is BLOCKED. An empty transaction window is BLOCKED for transaction-fact verification; a nonempty page only verifies that bounded page. `hasMore` is preserved, but `balanceTransactionContinuation` remains explicitly BLOCKED because one page cannot verify pagination. This is not a complete reconciliation or historical balance proof.
 
 Prepare payment fixtures through a hosted Checkout test-mode integration in the same Stripe account. Complete the hosted form using Stripe's documented test payment methods, obtain the Checkout Session ID from the trusted integration or account request logs, and place only that ID in the environment. Keep card numbers, CVCs, client secrets, hosted URLs, and raw provider payloads out of this repository, shell history, evidence files, and tickets. The automated smoke session is immediately expired and is not the manual fixture. Use existing test-mode refunds, disputes, and payouts prepared through an approved test workflow; do not repurpose production objects.
 

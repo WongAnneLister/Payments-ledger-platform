@@ -163,7 +163,7 @@ PR00 必须在此明确登记，避免"某条路径没有任何 PR 负责"。以
 | 待验证项 | 当前状态 | 验证 PR | 若受阻的处理 |
 |---|---|---|---|
 | Java / Spring Boot / PostgreSQL / Flyway / Kafka / Redis 精确版本 | 候选线，未联网核实 | PR01 | 记录实际锁定版本与来源 |
-| stripe-java 版本与 Stripe API 版本 | SDK 33.3.0 / API 2026-07-29.dahlia 本地已验证；远端待验证 | PR05 | 无法确定时 `BLOCKED`，不写"最新版本" |
+| stripe-java 版本与 Stripe API 版本 | SDK 33.3.0 / API 2026-07-29.dahlia 真实基础契约已验证；完整链路待验证 | PR05 | 无法确定时 `BLOCKED`，不写"最新版本" |
 | 测试账户是否可触发 Dispute / Payout / 报告能力 | 未知，不假设 | PR05 | `BLOCKED` 或 `fixture-only`，相关 AC 不得 `PASS` |
 | Stripe 幂等键实际保留窗口 | 文档语义已读，实测未做 | PR05（Fake 侧窗口在 PR04） | 未实测前按"不可依赖永久去重"设计 |
 | 属性测试库（候选 jqwik）版本 | 候选，未核实 | PR01/PR18 | 同上 |

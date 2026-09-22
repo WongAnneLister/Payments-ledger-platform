@@ -1,0 +1,176 @@
+{
+  "runId": "1d607fcf-e1fc-4c5a-80b6-107de9818799",
+  "startedAtUtc": "2026-09-22T16:47:43Z",
+  "sdkVersion": "33.3.0",
+  "apiVersion": "2026-07-29.dahlia",
+  "livemode": false,
+  "cases": {
+    "configuration": {
+      "status": "VERIFIED"
+    },
+    "checkoutCreate": {
+      "status": "VERIFIED",
+      "observations": [
+        {
+          "classification": "SUCCESS",
+          "httpStatus": 200,
+          "requestedAtUtc": "2026-09-22T16:47:43.153517Z",
+          "respondedAtUtc": "2026-09-22T16:47:45.049457Z",
+          "redactedEvidenceSha256": "92ba84b4b38a98ae4e5955266f6b524a026c0ec72e6737a500e9b757f3192cf3",
+          "requestId": "req_JeTrcQ6bEIP8h9"
+        }
+      ],
+      "objectSha256": [
+        "37b847a11617e6f8270313b242b5668de08c994ec33477eb53cd65bdb21da7b5"
+      ]
+    },
+    "checkoutQuery": {
+      "status": "VERIFIED",
+      "observations": [
+        {
+          "classification": "SUCCESS",
+          "httpStatus": 200,
+          "requestedAtUtc": "2026-09-22T16:47:45.072077Z",
+          "respondedAtUtc": "2026-09-22T16:47:45.391640Z",
+          "redactedEvidenceSha256": "146ee197837796bae58e49cb741de20dcdedb4a7659c5678b4afc1e7432db96b",
+          "requestId": "req_ARcRDykhELQM3c"
+        }
+      ],
+      "objectSha256": [
+        "37b847a11617e6f8270313b242b5668de08c994ec33477eb53cd65bdb21da7b5"
+      ]
+    },
+    "checkoutExpireCleanup": {
+      "status": "VERIFIED",
+      "observations": [
+        {
+          "classification": "SUCCESS",
+          "httpStatus": 200,
+          "requestedAtUtc": "2026-09-22T16:47:46.065006Z",
+          "respondedAtUtc": "2026-09-22T16:47:46.482816Z",
+          "redactedEvidenceSha256": "1b1ac018701efdba2f3838e09af7dbaec31895dcfe9b50b60bb0464157ec2376",
+          "requestId": "req_IGYUIE06LxxZFO"
+        }
+      ],
+      "objectSha256": [
+        "37b847a11617e6f8270313b242b5668de08c994ec33477eb53cd65bdb21da7b5"
+      ]
+    },
+    "completedCheckoutChain": {
+      "status": "BLOCKED",
+      "reason": "missing_STRIPE_CONTRACT_SESSION_ID"
+    },
+    "refundRead": {
+      "status": "BLOCKED",
+      "reason": "missing_STRIPE_CONTRACT_REFUND_ID"
+    },
+    "disputeRead": {
+      "status": "BLOCKED",
+      "reason": "missing_STRIPE_CONTRACT_DISPUTE_ID"
+    },
+    "payoutRead": {
+      "status": "BLOCKED",
+      "reason": "missing_STRIPE_CONTRACT_PAYOUT_ID"
+    },
+    "balanceRead": {
+      "status": "VERIFIED",
+      "observations": [
+        {
+          "classification": "SUCCESS",
+          "httpStatus": 200,
+          "requestedAtUtc": "2026-09-22T16:47:45.394038Z",
+          "respondedAtUtc": "2026-09-22T16:47:45.661416Z",
+          "redactedEvidenceSha256": "1e1cfa489139b6c2d5d246eeff087412e33f2fb196a59c68993cedcffe11e4e0",
+          "requestId": "req_ai26qSokniiyvI"
+        }
+      ],
+      "currency": "jpy"
+    },
+    "balanceTransactionList": {
+      "status": "BLOCKED",
+      "observations": [
+        {
+          "classification": "SUCCESS",
+          "httpStatus": 200,
+          "requestedAtUtc": "2026-09-22T16:47:45.665874Z",
+          "respondedAtUtc": "2026-09-22T16:47:46.058593Z",
+          "redactedEvidenceSha256": "e5a6613337bbecf80478b0bb9731811d1976ec0e3224ba770865a08b441cec6a",
+          "requestId": "req_J2i66WRvoq9fut"
+        }
+      ],
+      "itemCount": 0,
+      "hasMore": false,
+      "windowFromUtc": "2026-09-21T16:47:43Z",
+      "windowUntilUtc": "2026-09-22T16:47:44Z",
+      "reason": "empty_window_no_transaction_facts_verified"
+    },
+    "balanceTransactionContinuation": {
+      "status": "BLOCKED",
+      "reason": "single_bounded_page_does_not_verify_continuation"
+    },
+    "reports": {
+      "status": "BLOCKED",
+      "reason": "CAPABILITY_UNAVAILABLE_by_design_unverified",
+      "observations": [
+        {
+          "classification": "CAPABILITY_UNAVAILABLE",
+          "httpStatus": null,
+          "requestedAtUtc": "2026-09-22T16:47:46.063231Z",
+          "redactedEvidenceSha256": "0db4731c4447fc5d17cefc390f2771a4e35f58618a09dd6636fe62ca420acdd5"
+        }
+      ]
+    },
+    "refundCreate": {
+      "status": "BLOCKED",
+      "reason": "missing_STRIPE_CONTRACT_REFUND_CHARGE_ID_STRIPE_CONTRACT_REFUND_AMOUNT_MINOR_STRIPE_CONTRACT_REFUND_OPERATION_KEY"
+    },
+    "endpointSignature": {
+      "status": "BLOCKED",
+      "reason": "manual_real_fixture_required"
+    },
+    "metadataSession": {
+      "status": "VERIFIED",
+      "checkedCreateAndQuery": true,
+      "objectSha256": [
+        "37b847a11617e6f8270313b242b5668de08c994ec33477eb53cd65bdb21da7b5"
+      ]
+    },
+    "metadataPaymentIntent": {
+      "status": "BLOCKED",
+      "reason": "smoke_session_expires_without_payment_intent_creation_proof"
+    },
+    "automaticCapture": {
+      "status": "BLOCKED",
+      "reason": "original_payment_intent_capture_method_unverified"
+    },
+    "cancellationRace": {
+      "status": "BLOCKED",
+      "reason": "manual_real_fixture_required"
+    },
+    "decline": {
+      "status": "BLOCKED",
+      "reason": "manual_real_fixture_required"
+    },
+    "authenticationRequired": {
+      "status": "BLOCKED",
+      "reason": "manual_real_fixture_required"
+    },
+    "multipleChargeAttempts": {
+      "status": "BLOCKED",
+      "reason": "manual_real_fixture_required"
+    }
+  },
+  "organizationId": "cc36d435-07f5-4018-ac52-6e57c92b3b98",
+  "environmentId": "88b8499e-e267-4c6e-87f2-8bf34ee4f5df",
+  "providerAccountId": "07d7beec-adbd-4bb3-83f9-fdc339698ee6",
+  "stripeAccountSha256": "cf3f54f8d95d8e314a9f9e9d744dd2ee430daf32cda9aab4c25bbda6ede8cf58",
+  "checkoutOperation": {
+    "commandTemplate": "checkout-smoke-v2",
+    "operationKey": "contract-checkout-1d607fcf-e1fc-4c5a-80b6-107de9818799",
+    "currency": "usd",
+    "amountMinor": 100,
+    "expiresAtUtc": "2026-09-22T17:47:43Z"
+  },
+  "finishedAtUtc": "2026-09-22T16:47:46.483328Z",
+  "overallStatus": "PARTIAL_VERIFICATION"
+}

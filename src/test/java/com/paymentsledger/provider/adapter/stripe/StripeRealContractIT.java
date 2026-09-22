@@ -98,8 +98,11 @@ class StripeRealContractIT {
                     readBt("payoutRead", fact.failureBalanceTransactionId(), null);
                 });
                 runCase("balanceRead", () -> {
-                    var fact = success("balanceRead", financial.getBalance(scope, "usd", "PAYMENTS"));
-                    check("usd".equals(fact.currency()) && "PAYMENTS".equals(fact.balanceDomain()), "balance facts");
+                    String currency = System.getenv().getOrDefault("STRIPE_CONTRACT_BALANCE_CURRENCY", "usd").toLowerCase(Locale.ROOT);
+                    check(currency.matches("[a-z]{3}"), "invalid_STRIPE_CONTRACT_BALANCE_CURRENCY");
+                    var fact = success("balanceRead", financial.getBalance(scope, currency, "PAYMENTS"));
+                    check(currency.equals(fact.currency()) && "PAYMENTS".equals(fact.balanceDomain()), "balance facts");
+                    cases.get("balanceRead").put("currency",currency);
                 });
                 runCase("balanceTransactionList", () -> {
                     Instant until = started.plusSeconds(1);

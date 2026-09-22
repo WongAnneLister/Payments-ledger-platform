@@ -1,6 +1,6 @@
 # Provider 端口契约
 
-版本：PR05 · 日期：2026-09-22 · 状态：端口、持久 Fake 与 Stripe SDK 适配已实施；真实账户验证仍受凭据/fixture 阻塞
+版本：PR05 · 日期：2026-09-22 · 状态：端口、持久 Fake 与 Stripe SDK 适配已实施；真实 Checkout 基础契约已通过，其余支付 fixture 与 webhook 版本仍待验证
 
 关联：[PRD §2/§5/§14](../product/payment-platform-prd.md) · [AccountScope](account-scope.md) · [操作状态机](../state-machines/provider-operation.md) · [版本与能力矩阵](../spec/version-and-capability-matrix.md) · [ADR-0003 未知结果](../adr/0003-provider-unknown-result.md)
 
@@ -263,7 +263,7 @@ PR05 的报告必须保存：冻结版本、运行时间、脱敏对象引用、
 
 Checkout 的 `expiresAt` 改为绝对整秒时间（PR04 的相对 Duration 在延迟重试时会改变请求参数）。PR06 必须与 operation key 一起持久化。Fake 同步采用绝对时间；新建时校验 30 分钟至 24 小时范围，保留键重放先于时间检查。旧 Fake 状态中的相对参数不会自动迁移，新命令同键返回参数冲突；本地开发应使用新的模拟器目录，不覆盖原证据。
 
-所有 SDK 调用关闭自动重试。Checkout/refund 使用调用者操作键；expire 使用 scope+session 派生的固定键并记录实际发送值，Stripe 的 POST 默认随机键不会被误记为 null。SDK API 请求固定 `2026-07-29.dahlia`，本地 SDK `33.3.0`。远端 endpoint 版本和账户能力尚未冻结。
+所有 SDK 调用关闭自动重试。Checkout/refund 使用调用者操作键；expire 使用 scope+session 派生的固定键并记录实际发送值，Stripe 的 POST 默认随机键不会被误记为 null。SDK API 请求固定 `2026-07-29.dahlia`，本地 SDK `33.3.0`。真实基础契约已验证；账户既有测试 endpoint 使用 2026-06-24.dahlia，未绑定到本项目，完整账户能力与 endpoint 接收契约仍未冻结。
 
 `idempotency_key_in_use`/409、424、5xx 为暂态未知；只有同键不同参数的 idempotency error 才是 CONFLICT。连接无响应为 TIMEOUT_UNKNOWN（无 httpStatus/respondedAt）；明确 resource_missing 的 404 为 NOT_FOUND；空 Charge 枚举为 TRANSIENT_EMPTY，空财务窗口列表是成功观察，均不能推导资金操作未发生。`authentication_required` 可返回 AUTH_REQUIRED 且无 payload，调用者仍须按已有对象关联取证。
 

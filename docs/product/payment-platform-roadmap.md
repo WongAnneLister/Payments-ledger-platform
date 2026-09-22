@@ -1,6 +1,6 @@
 # 从零构建支付网关与复式账本：实施路线图
 
-版本：1.2 · 日期：2026-09-22 · 状态：已推进至 PR05 适配器与本地契约测试；真实账户门槛 BLOCKED，PR06 起待实施
+版本：1.2 · 日期：2026-09-22 · 状态：已推进至 PR05 适配器与本地契约测试；真实 Checkout 基础契约已验证，R0 完整门槛仍 BLOCKED，PR06 起待实施
 
 相关文档：[阅读入口](README.md) · [产品需求](payment-platform-prd.md) · [验收矩阵](payment-platform-acceptance.md) · [逐 PR 执行提示词](stripe-payment-ledger-codex-pr-prompts.md) · [面试问题与证据](payment-platform-interview-questions.md)
 

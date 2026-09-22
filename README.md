@@ -2,7 +2,7 @@
 
 Stripe 支付网关与复式账本。模块化单体，API / Worker 分角色运行，共享同一个 PostgreSQL 事务域。
 
-**当前状态：PR05 Stripe 适配器与本地契约测试已接入，真实账户验证仍 BLOCKED。** 已实现身份隔离、不可变账本、持久 Fake，以及 Checkout/退款/财务读取/验签适配器；尚未实现业务支付 API 或页面。
+**当前状态：PR05 Stripe 适配器已接入，真实账户基础验证已通过，完整支付链路仍待验证。** 已实现身份隔离、不可变账本、持久 Fake，以及 Checkout/退款/财务读取/验签适配器；尚未实现业务支付 API 或页面。
 运行说明见 [身份配置](docs/runbook/identity-and-fixtures.md)、[账本核心](docs/runbook/ledger-core.md)、[Provider 模拟器](docs/runbook/provider-simulator.md)和[Stripe 契约验证](docs/runbook/stripe-contract-check.md)。本地 fixture 通过不代表真实 Stripe 契约通过。
 设计基线见 [`docs/`](docs/)；本 README 只讲怎么跑起来。
 
