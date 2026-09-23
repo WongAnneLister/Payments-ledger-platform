@@ -1,0 +1,66 @@
+{
+  "recordedAtUtc": "2026-09-22T17:34:49.469134+00:00",
+  "status": "REQUESTED_SUCCESS_LIFECYCLE_VERIFIED",
+  "baseCommit": "d29da5a",
+  "sdkVersion": "33.3.0",
+  "apiVersion": "2026-07-29.dahlia",
+  "mode": "test",
+  "scopeKind": "Standalone provider-contract experiment; not application DB payment/ledger posting",
+  "browser": "Isolated Chrome through Playwright, actual hosted Checkout form",
+  "paymentAmountMinor": 100,
+  "paymentCurrency": "usd",
+  "refundAmountMinor": 100,
+  "refundCurrency": "usd",
+  "matchedWebhookEvents": 6,
+  "endpoint": {
+    "createdForThisRun": true,
+    "apiVersion": "2026-07-29.dahlia",
+    "livemode": false,
+    "endpointSha256": "eafd6a551d7ba4c9a4678264fb01e95122c9bd92f1bf11c7826219ca040ab0b5",
+    "createRequestId": "req_tosdbapqaMBLBa",
+    "deleted": true,
+    "deleteRequestId": "req_UInWVfCePnsZKn",
+    "existingEndpointModified": false
+  },
+  "verification": {
+    "command": "JAVA_HOME=<Corretto21> ./mvnw -B verify",
+    "exitCode": 0,
+    "tests": {
+      "unit": {
+        "tests": 134,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "integration": {
+        "tests": 46,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      }
+    }
+  },
+  "r0Status": "BLOCKED",
+  "notVerified": [
+    "production webhook inbox/business processing/ledger posting",
+    "decline/authentication/multiple Charge attempts",
+    "cancel/payment race",
+    "refund failure and failure BT",
+    "BT pagination and pending-to-available transition",
+    "dispute",
+    "payout",
+    "historical reports",
+    "idempotency retention window"
+  ],
+  "sourceSha256": {
+    "pom.xml": "9a2c408bc89f45d9638f66b66e9f2b0a80616d399e0fd99e48df545fe5d2f0fb",
+    "src/main/java/com/paymentsledger/provider/adapter/stripe/StripeAdapterConfiguration.java": "d3b1489577a7e06721aaf9ee0e3290f807dbaa6798036c95df5a407974f76143",
+    "src/main/java/com/paymentsledger/provider/adapter/stripe/StripeCheckoutAdapter.java": "15d41431a059794d979743914b1e5cbb038ef2053fc4675ee463d012d0bdfb32",
+    "src/main/java/com/paymentsledger/provider/adapter/stripe/StripeFinancialReadAdapter.java": "a630396bb7cce5bd9818749ef8ca522f88f63836de14b8cf61385639d91ab8ce",
+    "src/main/java/com/paymentsledger/provider/adapter/stripe/StripeGateway.java": "310cfe0dbe703e0070d482b41dcfa3253f0f949249172cb2b39f38ac25474102",
+    "src/main/java/com/paymentsledger/provider/adapter/stripe/StripeRefundAdapter.java": "7384014501c8121dc9fcf7c25c2007c486127210de03eecb612d3fb6d5f28ec6",
+    "src/main/java/com/paymentsledger/provider/adapter/stripe/StripeWebhookVerifier.java": "d4e5fd23d9928b35d82ea89308bd63fb8ac2a209dc7152e4e9dfe68de8add0c1",
+    "src/test/java/com/paymentsledger/provider/adapter/stripe/StripeLifecycleProbe.java": "372b26a502d59f5b577211e156bd48fe722b06e3caaa20751659d7dc8bf3c0a6",
+    "src/test/java/com/paymentsledger/provider/adapter/stripe/StripeLifecycleProbeTest.java": "7aa267a106b2e97773d94c3e1972d92b32f7c145615a440f4d26387957a59138"
+  }
+}

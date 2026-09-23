@@ -1,6 +1,6 @@
 # 版本与测试账户能力矩阵
 
-版本：PR05 · 日期：2026-09-23 · 状态：**运行时已锁定；Stripe SDK/API 配对与真实 Checkout 基础契约已验证，完整支付链路和 endpoint 接收仍待验证**
+版本：PR05 · 日期：2026-09-23 · 状态：**运行时已锁定；Stripe SDK/API 配对与真实 Checkout 基础契约已验证，单笔成功付款、退款资金链路与真实 endpoint 接收已验证；异常场景仍待验证**
 
 关联：[需求映射](requirements-map.md) · [Provider 端口](../contracts/provider.md) · [路线图 §1](../product/payment-platform-roadmap.md) · [验收 §1](../product/payment-platform-acceptance.md)
 
@@ -74,11 +74,11 @@
 | 项 | 候选 | 状态 | 验证 PR | 说明 |
 |---|---|---|---|---|
 | `stripe-java` SDK 版本 | `33.3.0` | **VERIFIED（基础契约）** | PR05 | Maven 实际解析，真实 Checkout create/query/expire 已通过 |
-| Stripe API 版本（pinned） | `2026-07-29.dahlia` | **VERIFIED（基础契约）** | PR05 | 真实请求通过，Balance 响应头确认同版本；完整资金链路仍待验证 |
-| Webhook endpoint API 版本 | 项目期望 `2026-07-29.dahlia`；账户既有 endpoint `2026-06-24.dahlia` | **BLOCKED** | PR05 | 既有测试 endpoint 未确认属于本项目，未修改；没有真实接收验签证据 |
+| Stripe API 版本（pinned） | `2026-07-29.dahlia` | **VERIFIED（基础契约）** | PR05 | 真实请求通过；单笔成功付款/退款及 BT 链路已验证，异常路径仍待验证 |
+| Webhook endpoint API 版本 | 本次专用 `2026-07-29.dahlia` | **VERIFIED（成功路径）** | PR05 | 6 个真实关联事件验签通过；临时端点已删除，既有端点未修改 |
 | 幂等键实际保留窗口 | 实测 `TBD` | **BLOCKED；官方契约已核对** | PR05 | [官方契约](https://docs.stripe.com/api/idempotent_requests)：至少 24 小时后可清理；非精确 TTL，不启用未验证的自动恢复窗口 |
 | 测试账户 ID（脱敏） | SHA-256 `cf3f54f8…de8cf58` | **VERIFIED** | PR05 | 完整哈希见 real/verification.json；凭据通过 /v1/account 绑定核验 |
-| 运行币种 | Checkout USD；当前 Balance JPY | **分别 VERIFIED** | PR05 | 测试会话金额 USD 1.00；账户余额实际为 JPY，未验证换汇或付款入账 |
+| 运行币种 | Checkout USD；当前 Balance JPY | **分别 VERIFIED** | PR05 | 测试会话金额 USD 1.00；账户余额实际为 JPY，本次 USD 1 付款对应 JPY 157 结算流水，非本地账本入账 |
 
 **版本冻结的含义**：仅本地 LOCAL_LOCKED 不代表远端 FROZEN。PR05 真实验证完成后，`stripe-java` 版本、Stripe API 版本、endpoint 版本三者一并记入本表并标为 `FROZEN`，后续变更需新 PR 并重跑契约测试。
 
@@ -89,15 +89,15 @@
 
 | 能力 | 用途 | 当前状态 | 验证 PR | 不可用时的替代 |
 |---|---|---|---|---|
-| Checkout Session 创建 / 查询 | PR06 最小客户入口 | **VERIFIED：两个未付款测试会话** | PR05 | 证据见 PR05 real/，不代表支付成功 |
+| Checkout Session 创建 / 查询 | PR06 最小客户入口 | **VERIFIED：两次未付款 smoke + 一次完成付款** | PR05 | smoke 见 PR05 real/；成功付款见 lifecycle/ |
 | Checkout Session `expire` | FR-PAY-03 取消语义 | **VERIFIED：OPEN→EXPIRED** | PR05 | 取消与支付竞争仍 BLOCKED |
-| PI ↔ Charge 关联、多 attempt | AC-V1-06 | **未知** | PR05 | Fake 覆盖 |
-| 自动 capture | 本期唯一支付方式 | **未知** | PR05 | 无替代 |
-| `payment_intent_data.metadata` 显式传递 | FR-PAY-01 | **未知** | PR05 | **必须实测核验，不假设自动继承** |
+| PI ↔ Charge 关联、多 attempt | AC-V1-06 | **单次成功关联 VERIFIED；多 attempt 未验证** | PR05 | Fake 覆盖 |
+| 自动 capture | 本期唯一支付方式 | **VERIFIED：PI automatic + Charge captured** | PR05 | 无替代 |
+| `payment_intent_data.metadata` 显式传递 | FR-PAY-01 | **VERIFIED：分别核对 Session/PI 标记** | PR05 | **必须实测核验，不假设自动继承** |
 | 卡拒付 / 需认证测试卡 | AC-V1-06 | **未知** | PR05 | Fake 覆盖 |
-| Refund 创建 / 查询 | PR11 | **未知** | PR05 | Fake 覆盖 |
+| Refund 创建 / 查询 | PR11 | **VERIFIED：USD 1 全额成功退款及 BT** | PR05 | Fake 覆盖 |
 | 退款失败与失败返还 BT | AC-V1-21 | **未知** | PR05 / PR11 | **很可能 fixture-only** |
-| Balance Transaction 分页读取 | PR10 核心 | **未知** | PR05 | 无替代；不可用则 I-05 无法真实验证 |
+| Balance Transaction 分页读取 | PR10 核心 | **两个 BT 详情 VERIFIED；分页未验证** | PR05 | 无替代；不可用则 I-05 无法真实验证 |
 | BT `available_on` / pending→available | AC-V1-30 | **未知** | PR05 | Fake 覆盖 |
 | **Dispute 触发**（测试争议） | PR13 全部资金路径 | **未知，很可能受限** | PR05 / PR13 | `fixture-only`，相关 AC **不得 PASS** |
 | Dispute won / lost / late win | AC-V1-24、25 | **未知，很可能受限** | PR13 | `fixture-only` |
@@ -106,7 +106,7 @@
 | Payout 失败与 `failure_balance_transaction` | AC-V1-27 | **未知，很可能受限** | PR14 | `fixture-only` |
 | Balance API 快照 | PR15 | **VERIFIED：当前 JPY / PAYMENTS** | PR05 | USD 当前无余额项，不据此推断任何历史余额 |
 | **报告 / 历史期末证据**（`ReportPort`） | I-05 第三份独立证据 | **未知，可能需额外开通** | PR05 / PR15 | 受控静止区间快照；否则运行 `INCOMPLETE` |
-| Webhook 真实接收（公网可达） | AC-V1-11 | **BLOCKED：无接收证据且既有版本不符** | PR05 / PR08 | 本地签名 fixture，**必须标注来源区别** |
+| Webhook 真实接收（公网可达） | AC-V1-11 | **VERIFIED：6 个关联事件；业务 Inbox 尚未实现** | PR05 / PR08 | 真实来源见 lifecycle/；本地 fixture 另行标注 |
 
 ### 3.1 记录规则
 
@@ -136,7 +136,7 @@
 | V2 | `stripe-java` + Stripe API 版本冻结 | PR05 | AC-V1-05、06、07 |
 | V3 | 幂等键实际保留窗口 | PR05 | AC-V1-09 的真实契约部分 |
 | V4 | Checkout create/query/expire 实测已通过；取消竞争待验证 | PR05 | AC-V1-05、07 的剩余部分 |
-| V5 | Session metadata 已实测；PI metadata 仍待支付样本 | PR05 | AC-V1-05 |
+| V5 | Session / PI metadata 已分别实测通过 | PR05 | AC-V1-05 |
 | V6 | BT 分页与字段实测 | PR05 | AC-V1-16、18、I-05 |
 | V7 | Dispute 能力 | PR05 / PR13 | AC-V1-24、25 |
 | V8 | Payout 能力 | PR05 / PR14 | AC-V1-26、27 |
@@ -149,6 +149,6 @@
 
 本地：Checkout/refund 参数及对象映射、全部 Charge attempts、错误分类与未知结果、财务分页与余额域、原始字节签名使用真实 SDK 加确定性 HTTP/签名 fixture。来源标记 `LOCAL_SDK_HTTP_FIXTURE` / `LOCAL_SIGNATURE_FIXTURE`；PR04 仍是 `PROVIDER_SIMULATOR`。
 
-真实账户：2026-09-23 已完成两次基础 smoke；创建/查询/过期、Session metadata 及 JPY 当前余额已验证。24 小时 BT 窗口为空，尚无完成付款、退款、争议、payout 样本；既有 webhook endpoint 版本与项目要求不一致。R0 仍为 BLOCKED；不能据基础 smoke 把完整验收 ID 标为 PASS。ReportPort 历史报告与非 PAYMENTS 域余额快照尚未验证契约，明确返回 CAPABILITY_UNAVAILABLE。公开 ReportRun 的 succeeded 状态不能代替下载并校验历史财务报告。
+真实账户：2026-09-23 已完成两次基础 smoke，以及一笔真实托管 Checkout 测试付款和全额退款。付款/退款 BT、automatic capture、Session/PI metadata、专用固定版本端点的 6 个关联回调及篡改拒绝均已验证，见[联调证据](../evidence/pr05/lifecycle/README.md)。临时端点已删除，既有端点未修改。争议、payout、多 attempt、异常路径、BT 分页及业务入账仍未验证。R0 仍为 BLOCKED；不能据基础 smoke 把完整验收 ID 标为 PASS。ReportPort 历史报告与非 PAYMENTS 域余额快照尚未验证契约，明确返回 CAPABILITY_UNAVAILABLE。公开 ReportRun 的 succeeded 状态不能代替下载并校验历史财务报告。
 
 运行方法与分项证据见[真实契约测试手册](../runbook/stripe-contract-check.md)；本次本地验证结果见[PR05 证据](../evidence/pr05/README.md)。版本依据：[Stripe 33.3.0 官方发布](https://github.com/stripe/stripe-java/releases/tag/v33.3.0)，及对应源码 `ApiVersion.CURRENT`。

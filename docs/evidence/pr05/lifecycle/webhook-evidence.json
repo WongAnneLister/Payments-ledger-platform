@@ -1,0 +1,83 @@
+{
+  "source": "REAL_STRIPE_HTTPS_DELIVERY",
+  "events": [
+    {
+      "receivedAtUtc": "2026-09-22T17:26:52.051067Z",
+      "classification": "SUCCESS",
+      "apiVersion": "2026-07-29.dahlia",
+      "mode": "test",
+      "eventIdSha256": "0bbb44f11c5b6c554d8d3e4de965c6be03f9a41eedd92cf02551e2af269a6401",
+      "objectIdSha256": "43db6faad944b9cae2ba51a56e7ecfe50b6a8abe478b5d3b4bb56ec1817600c7",
+      "eventType": "charge.succeeded",
+      "redactedEvidenceSha256": "2e9a713b8e6aded9a00592b42c7f303d27e62ef3262f595bfccff6583e2229e7",
+      "tamperClassification": "DEFINITIVE_REJECT",
+      "tamperRejected": true,
+      "matchedLifecycleObject": "chargeId"
+    },
+    {
+      "receivedAtUtc": "2026-09-22T17:26:52.075459Z",
+      "classification": "SUCCESS",
+      "apiVersion": "2026-07-29.dahlia",
+      "mode": "test",
+      "eventIdSha256": "9b1fd681be4245f917a37fdd13e0afb9d08d969455baddfc381d073505c2a1d4",
+      "objectIdSha256": "42dc44d794f3d5341fde5c4e5c092aae27fc57bd0c1e8987a02bf107488e17f3",
+      "eventType": "payment_intent.succeeded",
+      "redactedEvidenceSha256": "eba6c931c87e74c8bbbccde89c5c0b9b3664f939c58541d68277325fd07625ee",
+      "tamperClassification": "DEFINITIVE_REJECT",
+      "tamperRejected": true,
+      "matchedLifecycleObject": "piId"
+    },
+    {
+      "receivedAtUtc": "2026-09-22T17:26:52.089007Z",
+      "classification": "SUCCESS",
+      "apiVersion": "2026-07-29.dahlia",
+      "mode": "test",
+      "eventIdSha256": "853fa4811ff1e4fbdd2e10c271d318cf444fab1e1161e8faf2dc5b36cb3e399a",
+      "objectIdSha256": "f6a6ede51fb4429b6858f410f81095b86c8db693a2496728c71d8d9fc00463ff",
+      "eventType": "checkout.session.completed",
+      "redactedEvidenceSha256": "9f5d100cf5cf34a2a7e73b9e1e62e70353b8d37eadd12e68ebb570722e5a6732",
+      "tamperClassification": "DEFINITIVE_REJECT",
+      "tamperRejected": true,
+      "matchedLifecycleObject": "sessionId"
+    },
+    {
+      "receivedAtUtc": "2026-09-22T17:32:55.814989Z",
+      "classification": "SUCCESS",
+      "apiVersion": "2026-07-29.dahlia",
+      "mode": "test",
+      "eventIdSha256": "d20ab4d9dbe8702efab0c109ab14851199553e770bdea0fe5e5e297ddec057b3",
+      "objectIdSha256": "390ad4066fb9a152965561b0dcd3c5faf313f20d59417a40559b1414467c5779",
+      "eventType": "refund.created",
+      "redactedEvidenceSha256": "c449d144324a15ffb1190410c0c014fe570c9196e2df3692b67490092e64ecaa",
+      "tamperClassification": "DEFINITIVE_REJECT",
+      "tamperRejected": true,
+      "matchedLifecycleObject": "refundId"
+    },
+    {
+      "receivedAtUtc": "2026-09-22T17:32:55.839177Z",
+      "classification": "SUCCESS",
+      "apiVersion": "2026-07-29.dahlia",
+      "mode": "test",
+      "eventIdSha256": "3762c95b55f0e986cdadb7d2bbc396e9af752ccc0cd860fe85bddb7ec205fdd4",
+      "objectIdSha256": "43db6faad944b9cae2ba51a56e7ecfe50b6a8abe478b5d3b4bb56ec1817600c7",
+      "eventType": "charge.refunded",
+      "redactedEvidenceSha256": "6f71b15a88e97f58c71c3dc49514ccfbf025df89b4f7a3c01677498810e9342a",
+      "tamperClassification": "DEFINITIVE_REJECT",
+      "tamperRejected": true,
+      "matchedLifecycleObject": "chargeId"
+    },
+    {
+      "receivedAtUtc": "2026-09-22T17:32:55.935443Z",
+      "classification": "SUCCESS",
+      "apiVersion": "2026-07-29.dahlia",
+      "mode": "test",
+      "eventIdSha256": "a0af1cdf8babc43d457b7d1871b59b58299e8c2eddcf8c7d185319f67c9218cb",
+      "objectIdSha256": "390ad4066fb9a152965561b0dcd3c5faf313f20d59417a40559b1414467c5779",
+      "eventType": "refund.updated",
+      "redactedEvidenceSha256": "d5399444394e14180889058e71cc9cef3ef0e74a9b05a7f4fffaea4731296287",
+      "tamperClassification": "DEFINITIVE_REJECT",
+      "tamperRejected": true,
+      "matchedLifecycleObject": "refundId"
+    }
+  ]
+}

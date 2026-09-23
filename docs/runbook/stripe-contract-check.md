@@ -78,3 +78,28 @@ Every invocation creates a new run ID and therefore a **new Checkout operation**
 Cleanup always attempts expiration when a created session ID is known. A timeout, process termination, or mapping failure can leave an unknown remote session: inspect the account's request logs using the persisted operation key/request IDs, locate any session, and expire it through the approved test workflow if still open. Evidence hashes cannot recover object IDs. Cleanup failure is a failed case; elapsed expiry or an uncertain response must not be reported as successful cleanup. The harness never cancels a PaymentIntent as a substitute for expiring Checkout.
 
 `VERIFIED` applies only to the named assertions that actually ran. `BLOCKED` and `NOT_RUN` remain outstanding; even a passing Maven invocation reports `PARTIAL_VERIFICATION` because manual cases and reports are unresolved. Preserve the JSON alongside the Failsafe result when recording verification. A skipped run or missing artifact is not a successful real contract check.
+
+## 已完成的托管 Checkout 生命周期联调
+
+2026-09-23 的[独立实测记录](../evidence/pr05/lifecycle/README.md)补充了上面旧 smoke 的成功付款、PI metadata、automatic capture、退款 BT 和真实回调证据。旧 smoke 的能力边界和历史文件保持原样；未验证的异常路径不据此解锁。
+
+`StripeLifecycleProbe` 位于测试源码，显式要求 `STRIPE_LIFECYCLE_ENABLED=true` 和上表的测试凭据/账户绑定。编译测试源码并准备 runtime classpath 后，其 main 命令为：
+
+| 命令 | 行为 |
+| --- | --- |
+| `create` | 持久化原始操作键、绝对到期时间和返回地址后，创建 USD 1 Checkout；已知 Session 则查询 |
+| `inspect` | 查询该 Session → PI → 全部 Charge attempts → 已出现的 BT；核对 metadata、automatic capture 和金额关联 |
+| `refund` | 重新核验成功付款链，全额退还 USD 1；持久化独立退款键；已有 Refund ID 时只查询 |
+| `serve` | 仅在 localhost:18888 启动临时验签接收器，非生产业务 webhook controller |
+
+CLI 同时需要 `STRIPE_LIFECYCLE_BASE_URL=https://<dedicated-test-tunnel>`。私有运行文件放在 Git 忽略的 `target/pr05-lifecycle/`：`state.local.json` 保存完整对象引用/URL/操作键；`webhook-path.local` 是专用随机路径 `/webhook/<nonce>`；`webhook-secret.local` 是专用测试端点的签名 secret。不要把这些文件复制到证据目录。
+
+先准备接收器及 HTTPS 隧道，为本次实验新建 test-mode webhook endpoint，API 版本明确指定 `2026-07-29.dahlia`。启用 `checkout.session.completed`、`payment_intent.succeeded`、`charge.succeeded`、`charge.updated`、`charge.refunded`、`refund.created`、`refund.updated`。不修改不属于本实验的既有端点。端点创建也应持久化请求参数和稳定操作键，结果未知时先查明，不反复新建。
+
+创建后通过真正的托管收银台提交[官方测试卡](https://docs.stripe.com/testing)，再运行 inspect/refund。不要通过直接确认 PI 替代托管 Checkout。金额是 USD minor units；BT 可能是账户结算币种，本次为 JPY，必须分别解释。
+
+接收器读取原始请求字节、调用项目验签器，并对同一真实载荷追加空格验证签名拒绝。`webhook-evidence.jsonl` 仅保存事件/对象哈希及允许字段。**必须将 objectIdSha256 与本次 state 中对象的 UTF-8 SHA-256 匹配**，才能计为本次回调；同账户的其他事件不能算入。HTTP 200 仅表示原始签名验证及证据写入成功，不代表业务 Inbox、幂等消费或账本入账完成。
+
+每个命令会更新 `lifecycle-evidence.json` 对应命令的最近结果；归档最终成功记录时，应保留时间、请求 ID、源码版本和明确来源。PENDING 不可写成成功，FAILED 需先诊断。状态文件支持短时中断后的同参数恢复，但没有证明 Stripe 幂等保留窗口；超过保留期或无法确认旧结果时不要直接重放。不要删除状态文件后继续尝试“恢复”同一笔付款或退款。
+
+完成后核对专用端点 ID/实验标记并删除它，关闭本次启动的接收器、隧道和浏览器。仅归档脱敏 JSON 和文本测试报告，保留尚未覆盖的能力清单。

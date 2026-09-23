@@ -1,0 +1,184 @@
+{
+  "apiVersion" : "2026-07-29.dahlia",
+  "sdkVersion" : "33.3.0",
+  "mode" : "test",
+  "runSha256" : "ae8fcf72bac813ed590cd095ab2568b7600efbded72efcd80c1881a79e27738f",
+  "create" : {
+    "observedAtUtc" : "2026-09-22T17:23:48.300888Z",
+    "observations" : [ {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_Mk2Oya8VxWp8rN",
+      "redactedEvidenceSha256" : "ea4572ff15c18e5a7d6f86c1aa1c543ad97d55744bf22c5888429c97d39c34e2"
+    } ],
+    "classification" : "SUCCESS",
+    "sessionSha256" : "f6a6ede51fb4429b6858f410f81095b86c8db693a2496728c71d8d9fc00463ff",
+    "sessionStatus" : "OPEN",
+    "sessionMetadataVerified" : true,
+    "amountMinor" : 100,
+    "currency" : "usd",
+    "status" : "VERIFIED"
+  },
+  "inspect" : {
+    "observedAtUtc" : "2026-09-22T17:27:17.037993Z",
+    "observations" : [ {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_1ExHUKqizqbPYk",
+      "redactedEvidenceSha256" : "0cabc706285648dc1062e784bdf563d96ad6efe6f85be95be574b135d30b432c"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_J66wxssOHUAAVl",
+      "redactedEvidenceSha256" : "5910d8b58d9737c6fa1a471868ac0aa764dfe22d7154e75b110ccd4d66997557"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_h8q3729wzIwWFE",
+      "redactedEvidenceSha256" : "76fcbf50ec1a09c6d09932df5063446ffd91be2d814d345335cad47c55274844"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_luwJw6b5RSmQpL",
+      "redactedEvidenceSha256" : "9d9b6cf43f22ccbdda12bd6a6adc42db6a145a781e977f42dd6546039cc361ba"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_5XMbfgdTwBcm6z",
+      "redactedEvidenceSha256" : "bd41c325aa820f97f9796d106f157b8c69dc02403f44747059f82e1d2c96fb23"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_GKCot3XdqKHopp",
+      "redactedEvidenceSha256" : "e909c6c68a19c43b1227968f4bb1f87a137c921bfdb37acd4820932ae8ebc713"
+    } ],
+    "classification" : "SUCCESS",
+    "sessionSha256" : "f6a6ede51fb4429b6858f410f81095b86c8db693a2496728c71d8d9fc00463ff",
+    "sessionStatus" : "COMPLETE",
+    "sessionMetadataVerified" : true,
+    "piSha256" : "42dc44d794f3d5341fde5c4e5c092aae27fc57bd0c1e8987a02bf107488e17f3",
+    "paymentStatus" : "succeeded",
+    "paymentIntentMetadataVerified" : true,
+    "originalCaptureMethod" : "automatic",
+    "charges" : [ {
+      "chargeSha256" : "43db6faad944b9cae2ba51a56e7ecfe50b6a8abe478b5d3b4bb56ec1817600c7",
+      "amountMinor" : 100,
+      "currency" : "usd",
+      "captured" : true,
+      "status" : "succeeded",
+      "balanceTransaction" : {
+        "btSha256" : "8720e874683ba34b44151d536ea70b05f5f6afa19cb738ecdab962990df9e5fe",
+        "sourceSha256" : "43db6faad944b9cae2ba51a56e7ecfe50b6a8abe478b5d3b4bb56ec1817600c7",
+        "amountMinor" : 157,
+        "feeMinor" : 10,
+        "netMinor" : 147,
+        "currency" : "jpy",
+        "sourceAssociationVerified" : true,
+        "netArithmeticVerified" : true
+      }
+    } ],
+    "chargeAttemptCount" : 1,
+    "amountMinor" : 100,
+    "currency" : "usd",
+    "balanceTransactionStatus" : "VERIFIED",
+    "status" : "VERIFIED"
+  },
+  "refund" : {
+    "observedAtUtc" : "2026-09-22T17:32:48.965848Z",
+    "observations" : [ {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_TEilHbyFlgg4jj",
+      "redactedEvidenceSha256" : "1955ea38191533ddad6f6fa27135cb8805a3845243ae61c33e71163b866a9bd9"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_VhFP3MoO0UQCuW",
+      "redactedEvidenceSha256" : "5cca43009a88a3a8634794bb03b3f6fa4c5fca003470a8916038794c91fa8d0d"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_NAI5CrVvwxA8m6",
+      "redactedEvidenceSha256" : "e63505840f0bb95e510602dc81866dd9983870cce0fc4ad24f9687fd73d66bba"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_tS6wO9zTmQtTyo",
+      "redactedEvidenceSha256" : "db57cf94c17be7868df7114f017bbb24b5752b0d234989a223a9161400b31161"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_rtznBQsB1ggTGa",
+      "redactedEvidenceSha256" : "6f341c951d4a47eecbffd9c22899b8fb15a8dbe125be76f79ea366bb89efd3e4"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_8HZqjuBcxX2hqF",
+      "redactedEvidenceSha256" : "cfc57a0fbb85828e915fcaa626882aaa46044dabb2400515e2b8f21435145a93"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_xfzZG8EwsSOUHt",
+      "redactedEvidenceSha256" : "a173c47d492fcf4c8fda04309500cee59e7ef3f2e1ee81724fcd4245c1adad29"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_EsW91OSza50WKA",
+      "redactedEvidenceSha256" : "5e5d3fc3816fb2398ef9ff38b08cae0dbf33e25d3b8ba031eaf92c227357cf4c"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_SzKB9qULePDFzS",
+      "redactedEvidenceSha256" : "e59a3e218979a78f112e142b68c41e5cc77a00cb578fb88aa4b437ce2e8f5d85"
+    }, {
+      "classification" : "SUCCESS",
+      "httpStatus" : 200,
+      "requestId" : "req_Jv7xseZaV43HrZ",
+      "redactedEvidenceSha256" : "191d0102e14b1fd4bb2323fc3a0de141dcc807bb277b288be8c9251645a21ba6"
+    } ],
+    "classification" : "SUCCESS",
+    "sessionSha256" : "f6a6ede51fb4429b6858f410f81095b86c8db693a2496728c71d8d9fc00463ff",
+    "sessionStatus" : "COMPLETE",
+    "sessionMetadataVerified" : true,
+    "piSha256" : "42dc44d794f3d5341fde5c4e5c092aae27fc57bd0c1e8987a02bf107488e17f3",
+    "paymentStatus" : "succeeded",
+    "paymentIntentMetadataVerified" : true,
+    "originalCaptureMethod" : "automatic",
+    "charges" : [ {
+      "chargeSha256" : "43db6faad944b9cae2ba51a56e7ecfe50b6a8abe478b5d3b4bb56ec1817600c7",
+      "amountMinor" : 100,
+      "currency" : "usd",
+      "captured" : true,
+      "status" : "succeeded",
+      "balanceTransaction" : {
+        "btSha256" : "8720e874683ba34b44151d536ea70b05f5f6afa19cb738ecdab962990df9e5fe",
+        "sourceSha256" : "43db6faad944b9cae2ba51a56e7ecfe50b6a8abe478b5d3b4bb56ec1817600c7",
+        "amountMinor" : 157,
+        "feeMinor" : 10,
+        "netMinor" : 147,
+        "currency" : "jpy",
+        "sourceAssociationVerified" : true,
+        "netArithmeticVerified" : true
+      }
+    } ],
+    "chargeAttemptCount" : 1,
+    "amountMinor" : 100,
+    "currency" : "usd",
+    "balanceTransactionStatus" : "VERIFIED",
+    "refundSha256" : "390ad4066fb9a152965561b0dcd3c5faf313f20d59417a40559b1414467c5779",
+    "refundAmountMinor" : 100,
+    "refundCurrency" : "usd",
+    "refundStatus" : "succeeded",
+    "refundBalanceTransaction" : {
+      "btSha256" : "7b85cfcf19434161d8b98b3ad6ada5c87cdb7b2bbc0f05e80065f95e125f1161",
+      "sourceSha256" : "390ad4066fb9a152965561b0dcd3c5faf313f20d59417a40559b1414467c5779",
+      "amountMinor" : -157,
+      "feeMinor" : 0,
+      "netMinor" : -157,
+      "currency" : "jpy",
+      "sourceAssociationVerified" : true,
+      "netArithmeticVerified" : true
+    },
+    "status" : "VERIFIED"
+  }
+}
