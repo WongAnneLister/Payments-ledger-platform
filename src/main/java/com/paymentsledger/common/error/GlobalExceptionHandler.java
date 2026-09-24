@@ -40,6 +40,13 @@ public class GlobalExceptionHandler {
                 .body(ApiError.of(code, "Request validation failed", RequestContext.currentRequestId(), details));
     }
 
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleUnreadableJson() {
+        ErrorCode code = ErrorCode.VALIDATION_ERROR;
+        return ResponseEntity.status(code.httpStatus())
+                .body(ApiError.of(code, "Invalid JSON request", RequestContext.currentRequestId()));
+    }
+
     @ExceptionHandler(MissingRequestHeaderException.class)
     public ResponseEntity<ApiError> handleMissingHeader(MissingRequestHeaderException ex) {
         boolean idempotency = "Idempotency-Key".equalsIgnoreCase(ex.getHeaderName());
@@ -49,8 +56,8 @@ public class GlobalExceptionHandler {
                         RequestContext.currentRequestId()));
     }
 
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ApiError> handleNotFound(NoResourceFoundException ex) {
+    @ExceptionHandler({NoResourceFoundException.class, org.springframework.web.servlet.NoHandlerFoundException.class})
+    public ResponseEntity<ApiError> handleNotFound() {
         ErrorCode code = ErrorCode.NOT_FOUND;
         return ResponseEntity.status(code.httpStatus())
                 .body(ApiError.of(code, "Resource not found in caller scope", RequestContext.currentRequestId()));

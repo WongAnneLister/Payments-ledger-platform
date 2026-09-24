@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>测试付款 · Payments Ledger</title>
+<style>
+:root{font:16px/1.6 system-ui,sans-serif;color:#183047;background:#f4f7fa}*{box-sizing:border-box}body{margin:0}main{max-width:900px;margin:44px auto;padding:0 24px}h1{font-size:30px;margin:8px 0}h2{font-size:19px;margin:0 0 16px}.badge{font-size:12px;color:#366947;background:#e2f0e6;border-radius:20px;padding:5px 12px}p{color:#50677a}.panel{background:white;border:1px solid #dce4ed;border-radius:14px;padding:24px;margin:20px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:block;font-size:14px}input{width:100%;margin:5px 0 0;padding:10px 12px;border:1px solid #b8c8d7;border-radius:6px;font:inherit}.wide{grid-column:1/-1}button,.link{display:inline-block;border:0;background:#235989;color:white;padding:11px 18px;border-radius:7px;font:inherit;cursor:pointer;margin:16px 10px 0 0;text-decoration:none}button.secondary{background:#e8eef4;color:#183047}button:disabled{opacity:.5;cursor:wait}#notice{white-space:pre-wrap}pre{overflow:auto;font-size:13px;white-space:pre-wrap;word-break:break-word;background:#f4f7fa;padding:16px;border-radius:7px}.muted{font-size:13px;color:#50677a}a[hidden]{display:none}@media(max-width:600px){main{margin:22px auto}.grid{grid-template-columns:1fr}}
+</style></head>
+<body><main><span class="badge">仅限测试环境</span><h1>创建并查询测试付款</h1><p>先建立订单，再前往托管收银台完成付款。付款结果以查询到的状态为准。</p>
+<section class="panel"><h2>应用身份</h2><label>应用凭据<input id="credential" type="password" autocomplete="off" spellcheck="false" placeholder="app_…"></label><p class="muted">使用项目的应用凭据，不是 Stripe 密钥。凭据仅在当前页面内存中使用；从收银台返回后需要重新输入。</p></section>
+<form id="order" class="panel"><h2>测试订单</h2><div class="grid">
+<label>业务订单号<input id="orderKey" required maxlength="128"></label><label>幂等请求键<input id="operationKey" required minlength="8" maxlength="255"></label>
+<label>商品引用<input id="productRef" required value="demo-product"></label><label>价格版本<input id="priceVersion" type="number" required min="1" step="1" value="1"></label>
+<label>订单总金额（最小单位）<input id="amountMinor" type="number" required min="1" step="1" value="10000"></label><label>币种<input id="currency" required value="USD" pattern="[A-Z]{3}"></label>
+<label>数量<input id="quantity" type="number" required min="1" max="10000" step="1" value="1"></label><p class="muted">USD 的 10000 表示 100 美元；JPY 的 10000 表示 10000 日元。金额必须与服务端价格相符。</p>
+<label class="wide">付款返回地址（HTTPS）<input id="successUrl" type="url" required placeholder="https://你的测试域名/payment-test.html"></label>
+<label class="wide">取消返回地址（HTTPS）<input id="cancelUrl" type="url" required placeholder="https://你的测试域名/payment-test.html"></label>
+</div><button id="create" type="submit">创建测试支付</button><button id="newOrder" class="secondary" type="button" disabled>开始新测试订单</button></form>
+<section class="panel"><h2>支付结果</h2><label>支付 ID<input id="paymentId" autocomplete="off" placeholder="创建后自动填入，也可输入已有支付 ID"></label>
+<button id="query" class="secondary">查询最新状态</button><button id="cancel" class="secondary">申请取消</button><a id="checkout" class="link" rel="noreferrer" hidden>前往测试收银台</a>
+<p id="notice" role="status" aria-live="polite">等待创建或查询。</p><pre id="result" hidden></pre><p class="muted">结果待确认时，请继续查询原支付，勿更换订单号重新付款。申请取消不会退款，也不会抹掉已经成功的付款。</p></section>
+</main><script src="/payment-test.js" defer></script></body></html>

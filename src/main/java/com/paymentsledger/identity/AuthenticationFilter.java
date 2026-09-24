@@ -23,6 +23,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class AuthenticationFilter extends OncePerRequestFilter {
     static final String TENANT=AuthenticationFilter.class.getName()+".tenant";
     static final String OPS=AuthenticationFilter.class.getName()+".ops";
+    /** Only the authentication filter establishes this trusted request context. */
+    public static TenantContext tenant(HttpServletRequest request) {
+        return TenantAccessGuard.require((TenantContext)request.getAttribute(TENANT));
+    }
     private final IdentityRepository repository;
     private final CredentialTokens tokens;
     private final ObjectMapper mapper;

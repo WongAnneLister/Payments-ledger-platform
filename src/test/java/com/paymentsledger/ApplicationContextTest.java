@@ -33,6 +33,9 @@ class ApplicationContextTest {
     @org.springframework.test.context.bean.override.mockito.MockitoBean
     private org.springframework.jdbc.core.JdbcTemplate jdbcTemplate;
 
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    private org.springframework.transaction.PlatformTransactionManager transactionManager;
+
     @Autowired
     private ApplicationContext context;
 
@@ -51,12 +54,11 @@ class ApplicationContextTest {
     }
 
     @Test
-    @DisplayName("PR03 账本服务已装配，未提前实现支付或退款")
-    void noBusinessBeansYet() {
-        // 骨架阶段的显式断言：避免「悄悄提前实现未来模块」
+    @DisplayName("PR06 支付与账本服务已装配，退款仍未接入")
+    void paymentAndLedgerServicesAreWiredWithoutRefundService() {
         assertThat(context.getBeanDefinitionNames())
-                .noneMatch(name -> name.toLowerCase().contains("paymentservice"))
                 .noneMatch(name -> name.toLowerCase().contains("refundservice"));
+        assertThat(context.getBean(com.paymentsledger.payment.PaymentService.class)).isNotNull();
         assertThat(context.getBean(com.paymentsledger.ledger.LedgerPostingService.class)).isNotNull();
     }
 }

@@ -64,6 +64,11 @@ class WorkerRoleHealthIT {
     }
 
     @Test
+    void workerDoesNotExposeCustomerTestPage() {
+        assertThat(restTemplate.getForEntity("/payment-test.html", String.class).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
     @DisplayName("health 不泄露依赖拓扑细节")
     void healthHidesComponentDetails() {
         ResponseEntity<String> response = restTemplate.getForEntity("/actuator/health", String.class);

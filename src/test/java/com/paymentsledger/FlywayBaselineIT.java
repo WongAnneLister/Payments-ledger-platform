@@ -52,7 +52,7 @@ class FlywayBaselineIT {
     }
 
     @Test
-    @DisplayName("V1 保持无业务表，空库可升级至 V3，重复迁移幂等")
+    @DisplayName("V1 保持无业务表，空库可升级至 V4，重复迁移幂等")
     void migratesEmptyDatabaseThenIsIdempotent() throws Exception {
         // 1) 确认目标库确实是我们新建的隔离库
         assertThat(POSTGRES.getJdbcUrl()).contains(ISOLATED_DB);
@@ -105,7 +105,7 @@ class FlywayBaselineIT {
                         .isEqualTo("platform");
             }
         }
-        assertThat(flyway().migrate().migrationsExecuted).isEqualTo(2);
+        assertThat(flyway().migrate().migrationsExecuted).isEqualTo(3);
         assertThat(flyway().migrate().migrationsExecuted).isZero();
     }
 }

@@ -1573,6 +1573,8 @@ components:
           description: 业务订单唯一键，作用域 `(org, env, application)`
         productRef:
           type: string
+          maxLength: 128
+          minLength: 1
           description: 受控商品引用（PR02 fixture）
         priceVersion:
           type: integer
@@ -1580,15 +1582,17 @@ components:
           description: 受控价格版本；服务端据此解析权威金额
         amountMinor: { $ref: '#/components/schemas/AmountMinor' }
         currency: { $ref: '#/components/schemas/Currency' }
-        quantity: { type: integer, minimum: 1, default: 1 }
-        successUrl: { type: string, format: uri }
-        cancelUrl: { type: string, format: uri }
-        customerRef: { type: string, nullable: true, description: 商户侧客户标识；不接收原始卡号 }
+        quantity: { type: integer, minimum: 1, maximum: 10000, default: 1 }
+        successUrl: { type: string, format: uri, maxLength: 2048, description: HTTPS 返回地址；禁止用户信息段 }
+        cancelUrl: { type: string, format: uri, maxLength: 2048, description: HTTPS 返回地址；禁止用户信息段 }
+        customerRef: { type: string, minLength: 1, maxLength: 255, nullable: true, description: 商户侧客户标识；不接收原始卡号 }
         metadata:
           type: object
-          additionalProperties: { type: string }
+          maxProperties: 44
+          additionalProperties: { type: string, maxLength: 500 }
           description: |
-            业务附加信息。服务端会分别设置 Checkout 顶层 metadata 与
+            业务附加信息，键长 1–40，禁止控制字符、方括号、身份/密钥字段及 pr06 前缀。
+            服务端会分别设置 Checkout 顶层 metadata 与
             `payment_intent_data.metadata`，**不假设**自动传播。
             可信订单映射以本地持久化为准，不单独信任任意 metadata 字符串。
 

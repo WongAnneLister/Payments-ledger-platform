@@ -2,7 +2,7 @@
 
 Stripe 支付网关与复式账本。模块化单体，API / Worker 分角色运行，共享同一个 PostgreSQL 事务域。
 
-**当前状态：PR05 Stripe 适配器已接入，真实账户基础验证已通过，完整支付链路仍待验证。** 已实现身份隔离、不可变账本、持久 Fake，以及 Checkout/退款/财务读取/验签适配器；尚未实现业务支付 API 或页面。
+**当前状态：PR06 业务支付创建、查询、取消与持久执行义务已接入。** 已实现可信身份、不可变账本、Fake/Stripe 适配器和最小测试页面。PR05 已实测付款、退款及真实回调验签；完整恢复、业务 Inbox/通知与支付自动记账仍由后续 PR 接入。
 运行说明见 [身份配置](docs/runbook/identity-and-fixtures.md)、[账本核心](docs/runbook/ledger-core.md)、[Provider 模拟器](docs/runbook/provider-simulator.md)和[Stripe 契约验证](docs/runbook/stripe-contract-check.md)。本地 fixture 通过不代表真实 Stripe 契约通过。
 设计基线见 [`docs/`](docs/)；本 README 只讲怎么跑起来。
 
@@ -86,7 +86,7 @@ curl -s localhost:8081/actuator/health    # Worker 角色
 # 期望：{"status":"UP"}
 ```
 
-健康检查公开；PR02 新增以下 API 角色只读入口：
+健康检查公开；API 角色提供以下业务入口：
 
 | 接口 | 权限 |
 |---|---|
@@ -94,9 +94,14 @@ curl -s localhost:8081/actuator/health    # Worker 角色
 | `GET /v1/applications/{id}` | 只能读取当前凭据绑定的应用 |
 | `GET /v1/prices/{id}` | `payments:read` + 同组织/环境 + 已授权币种 |
 | `GET /ops/identity` | 独立 OpsBearer |
+| `POST /v1/payments` | `payments:write` + Idempotency-Key + 受控价格 |
+| `GET /v1/payments/{paymentId}` | `payments:read` + 原应用/账户范围 |
+| `POST /v1/payments/{paymentId}/cancel` | `payments:write` + 独立 Idempotency-Key |
 
 业务凭据格式为 `app_<credential-uuid>.<43字符随机secret>`，运营凭据使用 `ops_` 前缀。
 默认没有凭据或种子数据。开启本地 fixture 的方法见[运行手册](docs/runbook/identity-and-fixtures.md)。
+
+测试页面与完整支付运行说明见[PR06 业务支付手册](docs/runbook/business-payments.md)。创建收银台不等于扣款成功，结果未知时查询原支付。
 
 ## 运行角色
 

@@ -92,6 +92,9 @@ spring:
   config:
     activate:
       on-profile: worker
+  web:
+    resources:
+      add-mappings: false
 server:
   # Worker 角色的端口只承载受控健康检查，不暴露业务写入口
   port: ${WORKER_PORT:8081}
