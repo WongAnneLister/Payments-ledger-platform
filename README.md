@@ -2,7 +2,7 @@
 
 Stripe 支付网关与复式账本。模块化单体，API / Worker 分角色运行，共享同一个 PostgreSQL 事务域。
 
-**当前状态：PR06 业务支付创建、查询、取消与持久执行义务已接入。** 已实现可信身份、不可变账本、Fake/Stripe 适配器和最小测试页面。PR05 已实测付款、退款及真实回调验签；完整恢复、业务 Inbox/通知与支付自动记账仍由后续 PR 接入。
+**当前状态：PR07 支付操作恢复与 L1/L2 已接入。** 已实现可信身份、不可变账本、Fake/Stripe 适配器、业务支付 API 和最小测试页面。支付支持持久任务、租约重领、权威查询与不安全重试的调查升级。PR05 已实测付款、退款及真实回调验签；业务 Inbox/通知、支付自动记账、退款业务与 L3 外部回补仍由后续 PR 接入。
 运行说明见 [身份配置](docs/runbook/identity-and-fixtures.md)、[账本核心](docs/runbook/ledger-core.md)、[Provider 模拟器](docs/runbook/provider-simulator.md)和[Stripe 契约验证](docs/runbook/stripe-contract-check.md)。本地 fixture 通过不代表真实 Stripe 契约通过。
 设计基线见 [`docs/`](docs/)；本 README 只讲怎么跑起来。
 
@@ -102,6 +102,7 @@ curl -s localhost:8081/actuator/health    # Worker 角色
 默认没有凭据或种子数据。开启本地 fixture 的方法见[运行手册](docs/runbook/identity-and-fixtures.md)。
 
 测试页面与完整支付运行说明见[PR06 业务支付手册](docs/runbook/business-payments.md)。创建收银台不等于扣款成功，结果未知时查询原支付。
+后台恢复配置、保留窗口与人工调查边界见[PR07 恢复手册](docs/runbook/operation-recovery.md)。真实 Stripe 的无 ID 未知创建默认不自动重发；Fake 的窗口实验不等于真实账户验证。
 
 ## 运行角色
 

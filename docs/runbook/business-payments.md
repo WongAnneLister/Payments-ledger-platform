@@ -1,6 +1,6 @@
 # PR06 业务支付：创建、查询与取消
 
-这一步把 PR02 的可信身份、受控价格和 PR05 的 Provider 端口接到业务 API。它不提供退款、业务 Webhook Inbox、商户通知或自动记账；对应后续 PR07–PR12。创建 Checkout 只表示收银台入口已就绪，不表示已扣款。
+PR06 把 PR02 的可信身份、受控价格和 PR05 的 Provider 端口接到业务 API；PR07 在此基础上接入持久恢复。退款、业务 Webhook Inbox、商户通知和自动记账对应后续 PR08–PR12。创建 Checkout 只表示收银台入口已就绪，不表示已扣款。
 
 ## 配置与入口
 
@@ -51,9 +51,9 @@ Provider 明确拒绝且能够证明没有产生外部效果时，操作记录�
 
 订单、支付、API 幂等记录、Provider 操作、`recovery_task` 在一个短事务中提交；Worker/同步执行器领取后，在事务外调用 Provider，最后条件回写。Provider 响应另存受控字段的不可变观察，旧执行者的返回也保留取证锚点。
 
-Worker 使用 `worker` profile，默认每 5000 毫秒扫描一次 PREPARED 队列，每轮最多 25 项。`platform.payments.worker.enabled=false` 可以关闭扫描；轮询间隔为 `platform.payments.worker.poll-ms`。API 提交后执行前崩溃，另一进程仍可从数据库找到 PREPARED 任务。
+Worker 使用 `worker` profile。PR07 将快速领取与 L2 补扫接到同一持久任务，使用注入时钟、有效租约和条件回写；API 提交后执行前崩溃，另一进程仍能找到任务。当前调度与限流配置见[操作恢复手册](operation-recovery.md)。
 
-**PR06 不盲目重发 UNKNOWN 或遗留 SENDING。** 这些状态和执行义务保留，PR07 再实现租约到期重领、L1/L2、保留窗口判断与调查升级；此处不能声称 UNKNOWN 已自动恢复。已有 Session ID 的查询可以取得支付事实，但不是完整恢复框架。
+**UNKNOWN 和遗留 SENDING 不盲目重发。** PR07 会先查原外部 ID 和持久观察中的可信锚点，只有仍在已验证幂等窗口内才允许原键恢复。真实 Stripe 当前未验证窗口，无 ID 未知创建会挂起调查；不会新建一个请求键来试付。查询资源新增 `recovery` 进度，升级不代表支付失败。
 
 取消只使用 Checkout expire，不调用通用 PI cancel，不触发退款。Session 不再开放、PI 处理中、capture 竞争或信息不完整时，保留 UNKNOWN/CONFLICT。已确认成功的 capture 不被后来失败的 attempt 或取消意图抹掉。出现有效 capture 后，账务状态仍为 `PENDING_EVIDENCE`，PR10 接入正式过账前不产生 Journal。
 

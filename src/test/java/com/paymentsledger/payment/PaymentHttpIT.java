@@ -33,6 +33,9 @@ class PaymentHttpIT {
         r.add("platform.provider.fake.seed",()->72);r.add("platform.provider.fake.initial-time",()->Instant.now().toString());r.add("platform.provider.fake.retention",()->"P1D");
     }
     @Autowired TestRestTemplate http;@Autowired ObjectMapper json;
+    @Autowired OperationRecoveryCoordinator recovery;
+    @org.springframework.test.context.bean.override.mockito.MockitoSpyBean
+    com.paymentsledger.provider.fake.FakeStripeProvider fake;
     JdbcTemplate admin;
     static UUID id(int value){return new UUID(1,value);}
     @BeforeEach void seed(){
@@ -107,5 +110,55 @@ class PaymentHttpIT {
     @Test void testPageIsAvailableWithoutExposingCredentials(){
         var page=http.getForEntity("/payment-test.html",String.class);assertThat(page.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(page.getBody()).contains("创建并查询测试付款").doesNotContain(SECRET,HASH);
+    }
+    @Test void paymentQueryShowsDurableRecoveryProgressWithoutLeaseSecrets(){
+        var created=send(1,"/v1/payments",HttpMethod.POST,body("recovery-progress"),"recovery-key");
+        assertThat(created.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        String path=created.getHeaders().getLocation().toString();
+        var response=send(1,path,HttpMethod.GET,null,null);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        JsonNode progress=response.getBody().path("recovery");
+        assertThat(progress.isObject()).as("persistent recovery summary").isTrue();
+        assertThat(progress.path("status").asText()).isEqualTo("WAITING");
+        assertThat(progress.path("attemptCount").asInt()).isPositive();
+        assertThat(progress.hasNonNull("nextAttemptAt")).isTrue();
+        assertThat(progress.hasNonNull("lastQueryAt")).isTrue();
+        assertThat(Instant.parse(progress.path("nextAttemptAt").asText())).isNotNull();
+        assertThat(Instant.parse(progress.path("lastQueryAt").asText())).isNotNull();
+        assertThat(progress.toString()).doesNotContain("leaseToken","lease_token","operation_key","command",SECRET);
+        assertThat(send(3,path,HttpMethod.GET,null,null).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+    @Test void lostCreateResponseWithoutVerifiedWindowEscalatesAndNeverCreatesAgain(){
+        var scope=new com.paymentsledger.provider.ProviderScope(id(1),id(11),id(21),false);
+        var before=fake.counters(scope);
+        // Inject a lost response after real persistent Fake acceptance and capture.
+        org.mockito.Mockito.doAnswer(call->{
+            var accepted=(com.paymentsledger.provider.ProviderCallResult<com.paymentsledger.provider.ProviderModels.CheckoutSessionFact>)call.callRealMethod();
+            fake.controls().attemptPayment(scope,accepted.payload().sessionId(),com.paymentsledger.provider.fake.FakeControls.AttemptOutcome.SUCCEED);
+            return new com.paymentsledger.provider.ProviderCallResult<>(com.paymentsledger.provider.ProviderCallClassification.TIMEOUT_UNKNOWN,null,accepted.evidence());
+        }).when(fake).createSession(org.mockito.ArgumentMatchers.any());
+        var created=send(1,"/v1/payments",HttpMethod.POST,body("lost-http-response"),"lost-http-key");
+        assertThat(created.getBody().path("code").asText()).isEqualTo("PROVIDER_UNKNOWN_RESULT");
+        String payment=created.getBody().path("details").get(0).path("issue").asText();
+        admin.update("UPDATE platform.recovery_task SET available_at=now()-interval '1 minute'");
+        recovery.recoverDue(25);
+        String path="/v1/payments/"+payment;
+        var queried=send(1,path,HttpMethod.GET,null,null);
+        assertThat(queried.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(queried.getBody().path("resolutionStatus").asText()).isEqualTo("UNKNOWN");
+        var progress=queried.getBody().path("recovery");
+        assertThat(progress.path("status").asText()).isEqualTo("ESCALATED");
+        assertThat(progress.path("reason").asText()).isNotBlank();
+        assertThat(progress.hasNonNull("nextAttemptAt")).isFalse();
+        assertThat(send(3,path,HttpMethod.GET,null,null).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        recovery.scanL2(25);recovery.recoverDue(25);
+        var replay=send(1,"/v1/payments",HttpMethod.POST,body("lost-http-response"),"lost-http-key");
+        assertThat(replay.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(replay.getBody().path("id").asText()).isEqualTo(payment);
+        assertThat(replay.getBody().path("recovery").path("status").asText()).isEqualTo("ESCALATED");
+        var after=fake.counters(scope);
+        assertThat(after.sessionCreatedCount()-before.sessionCreatedCount()).isEqualTo(1);
+        assertThat(after.paymentEffectCount()-before.paymentEffectCount()).isEqualTo(1);
+        assertThat(admin.queryForObject("SELECT count(*) FROM platform.payment",Long.class)).isEqualTo(1);
     }
 }

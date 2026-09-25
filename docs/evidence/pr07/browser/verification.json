@@ -1,0 +1,13 @@
+{
+  "source": "LOCAL_BROWSER_WITH_HTTP_FIXTURE",
+  "passed": [
+    "pre-intent rejection unlocks form",
+    "persisted rejection retains draft and payment ID",
+    "unknown reload retains identical order/key/body",
+    "prefixed payment ID accepted",
+    "hosted URL offered only on known response",
+    "application credential never persisted",
+    "escalated recovery explains manual investigation and blocks checkout/new order"
+  ],
+  "verifiedAtUtc": "2026-09-25T12:27:17.329Z"
+}

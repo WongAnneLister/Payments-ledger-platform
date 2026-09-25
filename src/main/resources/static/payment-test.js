@@ -45,7 +45,8 @@
     field('result').hidden = false;
     field('result').textContent = JSON.stringify(data, null, 2);
     const link = field('checkout'); link.hidden = true; link.removeAttribute('href');
-    if (data.resolutionStatus !== 'KNOWN') notice('结果待确认。继续查询此支付，请勿重复创建或付款。');
+    if (data.recovery && data.recovery.status === 'ESCALATED') notice('此支付需要人工调查。请保留支付 ID 并联系运营人员，不要换键重付。');
+    else if (data.resolutionStatus !== 'KNOWN') notice('结果待确认，后台将按恢复计划继续处理。请保留此支付，不要重复创建或付款。');
     else if (data.paymentStatus === 'SUCCEEDED') notice('付款已确认成功。账务状态：' + data.financialStatus);
     else if (data.paymentStatus === 'CANCELED') notice('此支付已确认取消。');
     else {

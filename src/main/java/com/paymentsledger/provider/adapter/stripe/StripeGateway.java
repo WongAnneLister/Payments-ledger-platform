@@ -125,9 +125,11 @@ public final class StripeGateway {
                     .setReadTimeout(15000).setIdempotencyKey(key).build();
         }
         <T extends StripeObject> T fetch(Fetch<T> fetch) throws StripeException {
-            sentKey = key;
-            usedKey = key;
+            sentKey = null; usedKey = null;
             requestId = null; status = null; responded = null;
+            if (!ProviderRequestBudget.tryAcquire())
+                throw new Signal(RETRYABLE_TRANSIENT,"query_budget_exhausted");
+            sentKey = key; usedKey = key;
             T result = fetch.get();
             responded = clock.instant();
             if (result == null || result.getLastResponse() == null) throw mismatch();

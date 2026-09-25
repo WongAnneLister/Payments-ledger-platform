@@ -1,0 +1,164 @@
+{
+  "sources": [
+    "POSTGRESQL_RUNTIME_ROLE",
+    "PERSISTENT_PROVIDER_SIMULATOR",
+    "LOCAL_SDK_HTTP_FIXTURE"
+  ],
+  "tests": [
+    {
+      "class": "com.paymentsledger.payment.RecoveryPolicyTest",
+      "test": "unverifiedStripeIsAlwaysDisabledAndFakeCannotExceedActualConfiguredRetention",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.RecoveryPolicyTest",
+      "test": "backoffAndJitterAreBoundedDeterministicAndCapAtTwoMinutes",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.RecoveryPolicyTest",
+      "test": "configuredL1DelaysReplaceDefaultsAndRejectNonpositiveIntervals",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeGatewayTest",
+      "test": "sessionAndChargePaginationShareOneThirtyTwoRequestBatch",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeGatewayTest",
+      "test": "nestedPaymentIntentPaginationStopsAtActualRequestBudgetAndCleansUpScope",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.PaymentHttpIT",
+      "test": "lostCreateResponseWithoutVerifiedWindowEscalatesAndNeverCreatesAgain",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.PaymentHttpIT",
+      "test": "paymentQueryShowsDurableRecoveryProgressWithoutLeaseSecrets",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.RecoverySchemaIT",
+      "test": "v4UpgradePreservesOriginalOperationWithoutInventingVerifiedRetryWindow",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "originalRetryHorizonAndTaskResourceCannotBeRewrittenAtRuntime",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "unverifiedWindowEscalatesAndPersistsOriginalAge",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "lateWorkerEvidenceBecomesQueryAnchorAfterLeaseExpiryWithoutResending",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "knownAnchorIsQueriedBeforeAgeEscalationAndFindsCapture",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "responseLostRetriesOriginalKeyAndProducesOneIndependentRemoteSession",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "crashAfterQueryBeforeWritebackIsRecoveredFromSameDurableSession",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "authoritativeNaturalExpiryProvesUnpaidAndClosesWithoutAgeEscalation",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "aNewTransientFailureAfterLongCustomerWaitDoesNotImmediatelyAgeEscalate",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "captureRacingCancellationRecoveryNeverExpiresOrCancelsSuccessfulPayment",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "writebackOwnershipIsLinearizedOnceWithinTheShortLockedTransaction",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "ageEscalationSharesTheQueryWritebackAuthorizationPoint",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "successfulCancellationUpdatesLastQueryTimestampWithoutAGet",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "expiredSendingAfterClaimBeforeCallIsRecoveredWithOriginalCommand",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "transientEmptyWithAnchorNeverResendsCreateAndLaterConverges",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "cancellationRecoveryFindsCompletedExpireWithoutAnotherExpire",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "persistentAccountLimitAppliesAcrossCoordinatorInstances",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "persistentUnknownWithAnchorQueriesBeforeDurableAgeEscalation",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "recoveryRefusesNetworkInsideTransaction",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "oldWorkerReturnsAfterNewTokenFinishedAndCannotOverwriteControl",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "l2DoesNotStealLiveLeaseOrResetItsRetryHorizon",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "twoWorkersCannotBothOwnOneExpiredOperation",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "expiredWindowNeverCreatesASecondSessionEvenWhenRemotePaymentExists",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.OperationRecoveryIT",
+      "test": "conflictingObservationAnchorsNeverChooseAnArbitrarySession",
+      "result": "PASS"
+    }
+  ]
+}

@@ -73,4 +73,41 @@ class StripeGatewayTest {
             assertThat(new StripeCheckoutAdapter(http.gateway()).querySession(SCOPE,"cs_test_fixture").classification()).isEqualTo(CONTRACT_MISMATCH);
         }
     }
+    @Test void nestedPaymentIntentPaginationStopsAtActualRequestBudgetAndCleansUpScope() {
+        var http = new StripeTestTransport().reply(200,"""
+            {"id":"pi_fixture","object":"payment_intent","livemode":false,"status":"requires_payment_method",
+             "amount":1000,"amount_received":0,"currency":"usd","latest_charge":null,"created":1790035200,"metadata":{}}
+            """);
+        http.reply(200,StripePaymentsAdapterTest.page(StripePaymentsAdapterTest.charge("ch_first","failed"),true));
+        http.reply(200,StripePaymentsAdapterTest.page(StripePaymentsAdapterTest.charge("ch_second","failed"),false));
+        var adapter = new StripeCheckoutAdapter(http.gateway());
+        try (var outer = ProviderRequestBudget.openOrJoin(3)) {
+            try (var inner = ProviderRequestBudget.openOrJoin(32)) {
+                var result = adapter.queryPaymentIntent(SCOPE,"pi_fixture");
+                assertThat(result.classification()).isEqualTo(RETRYABLE_TRANSIENT);
+                assertThat(result.payload()).isNull();
+                assertThat(result.evidence().providerErrorCode()).isEqualTo("query_budget_exhausted");
+            }
+            assertThat(adapter.listChargeAttempts(SCOPE,"pi_fixture").classification()).isEqualTo(RETRYABLE_TRANSIENT);
+            assertThat(http.requests).hasSize(3); // account + PI + first page; nested scope cannot refill
+        }
+        http.replies.clear(); http.reply(200,session("open"));
+        assertThat(adapter.querySession(SCOPE,"cs_test_fixture").classification()).isEqualTo(SUCCESS);
+        assertThat(http.requests).hasSize(4); // closing root releases the thread-local scope
+    }
+    @Test void sessionAndChargePaginationShareOneThirtyTwoRequestBatch() {
+        var http = new StripeTestTransport().reply(200,session("open"));
+        for (int i=0;i<33;i++) http.reply(200,StripePaymentsAdapterTest.page(StripePaymentsAdapterTest.charge("ch_"+i,"failed"),i<32));
+        var adapter = new StripeCheckoutAdapter(http.gateway());
+        try (var budget = ProviderRequestBudget.openOrJoin(32)) {
+            assertThat(adapter.querySession(SCOPE,"cs_test_fixture").classification()).isEqualTo(SUCCESS);
+            var result = adapter.listChargeAttempts(SCOPE,"pi_fixture");
+            assertThat(result.classification()).isEqualTo(RETRYABLE_TRANSIENT);
+            assertThat(result.payload()).isNull();
+            assertThat(http.requests).hasSize(32);
+            assertThat(adapter.expireSession(SCOPE,"cs_test_fixture").classification()).isEqualTo(RETRYABLE_TRANSIENT);
+            assertThat(http.requests).hasSize(32); // no cancellation request after budget exhaustion
+        }
+    }
+
 }

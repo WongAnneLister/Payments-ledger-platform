@@ -1655,8 +1655,27 @@ components:
           format: date-time
           nullable: true
           description: 最近一次由权威查询或已验证事件确认的时间
+        recovery:
+          $ref: '#/components/schemas/RecoverySummary'
         createdAt: { type: string, format: date-time }
         updatedAt: { type: string, format: date-time }
+
+    RecoverySummary:
+      type: object
+      required: [status, attemptCount]
+      additionalProperties: false
+      description: PR07 持久恢复进度；多个操作按升级、运行、等待优先级汇总。时间字段无值时可省略，不暴露执行租约或原操作键。
+      properties:
+        status:
+          type: string
+          enum: [IDLE, WAITING, RUNNING, ESCALATED]
+        nextAttemptAt: { type: string, format: date-time, nullable: true }
+        attemptCount: { type: integer, minimum: 0 }
+        lastQueryAt: { type: string, format: date-time, nullable: true }
+        reason:
+          type: string
+          nullable: true
+          description: 受控恢复或升级原因；ESCALATED 表示需要调查，不代表支付失败。
 
     RefundCreateRequest:
       type: object
