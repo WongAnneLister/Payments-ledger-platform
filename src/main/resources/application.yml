@@ -42,6 +42,9 @@ spring:
     default-property-inclusion: non_null
 
 platform:
+  webhooks:
+    stripe:
+      enabled: ${STRIPE_WEBHOOK_ENABLED:false}
   stripe:
     enabled: ${STRIPE_ENABLED:false}
   fixtures:

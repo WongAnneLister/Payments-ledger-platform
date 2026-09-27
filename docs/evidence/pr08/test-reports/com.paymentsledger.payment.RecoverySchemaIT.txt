@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.paymentsledger.payment.RecoverySchemaIT
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.038 s -- in com.paymentsledger.payment.RecoverySchemaIT

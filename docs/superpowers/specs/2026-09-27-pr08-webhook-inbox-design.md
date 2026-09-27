@@ -8,7 +8,7 @@
 
 `POST /webhooks/stripe` 仅 API role 开放，无 Bearer；默认禁用，由 `platform.webhooks.stripe.enabled` 显式开启。Endpoint 的组织/环境/Provider 账户/Stripe account/API version/签名 secret 来自部署配置，事件 metadata 或 query string 不可选择账户。复用 StripeWebhookVerifier 对原始字节验证；入库事务再次核对 ACTIVE 的 STRIPE 测试账户、组织、环境及精确 account ref。默认最大请求 256 KiB，非法/重复签名头、篡改、错误版本/账户/live、缺签名不写任何表；持久化错误返回可重试 503。已持久的相同范围 eventId 重放返回 200；同 eventId 内容冲突不能覆写原件。
 
-持久接收 API：`WebhookInboxRepository.receive(ProviderScope scope, String accountRef, byte[] raw, ProviderCallResult<VerifiedWebhook> verified)` 返回 Inbox UUID。该内部入口必须检查 SUCCESS、验证事实和解析头部一致性。HTTP 不执行业务归并。原始字节仅用于当次验签/提取/摘要，数据库保存 raw SHA-256、验签/API version/receivedAt、受控 envelope 和对象白名单字段；不保存原始签名、secret、client_secret、客户联系方式/卡数据或任意 metadata。仅保留 `payment_id` 关联 metadata。对后续资源保留必要对象 ID/关系/状态/金额等以供查询取证，不虚报已经生效。
+持久接收 API：`WebhookInboxRepository.receive(ProviderScope scope, String accountRef, byte[] raw, ProviderCallResult<VerifiedWebhook> verified)` 返回 `Receipt(UUID inboxId, boolean duplicate)`。该内部入口必须检查 SUCCESS、验证事实和解析头部一致性。HTTP 不执行业务归并。原始字节仅用于当次验签/提取/摘要，数据库保存 raw SHA-256、验签/API version/receivedAt、受控 envelope 和对象白名单字段；不保存原始签名、secret、client_secret、客户联系方式/卡数据或任意 metadata。仅保留 `payment_id` 关联 metadata。对后续资源保留必要对象 ID/关系/状态/金额等以供查询取证，不虚报已经生效。
 
 ## 持久执行与归并
 

@@ -76,4 +76,12 @@ class WorkerRoleHealthIT {
                 .doesNotContain("\"components\"")
                 .doesNotContain("PostgreSQL");
     }
+    @Test
+    void workerDoesNotExposeWebhookReceipt() {
+        var headers=new org.springframework.http.HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+        var response=restTemplate.postForEntity("/webhooks/stripe",new org.springframework.http.HttpEntity<>("{}",headers),String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
 }

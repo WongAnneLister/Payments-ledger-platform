@@ -200,8 +200,11 @@ class PaymentCoreIT extends PaymentCoreFixture {
         var resource=service.create(context,"create-key",command("order")).resource();UUID payment=payment(resource);UUID operation=repository.createOperation(payment);
         try(var workers=Executors.newVirtualThreadPerTaskExecutor()){
             for(int round=0;round<10;round++){
-                admin.update("UPDATE platform.provider_operation SET status='PREPARED',version=version+1 WHERE id=?",operation);
-                var claim=repository.claim(operation,"FAKE");
+                // A known remote PI must never be reclaimed as an unsent create. Model a recovery lease.
+                fake.clock().advance(Duration.ofMinutes(1));
+                admin.update("UPDATE platform.provider_operation SET status='UNKNOWN',version=version+1 WHERE id=?",operation);
+                admin.update("UPDATE platform.recovery_task SET status='WAITING',available_at=? WHERE operation_id=?",java.sql.Timestamp.from(fake.clock().instant()),operation);
+                var claim=repository.claimRecovery(operation,"FAKE",true);
                 var command=repository.decode(claim.operation().get("command"),CreateCheckoutSessionCommand.class);
                 var accepted=fake.createSession(command);var start=new CountDownLatch(1);
                 var sender=workers.submit(()->{start.await();repository.finishCreate(claim,accepted);return true;});

@@ -1,0 +1,1086 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- clean:3.4.1:clean (default-clean) @ payments-ledger-platform ---
+[INFO] Deleting /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks/target
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 8 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 91 source files with javac [debug parameters release 21] to target/classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ???????????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ??????, ??? -Xlint:deprecation ?????
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 46 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.webhook.WebhookNormalizerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.289 s -- in com.paymentsledger.webhook.WebhookNormalizerTest
+[INFO] Running com.paymentsledger.ledger.LedgerRulesTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in com.paymentsledger.ledger.LedgerRulesTest
+[INFO] Running com.paymentsledger.identity.AuthenticationFilterTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+22:49:49.038 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+22:49:49.466 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+22:49:49.898 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+22:49:50.373 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=WORKER
+22:49:50.869 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+22:49:51.323 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.547 s -- in com.paymentsledger.identity.AuthenticationFilterTest
+[INFO] Running com.paymentsledger.identity.TestModeGuardTest
+22:49:51.718 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live mode is forbidden
+22:49:51.823 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live provider credentials are forbidden
+22:49:51.834 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live provider credentials are forbidden
+22:49:51.852 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live configuration is forbidden
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.523 s -- in com.paymentsledger.identity.TestModeGuardTest
+[INFO] Running com.paymentsledger.identity.IdentityRulesTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.paymentsledger.identity.IdentityRulesTest
+[INFO] Running com.paymentsledger.ApplicationContextTest
+22:49:51.925 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.paymentsledger.ApplicationContextTest]: ApplicationContextTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:49:52.026 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ApplicationContextTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-27T22:49:52.411+08:00 INFO  [-] c.p.ApplicationContextTest - Starting ApplicationContextTest using Java 21.0.12.1 with PID 81958 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks)
+2026-09-27T22:49:52.411+08:00 INFO  [-] c.p.ApplicationContextTest - The following 1 profile is active: "api"
+2026-09-27T22:49:53.607+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-27T22:49:54.629+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-27T22:49:54.685+08:00 INFO  [-] c.p.ApplicationContextTest - Started ApplicationContextTest in 2.586 seconds (process running for 7.858)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.942 s -- in com.paymentsledger.ApplicationContextTest
+[INFO] Running com.paymentsledger.config.RunRoleConfigTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.paymentsledger.config.RunRoleConfigTest
+[INFO] Running com.paymentsledger.payment.PaymentControllerTest
+2026-09-27T22:49:54.864+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-27T22:49:54.865+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-27T22:49:54.866+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-27T22:49:54.997+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-27T22:49:54.997+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-27T22:49:54.997+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-27T22:49:55.016+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-27T22:49:55.016+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-27T22:49:55.016+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-27T22:49:55.026+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-09-27T22:49:55.038+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-27T22:49:55.038+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-27T22:49:55.038+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-27T22:49:55.041+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=PROVIDER_UNKNOWN_RESULT status=500 retryable=false
+2026-09-27T22:49:55.053+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-27T22:49:55.053+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-27T22:49:55.053+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-27T22:49:55.067+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-27T22:49:55.067+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-27T22:49:55.067+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-27T22:49:55.068+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=IDEMPOTENCY_KEY_REQUIRED status=400 retryable=false
+2026-09-27T22:49:55.071+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-09-27T22:49:55.078+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-27T22:49:55.078+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-27T22:49:55.078+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-27T22:49:55.079+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=UNAUTHORIZED status=401 retryable=false
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.249 s -- in com.paymentsledger.payment.PaymentControllerTest
+[INFO] Running com.paymentsledger.payment.PaymentIdsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.paymentsledger.payment.PaymentIdsTest
+[INFO] Running com.paymentsledger.payment.PaymentRequestsTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.paymentsledger.payment.PaymentRequestsTest
+[INFO] Running com.paymentsledger.payment.RecoveryPolicyTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.paymentsledger.payment.RecoveryPolicyTest
+[INFO] Running com.paymentsledger.provider.ProviderModelsTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in com.paymentsledger.provider.ProviderModelsTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.424 s -- in com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeGatewayTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.211 s -- in com.paymentsledger.provider.adapter.stripe.StripeGatewayTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeAdapterConfigurationTest
+2026-09-27T22:49:55.817+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeGateway' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeGateway]: Factory method 'stripeGateway' threw exception with message: A Stripe test credential is required
+2026-09-27T22:49:55.831+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeGateway' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeGateway]: Factory method 'stripeGateway' threw exception with message: A bound Stripe account ID is required
+2026-09-27T22:49:55.838+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeGateway' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeGateway]: Factory method 'stripeGateway' threw exception with message: Select exactly one provider implementation
+2026-09-27T22:49:55.867+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeWebhookVerifier' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifier]: Factory method 'stripeWebhookVerifier' threw exception with message: The pinned Stripe API version is required
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s -- in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfigurationTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripePaymentsAdapterTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.088 s -- in com.paymentsledger.provider.adapter.stripe.StripePaymentsAdapterTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeLifecycleProbeTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.062 s -- in com.paymentsledger.provider.adapter.stripe.StripeLifecycleProbeTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.061 s -- in com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest
+[INFO] Running com.paymentsledger.provider.fake.FakeProviderConfigurationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s -- in com.paymentsledger.provider.fake.FakeProviderConfigurationTest
+[INFO] Running com.paymentsledger.provider.fake.FakeStateStoreTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.583 s -- in com.paymentsledger.provider.fake.FakeStateStoreTest
+[INFO] Running com.paymentsledger.provider.fake.FakeStripeProviderTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.677 s -- in com.paymentsledger.provider.fake.FakeStripeProviderTest
+[INFO] Running com.paymentsledger.provider.fake.FakeEvidenceTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.241 s -- in com.paymentsledger.provider.fake.FakeEvidenceTest
+[INFO] Running com.paymentsledger.provider.fake.ProviderSimulatorReplayTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.158 s -- in com.paymentsledger.provider.fake.ProviderSimulatorReplayTest
+[INFO] Running com.paymentsledger.common.request.RequestIdFilterTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.paymentsledger.common.request.RequestIdFilterTest
+[INFO] Running com.paymentsledger.common.error.ErrorContractTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.paymentsledger.common.error.ErrorContractTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 161, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- jar:3.4.2:jar (default-jar) @ payments-ledger-platform ---
+[INFO] Building jar: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- spring-boot:3.5.16:repackage (repackage) @ payments-ledger-platform ---
+[INFO] Replacing main artifact /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar.original
+[INFO]
+[INFO] --- failsafe:3.5.6:integration-test (default) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.webhook.StripeWebhookHttpIT
+22:50:03.055 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+22:50:03.058 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+22:50:03.074 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+22:50:03.472 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+22:50:03.473 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+22:50:03.492 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+22:50:03.521 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+22:50:03.604 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+22:50:03.693 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 2b3605f465bc95a6053ae355ce0faaf4d3c91b2fae52d4ee4cac462591a0c999
+22:50:04.244 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.723259S
+22:50:04.253 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+22:50:04.253 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+22:50:04.254 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+22:50:04.255 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+22:50:04.342 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 16daf177c88cba6ca9a906c668b1b3aafa4419facf57fb404dbc0a7e1f180ac1
+22:50:06.104 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.849306S
+22:50:06.106 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:65135/test?loggerLevel=OFF)
+22:50:06.116 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+22:50:06.294 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 178 ms.
+22:50:06.344 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.paymentsledger.webhook.StripeWebhookHttpIT]: StripeWebhookHttpIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:50:06.427 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.webhook.StripeWebhookHttpIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-27T22:50:06.745+08:00 INFO  [-] c.p.webhook.StripeWebhookHttpIT - Starting StripeWebhookHttpIT using Java 21.0.12.1 with PID 81993 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks)
+2026-09-27T22:50:06.746+08:00 INFO  [-] c.p.webhook.StripeWebhookHttpIT - The following 2 profiles are active: "api", "test"
+2026-09-27T22:50:07.874+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-09-27T22:50:07.883+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-27T22:50:07.883+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-09-27T22:50:07.907+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-27T22:50:07.908+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1139 ms
+2026-09-27T22:50:08.143+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65135/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:08.191+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-27T22:50:08.193+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.018s)
+2026-09-27T22:50:08.209+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:50:08.276+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-27T22:50:08.284+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:50:08.289+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:50:08.324+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:50:08.405+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:50:08.462+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:50:08.527+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:50:08.565+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:50:08.606+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "platform", now at version v6 (execution time 00:00.223s)
+2026-09-27T22:50:09.008+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-27T22:50:09.421+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-27T22:50:09.650+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 65168 (http) with context path '/'
+2026-09-27T22:50:09.667+08:00 INFO  [-] c.p.webhook.StripeWebhookHttpIT - Started StripeWebhookHttpIT in 3.164 seconds (process running for 7.096)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-09-27T22:50:10.296+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-27T22:50:10.296+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-09-27T22:50:10.297+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-09-27T22:50:10.487+08:00 WARN  [req_a3628bb2d6714126a221d7b0b2b6b9f8] c.p.c.error.GlobalExceptionHandler - api_error code=EVIDENCE_CONFLICT status=409 retryable=false
+2026-09-27T22:50:10.708+08:00 WARN  [req_89e05d3ef96b43df84cbdba67f142072] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-27T22:50:10.713+08:00 WARN  [req_ef32ca69678b4460b34531598462619e] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-27T22:50:10.717+08:00 WARN  [req_a0920145afe44be087a827a3329301e0] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-27T22:50:11.143+08:00 WARN  [req_2ae3c06af8f8407b9e3805881fcd4754] c.p.c.error.GlobalExceptionHandler - api_error code=SERVICE_UNAVAILABLE status=503 retryable=true
+2026-09-27T22:50:11.690+08:00 WARN  [req_e93814298aad4dbb9dc9f34ec9814cb0] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-27T22:50:11.700+08:00 WARN  [req_e88bffd10e7345c7b779aa0afaa123bc] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-27T22:50:11.719+08:00 WARN  [req_d86508c63c67425691421b1c360f1e06] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-27T22:50:11.728+08:00 WARN  [req_17196749234f424e90bdf200a869e017] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-27T22:50:11.834+08:00 WARN  [req_56c1f1071f744a1e852db03b41c634ca] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-27T22:50:11.837+08:00 WARN  [req_fa5300a16f8e4740bf5b434544322acd] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.139 s -- in com.paymentsledger.webhook.StripeWebhookHttpIT
+[INFO] Running com.paymentsledger.webhook.WebhookSchemaIT
+2026-09-27T22:50:12.142+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:50:12.313+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 983d66849eeabce57be63e3701ad293db86c53e00360200b4004ed7a2d8ad1a9
+2026-09-27T22:50:13.650+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.508768S
+2026-09-27T22:50:13.651+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:65265/test?loggerLevel=OFF)
+2026-09-27T22:50:13.652+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-27T22:50:13.681+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 28 ms.
+2026-09-27T22:50:13.708+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65265/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:13.724+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-27T22:50:13.725+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.006s)
+2026-09-27T22:50:13.735+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:50:13.759+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-27T22:50:13.763+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:50:13.765+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:50:13.788+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:50:13.909+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:50:13.963+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:50:14.010+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 4 migrations to schema "platform", now at version v4 (execution time 00:00.191s)
+2026-09-27T22:50:14.046+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65265/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:14.064+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.007s)
+2026-09-27T22:50:14.083+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 4
+2026-09-27T22:50:14.090+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:50:14.128+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 1 migration to schema "platform", now at version v5 (execution time 00:00.030s)
+2026-09-27T22:50:14.169+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65265/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:14.183+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:50:14.200+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 5
+2026-09-27T22:50:14.205+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:50:14.234+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 1 migration to schema "platform", now at version v6 (execution time 00:00.021s)
+2026-09-27T22:50:14.251+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65265/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:14.266+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:50:14.283+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:14.284+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:14.640+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65265/pr08_duplicate_legacy (PostgreSQL 16.14)
+2026-09-27T22:50:14.656+08:00 INFO  [-] o.f.c.internal.database.base.Schema - Creating schema "platform" ...
+2026-09-27T22:50:14.662+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:50:14.690+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": null
+2026-09-27T22:50:14.694+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:50:14.696+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:50:14.740+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:50:14.803+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:50:14.845+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:50:14.950+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 4 migrations to schema "platform", now at version v4 (execution time 00:00.155s)
+2026-09-27T22:50:15.058+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65265/pr08_duplicate_legacy (PostgreSQL 16.14)
+2026-09-27T22:50:15.074+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 7 migrations (execution time 00:00.007s)
+2026-09-27T22:50:15.093+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 4
+2026-09-27T22:50:15.097+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:50:15.130+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 1 migration to schema "platform", now at version v5 (execution time 00:00.024s)
+2026-09-27T22:50:15.188+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65265/pr08_duplicate_legacy (PostgreSQL 16.14)
+2026-09-27T22:50:15.203+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 7 migrations (execution time 00:00.005s)
+2026-09-27T22:50:15.220+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 5
+2026-09-27T22:50:15.224+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:50:15.235+08:00 ERROR [-] o.f.core.internal.command.DbMigrate - Migration of schema "platform" to version "6 - webhook inbox" failed! Changes successfully rolled back.
+2026-09-27T22:50:15.306+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65265/pr08_duplicate_legacy (PostgreSQL 16.14)
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.516 s -- in com.paymentsledger.webhook.WebhookSchemaIT
+[INFO] Running com.paymentsledger.ledger.LedgerDatabaseIT
+2026-09-27T22:50:15.662+08:00 INFO  [-] tc.postgres:16-alpine - Creating container for image: postgres:16-alpine
+2026-09-27T22:50:15.765+08:00 INFO  [-] tc.postgres:16-alpine - Container postgres:16-alpine is starting: 58ec29c8c9fafeb6f83a59672412ef3dae4bad0f4e59a30f9e7d56bc50def45d
+2026-09-27T22:50:17.238+08:00 INFO  [-] tc.postgres:16-alpine - Container postgres:16-alpine started in PT1.575233S
+2026-09-27T22:50:17.238+08:00 INFO  [-] tc.postgres:16-alpine - Container is started (JDBC URL: jdbc:postgresql://localhost:65333/test?loggerLevel=OFF)
+2026-09-27T22:50:17.304+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65333/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-27T22:50:17.322+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-27T22:50:17.323+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:50:17.335+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-27T22:50:17.370+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2026-09-27T22:50:17.377+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "1 - baseline"
+2026-09-27T22:50:17.406+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "2 - identity and scoped configuration"
+2026-09-27T22:50:17.502+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "3 - immutable ledger"
+2026-09-27T22:50:17.598+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "4 - business payments"
+2026-09-27T22:50:17.658+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "5 - operation recovery"
+2026-09-27T22:50:17.691+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "6 - webhook inbox"
+2026-09-27T22:50:17.728+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "public", now at version v6 (execution time 00:00.254s)
+2026-09-27T22:50:19.007+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65333/ledger_upgrade?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-27T22:50:19.024+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-27T22:50:19.025+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:50:19.045+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-27T22:50:19.141+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2026-09-27T22:50:19.147+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "1 - baseline"
+2026-09-27T22:50:19.176+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "2 - identity and scoped configuration"
+2026-09-27T22:50:19.237+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 2 migrations to schema "public", now at version v2 (execution time 00:00.072s)
+2026-09-27T22:50:19.274+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65333/ledger_upgrade?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-27T22:50:19.295+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.006s)
+2026-09-27T22:50:19.314+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "public": 2
+2026-09-27T22:50:19.322+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "3 - immutable ledger"
+2026-09-27T22:50:19.375+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "4 - business payments"
+2026-09-27T22:50:19.439+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "5 - operation recovery"
+2026-09-27T22:50:19.476+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "6 - webhook inbox"
+2026-09-27T22:50:19.505+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 4 migrations to schema "public", now at version v6 (execution time 00:00.144s)
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.399 s -- in com.paymentsledger.ledger.LedgerDatabaseIT
+[INFO] Running com.paymentsledger.ledger.LedgerServiceIT
+2026-09-27T22:50:20.064+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:50:20.146+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 7ec52a413d8f33da235c59284ea8cc874961ef5ad59353f0e3c85a44a2dbc554
+2026-09-27T22:50:21.416+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.351652S
+2026-09-27T22:50:21.417+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:65412/pr03_isolated_services?loggerLevel=OFF)
+2026-09-27T22:50:21.418+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-27T22:50:21.447+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 28 ms.
+2026-09-27T22:50:21.449+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.ledger.LedgerServiceIT]: LedgerServiceIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-27T22:50:21.470+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ledger.LedgerServiceIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-27T22:50:21.504+08:00 INFO  [-] c.p.ledger.LedgerServiceIT - Starting LedgerServiceIT using Java 21.0.12.1 with PID 81993 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks)
+2026-09-27T22:50:21.504+08:00 INFO  [-] c.p.ledger.LedgerServiceIT - The following 1 profile is active: "api"
+2026-09-27T22:50:21.739+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-27T22:50:21.848+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:65412/pr03_isolated_services?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:21.879+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-27T22:50:21.882+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.014s)
+2026-09-27T22:50:21.919+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:50:21.965+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-27T22:50:21.969+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:50:21.972+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:50:22.004+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:50:22.144+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:50:22.347+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:50:22.400+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:50:22.458+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:50:22.517+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "platform", now at version v6 (execution time 00:00.404s)
+2026-09-27T22:50:23.099+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-27T22:50:23.111+08:00 INFO  [-] c.p.ledger.LedgerServiceIT - Started LedgerServiceIT in 1.627 seconds (process running for 20.54)
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.318 s -- in com.paymentsledger.ledger.LedgerServiceIT
+[INFO] Running com.paymentsledger.identity.IdentityIT
+2026-09-27T22:50:27.525+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:50:27.641+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: ef0595590df6837e0aa092f66e8fb1d3e30c25d311212c9afcf54bed0d4a95fb
+2026-09-27T22:50:29.051+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.525706S
+2026-09-27T22:50:29.053+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:49293/pr02_isolated_identity?loggerLevel=OFF)
+2026-09-27T22:50:29.057+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-27T22:50:29.082+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 25 ms.
+2026-09-27T22:50:29.085+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.identity.IdentityIT]: IdentityIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-27T22:50:29.099+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.identity.IdentityIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-27T22:50:29.138+08:00 INFO  [-] c.paymentsledger.identity.IdentityIT - Starting IdentityIT using Java 21.0.12.1 with PID 81993 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks)
+2026-09-27T22:50:29.139+08:00 INFO  [-] c.paymentsledger.identity.IdentityIT - The following 1 profile is active: "api"
+2026-09-27T22:50:29.317+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-09-27T22:50:29.318+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-27T22:50:29.319+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-09-27T22:50:29.332+08:00 INFO  [-] o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-27T22:50:29.332+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 191 ms
+2026-09-27T22:50:29.378+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49293/pr02_isolated_identity?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:29.394+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-27T22:50:29.395+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:50:29.406+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:50:29.430+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-27T22:50:29.433+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:50:29.435+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:50:29.455+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:50:29.512+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:50:29.572+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:50:29.620+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:50:29.668+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:50:29.705+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "platform", now at version v6 (execution time 00:00.197s)
+2026-09-27T22:50:30.034+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-27T22:50:30.126+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-27T22:50:30.138+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 49303 (http) with context path '/'
+2026-09-27T22:50:30.143+08:00 INFO  [-] c.paymentsledger.identity.IdentityIT - Started IdentityIT in 1.039 seconds (process running for 27.572)
+2026-09-27T22:50:30.290+08:00 INFO  [-] o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-27T22:50:30.290+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-09-27T22:50:30.291+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-09-27T22:50:30.313+08:00 WARN  [req_6e807309b3c94e729070e88dd12b4401] c.p.c.error.GlobalExceptionHandler - api_error code=SERVICE_UNAVAILABLE status=503 retryable=true
+2026-09-27T22:50:30.722+08:00 WARN  [req_676b3d3914074ea48a6aa234c2f57285] c.p.c.error.GlobalExceptionHandler - api_error code=CURRENCY_NOT_ENABLED status=422 retryable=false
+2026-09-27T22:50:31.096+08:00 WARN  [req_d89be9c8aea844ad91eeab84cdcb9e4a] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-09-27T22:50:31.351+08:00 WARN  [req_196b9d8d972747a69b106c7d25fda96d] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-27T22:50:31.447+08:00 WARN  [req_b5e5ca7f24cc4a15a8f809fcce031058] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-27T22:50:31.547+08:00 WARN  [req_7eab7bcef0424915aacde3715b7b4749] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-27T22:50:31.655+08:00 WARN  [req_b73edd4ba1ff4d5c9f53a915732ef833] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.41 s -- in com.paymentsledger.identity.IdentityIT
+[INFO] Running com.paymentsledger.payment.PaymentHttpIT
+2026-09-27T22:50:41.002+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:50:41.071+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 3cb0faaf6639d5be8002643d419c774a2ec678334cd390f463cbb35c6acd747a
+2026-09-27T22:50:42.452+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.450306S
+2026-09-27T22:50:42.453+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:49396/test?loggerLevel=OFF)
+2026-09-27T22:50:42.454+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-27T22:50:42.508+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 53 ms.
+2026-09-27T22:50:42.511+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.payment.PaymentHttpIT]: PaymentHttpIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-27T22:50:42.538+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.payment.PaymentHttpIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-27T22:50:42.564+08:00 INFO  [-] c.p.payment.PaymentHttpIT - Starting PaymentHttpIT using Java 21.0.12.1 with PID 81993 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks)
+2026-09-27T22:50:42.564+08:00 INFO  [-] c.p.payment.PaymentHttpIT - The following 2 profiles are active: "api", "test"
+2026-09-27T22:50:42.760+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-09-27T22:50:42.760+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-27T22:50:42.760+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-09-27T22:50:42.767+08:00 INFO  [-] o.a.c.c.C.[Tomcat-2].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-27T22:50:42.767+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 202 ms
+2026-09-27T22:50:42.807+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49396/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:42.828+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-27T22:50:42.830+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.012s)
+2026-09-27T22:50:42.845+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:50:42.872+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-27T22:50:42.875+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:50:42.877+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:50:42.897+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:50:42.963+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:50:43.075+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:50:43.146+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:50:43.251+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:50:43.309+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "platform", now at version v6 (execution time 00:00.296s)
+2026-09-27T22:50:43.754+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-27T22:50:44.876+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-27T22:50:44.902+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 49431 (http) with context path '/'
+2026-09-27T22:50:44.914+08:00 INFO  [-] c.p.payment.PaymentHttpIT - Started PaymentHttpIT in 2.373 seconds (process running for 42.343)
+2026-09-27T22:50:45.787+08:00 INFO  [-] o.a.c.c.C.[Tomcat-2].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-27T22:50:45.788+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-09-27T22:50:45.788+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-09-27T22:50:46.266+08:00 WARN  [req_047267db2a6f4baebfa1a67bf4eec3f0] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-27T22:50:46.374+08:00 WARN  [req_e909a0b141314d2b97a4f40ae9bfda56] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-27T22:50:46.483+08:00 WARN  [req_c103f4c42b28471e956e21b3cf162767] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-27T22:50:46.581+08:00 WARN  [req_1390fae435954eb6a2f85ab70d9bfe83] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-27T22:50:46.855+08:00 WARN  [req_f4ef17b879ef491d95d39777e146f79c] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-09-27T22:50:47.370+08:00 WARN  [req_bfbffa711cea449982d85c2b6915b745] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-09-27T22:50:47.462+08:00 WARN  [req_c7f60e8f31cf4ecb873518556b45b820] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-09-27T22:50:49.190+08:00 WARN  [req_bcce56efd8134c1eb16112c1e4e7438f] c.p.c.error.GlobalExceptionHandler - api_error code=ORDER_INTENT_CONFLICT status=409 retryable=false
+2026-09-27T22:50:49.280+08:00 WARN  [req_d35d75152749492eb86071706fbd0d25] c.p.c.error.GlobalExceptionHandler - api_error code=IDEMPOTENCY_CONFLICT status=409 retryable=false
+2026-09-27T22:50:49.374+08:00 WARN  [req_91e1bf13c464496190fcdf6f27bc14f2] c.p.c.error.GlobalExceptionHandler - api_error code=AMOUNT_MISMATCH status=422 retryable=false
+2026-09-27T22:50:49.779+08:00 WARN  [req_68d60fa8f01842b788bf12cc3da80ae6] c.p.c.error.GlobalExceptionHandler - api_error code=PROVIDER_UNKNOWN_RESULT status=500 retryable=false
+2026-09-27T22:50:49.866+08:00 WARN  [-] c.p.payment.PaymentRepository - Payment recovery escalated operation=a61dbf34-01cb-46c0-b7d4-c71722576e7e payment=01a0e358-e7fd-f790-5cd3-a10d84214740 reason=IDEMPOTENCY_WINDOW_UNVERIFIED
+2026-09-27T22:50:49.867+08:00 WARN  [-] c.p.p.OperationRecoveryCoordinator - Payment recovery escalated operation=a61dbf34-01cb-46c0-b7d4-c71722576e7e payment=01a0e358-e7fd-f790-5cd3-a10d84214740 reason=IDEMPOTENCY_WINDOW_UNVERIFIED
+2026-09-27T22:50:50.047+08:00 WARN  [req_449bf1b8ade045a0a468c22214c41d4d] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-27T22:50:50.910+08:00 WARN  [req_31e5049c198e4da4bd4e0081ea6b9e1c] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.21 s -- in com.paymentsledger.payment.PaymentHttpIT
+[INFO] Running com.paymentsledger.payment.WebhookProcessingIT
+2026-09-27T22:50:52.040+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:50:52.143+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 04915d9d5c0a11947df2c102f85f75ea07b728d8a6535bdfc177484d23650728
+2026-09-27T22:50:53.349+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.30934S
+2026-09-27T22:50:53.350+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF)
+2026-09-27T22:50:53.351+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-27T22:50:53.372+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 21 ms.
+2026-09-27T22:50:53.398+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:53.415+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-27T22:50:53.416+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.007s)
+2026-09-27T22:50:53.424+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:50:53.446+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-27T22:50:53.451+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:50:53.453+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:50:53.476+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:50:53.523+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:50:53.562+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:50:53.603+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:50:53.630+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:50:53.664+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "platform", now at version v6 (execution time 00:00.144s)
+2026-09-27T22:50:54.188+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:54.205+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:50:54.222+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:54.223+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:54.597+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:54.612+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:50:54.628+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:54.629+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:54.956+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:54.968+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:50:55.004+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:55.005+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:55.467+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:55.483+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.007s)
+2026-09-27T22:50:55.504+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:55.505+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:56.109+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:56.126+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.006s)
+2026-09-27T22:50:56.144+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:56.144+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:56.712+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:56.730+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:50:56.747+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:56.748+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:57.163+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:57.179+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:50:57.199+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:57.200+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:57.426+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:57.440+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:50:57.464+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:57.465+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:57.944+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:57.960+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:50:57.976+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:57.977+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:58.403+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:58.420+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.007s)
+2026-09-27T22:50:58.440+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:58.441+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:58.673+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:58.686+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:50:58.702+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:58.702+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:58.929+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:58.943+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:50:58.957+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:58.958+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:59.446+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:59.459+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:50:59.475+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:50:59.476+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:50:59.984+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:50:59.998+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:00.014+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:00.016+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:00.580+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:00.591+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:00.605+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:00.606+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:00.967+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:00.986+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.007s)
+2026-09-27T22:51:01.007+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:01.008+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:01.524+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49680/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:01.562+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.016s)
+2026-09-27T22:51:01.593+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:01.594+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.28 s -- in com.paymentsledger.payment.WebhookProcessingIT
+[INFO] Running com.paymentsledger.payment.PaymentCoreIT
+2026-09-27T22:51:02.329+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:51:02.566+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 265292ea73efe18b63be42001a5566ddf9fddae4d71186bba88d6dfe9f2f3a26
+2026-09-27T22:51:03.943+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.613656S
+2026-09-27T22:51:03.944+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF)
+2026-09-27T22:51:03.945+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-27T22:51:03.991+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 45 ms.
+2026-09-27T22:51:04.026+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:04.046+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-27T22:51:04.047+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:04.061+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:51:04.112+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-27T22:51:04.117+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:51:04.122+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:51:04.150+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:51:04.311+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:51:04.393+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:51:04.458+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:51:04.511+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:51:04.552+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "platform", now at version v6 (execution time 00:00.275s)
+2026-09-27T22:51:04.909+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:04.924+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:04.938+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:04.939+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:05.167+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:05.188+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.011s)
+2026-09-27T22:51:05.201+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:05.203+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:05.558+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:05.584+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.008s)
+2026-09-27T22:51:05.605+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:05.605+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:05.830+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:05.844+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:05.864+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:05.866+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:07.877+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:07.891+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:07.906+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:07.907+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:08.324+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:08.335+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:08.350+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:08.351+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:08.823+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:08.837+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:08.853+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:08.854+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:09.074+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:09.084+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:09.098+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:09.099+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:09.452+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:09.467+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.006s)
+2026-09-27T22:51:09.483+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:09.483+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:10.046+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:10.057+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:10.071+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:10.071+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:10.343+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:10.361+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:10.397+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:10.398+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:10.785+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:10.797+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:10.814+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:10.814+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:11.360+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:11.371+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:11.386+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:11.387+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:11.932+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:11.949+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.007s)
+2026-09-27T22:51:11.968+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:11.969+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:12.396+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:12.409+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:12.426+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:12.427+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:12.633+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:12.652+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.007s)
+2026-09-27T22:51:12.669+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:12.669+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:13.130+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:13.141+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:13.157+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:13.165+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:13.781+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:13.822+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.021s)
+2026-09-27T22:51:13.839+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:13.841+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:14.042+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:14.065+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.007s)
+2026-09-27T22:51:14.086+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:14.086+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:14.472+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:14.485+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:14.501+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:14.501+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:15.163+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:15.178+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:15.199+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:15.199+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:15.855+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:15.886+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.013s)
+2026-09-27T22:51:15.924+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:15.925+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:17.081+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:17.100+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:17.114+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:17.116+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:17.646+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:17.675+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.011s)
+2026-09-27T22:51:17.716+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:17.718+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:19.459+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:19.484+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.006s)
+2026-09-27T22:51:19.516+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:19.517+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:19.960+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50038/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:19.972+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:19.986+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:19.988+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+[INFO] Tests run: 27, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 18.44 s -- in com.paymentsledger.payment.PaymentCoreIT
+[INFO] Running com.paymentsledger.payment.PaymentRealContractIT
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0 s -- in com.paymentsledger.payment.PaymentRealContractIT
+[INFO] Running com.paymentsledger.payment.WebhookAssociationIT
+2026-09-27T22:51:20.783+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:51:20.979+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 9cb288ec4d99e12a64d99c2824f6a41072e9becec9a5699898621728b1d2cb01
+2026-09-27T22:51:22.821+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT2.037S
+2026-09-27T22:51:22.829+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF)
+2026-09-27T22:51:22.838+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-27T22:51:22.950+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 111 ms.
+2026-09-27T22:51:22.985+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:23.043+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-27T22:51:23.045+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.006s)
+2026-09-27T22:51:23.058+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:51:23.080+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-27T22:51:23.083+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:51:23.086+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:51:23.117+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:51:23.181+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:51:23.243+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:51:23.326+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:51:23.386+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:51:23.426+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "platform", now at version v6 (execution time 00:00.239s)
+2026-09-27T22:51:24.166+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:24.188+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:24.204+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:24.204+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:24.509+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:24.522+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:24.536+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:24.537+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:24.885+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:24.901+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.006s)
+2026-09-27T22:51:24.920+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:24.920+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:25.329+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:25.368+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.017s)
+2026-09-27T22:51:25.393+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:25.395+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:25.978+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:26.012+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.010s)
+2026-09-27T22:51:26.031+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:26.032+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:26.643+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:26.666+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.007s)
+2026-09-27T22:51:26.688+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:26.690+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:27.192+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:27.218+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:27.236+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:27.237+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:27.669+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:27.681+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:27.706+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:27.707+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:28.232+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:28.245+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:28.261+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:28.262+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:28.797+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50594/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:28.821+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.016s)
+2026-09-27T22:51:28.843+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:28.845+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.870 s -- in com.paymentsledger.payment.WebhookAssociationIT
+[INFO] Running com.paymentsledger.payment.OperationRecoveryIT
+2026-09-27T22:51:29.650+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:51:29.747+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: f708cf901a73a2b2aa5d5c710c8d15610b830c3bf919ce61f0f50b751a9a3807
+2026-09-27T22:51:31.076+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.426144S
+2026-09-27T22:51:31.077+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF)
+2026-09-27T22:51:31.078+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-27T22:51:31.101+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 22 ms.
+2026-09-27T22:51:31.134+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:31.163+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-27T22:51:31.167+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.009s)
+2026-09-27T22:51:31.182+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:51:31.214+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-27T22:51:31.219+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:51:31.221+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:51:31.248+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:51:31.305+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:51:31.347+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:51:31.389+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:51:31.420+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:51:31.442+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "platform", now at version v6 (execution time 00:00.153s)
+2026-09-27T22:51:31.742+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:31.755+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:31.769+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:31.770+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:32.103+08:00 WARN  [-] c.p.payment.PaymentRepository - Payment recovery escalated operation=7a9e3f13-5642-4fdd-85d7-7bdf8b7a892b payment=01a0e359-8cdb-f4c2-c4e5-7275d835724d reason=IDEMPOTENCY_WINDOW_UNVERIFIED
+2026-09-27T22:51:32.104+08:00 WARN  [-] c.p.p.OperationRecoveryCoordinator - Payment recovery escalated operation=7a9e3f13-5642-4fdd-85d7-7bdf8b7a892b payment=01a0e359-8cdb-f4c2-c4e5-7275d835724d reason=IDEMPOTENCY_WINDOW_UNVERIFIED
+2026-09-27T22:51:32.142+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:32.155+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:32.171+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:32.171+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:32.666+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:32.677+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:32.691+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:32.692+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:33.103+08:00 WARN  [-] c.p.p.OperationRecoveryCoordinator - Payment recovery age alert operation=702ba5fc-a15d-4092-b104-90f5e2a1c353 payment=01a0e359-9061-ae48-ae86-b6fde16713a5
+2026-09-27T22:51:33.304+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:33.318+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:33.334+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:33.335+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:33.809+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:33.823+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:33.846+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:33.846+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:34.469+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:34.490+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:34.508+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:34.508+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:35.150+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:35.174+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.006s)
+2026-09-27T22:51:35.192+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:35.193+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:35.732+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:35.744+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:35.758+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:35.758+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:36.536+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:36.552+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:36.567+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:36.567+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:36.857+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:36.867+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:36.881+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:36.882+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:37.312+08:00 WARN  [-] c.p.payment.PaymentRepository - Payment recovery escalated operation=e313f793-f939-4532-a710-6e957cc470a3 payment=01a0e359-a0c3-322c-5b4f-d11505c70daa reason=UNRESOLVED_AGE_LIMIT
+2026-09-27T22:51:37.352+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:37.369+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.007s)
+2026-09-27T22:51:37.384+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:37.385+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:38.011+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:38.029+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.006s)
+2026-09-27T22:51:38.044+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:38.045+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:38.588+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:38.606+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.008s)
+2026-09-27T22:51:38.628+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:38.628+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:39.367+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:39.393+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.009s)
+2026-09-27T22:51:39.411+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:39.412+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:40.178+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:40.191+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.006s)
+2026-09-27T22:51:40.205+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:40.206+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:41.044+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:41.056+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:41.070+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:41.071+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:41.524+08:00 WARN  [-] c.p.p.OperationRecoveryCoordinator - Payment recovery age alert operation=8f89c4c0-1737-4e2a-bc19-1e602d3c4a89 payment=01a0e359-b11a-f56b-5b0e-60a84f13dfeb
+2026-09-27T22:51:41.654+08:00 WARN  [-] c.p.payment.PaymentRepository - Payment recovery escalated operation=8f89c4c0-1737-4e2a-bc19-1e602d3c4a89 payment=01a0e359-b11a-f56b-5b0e-60a84f13dfeb reason=UNRESOLVED_AGE_LIMIT
+2026-09-27T22:51:41.714+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:41.727+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.004s)
+2026-09-27T22:51:41.742+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:41.743+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:41.885+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:41.896+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:41.912+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:41.914+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:42.284+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:42.301+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:42.313+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:42.314+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:42.724+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:42.737+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:42.751+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:42.752+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:43.132+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:43.159+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:43.176+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:43.177+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:43.645+08:00 WARN  [-] c.p.payment.PaymentRepository - Payment recovery escalated operation=abf19e57-099f-4e22-9728-cb8dcbff39c1 payment=01a0e359-b9d9-e001-4c57-45c2b7d2adbe reason=IDEMPOTENCY_WINDOW_EXPIRED
+2026-09-27T22:51:43.645+08:00 WARN  [-] c.p.p.OperationRecoveryCoordinator - Payment recovery escalated operation=abf19e57-099f-4e22-9728-cb8dcbff39c1 payment=01a0e359-b9d9-e001-4c57-45c2b7d2adbe reason=IDEMPOTENCY_WINDOW_EXPIRED
+2026-09-27T22:51:43.797+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:50836/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:43.808+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:43.822+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:43.823+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:44.236+08:00 WARN  [-] c.p.payment.PaymentRepository - Payment recovery escalated operation=a46a3ec2-50a4-43eb-961c-266a9e00eea9 payment=01a0e359-bc04-d927-b81a-9ca86c8d2041 reason=CONFLICTING_SESSION_ANCHORS
+2026-09-27T22:51:44.238+08:00 WARN  [-] c.p.p.OperationRecoveryCoordinator - Payment recovery escalated operation=a46a3ec2-50a4-43eb-961c-266a9e00eea9 payment=01a0e359-bc04-d927-b81a-9ca86c8d2041 reason=CONFLICTING_SESSION_ANCHORS
+[INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.92 s -- in com.paymentsledger.payment.OperationRecoveryIT
+[INFO] Running com.paymentsledger.payment.RecoverySchemaIT
+2026-09-27T22:51:44.589+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:51:44.781+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: b7231719362a2b7e209d410142a16c3653c2d06722c0fc20cc6fa9062ca11307
+2026-09-27T22:51:45.952+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.363251S
+2026-09-27T22:51:45.952+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:51362/test?loggerLevel=OFF)
+2026-09-27T22:51:45.953+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-27T22:51:45.977+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 23 ms.
+2026-09-27T22:51:45.992+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:51362/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:46.005+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-27T22:51:46.006+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:46.014+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:51:46.050+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-27T22:51:46.055+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:51:46.057+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:51:46.082+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:51:46.135+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:51:46.181+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:51:46.224+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 4 migrations to schema "platform", now at version v4 (execution time 00:00.118s)
+2026-09-27T22:51:46.262+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:51362/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:46.277+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.005s)
+2026-09-27T22:51:46.295+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 4
+2026-09-27T22:51:46.302+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:51:46.341+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:51:46.368+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 2 migrations to schema "platform", now at version v6 (execution time 00:00.044s)
+2026-09-27T22:51:46.383+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:51362/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:46.407+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.007s)
+2026-09-27T22:51:46.426+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:46.427+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.038 s -- in com.paymentsledger.payment.RecoverySchemaIT
+[INFO] Running com.paymentsledger.payment.PaymentSchemaIT
+2026-09-27T22:51:46.627+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:51:46.716+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 92fa21f08d6aa845503f8e9a60821aa45b38bd941e646eacc5e08bf2d8a04af0
+2026-09-27T22:51:47.185+08:00 WARN  [-] com.zaxxer.hikari.pool.PoolBase - payments-ledger-pool - Failed to validate connection org.postgresql.jdbc.PgConnection@2748c714 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-27T22:51:47.829+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.201969S
+2026-09-27T22:51:47.829+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:51401/test?loggerLevel=OFF)
+2026-09-27T22:51:47.829+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-27T22:51:47.851+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 21 ms.
+2026-09-27T22:51:47.863+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:51401/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:47.875+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-27T22:51:47.876+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.003s)
+2026-09-27T22:51:47.888+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:51:47.914+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-27T22:51:47.919+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:51:47.921+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:51:47.945+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:51:48.008+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:51:48.063+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 3 migrations to schema "platform", now at version v3 (execution time 00:00.084s)
+2026-09-27T22:51:48.097+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:51401/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:48.120+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 6 migrations (execution time 00:00.006s)
+2026-09-27T22:51:48.139+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 3
+2026-09-27T22:51:48.144+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:51:48.186+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:51:48.217+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:51:48.238+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 3 migrations to schema "platform", now at version v6 (execution time 00:00.068s)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.829 s -- in com.paymentsledger.payment.PaymentSchemaIT
+[INFO] Running com.paymentsledger.ApiRoleHealthIT
+2026-09-27T22:51:48.467+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:51:48.515+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 547d70ce6a26c8a03662124912c767304a3ede3e42887ffc64738cf54df71197
+2026-09-27T22:51:49.720+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.253036S
+2026-09-27T22:51:49.720+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:51430/pr01_isolated_api_role_check?loggerLevel=OFF)
+2026-09-27T22:51:49.726+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.ApiRoleHealthIT]: ApiRoleHealthIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-27T22:51:49.742+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ApiRoleHealthIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-27T22:51:49.788+08:00 INFO  [-] com.paymentsledger.ApiRoleHealthIT - Starting ApiRoleHealthIT using Java 21.0.12.1 with PID 81993 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks)
+2026-09-27T22:51:49.788+08:00 INFO  [-] com.paymentsledger.ApiRoleHealthIT - The following 1 profile is active: "api"
+2026-09-27T22:51:50.164+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-09-27T22:51:50.165+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-27T22:51:50.165+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-09-27T22:51:50.187+08:00 INFO  [-] o.a.c.c.C.[Tomcat-3].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-27T22:51:50.187+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 398 ms
+2026-09-27T22:51:50.231+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:51430/pr01_isolated_api_role_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:50.242+08:00 INFO  [-] o.f.c.internal.database.base.Schema - Creating schema "platform" ...
+2026-09-27T22:51:50.246+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:51:50.274+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": null
+2026-09-27T22:51:50.277+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:51:50.278+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:51:50.295+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:51:50.341+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:51:50.383+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:51:50.430+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:51:50.460+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:51:50.520+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "platform", now at version v6 (execution time 00:00.169s)
+2026-09-27T22:51:50.859+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-27T22:51:50.926+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-27T22:51:50.934+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 51438 (http) with context path '/'
+2026-09-27T22:51:50.938+08:00 INFO  [-] com.paymentsledger.ApiRoleHealthIT - Started ApiRoleHealthIT in 1.176 seconds (process running for 108.366)
+2026-09-27T22:51:50.947+08:00 INFO  [-] o.a.c.c.C.[Tomcat-3].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-27T22:51:50.947+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-09-27T22:51:50.947+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-09-27T22:51:50.991+08:00 WARN  [req_05901d891e5e4f35a71e3a5724443967] c.p.c.error.GlobalExceptionHandler - api_error code=SERVICE_UNAVAILABLE status=503 retryable=true
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.753 s -- in com.paymentsledger.ApiRoleHealthIT
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeRealContractIT
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0 s -- in com.paymentsledger.provider.adapter.stripe.StripeRealContractIT
+[INFO] Running com.paymentsledger.provider.fake.FakeTransactionBoundaryIT
+2026-09-27T22:51:51.224+08:00 INFO  [-] tc.postgres:16-alpine - Creating container for image: postgres:16-alpine
+2026-09-27T22:51:51.304+08:00 INFO  [-] tc.postgres:16-alpine - Container postgres:16-alpine is starting: 6b2d0f4ac687db6e811d3f2e8fa24501434feea96fd2ef6b7a199c649e9507c7
+2026-09-27T22:51:51.883+08:00 WARN  [-] com.zaxxer.hikari.pool.PoolBase - payments-ledger-pool - Failed to validate connection org.postgresql.jdbc.PgConnection@31699ba5 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-27T22:51:52.823+08:00 INFO  [-] tc.postgres:16-alpine - Container postgres:16-alpine started in PT1.598933S
+2026-09-27T22:51:52.823+08:00 INFO  [-] tc.postgres:16-alpine - Container is started (JDBC URL: jdbc:postgresql://localhost:51446/test?loggerLevel=OFF)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.901 s -- in com.paymentsledger.provider.fake.FakeTransactionBoundaryIT
+[INFO] Running com.paymentsledger.FlywayBaselineIT
+2026-09-27T22:51:53.130+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:51:53.243+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 7029852bacdd9bd0b4868a72e58f6e553832d1cb808dc51d3485875cd4cee3e3
+2026-09-27T22:51:54.385+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.254958S
+2026-09-27T22:51:54.385+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:51476/pr01_isolated_migration_check?loggerLevel=OFF)
+2026-09-27T22:51:54.404+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:51476/pr01_isolated_migration_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:54.418+08:00 INFO  [-] o.f.c.internal.database.base.Schema - Creating schema "platform" ...
+2026-09-27T22:51:54.423+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:51:54.458+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": null
+2026-09-27T22:51:54.467+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:51:54.469+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:51:54.485+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 1 migration to schema "platform", now at version v1 (execution time 00:00.011s)
+2026-09-27T22:51:54.504+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:51476/pr01_isolated_migration_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:54.517+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 7 migrations (execution time 00:00.004s)
+2026-09-27T22:51:54.532+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 1
+2026-09-27T22:51:54.533+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-27T22:51:54.559+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:51476/pr01_isolated_migration_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:54.570+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 7 migrations (execution time 00:00.003s)
+2026-09-27T22:51:54.587+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 1
+2026-09-27T22:51:54.591+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:51:54.659+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:51:54.700+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:51:54.741+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:51:54.771+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:51:54.797+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 5 migrations to schema "platform", now at version v6 (execution time 00:00.136s)
+2026-09-27T22:51:54.813+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:51476/pr01_isolated_migration_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:54.828+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 7 migrations (execution time 00:00.003s)
+2026-09-27T22:51:54.864+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-27T22:51:54.865+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.885 s -- in com.paymentsledger.FlywayBaselineIT
+[INFO] Running com.paymentsledger.WorkerRoleHealthIT
+2026-09-27T22:51:55.015+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-27T22:51:55.094+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 271eff300a88ec96abc91cfa0c6c6de47f539ff4d1f05926326fc15949954dd2
+2026-09-27T22:51:56.197+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.181037S
+2026-09-27T22:51:56.197+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:51500/pr01_isolated_worker_role_check?loggerLevel=OFF)
+2026-09-27T22:51:56.214+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.WorkerRoleHealthIT]: WorkerRoleHealthIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-27T22:51:56.218+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.WorkerRoleHealthIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-27T22:51:56.242+08:00 INFO  [-] c.paymentsledger.WorkerRoleHealthIT - Starting WorkerRoleHealthIT using Java 21.0.12.1 with PID 81993 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr08-webhooks)
+2026-09-27T22:51:56.242+08:00 INFO  [-] c.paymentsledger.WorkerRoleHealthIT - The following 1 profile is active: "worker"
+2026-09-27T22:51:56.430+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-09-27T22:51:56.431+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-27T22:51:56.431+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-09-27T22:51:56.449+08:00 INFO  [-] o.a.c.c.C.[Tomcat-4].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-27T22:51:56.449+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 206 ms
+2026-09-27T22:51:56.485+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:51500/pr01_isolated_worker_role_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-27T22:51:56.509+08:00 INFO  [-] o.f.c.internal.database.base.Schema - Creating schema "platform" ...
+2026-09-27T22:51:56.515+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-27T22:51:56.546+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": null
+2026-09-27T22:51:56.549+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-27T22:51:56.551+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-27T22:51:56.570+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-27T22:51:56.617+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-27T22:51:56.658+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-27T22:51:56.702+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-27T22:51:56.730+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-27T22:51:56.779+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "platform", now at version v6 (execution time 00:00.161s)
+2026-09-27T22:51:57.105+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=WORKER
+2026-09-27T22:51:57.177+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-27T22:51:57.190+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 51507 (http) with context path '/'
+2026-09-27T22:51:57.200+08:00 INFO  [-] c.paymentsledger.WorkerRoleHealthIT - Started WorkerRoleHealthIT in 0.98 seconds (process running for 114.628)
+2026-09-27T22:51:57.205+08:00 INFO  [-] o.a.c.c.C.[Tomcat-4].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-27T22:51:57.205+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-09-27T22:51:57.206+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-09-27T22:51:57.206+08:00 WARN  [req_fa2415a7bae7418393bd7da5e62358a6] o.s.web.servlet.PageNotFound - No mapping for POST /webhooks/stripe
+2026-09-27T22:51:57.220+08:00 WARN  [req_04deb0da5fdb4e6b89e1ed7037e8c23b] o.s.web.servlet.PageNotFound - No mapping for GET /payment-test.html
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.410 s -- in com.paymentsledger.WorkerRoleHealthIT
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 150, Failures: 0, Errors: 0, Skipped: 2
+[INFO]
+[INFO]
+[INFO] --- failsafe:3.5.6:verify (default) @ payments-ledger-platform ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:33 min
+[INFO] Finished at: 2026-09-27T22:52:12+08:00
+[INFO] ------------------------------------------------------------------------

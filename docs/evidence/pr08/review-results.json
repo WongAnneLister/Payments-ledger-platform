@@ -1,0 +1,27 @@
+{
+  "specification": {
+    "status": "PASS",
+    "reviewers": [
+      "pr08_endpoint_spec",
+      "pr08_core_spec"
+    ],
+    "fixedFindings": [
+      "Atomic scoped PaymentIntent ownership prevents concurrent double binding; conflicting receipt remains durable.",
+      "Late snapshots fill validated missing Session/PI relationships without reverting newer state."
+    ]
+  },
+  "quality": {
+    "status": "PASS",
+    "reviewer": "pr08_quality",
+    "fixedFinding": "In-flight definitive create rejection must retain recovery when a verified PaymentIntent has already arrived.",
+    "conclusion": "No remaining P1/P2 findings after the minimal PI-presence guard fix and exact race regression review."
+  },
+  "finalVerification": {
+    "command": "JAVA_HOME=<Corretto21> ./mvnw -B clean verify",
+    "exitCode": 0,
+    "passed": 309,
+    "skipped": 2,
+    "failures": 0,
+    "errors": 0
+  }
+}

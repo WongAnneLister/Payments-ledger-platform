@@ -28,7 +28,8 @@ public final class ProviderQueryService {
         var observations=new ArrayList<Observation>();var verified=new LinkedHashMap<String,ChargeFact>();
         var providerScope=scope(p);UUID payment=uuid(p,"id");String expectedSession=str(p,"checkout_session_id"),expectedIntent=str(p,"payment_intent_id");
         CheckoutSessionFact session=null;PaymentIntentFact intent=null;boolean complete=true,conflict=false;
-        if(checkout==null || expectedSession==null)return new Queried(new Facts(null,null,List.of(),false,false,queryStarted,paymentVersion),observations);
+        if((checkout==null || expectedSession==null) && expectedIntent==null)return new Queried(new Facts(null,null,List.of(),false,false,queryStarted,paymentVersion),observations);
+        if(expectedSession!=null && checkout!=null){
         var sessionResult=call(()->checkout.querySession(providerScope,expectedSession),null);
         observations.add(new Observation("QUERY_SESSION",sessionResult,sessionResult.payload()==null?expectedSession:sessionResult.payload().sessionId()));
         if(success(sessionResult)){
@@ -36,6 +37,7 @@ public final class ProviderQueryService {
             if(fact.expiresAt()==null || fact.status()==CheckoutSessionStatus.OPEN && (fact.hostedUrl()==null || fact.hostedUrl().isBlank()) || !expectedSession.equals(fact.sessionId()) || !matchesMetadata(fact.metadata(),payment) || expectedIntent!=null && !expectedIntent.equals(fact.paymentIntentId())){conflict=true;complete=false;}
             else{session=fact;if(expectedIntent==null)expectedIntent=fact.paymentIntentId();}
         }else complete=false;
+        }
         if(expectedIntent!=null){
             String pi=expectedIntent;
             if(intents==null || charges==null)complete=false;

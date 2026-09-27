@@ -1,0 +1,20 @@
+{
+  "initialCoreRed": {
+    "result": "6 expected assertion failures before core classes existed",
+    "logDuringDevelopment": "/private/tmp/pr08-core-red.log",
+    "suite": "WebhookProcessingIT"
+  },
+  "initialHttpRed": {
+    "result": "expected HTTP 200 but received 404 before route existed; existing Stripe verifier tests passed",
+    "logDuringDevelopment": "/private/tmp/pr08-http-red.log"
+  },
+  "specRegressionRed": {
+    "result": "17 core cases: 2 expected failures reproduce same-PI double ownership and missing stale Session relationship",
+    "logDuringDevelopment": "/private/tmp/pr08-core-review-red.log"
+  },
+  "note": "Development log paths are local diagnostic references. Final passing test reports and build output are archived separately.",
+  "qualityRegressionRed": {
+    "result": "1 expected failure reproduced false CANCELED after PI receipt and in-flight create rejection",
+    "logDuringDevelopment": "/private/tmp/pr08-quality-reject-red.log"
+  }
+}

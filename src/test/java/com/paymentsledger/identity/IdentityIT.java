@@ -156,7 +156,10 @@ class IdentityIT {
     }
     @Test void healthIsPublicAndWebhookIsNotFalselyAcknowledged() {
         assertThat(get("/actuator/health",null).getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(http.postForEntity("/webhooks/stripe","raw",String.class).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        var headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        assertThat(http.postForEntity("/webhooks/stripe",new HttpEntity<>("{}",headers),String.class).getStatusCode())
+                .isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
     }
     @Test void refusesLiveDatabaseOnStartupCheck() {
         write(() -> jdbc.update("INSERT INTO platform.environment_config(organization_id,code,livemode) VALUES (?,'live',true)",id(1)));

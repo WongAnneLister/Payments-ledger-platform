@@ -41,6 +41,7 @@ public class PaymentExecutor {
     void executeClaim(Claim claim){
         outsideTransaction();
         if(claim.type().equals("CREATE_CHECKOUT")){
+            if(repository.deferCreateWithRemoteFact(claim))return;
             var command=repository.decode(claim.operation().get("command"),CreateCheckoutSessionCommand.class);
             repository.finishCreate(claim,call(()->checkout.createSession(command),command.operationIdempotencyKey()));
         }else cancel(claim);
@@ -55,7 +56,7 @@ public class PaymentExecutor {
     private ProviderScope scope(Map<String,Object> p){return new ProviderScope(uuid(p,"organization_id"),uuid(p,"environment_id"),uuid(p,"provider_account_id"),false);}
     private static boolean success(ProviderCallResult<?> result){return result.payload()!=null && (result.classification()==ProviderCallClassification.SUCCESS || result.classification()==ProviderCallClassification.AUTH_REQUIRED);}
     public void refresh(UUID payment){
-        outsideTransaction();var p=repository.payment(payment);if(p==null || p.get("checkout_session_id")==null)return;
+        outsideTransaction();var p=repository.payment(payment);if(p==null || p.get("checkout_session_id")==null && p.get("payment_intent_id")==null)return;
         var query=query(p);repository.mergeQuery(payment,repository.createOperation(payment),query.observations(),query.facts());
     }
     ProviderQueryService.Queried query(Map<String,Object> payment){return new ProviderQueryService(repository,checkout,intents,charges).query(payment);}

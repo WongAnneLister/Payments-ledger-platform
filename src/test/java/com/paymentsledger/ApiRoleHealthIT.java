@@ -66,4 +66,13 @@ class ApiRoleHealthIT {
                 .contains("\"requestId\":");
         assertThat(response.getHeaders().getFirst("X-Request-Id")).isNotBlank();
     }
+    @Test
+    void unconfiguredWebhookDoesNotFalselyAcknowledgeReceipt() {
+        var headers=new org.springframework.http.HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+        var response=restTemplate.postForEntity("/webhooks/stripe",new org.springframework.http.HttpEntity<>("{}",headers),String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
+        assertThat(response.getBody()).contains("\"retryable\":true");
+    }
+
 }

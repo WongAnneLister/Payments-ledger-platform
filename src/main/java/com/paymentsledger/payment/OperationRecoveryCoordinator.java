@@ -39,6 +39,7 @@ public class OperationRecoveryCoordinator {
    else escalate(claim,"CANCEL_WITHOUT_TRUSTED_SESSION");return;
   }
   if(anchor!=null){var p=new LinkedHashMap<>(claim.payment());p.put("checkout_session_id",anchor);repository.finishRecoveryQuery(claim,executor.query(p));return;}
+  if(claim.payment().get("payment_intent_id")!=null || number(claim.payment(),"captured_amount_minor")>0){repository.finishRecoveryQuery(claim,executor.query(claim.payment()));return;}
   if("PREPARED".equals(claim.operation().get("status"))){executor.executeClaim(claim);return;}
   if(unresolved&&unresolvedSince!=null&&!unresolvedSince.plus(policy.unresolvedAge()).isAfter(repository.now())){escalate(claim,"UNRESOLVED_AGE_LIMIT");return;}
   Instant horizon=instant(claim.operation(),"retry_until");

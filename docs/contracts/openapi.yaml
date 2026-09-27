@@ -424,7 +424,7 @@ paths:
 
         1. 以**原始请求字节**配合 `Stripe-Signature` 验签，禁止先反序列化再重新序列化。
         2. 校验事件的 account/livemode 与该 endpoint 绑定的 ProviderScope 一致。
-        3. 在短事务内唯一写入 `webhook_inbox`（去重键 `(org, provider_account, livemode, eventId)`）。
+        3. 在短事务内唯一写入 `webhook_inbox`（去重键 `(org, environment, provider_account, livemode, eventId)`）。
         4. **持久化成功之后**才返回 2xx。
 
         持久化失败必须返回可重试错误（5xx），**不得**返回 200 假装已接收。
@@ -439,7 +439,8 @@ paths:
       requestBody:
         required: true
         description: |
-          Stripe 事件原始 JSON。服务端保留原始字节用于验签与取证；
+          Stripe 事件原始 JSON，默认最多 256 KiB。服务端以原始字节验签；
+          验签后仅持久化字节摘要、范围、验证记录和处理所需白名单字段，不长期保存原始客户信息。
           此处的 schema 仅描述验签后解析所依赖的最小字段，不代表服务端信任请求内容。
         content:
           application/json:
@@ -451,7 +452,7 @@ paths:
                 value:
                   id: "evt_1PxxxxxxxxxxxxxxxxxxxxxA"
                   object: "event"
-                  api_version: "2024-06-20"
+                  api_version: "2026-07-29.dahlia"
                   created: 1789000000
                   livemode: false
                   account: "acct_1Pxxxxxxxxxxxxxx"
@@ -496,8 +497,14 @@ paths:
                     message: "Signature verification failed for raw payload"
                     retryable: false
                     requestId: "req_01HZXA0000000000000000"
+        '409':
+          description: 同范围 eventId 的已持久证据与本次内容冲突，保留原记录
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '503':
-          description: 无法持久化 Inbox；Stripe 应重试。**不得**改为返回 200
+          description: 入口未配置、可信账户绑定不可用或无法持久化 Inbox；Stripe 应重试。**不得**改为返回 200
           headers:
             X-Request-Id:
               $ref: '#/components/headers/XRequestId'
@@ -511,7 +518,7 @@ paths:
               examples:
                 persistenceFailed:
                   value:
-                    code: "PERSISTENCE_FAILED"
+                    code: "SERVICE_UNAVAILABLE"
                     message: "Inbox persistence unavailable; retry"
                     retryable: true
                     requestId: "req_01HZXA0000000000000001"
@@ -1754,14 +1761,14 @@ components:
       description: |
         验签**之后**解析所依赖的最小字段。服务端始终以原始字节为验签输入，
         并以 endpoint 绑定的 ProviderScope 校验 `account` / `livemode`。
-      required: [id, type, data]
+      required: [id, object, api_version, created, livemode, type, data]
       properties:
         id: { type: string, description: Stripe event id；传输层去重键的一部分 }
         object: { type: string, enum: [event] }
-        api_version: { type: string, nullable: true }
-        created: { type: integer, format: int64 }
-        livemode: { type: boolean }
-        account: { type: string, nullable: true }
+        api_version: { type: string, enum: [2026-07-29.dahlia] }
+        created: { type: integer, format: int64, minimum: 0 }
+        livemode: { type: boolean, enum: [false] }
+        account: { type: string, nullable: true, description: 直接账户事件可省略；身份仍来自 endpoint 固定绑定 }
         type: { type: string, example: "checkout.session.completed" }
         data:
           type: object
@@ -1775,7 +1782,7 @@ components:
 
     WebhookAck:
       type: object
-      required: [received]
+      required: [received, duplicate]
       properties:
         received:
           type: boolean

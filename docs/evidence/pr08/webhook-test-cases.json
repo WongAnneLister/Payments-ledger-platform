@@ -1,0 +1,339 @@
+{
+  "sources": [
+    "POSTGRESQL_RUNTIME_ROLE",
+    "LOCAL_SIGNED_FIXTURE",
+    "VERIFIED_BOUNDARY_FIXTURE"
+  ],
+  "tests": [
+    {
+      "class": "com.paymentsledger.webhook.WebhookNormalizerTest",
+      "test": "semanticIdentityIgnoresSerializationOrderButRetainsChangedFacts",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.WebhookNormalizerTest",
+      "test": "keepsCorrelationButDropsCustomerDetailsAndExpandedObjectContents",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.WebhookNormalizerTest",
+      "test": "malformedTypesCannotBecomeFinancialFacts",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "verifiesOriginalUnicodeBytesAndMapsOnlyProjectFacts",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "acceptsTimestampsWithinTheInclusiveTolerance(long)[1]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "acceptsTimestampsWithinTheInclusiveTolerance(long)[2]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "acceptsTimestampsWithinTheInclusiveTolerance(long)[3]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "rejectsStaleAndFutureSignatures(long)[1]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "rejectsStaleAndFutureSignatures(long)[2]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "rejectsStaleAndFutureSignatures(long)[3]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "rejectsStaleAndFutureSignatures(long)[4]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "rejectsMissingOrMalformedMandatoryEventFields",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "rejectsWrongAccountVersionOrLiveMode",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "rejectsTamperingAndReformattingEvenWhenJsonMeaningIsUnchanged",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "rejectsMalformedUtf8RatherThanSilentlyReplacingBytes",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "rejectsInvalidSignatureInputsWithoutExposingInput",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "rejectsUnsafeConfigurationWithoutEchoingIt",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "acceptsBoundDirectAccountAndExplicitMatchingAccount",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "acceptsMultipleV1SignaturesForSecretRotation",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+      "test": "evidenceDigestExcludesUnallowlistedFieldsAndJsonFormatting",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.fake.FakeEvidenceTest",
+      "test": "localWebhookSignatureUsesOriginalBytesAndEnforcesTimestampAndSecret",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.provider.fake.FakeEvidenceTest",
+      "test": "webhookLossDuplicateAndOrderAreReplayedAfterRestart",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.identity.AuthenticationFilterTest",
+      "test": "webhookRawBytesAreUntouchedAndWorkerRejectsBusinessRoutes",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.WebhookSchemaIT",
+      "test": "upgradePreservesRecoveryAndEnforcesScopedImmutableWebhookEvidence",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.WebhookSchemaIT",
+      "test": "ambiguousLegacyIntentOwnershipStopsUpgradeWithoutDeletingEvidence",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.WorkerRoleHealthIT",
+      "test": "workerDoesNotExposeWebhookReceipt",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "staleCreateResponseCannotAttachAnotherIntentToCapturedPayment",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "futureChargeRefundEventRetainsDependencyInsteadOfClaimingCompletion",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "expiredSessionEventDoesNotProveNoCapture",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "outOfOrderChargeWaitsThenIntentEstablishesDependency",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "capturedWebhookBlocksStillPreparedCreate",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "querySourceAndOldFailedAttemptsCannotRegressNewerFacts",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "queryAndWebhookConcurrentCaptureUseOneImmutableFact",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "missingPaymentRemainsDurableUntilItExists",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "completionFailureRollsBackCaptureAndRetryRecovers",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "concurrentDifferentPaymentsCannotClaimTheSameScopedIntent",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "sanitizerDropsSensitiveFieldsAndFutureResourcesWait",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "concurrentSameEventIsOneDurableReceipt",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "differentEventsSameCaptureAndQueryShareOneIdentity",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "definitiveCreateRejectCannotCancelAnIntentAlreadyProvenByWebhook",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "expiredClaimCannotCompleteNewOwnersWork",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "olderSessionStillAddsMissingImmutableLinksWithoutRegressingNewerIntent",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "captureAmountConflictNeverChangesMoney",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookProcessingIT",
+      "test": "claimedCreateCannotSendAfterWebhookEstablishesRemotePayment",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+      "test": "sameEventWithChangedSignedContentCannotReplaceOriginalReceipt",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+      "test": "signedWrongAccountLiveAndWrongApiVersionAreRejected",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+      "test": "rawSignedReceiptIsDurableBeforeAnyProcessing",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+      "test": "databaseWriteFailureReturnsRetryable503InsteadOfAcknowledgement",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+      "test": "trustedEndpointBindingMustMatchPersistedStripeAccount",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+      "test": "unsupportedContentTypeIsAClientErrorWithoutPersistence",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+      "test": "signedHttpFactsReachPaymentThroughTheAsynchronousProcessor",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+      "test": "missingWrongStaleAndTamperedSignaturesNeverPersist",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+      "test": "oversizedBodyAndMultipleSignatureHeadersAreRejectedWithoutPersistence",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.ApiRoleHealthIT",
+      "test": "unconfiguredWebhookDoesNotFalselyAcknowledgeReceipt",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookAssociationIT",
+      "test": "receiptWaitingForAbsentLocalPaymentConvergesWhenPaymentAppears",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookAssociationIT",
+      "test": "futureResourcesRetainAProcessingObligation(String)[1]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookAssociationIT",
+      "test": "futureResourcesRetainAProcessingObligation(String)[2]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookAssociationIT",
+      "test": "futureResourcesRetainAProcessingObligation(String)[3]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookAssociationIT",
+      "test": "metadataCannotBindAnEventToAnotherProviderAccount",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookAssociationIT",
+      "test": "everySessionIntentChargeOrderConvergesWithoutDoubleCapture(String)[1]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookAssociationIT",
+      "test": "everySessionIntentChargeOrderConvergesWithoutDoubleCapture(String)[2]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookAssociationIT",
+      "test": "everySessionIntentChargeOrderConvergesWithoutDoubleCapture(String)[3]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookAssociationIT",
+      "test": "everySessionIntentChargeOrderConvergesWithoutDoubleCapture(String)[4]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookAssociationIT",
+      "test": "everySessionIntentChargeOrderConvergesWithoutDoubleCapture(String)[5]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.payment.WebhookAssociationIT",
+      "test": "everySessionIntentChargeOrderConvergesWithoutDoubleCapture(String)[6]",
+      "result": "PASS"
+    },
+    {
+      "class": "com.paymentsledger.identity.IdentityIT",
+      "test": "healthIsPublicAndWebhookIsNotFalselyAcknowledged",
+      "result": "PASS"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # PR06 业务支付：创建、查询与取消
 
-PR06 把 PR02 的可信身份、受控价格和 PR05 的 Provider 端口接到业务 API；PR07 在此基础上接入持久恢复。退款、业务 Webhook Inbox、商户通知和自动记账对应后续 PR08–PR12。创建 Checkout 只表示收银台入口已就绪，不表示已扣款。
+PR06 把 PR02 的可信身份、受控价格和 PR05 的 Provider 端口接到业务 API；PR07 在此基础上接入持久恢复。PR08 接入 [Webhook Inbox 与异步支付观察](webhook-inbox.md)。退款、商户通知和自动记账对应后续 PR09–PR12。创建 Checkout 只表示收银台入口已就绪，不表示已扣款。
 
 ## 配置与入口
 

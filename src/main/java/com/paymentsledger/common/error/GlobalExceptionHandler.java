@@ -47,6 +47,13 @@ public class GlobalExceptionHandler {
                 .body(ApiError.of(code, "Invalid JSON request", RequestContext.currentRequestId()));
     }
 
+    @ExceptionHandler(org.springframework.web.HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ApiError> handleUnsupportedContentType() {
+        ErrorCode code = ErrorCode.VALIDATION_ERROR;
+        return ResponseEntity.status(code.httpStatus())
+                .body(ApiError.of(code, "Unsupported request content type", RequestContext.currentRequestId()));
+    }
+
     @ExceptionHandler(MissingRequestHeaderException.class)
     public ResponseEntity<ApiError> handleMissingHeader(MissingRequestHeaderException ex) {
         boolean idempotency = "Idempotency-Key".equalsIgnoreCase(ex.getHeaderName());
