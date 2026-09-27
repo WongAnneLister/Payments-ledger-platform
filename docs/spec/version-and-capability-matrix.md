@@ -45,14 +45,17 @@
 | PostgreSQL（服务端） | **16.14**（镜像 `postgres:16`） | `LOCKED` | ✅ 已验证 | Flyway 日志 `(PostgreSQL 16.14)`；Compose healthy | 支持 `DEFERRABLE` 约束触发器、`num_nonnulls()`、`gen_random_uuid()`（PR03 将实际使用） |
 | PostgreSQL JDBC | **42.7.13** | `LOCKED` | ✅ 已验证 | 集成测试连接成功 | `runtime` scope |
 | Flyway | **11.20.3** | `LOCKED` | ✅ 已验证 | 空库迁移 + 二次迁移幂等均通过 | `flyway-core` + `flyway-database-postgresql` |
-| Apache Kafka | **3.9.0**（镜像 `apache/kafka:3.9.0`） | `LOCKED`（基础设施） | ✅ 容器 healthy | `docker compose ps` | **客户端未接入**，PR09 引入 `spring-kafka` |
+| Apache Kafka | **3.9.0**（镜像 `apache/kafka:3.9.0`） | `LOCKED`（基础设施） | ✅ 容器 healthy | `docker compose ps` | PR09 接入客户端；本地故障测试使用相同 `apache/kafka:3.9.0` 镜像 |
+| Spring Kafka | **3.3.16** | Boot BOM | LOCAL_LOCKED | PR09 实际 Kafka 测试 | 仅显式启用的 Worker 连接 |
+| Kafka clients | **3.9.2** | Boot BOM | LOCAL_LOCKED | PR09 实际 Kafka 测试 | broker 镜像仍为 3.9.0 |
+| Apache HttpClient / HttpCore | **5.5.2 / 5.3.6** | Boot BOM | LOCAL_LOCKED | PR09 真实 loopback HTTP 测试 | 固定验证后的 DNS 地址，禁用重定向 |
 | Redis | **7-alpine** | `LOCKED`（基础设施） | ✅ 容器 healthy | `docker compose ps` | **客户端未接入**，PR07 引入 |
 | Testcontainers | **1.21.4** | `LOCKED` | ✅ 已验证 | 3 个 IT 均用一次性容器跑通 | 仅 `test` scope |
 | 属性测试库 | jqwik | `CANDIDATE_LINE` | ⏳ 待验证 | — | PR18 才实际引入，届时锁定版本 |
 
-### 1.1 刻意未引入的依赖
+### 1.1 PR01 时的依赖接入安排（历史）
 
-为避免「未接通的组件」与启动期无谓的连接尝试，以下依赖 PR01 **不引入**：
+为避免「未接通的组件」与启动期无谓的连接尝试，以下依赖 PR01 **不引入**；PR05 已接入 Stripe，PR09 已接入 Spring Kafka：
 
 | 依赖 | 引入 PR | 理由 |
 |---|---|---|

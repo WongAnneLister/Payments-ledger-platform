@@ -1,0 +1,35 @@
+{
+  "specification": {
+    "reviewer": "pr09_spec_review",
+    "status": "PASS",
+    "closedFindings": [
+      {
+        "priority": "P2",
+        "finding": "Internal Kafka message contract not explicit",
+        "resolution": "Added topic/key/value/exact bytes/authoritative Outbox/rejection/ack contract"
+      }
+    ]
+  },
+  "quality": {
+    "reviewer": "pr09_quality_review",
+    "initialStatus": "REQUEST_CHANGES",
+    "finalStatus": "PASS",
+    "closedFindings": [
+      {
+        "priority": "P1",
+        "finding": "Runtime raw Outbox INSERT could mismatch relational type and signed payload to forge a success notification",
+        "resolution": "Restricted canonical SECURITY DEFINER writer with fixed search_path; runtime raw insertion denied; explicitly revoked inherited default table grants; actual PostgreSQL RED/GREEN regression"
+      }
+    ]
+  },
+  "additionalFixes": [
+    "Partial capture cannot freeze succeeded payload before full capture",
+    "Consume-time target snapshot prevents silent redirection",
+    "Missing key HELD does not burn network retry allowance",
+    "HTTP absolute deadline and special IPv6 ranges",
+    "Eligibility trigger cannot be attached to a runtime temp table",
+    "Legacy V7 upgrade assertions"
+  ],
+  "reviewMethod": "Independent read-only source and test-evidence review; reviewers did not run concurrent Maven builds",
+  "finalFullVerification": "verification.json + build-output.txt"
+}

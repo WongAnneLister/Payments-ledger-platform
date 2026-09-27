@@ -42,6 +42,13 @@ spring:
     default-property-inclusion: non_null
 
 platform:
+  messaging:
+    enabled: ${PAYMENT_MESSAGING_ENABLED:false}
+    topic: ${PAYMENT_NOTIFICATION_TOPIC:payment-notifications-v1}
+  notifications:
+    allowed-hosts: ${MERCHANT_NOTIFICATION_ALLOWED_HOSTS:}
+    max-attempts: ${MERCHANT_NOTIFICATION_MAX_ATTEMPTS:8}
+    poll-ms: ${MERCHANT_NOTIFICATION_POLL_MS:1000}
   webhooks:
     stripe:
       enabled: ${STRIPE_WEBHOOK_ENABLED:false}
@@ -73,6 +80,9 @@ logging:
     # 连接池与迁移在启动阶段有用，但不应长期刷屏
     com.zaxxer.hikari: WARN
     org.flywaydb: INFO
+    # Never emit signed request headers/body through HttpClient wire diagnostics.
+    org.apache.hc.client5.http.wire: "OFF"
+    org.apache.hc.client5.http.headers: "OFF"
   pattern:
     # requestId 来自 MDC（RequestIdFilter 写入），使日志、trace 与错误响应三者可关联
     console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%X{requestId:--}] %logger{36} - %msg%n"

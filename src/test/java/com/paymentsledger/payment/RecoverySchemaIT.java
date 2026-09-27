@@ -27,7 +27,7 @@ class RecoverySchemaIT {
    END $$;
    """);
   var migration=Flyway.configure().dataSource(DB.getJdbcUrl(),DB.getUsername(),DB.getPassword()).schemas("platform").load();
-  assertThat(migration.migrate().migrationsExecuted).isEqualTo(2);assertThat(migration.migrate().migrationsExecuted).isZero();
+  assertThat(migration.migrate().migrationsExecuted).isEqualTo(3);assertThat(migration.migrate().migrationsExecuted).isZero();
   var jdbc=new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(),"payments_app","pr02_test_only"));
   assertThat(jdbc.queryForObject("SELECT first_send_at=created_at AND retry_until IS NULL AND operation_key='original' FROM platform.provider_operation",Boolean.class)).isTrue();
   assertThat(jdbc.queryForObject("SELECT t.payment_id=o.payment_id FROM platform.recovery_task t JOIN platform.provider_operation o ON o.id=t.operation_id",Boolean.class)).isTrue();

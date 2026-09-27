@@ -37,7 +37,7 @@ class WebhookSchemaIT {
         admin.update("UPDATE platform.payment SET last_provider_confirmed_at='2026-09-26T10:00:00Z'");
         var original = admin.queryForMap("SELECT p.id payment_id,o.id operation_id,t.id recovery_id,o.operation_key,o.command FROM platform.payment p JOIN platform.provider_operation o ON o.payment_id=p.id JOIN platform.recovery_task t ON t.operation_id=o.id");
         var migration = Flyway.configure().dataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword()).schemas("platform").load();
-        assertThat(migration.migrate().migrationsExecuted).isEqualTo(1);
+        assertThat(migration.migrate().migrationsExecuted).isEqualTo(2);
         assertThat(migration.migrate().migrationsExecuted).isZero();
         var jdbc = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), "payments_app", "pr02_test_only"));
         assertThat(jdbc.queryForMap("SELECT p.id payment_id,o.id operation_id,t.id recovery_id,o.operation_key,o.command FROM platform.payment p JOIN platform.provider_operation o ON o.payment_id=p.id JOIN platform.recovery_task t ON t.operation_id=o.id")).isEqualTo(original);

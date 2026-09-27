@@ -10,17 +10,17 @@ PostgreSQL 保存事件、发布义务、消费身份、通知任务；Kafka 只
 
 ## 稳定事件与资格
 
-事件类型为 payment.succeeded、payment.canceled，以及非终局的 payment.state_changed。只对 resolution_status=KNOWN 的确认状态生成；UNKNOWN/CONFLICT 不生成可履约成功通知。初始 CREATED 可以产生 state_changed，业务状态不变的重复查单不产生新事件。终局事件以范围+payment+类型唯一，版本和 eventId 固定；非终局确认变更以资源版本去重。
+事件类型为 payment.succeeded、payment.canceled，以及非终局的 payment.state_changed。只对 resolution_status=KNOWN 的确认状态生成；UNKNOWN/CONFLICT 不生成可履约成功通知。部分扣款即使现有 paymentStatus=SUCCEEDED 也仅产生 state_changed；确认全额 capture 后才首次生成 succeeded，避免提前冻结部分金额成功载荷。初始 CREATED 可以产生 state_changed，业务状态不变的重复查单不产生新事件。终局事件以范围+payment+类型唯一，版本和 eventId 固定；非终局确认变更以资源版本去重。
 
 事件 JSON 字段固定：schemaVersion=1、eventId(UUID)、eventType、organizationId、environmentId、applicationId、providerAccountId、paymentId(UUID)、orderId(UUID)、orderKey、resourceVersion、currency、amountMinor、capturedAmountMinor、paymentStatus、origin、occurredAt、businessKey。businessKey 为 org:env:app:orderId:eventType；成功履约键不依赖运输重试、eventId或付款资源版本。body 最大 16 KiB，不含客户资料、metadata、PSP原始对象、目标地址或密钥。持久 text payload 保存精确可重发字节和摘要。
 
-提供 FulfillmentEligibility 接口。成功通知要求同 scope 的唯一原订单、金额/币种一致、SUCCEEDED/KNOWN且全额 capture，以及显式有效的原订单资格。新本地下单在独立资格表记录有效资格；已有订单升级不自动获得历史履约许可，缺记录或无效订单保留 HELD。未来 RECONCILIATION 来源默认不放行，PR15 再接核实政策。资格不修改不可变订单快照。领取通知前重新检查当前资格；资格不符可见且不发请求。
+提供 FulfillmentEligibility 接口。成功通知要求同 scope 的唯一原订单、金额/币种一致、SUCCEEDED/KNOWN且全额 capture，以及显式有效的原订单资格。新本地下单在独立资格表记录有效资格；已有订单升级不自动获得历史履约许可，缺记录或无效订单保留 HELD。未来 RECONCILIATION 来源默认不放行，PR15 再接核实政策。资格不修改不可变订单快照。消费时存在目标则冻结配置快照；缺目标时保留空快照，首次配置后受控绑定。领取通知前重新检查当前资格；资格不符可见且不发请求。
 
 ## 持久执行
 
-V7 新增 outbox_event、consumer_inbox、delivery_task、merchant_notification_target、order_fulfillment_eligibility 和必要拒绝/审计字段。范围 FK、不可变身份/载荷、runtime无DELETE。升级不能重写支付/恢复身份，也不生成历史成功通知。
+V7 新增 outbox_event、consumer_inbox、delivery_task、merchant_notification_target、order_fulfillment_eligibility 和必要拒绝/审计字段。范围 FK、不可变身份/载荷、runtime无DELETE。Outbox只能通过固定search_path的受控SECURITY DEFINER写入器从支付事实生成，runtime无原始INSERT权限；资格生成函数撤销PUBLIC/runtime直接执行权限，防止挂载伪触发器。升级不能重写支付/恢复身份，也不生成历史成功通知。
 
-Publisher 短事务领取 token/lease→事务外 Kafka send/确认→token条件完成；发送后丢完成标记允许再次发同event。消费者校验消息与本地权威Outbox身份/载荷、范围，Consumer Inbox去重与 delivery_task 创建在同一事务；提交后 ack。无效消息先持久拒绝证据再 ack，数据库失败不 ack。两个消费者争同event只产生一任务。Kafka监听与发布仅在 worker 且 messaging显式启用时运行。
+Publisher 短事务领取 token/lease→事务外 Kafka send/确认→token条件完成；发送后丢完成标记允许再次发同event。发布义务不因 broker 长期不可用进入不可恢复 DEAD，按指数退避至 1 小时后持续重试；DEAD 和最大尝试次数用于商户 HTTP 投递。消费者校验消息与本地权威Outbox身份/载荷、范围，Consumer Inbox去重与 delivery_task 创建在同一事务；提交后 ack。无效消息先持久拒绝证据再 ack，数据库失败不 ack。两个消费者争同event只产生一任务。Kafka监听与发布仅在 worker 且 messaging显式启用时运行。
 
 目的地址按 org/environment/application 配置，URI与keyRef不可来自消息或支付请求。密钥仅由部署配置解析，数据库仅存keyRef。目标快照固定；关闭或更改配置时旧任务必须停止或明确重绑，不能静默改投。delivery task claim与完成短事务，网络在事务外；超时/408/429/5xx退避，永久4xx/重定向和超次数进入可见DEAD，资格或配置缺失为HELD。lease过期可重领，旧token不能完成新任务。至少保留 attempt_count、available_at、last_reason、last_status、first/last时间，增加积压/最老年龄/失败指标和仅含ID的日志。
 

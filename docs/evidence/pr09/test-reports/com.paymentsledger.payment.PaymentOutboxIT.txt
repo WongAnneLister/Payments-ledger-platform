@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.paymentsledger.payment.PaymentOutboxIT
+-------------------------------------------------------------------------------
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.920 s -- in com.paymentsledger.payment.PaymentOutboxIT

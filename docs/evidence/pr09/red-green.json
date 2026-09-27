@@ -1,0 +1,75 @@
+{
+  "cycles": [
+    {
+      "area": "payment transactional outbox",
+      "redLog": "pr09-core-red.log",
+      "failure": "outbox relation missing; confirmed event and atomic rollback expectations fail",
+      "green": "PaymentOutboxIT"
+    },
+    {
+      "area": "target policy and signature",
+      "redLog": "pr09-http-red.log",
+      "failure": "missing private-address rejection and v1 signature",
+      "green": "NotificationTargetPolicyTest + NotificationSignatureTest"
+    },
+    {
+      "area": "HTTP transport",
+      "redLog": "pr09-transport-red.log",
+      "failure": "actual HTTP 204 returned status0 and key-missing classification absent",
+      "green": "HttpMerchantTransportTest"
+    },
+    {
+      "area": "independent merchant",
+      "redLog": "pr09-merchant-red.log",
+      "failure": "expected one committed fulfillment and401 signature rejection, got zero",
+      "green": "MerchantDeliveryIT"
+    },
+    {
+      "area": "bounded HTTP and special IPv6",
+      "redLog": "pr09-deadline-red.log",
+      "failure": "slow trickled headers exceeded14s and3fff documentation range accepted",
+      "green": "10s absolute deadline and special-address rejection"
+    },
+    {
+      "area": "partial capture and repeated writer",
+      "redLog": "pr09-final-regressions-red.log",
+      "failure": "premature immutable success body and repeated nonterminal state event",
+      "green": "PaymentOutboxIT"
+    },
+    {
+      "area": "HTTP status contract",
+      "redLog": "pr09-http-status-red.log",
+      "failure": "600 incorrectly classified as retryable5xx",
+      "green": "HttpMerchantTransportTest"
+    },
+    {
+      "area": "runtime eligibility privilege",
+      "redLog": "pr09-policy-privilege-red.log",
+      "failure": "payments_app attached SECURITY DEFINER function to temp-table trigger and minted legacy eligibility",
+      "green": "REVOKE EXECUTE prevents attachment with SQLSTATE42501; owned business_order trigger still works"
+    },
+    {
+      "area": "legacy migration counts",
+      "redLog": "pr09-first-full.log",
+      "failure": "three latest-version assertions still expected V6 counts",
+      "green": "updated V7 counts, fixed-target tests retained"
+    },
+    {
+      "area": "authoritative Outbox write boundary",
+      "redLog": "pr09-outbox-authority-red.log",
+      "failure": "runtime raw INSERT accepted state_changed row carrying a forged succeeded payload",
+      "green": "canonical SECURITY DEFINER writer only; raw INSERT denied"
+    },
+    {
+      "area": "production default table grants",
+      "redLog": "pr09-default-privileges-red.log",
+      "failure": "inherited default SELECT,INSERT preserved unwanted write privileges",
+      "green": "V7 revokes inherited grants then applies explicit least privilege; Outbox/config/eligibility raw INSERT denied"
+    }
+  ],
+  "notes": [
+    "Development log names identify local captured runs; final clean-verify output and text reports are archived here.",
+    "JUnit XML is intentionally not copied because it may include process environment properties.",
+    "Initial Kafka native-container boot failed; final tests use actual apache/kafka:3.9.0 with explicit localhost controller listener. No failed startup was counted as PASS."
+  ]
+}

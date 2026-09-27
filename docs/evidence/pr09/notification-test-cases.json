@@ -1,0 +1,92 @@
+[
+  {
+    "suite": "com.paymentsledger.notification.HttpMerchantTransportTest",
+    "tests": [
+      "absoluteDeadlineStopsTrickledResponseHeaders",
+      "invalidConfigurationAndOversizedBodiesNeverSend",
+      "mapsStatusesWithoutFollowingRedirectsOrReadingResponseBody"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.notification.NotificationTargetPolicyTest",
+    "tests": [
+      "fixtureExceptionIsLimitedToOneExactNumericLoopbackEndpoint",
+      "rejectsUnapprovedUriPartsBeforeResolution",
+      "rejectsPrivateAndSpecialAddressesIncludingMixedDnsAnswers",
+      "acceptsPublicAnswersAndPinsDefensiveCopies"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.notification.NotificationSignatureTest",
+    "tests": [
+      "bindsExactBytesEventBusinessIdentityAndRecentTimestamp"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.notification.NotificationConfigurationTest",
+    "tests": [
+      "workerOptInAndManualCommitCannotBeOverriddenByKafkaProperties"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.notification.NotificationMigrationIT",
+    "tests": [
+      "v6UpgradeCreatesNoHistoricalEventsOrImplicitFulfillmentPermission"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payment.PaymentOutboxIT",
+    "tests": [
+      "webhookConfirmationAndRecoveryQueryUseTheSameAtomicWriter",
+      "confirmedCaptureCommitsOneStableEventAndReobservationDoesNotDuplicate",
+      "outboxFailureRollsBackConfirmedPaymentState",
+      "synchronousCreateAndCancelEmitConfirmedChangesOnly",
+      "partialCaptureDoesNotFreezePrematureSuccessPayloadBeforeFullCapture",
+      "unknownOrConflictingStateCannotCreateSuccessAndPayloadIsBoundedAllowlist",
+      "controlledWriterDoesNotCreateANewEventForUnchangedNonterminalObservation"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.notification.NotificationPipelineIT",
+    "tests": [
+      "consumerFreezesConfiguredTargetBeforeFirstClaim",
+      "retriesAreBoundedAndExpiredTokenCannotCompleteNewClaim",
+      "concurrentConsumersCreateOneEffectAndAckOnlyAfterCommit",
+      "missingSigningKeyRemainsHeldWithoutConsumingNetworkRetryAllowance",
+      "publisherRetryBackoffGrowsAndCapsWithoutDroppingDurableObligation",
+      "explicitOriginalOrderPolicyAndCurrentCaptureRequiredAtSend",
+      "committedBusinessSurvivesPublisherCrashAndOldLeaseCannotFinish",
+      "missingPolicyAndTargetAreHeldAndTargetChangeNeverRedirects",
+      "runtimeCannotForgeAuthoritativeOutboxPayloadAndBypassFulfillmentChecks",
+      "consumerFailureRollsBackInboxAndNeverAcknowledgesThenRetryWorks",
+      "durableBacklogHeldDeadAndAgeAreObservable",
+      "forgedOrMalformedBrokerBodiesAreDurablyRejectedWithoutDelivery",
+      "runtimeCannotMountDefinerPolicyTriggerOnATemporaryTableToAuthorizeLegacyOrder",
+      "writerRequiresTransactionAndEvidenceCannotBeChangedOrDeleted",
+      "transportRunsOutsideTransactionAndPermanentFailureIsVisible",
+      "claimsAcrossConnectionsDoNotOverlap"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.notification.MerchantDeliveryIT",
+    "tests": [
+      "redirectIsNeverFollowedAndHttpIsNeverPerformedUnderTransaction",
+      "rejectsTamperingAndEventIdentityReuse",
+      "lostResponseAfterMerchantCommitRetriesWithoutRepeatingFulfillment"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.notification.NotificationWorkerWiringIT",
+    "tests": [
+      "optInWorkerStartsTheActualConfiguredListenerAndProductionTransport"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.notification.NotificationKafkaIT",
+    "tests": [
+      "pausedBrokerLeavesDurableWorkAndUnpausePublishes",
+      "brokerDuplicateAfterSendBeforeMarkAndCommitBeforeAckCreatesOneTask",
+      "configuredSpringListenerDoesNotCommitDatabaseFailuresAndRecoversDurably"
+    ]
+  }
+]

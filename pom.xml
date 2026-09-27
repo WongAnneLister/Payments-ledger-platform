@@ -77,12 +77,20 @@
       <scope>runtime</scope>
     </dependency>
 
-    <!--
-      刻意未引入的依赖（避免未接通的组件与启动期连接尝试）：
-        spring-kafka              -> PR09 Outbox/消费者接线时引入
-        spring-boot-starter-data-redis -> PR07 限流/缓存时引入
-      Compose 已提供 Kafka/Redis 基础设施，但本 PR 不建立客户端连接。
-    -->
+    <dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>kafka</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
