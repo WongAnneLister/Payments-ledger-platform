@@ -48,7 +48,7 @@ public class FinancialIngestionConfiguration {
     }
 
     @Bean FinancialIngestionWorker financialIngestionWorker(JdbcTemplate jdbc, FinancialImportService importer,
-            FinancialReplayService replay, Clock clock,
+            FinancialReplayService replay, Clock clock,ObjectProvider<RefundSourceResolver> refundSources,
             @Value("${platform.financial-ingestion.organization-id:}") String organization,
             @Value("${platform.financial-ingestion.environment-id:}") String environment,
             @Value("${platform.financial-ingestion.provider-account-id:}") String providerAccount) {
@@ -59,6 +59,6 @@ public class FinancialIngestionConfiguration {
         } catch (IllegalArgumentException invalid) {
             throw new IllegalArgumentException("Financial ingestion requires configured scope UUIDs");
         }
-        return new FinancialIngestionWorker(jdbc, importer, replay, scope, clock);
+        return new FinancialIngestionWorker(jdbc, importer, replay, scope, clock,refundSources.getIfAvailable(RefundSourceResolver::unavailable));
     }
 }

@@ -105,7 +105,7 @@ class FlywayBaselineIT {
                         .isEqualTo("platform");
             }
         }
-        assertThat(flyway().migrate().migrationsExecuted).isEqualTo(7);
+        assertThat(flyway().migrate().migrationsExecuted).isEqualTo(8);
         assertThat(flyway().migrate().migrationsExecuted).isZero();
     }
 }

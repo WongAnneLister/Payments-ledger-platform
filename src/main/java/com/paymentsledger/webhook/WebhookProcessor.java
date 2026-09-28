@@ -15,7 +15,10 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 @Service
 public class WebhookProcessor {
     private final WebhookInboxRepository inbox;private final PaymentRepository payments;private final ObjectMapper json;private final Clock clock;
-    public WebhookProcessor(WebhookInboxRepository inbox,PaymentRepository payments,ObjectMapper json,Clock clock){this.inbox=inbox;this.payments=payments;this.json=json;this.clock=clock;}
+    private final RefundWebhookHandler refunds;
+    public WebhookProcessor(WebhookInboxRepository inbox,PaymentRepository payments,ObjectMapper json,Clock clock){this(inbox,payments,json,clock,null);}
+    @org.springframework.beans.factory.annotation.Autowired
+    public WebhookProcessor(WebhookInboxRepository inbox,PaymentRepository payments,ObjectMapper json,Clock clock,RefundWebhookHandler refunds){this.inbox=inbox;this.payments=payments;this.json=json;this.clock=clock;this.refunds=refunds;}
     public int processDue(int limit){
         if(TransactionSynchronizationManager.isActualTransactionActive())throw new IllegalStateException("Webhook processing must start outside transactions");
         var claims=inbox.claimDue(limit);for(var claim:claims){try{process(claim);}catch(RuntimeException failure){inbox.retry(claim);}}return claims.size();
@@ -23,6 +26,7 @@ public class WebhookProcessor {
     public void process(WebhookInboxRepository.Claim claim){
         JsonNode object;try{object=json.readTree(claim.row().get("object_snapshot").toString());}catch(Exception e){throw new IllegalStateException("Invalid controlled webhook snapshot",e);}
         String type=text(object,"object"),objectId=text(object,"id"),pi=type.equals("payment_intent")?objectId:text(object,"payment_intent");
+        if("refund".equals(type)&&refunds!=null){refunds.process(claim,object);return;}
         UUID candidate=null;String candidateError=null;
         if(Set.of("checkout.session","payment_intent","charge").contains(type)){
             var ids=inbox.jdbc().queryForList("SELECT id FROM platform.payment WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND ((CAST(? AS text) IS NOT NULL AND payment_intent_id=?) OR (?='checkout.session' AND checkout_session_id=?))",UUID.class,claim.row().get("organization_id"),claim.row().get("environment_id"),claim.row().get("provider_account_id"),pi,pi,type,objectId);

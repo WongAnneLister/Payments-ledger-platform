@@ -96,6 +96,39 @@ class NotificationKafkaIT extends NotificationFixture {
             admin.execute("DROP TRIGGER IF EXISTS kafka_delivery_failure ON platform.delivery_task");
         }
     }
+    @Test void canonicalRefundTravelsThroughKafkaAndMerchantRetryWithOneIndependentEffect()throws Exception{
+        var payment=success();
+        String charge=jdbc.queryForObject("SELECT latest_charge_id FROM platform.payment WHERE id=?",String.class,payment.paymentId());
+        var json=new com.fasterxml.jackson.databind.ObjectMapper().findAndRegisterModules();
+        var refunds=new com.paymentsledger.payment.RefundRepository(jdbc,tx,json,fake.clock());
+        var fact=new com.paymentsledger.provider.ProviderModels.RefundFact("re_kafka",charge,"succeeded",4000,"usd",null,null,null,fake.clock().instant());
+        UUID refund=refunds.accept(scope,fact,new com.paymentsledger.provider.ProviderEvidence(null,null,fake.clock().instant(),fake.clock().instant(),200,null,null,"fixture"),null);
+        var event=outbox().find(jdbc.queryForObject("SELECT id FROM platform.outbox_event WHERE refund_id=?",UUID.class,refund));
+        String topic="refund-"+UUID.randomUUID();
+        try(var merchantDb=new org.testcontainers.containers.PostgreSQLContainer<>("postgres:16")){
+            merchantDb.start();
+            var ds=new org.springframework.jdbc.datasource.DriverManagerDataSource(merchantDb.getJdbcUrl(),merchantDb.getUsername(),merchantDb.getPassword());
+            String secret="kafka-refund-fixture-signing-secret-32bytes";
+            try(var merchant=new com.paymentsledger.notification.fixture.SimulatedMerchantServer(new java.net.InetSocketAddress("127.0.0.1",0),ds,secret,fake.clock());
+                    var producer=producer();var consumer=consumer(topic,"refund-group-"+UUID.randomUUID())){
+                admin.update("INSERT INTO platform.merchant_notification_target(organization_id,environment_id,application_id,url,key_ref,version) VALUES (?,?,?,?,?,1)",id(1),id(2),id(3),merchant.uri().toString(),"refund-fixture");
+                for(int duplicate=0;duplicate<2;duplicate++)producer.send(new ProducerRecord<>(topic,event.businessKey(),event.bytes())).get(15,TimeUnit.SECONDS);
+                for(int duplicate=0;duplicate<2;duplicate++){
+                    var record=pollOne(consumer);
+                    inbox().consume(record.value(),()->consumer.commitSync(Map.of(new org.apache.kafka.common.TopicPartition(topic,record.partition()),new OffsetAndMetadata(record.offset()+1))));
+                }
+                assertThat(count("consumer_inbox")).isEqualTo(1);assertThat(count("delivery_task")).isEqualTo(1);
+                var transport=new HttpMerchantTransport(NotificationTargetPolicy.localFixture(merchant.uri()),ref->secret,fake.clock());
+                var notifier=new MerchantNotifier(delivery(),transport);
+                merchant.dropNextResponse();notifier.drain(1);
+                assertThat(jdbc.queryForObject("SELECT status FROM platform.delivery_task",String.class)).isEqualTo("READY");
+                fake.clock().advance(Duration.ofHours(1));notifier.drain(1);
+                assertThat(jdbc.queryForObject("SELECT status FROM platform.delivery_task",String.class)).isEqualTo("DELIVERED");
+                assertThat(merchant.effects()).isZero();assertThat(merchant.receipts()).isEqualTo(1);
+                assertThat(new org.springframework.jdbc.core.JdbcTemplate(ds).queryForObject("SELECT count(*) FROM merchant_fixture.refund_effect",Long.class)).isEqualTo(1);
+            }
+        }
+    }
     KafkaProducer<String,byte[]> producer() {
         Map<String,Object> p=new HashMap<>();p.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,KAFKA.getBootstrapServers());
         p.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,StringSerializer.class);p.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,ByteArraySerializer.class);

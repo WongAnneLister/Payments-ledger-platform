@@ -1,0 +1,2040 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- clean:3.4.1:clean (default-clean) @ payments-ledger-platform ---
+[INFO] Deleting /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/target
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 11 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 126 source files with javac [debug parameters release 21] to target/classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ???????????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ??????, ??? -Xlint:deprecation ?????
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 70 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.webhook.WebhookNormalizerTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.274 s -- in com.paymentsledger.webhook.WebhookNormalizerTest
+[INFO] Running com.paymentsledger.ledger.LedgerRulesTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 s -- in com.paymentsledger.ledger.LedgerRulesTest
+[INFO] Running com.paymentsledger.identity.AuthenticationFilterTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+00:08:05.232 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+00:08:05.697 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+00:08:06.028 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+00:08:06.362 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=WORKER
+00:08:06.688 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+00:08:06.997 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.771 s -- in com.paymentsledger.identity.AuthenticationFilterTest
+[INFO] Running com.paymentsledger.identity.TestModeGuardTest
+00:08:07.201 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live mode is forbidden
+00:08:07.226 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live provider credentials are forbidden
+00:08:07.235 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live provider credentials are forbidden
+00:08:07.247 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live configuration is forbidden
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.243 s -- in com.paymentsledger.identity.TestModeGuardTest
+[INFO] Running com.paymentsledger.identity.IdentityRulesTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.paymentsledger.identity.IdentityRulesTest
+[INFO] Running com.paymentsledger.ApplicationContextTest
+00:08:07.285 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.paymentsledger.ApplicationContextTest]: ApplicationContextTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+00:08:07.345 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ApplicationContextTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-29T00:08:07.559+08:00 INFO  [-] c.p.ApplicationContextTest - Starting ApplicationContextTest using Java 21.0.12.1 with PID 85958 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds)
+2026-09-29T00:08:07.560+08:00 INFO  [-] c.p.ApplicationContextTest - The following 1 profile is active: "api"
+2026-09-29T00:08:08.516+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-29T00:08:09.522+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-29T00:08:09.576+08:00 INFO  [-] c.p.ApplicationContextTest - Started ApplicationContextTest in 2.174 seconds (process running for 6.031)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.385 s -- in com.paymentsledger.ApplicationContextTest
+[INFO] Running com.paymentsledger.config.RunRoleConfigTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.paymentsledger.config.RunRoleConfigTest
+[INFO] Running com.paymentsledger.notification.HttpMerchantTransportTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.27 s -- in com.paymentsledger.notification.HttpMerchantTransportTest
+[INFO] Running com.paymentsledger.notification.NotificationTargetPolicyTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.paymentsledger.notification.NotificationTargetPolicyTest
+[INFO] Running com.paymentsledger.notification.NotificationConfigurationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in com.paymentsledger.notification.NotificationConfigurationTest
+[INFO] Running com.paymentsledger.notification.NotificationSignatureTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.paymentsledger.notification.NotificationSignatureTest
+[INFO] Running com.paymentsledger.payment.PaymentControllerTest
+2026-09-29T00:08:20.013+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-29T00:08:20.013+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-29T00:08:20.014+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-09-29T00:08:20.090+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-29T00:08:20.090+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-29T00:08:20.090+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-29T00:08:20.103+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-29T00:08:20.103+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-29T00:08:20.103+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-29T00:08:20.108+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-09-29T00:08:20.113+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-29T00:08:20.113+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-29T00:08:20.113+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-29T00:08:20.115+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=PROVIDER_UNKNOWN_RESULT status=500 retryable=false
+2026-09-29T00:08:20.125+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-29T00:08:20.125+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-29T00:08:20.125+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-29T00:08:20.133+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-29T00:08:20.133+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-29T00:08:20.133+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-29T00:08:20.134+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=IDEMPOTENCY_KEY_REQUIRED status=400 retryable=false
+2026-09-29T00:08:20.136+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-09-29T00:08:20.140+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-29T00:08:20.140+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-09-29T00:08:20.140+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-09-29T00:08:20.141+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=UNAUTHORIZED status=401 retryable=false
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.169 s -- in com.paymentsledger.payment.PaymentControllerTest
+[INFO] Running com.paymentsledger.payment.PaymentIdsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.paymentsledger.payment.PaymentIdsTest
+[INFO] Running com.paymentsledger.payment.PaymentRequestsTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.paymentsledger.payment.PaymentRequestsTest
+[INFO] Running com.paymentsledger.payment.RecoveryPolicyTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.paymentsledger.payment.RecoveryPolicyTest
+[INFO] Running com.paymentsledger.payment.RefundRequestsTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.paymentsledger.payment.RefundRequestsTest
+[INFO] Running com.paymentsledger.provider.ProviderModelsTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.paymentsledger.provider.ProviderModelsTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.220 s -- in com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeGatewayTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.128 s -- in com.paymentsledger.provider.adapter.stripe.StripeGatewayTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeAdapterConfigurationTest
+2026-09-29T00:08:20.552+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeGateway' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeGateway]: Factory method 'stripeGateway' threw exception with message: A Stripe test credential is required
+2026-09-29T00:08:20.555+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeGateway' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeGateway]: Factory method 'stripeGateway' threw exception with message: A bound Stripe account ID is required
+2026-09-29T00:08:20.558+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeGateway' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeGateway]: Factory method 'stripeGateway' threw exception with message: Select exactly one provider implementation
+2026-09-29T00:08:20.563+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeWebhookVerifier' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifier]: Factory method 'stripeWebhookVerifier' threw exception with message: The pinned Stripe API version is required
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfigurationTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripePaymentsAdapterTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 s -- in com.paymentsledger.provider.adapter.stripe.StripePaymentsAdapterTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeLifecycleProbeTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.097 s -- in com.paymentsledger.provider.adapter.stripe.StripeLifecycleProbeTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s -- in com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest
+[INFO] Running com.paymentsledger.provider.fake.FakeProviderConfigurationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in com.paymentsledger.provider.fake.FakeProviderConfigurationTest
+[INFO] Running com.paymentsledger.provider.fake.FakeStateStoreTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.952 s -- in com.paymentsledger.provider.fake.FakeStateStoreTest
+[INFO] Running com.paymentsledger.provider.fake.FakeStripeProviderTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.947 s -- in com.paymentsledger.provider.fake.FakeStripeProviderTest
+[INFO] Running com.paymentsledger.provider.fake.FakeEvidenceTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.577 s -- in com.paymentsledger.provider.fake.FakeEvidenceTest
+[INFO] Running com.paymentsledger.provider.fake.ProviderSimulatorReplayTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.100 s -- in com.paymentsledger.provider.fake.ProviderSimulatorReplayTest
+[INFO] Running com.paymentsledger.common.request.RequestIdFilterTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.paymentsledger.common.request.RequestIdFilterTest
+[INFO] Running com.paymentsledger.common.error.ErrorContractTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.paymentsledger.common.error.ErrorContractTest
+[INFO] Running com.paymentsledger.financialingestion.FinancialRulesTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in com.paymentsledger.financialingestion.FinancialRulesTest
+[INFO] Running com.paymentsledger.financialingestion.FinancialIngestionWorkerTest
+2026-09-29T00:08:24.530+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'financialIngestionWorker' defined in com.paymentsledger.financialingestion.FinancialIngestionConfiguration: Failed to instantiate [com.paymentsledger.financialingestion.FinancialIngestionWorker]: Factory method 'financialIngestionWorker' threw exception with message: Financial ingestion requires configured scope UUIDs
+2026-09-29T00:08:24.533+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'financialImportService' defined in com.paymentsledger.financialingestion.FinancialIngestionConfiguration: Unsatisfied dependency expressed through method 'financialImportService' parameter 0: No qualifying bean of type 'org.springframework.jdbc.core.JdbcTemplate' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.118 s -- in com.paymentsledger.financialingestion.FinancialIngestionWorkerTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 184, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- jar:3.4.2:jar (default-jar) @ payments-ledger-platform ---
+[INFO] Building jar: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- spring-boot:3.5.16:repackage (repackage) @ payments-ledger-platform ---
+[INFO] Replacing main artifact /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar.original
+[INFO]
+[INFO] --- failsafe:3.5.6:integration-test (default) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.webhook.StripeWebhookHttpIT
+00:08:26.559 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+00:08:26.562 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+00:08:26.578 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+00:08:27.000 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+00:08:27.001 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+00:08:27.019 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+00:08:27.078 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+00:08:27.174 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+00:08:27.284 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 778744fb0236cc7b7b7f68b93badab4f6d5abea6cf530e17c58205f3fed4b5df
+00:08:27.887 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.808273S
+00:08:27.895 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+00:08:27.895 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+00:08:27.895 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+00:08:27.895 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+00:08:28.007 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: faf590a9a20345b2544149b345ced8c7681204ff41ebc83b4a95800ec5d9ad07
+00:08:29.522 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.626344S
+00:08:29.524 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:55232/test?loggerLevel=OFF)
+00:08:29.535 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+00:08:29.683 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 148 ms.
+00:08:29.726 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.paymentsledger.webhook.StripeWebhookHttpIT]: StripeWebhookHttpIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+00:08:29.796 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.webhook.StripeWebhookHttpIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-29T00:08:30.232+08:00 INFO  [-] c.p.webhook.StripeWebhookHttpIT - Starting StripeWebhookHttpIT using Java 21.0.12.1 with PID 86017 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds)
+2026-09-29T00:08:30.234+08:00 INFO  [-] c.p.webhook.StripeWebhookHttpIT - The following 2 profiles are active: "api", "test"
+2026-09-29T00:08:31.110+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-09-29T00:08:31.121+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-29T00:08:31.121+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-09-29T00:08:31.147+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-29T00:08:31.147+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 881 ms
+2026-09-29T00:08:31.477+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55232/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:08:31.544+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-29T00:08:31.548+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.034s)
+2026-09-29T00:08:31.569+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-29T00:08:31.622+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-29T00:08:31.629+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-29T00:08:31.634+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-29T00:08:31.708+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-29T00:08:31.815+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-29T00:08:31.903+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-29T00:08:31.997+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-29T00:08:32.042+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-29T00:08:32.094+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-09-29T00:08:32.162+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-09-29T00:08:32.303+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-09-29T00:08:32.533+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.686s)
+2026-09-29T00:08:33.038+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-29T00:08:33.547+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-29T00:08:33.692+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 55270 (http) with context path '/'
+2026-09-29T00:08:33.703+08:00 INFO  [-] c.p.webhook.StripeWebhookHttpIT - Started StripeWebhookHttpIT in 3.828 seconds (process running for 7.808)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-09-29T00:08:34.519+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-29T00:08:34.520+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-09-29T00:08:34.520+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-09-29T00:08:34.656+08:00 WARN  [req_0c45f958166345eea43eab9f003938ce] c.p.c.error.GlobalExceptionHandler - api_error code=EVIDENCE_CONFLICT status=409 retryable=false
+2026-09-29T00:08:34.849+08:00 WARN  [req_1f630453961645bdbe7aaa96ffe40498] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-29T00:08:34.854+08:00 WARN  [req_c0b919e300f04c6e91f671b5d872ee15] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-29T00:08:34.859+08:00 WARN  [req_6e94aa0fa7bb45d3bafda9118aee1975] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-29T00:08:35.301+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000008 http://localhost:55270 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-09-29T00:08:36.465+08:00 WARN  [req_682b21395a2442fa92a7d9639556aa75] c.p.c.error.GlobalExceptionHandler - api_error code=SERVICE_UNAVAILABLE status=503 retryable=true
+2026-09-29T00:08:36.466+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000009 http://localhost:55270 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-09-29T00:08:37.511+08:00 WARN  [req_e33a043ef4994e5593249ba86a89f655] c.p.c.error.GlobalExceptionHandler - api_error code=SERVICE_UNAVAILABLE status=503 retryable=true
+2026-09-29T00:08:38.139+08:00 WARN  [req_3e551a17eee04d2c86117724e7fd7604] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-29T00:08:38.154+08:00 WARN  [req_6b085f2bd5d543ca9254ebbf32fec93e] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-29T00:08:38.159+08:00 WARN  [req_9d352c53c47c413bba70d5b8d6b52ebb] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-29T00:08:38.166+08:00 WARN  [req_f94e3fb88dbe420a981831d6d47d04cc] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-29T00:08:38.320+08:00 WARN  [req_0228fc94017842da9877249215b4da14] c.p.c.error.GlobalExceptionHandler - api_error code=SIGNATURE_VERIFICATION_FAILED status=400 retryable=false
+2026-09-29T00:08:38.324+08:00 WARN  [req_f531e2d09b34413ab5dbaa3c74605062] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.22 s -- in com.paymentsledger.webhook.StripeWebhookHttpIT
+[INFO] Running com.paymentsledger.webhook.WebhookSchemaIT
+2026-09-29T00:08:38.700+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:08:38.816+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 737dc665802afda780418336e4a69eeb13ea1ae188a1fbd6b5a6e4c3bee6ac7b
+2026-09-29T00:08:41.114+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT2.413588S
+2026-09-29T00:08:41.116+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:55390/test?loggerLevel=OFF)
+2026-09-29T00:08:41.118+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-29T00:08:41.158+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 40 ms.
+2026-09-29T00:08:41.207+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55390/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:08:41.229+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-29T00:08:41.230+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.009s)
+2026-09-29T00:08:41.237+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-29T00:08:41.280+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-29T00:08:41.283+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-29T00:08:41.285+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-29T00:08:41.311+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-29T00:08:41.413+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-29T00:08:41.493+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-29T00:08:41.576+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 4 migrations to schema "platform", now at version v4 (execution time 00:00.230s)
+2026-09-29T00:08:41.635+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55390/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:08:41.653+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.006s)
+2026-09-29T00:08:41.670+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 4
+2026-09-29T00:08:41.675+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-29T00:08:41.703+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 1 migration to schema "platform", now at version v5 (execution time 00:00.021s)
+2026-09-29T00:08:41.748+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55390/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:08:41.768+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.008s)
+2026-09-29T00:08:41.790+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 5
+2026-09-29T00:08:41.825+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-29T00:08:41.901+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-09-29T00:08:41.944+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-09-29T00:08:42.018+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-09-29T00:08:42.129+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 4 migrations to schema "platform", now at version v9 (execution time 00:00.186s)
+2026-09-29T00:08:42.159+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55390/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:08:42.197+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.014s)
+2026-09-29T00:08:42.232+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:08:42.235+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:08:42.842+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55390/pr08_duplicate_legacy (PostgreSQL 16.14)
+2026-09-29T00:08:42.866+08:00 INFO  [-] o.f.c.internal.database.base.Schema - Creating schema "platform" ...
+2026-09-29T00:08:42.869+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-29T00:08:42.915+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": null
+2026-09-29T00:08:42.918+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-29T00:08:42.920+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-29T00:08:42.943+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-29T00:08:43.085+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-29T00:08:43.178+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-29T00:08:43.251+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 4 migrations to schema "platform", now at version v4 (execution time 00:00.203s)
+2026-09-29T00:08:43.315+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55390/pr08_duplicate_legacy (PostgreSQL 16.14)
+2026-09-29T00:08:43.331+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 10 migrations (execution time 00:00.007s)
+2026-09-29T00:08:43.347+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 4
+2026-09-29T00:08:43.355+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-29T00:08:43.393+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 1 migration to schema "platform", now at version v5 (execution time 00:00.030s)
+2026-09-29T00:08:43.471+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55390/pr08_duplicate_legacy (PostgreSQL 16.14)
+2026-09-29T00:08:43.484+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 10 migrations (execution time 00:00.004s)
+2026-09-29T00:08:43.523+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 5
+2026-09-29T00:08:43.528+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-29T00:08:43.547+08:00 ERROR [-] o.f.core.internal.command.DbMigrate - Migration of schema "platform" to version "6 - webhook inbox" failed! Changes successfully rolled back.
+2026-09-29T00:08:43.612+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55390/pr08_duplicate_legacy (PostgreSQL 16.14)
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.475 s -- in com.paymentsledger.webhook.WebhookSchemaIT
+[INFO] Running com.paymentsledger.ledger.LedgerDatabaseIT
+2026-09-29T00:08:44.177+08:00 INFO  [-] tc.postgres:16-alpine - Creating container for image: postgres:16-alpine
+2026-09-29T00:08:44.318+08:00 INFO  [-] tc.postgres:16-alpine - Container postgres:16-alpine is starting: 93e2aeb714cac69acf7c9718f6ab03a61ba7ee69c937cd0e36623734c800362a
+2026-09-29T00:08:47.041+08:00 INFO  [-] tc.postgres:16-alpine - Container postgres:16-alpine started in PT2.863972S
+2026-09-29T00:08:47.042+08:00 INFO  [-] tc.postgres:16-alpine - Container is started (JDBC URL: jdbc:postgresql://localhost:55486/test?loggerLevel=OFF)
+2026-09-29T00:08:47.095+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55486/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-29T00:08:47.113+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-29T00:08:47.114+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.005s)
+2026-09-29T00:08:47.123+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-29T00:08:47.152+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2026-09-29T00:08:47.157+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "1 - baseline"
+2026-09-29T00:08:47.183+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "2 - identity and scoped configuration"
+2026-09-29T00:08:47.251+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "3 - immutable ledger"
+2026-09-29T00:08:47.302+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "4 - business payments"
+2026-09-29T00:08:47.364+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "5 - operation recovery"
+2026-09-29T00:08:47.401+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "6 - webhook inbox"
+2026-09-29T00:08:47.453+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "7 - payment notifications"
+2026-09-29T00:08:47.508+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "8 - financial ingestion"
+2026-09-29T00:08:47.591+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "9 - refund lifecycle"
+2026-09-29T00:08:47.677+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "public", now at version v9 (execution time 00:00.396s)
+2026-09-29T00:08:49.893+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55486/ledger_upgrade?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-29T00:08:49.926+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-29T00:08:49.927+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.016s)
+2026-09-29T00:08:49.936+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-29T00:08:49.968+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2026-09-29T00:08:49.971+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "1 - baseline"
+2026-09-29T00:08:50.062+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "2 - identity and scoped configuration"
+2026-09-29T00:08:50.149+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 2 migrations to schema "public", now at version v2 (execution time 00:00.124s)
+2026-09-29T00:08:50.207+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55486/ledger_upgrade?loggerLevel=OFF (PostgreSQL 16.15)
+2026-09-29T00:08:50.243+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.008s)
+2026-09-29T00:08:50.289+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "public": 2
+2026-09-29T00:08:50.302+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "3 - immutable ledger"
+2026-09-29T00:08:50.464+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "4 - business payments"
+2026-09-29T00:08:50.628+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "5 - operation recovery"
+2026-09-29T00:08:50.749+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "6 - webhook inbox"
+2026-09-29T00:08:50.847+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "7 - payment notifications"
+2026-09-29T00:08:50.987+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "8 - financial ingestion"
+2026-09-29T00:08:51.108+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "9 - refund lifecycle"
+2026-09-29T00:08:51.272+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 7 migrations to schema "public", now at version v9 (execution time 00:00.713s)
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.490 s -- in com.paymentsledger.ledger.LedgerDatabaseIT
+[INFO] Running com.paymentsledger.ledger.LedgerServiceIT
+2026-09-29T00:08:53.678+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:08:53.836+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: e15c05a1f0e76ef2d54bee3d08c01f67aba120181f01ae595ce38c9ed7751e62
+2026-09-29T00:08:56.408+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT2.72962S
+2026-09-29T00:08:56.409+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:55627/pr03_isolated_services?loggerLevel=OFF)
+2026-09-29T00:08:56.410+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-29T00:08:56.453+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 42 ms.
+2026-09-29T00:08:56.468+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.ledger.LedgerServiceIT]: LedgerServiceIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-29T00:08:56.493+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ledger.LedgerServiceIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-29T00:08:56.591+08:00 INFO  [-] c.p.ledger.LedgerServiceIT - Starting LedgerServiceIT using Java 21.0.12.1 with PID 86017 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds)
+2026-09-29T00:08:56.591+08:00 INFO  [-] c.p.ledger.LedgerServiceIT - The following 1 profile is active: "api"
+2026-09-29T00:08:57.279+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-29T00:08:57.348+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55627/pr03_isolated_services?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:08:57.399+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-29T00:08:57.400+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.007s)
+2026-09-29T00:08:57.422+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-29T00:08:57.459+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-29T00:08:57.464+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-29T00:08:57.466+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-29T00:08:57.515+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-29T00:08:57.621+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-29T00:08:57.682+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-29T00:08:57.766+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-29T00:08:57.802+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-29T00:08:57.835+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-09-29T00:08:57.889+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-09-29T00:08:57.947+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-09-29T00:08:58.006+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.376s)
+2026-09-29T00:08:58.596+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-29T00:08:58.605+08:00 INFO  [-] c.p.ledger.LedgerServiceIT - Started LedgerServiceIT in 2.096 seconds (process running for 32.71)
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.901 s -- in com.paymentsledger.ledger.LedgerServiceIT
+[INFO] Running com.paymentsledger.identity.IdentityIT
+2026-09-29T00:09:03.800+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:09:03.982+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: c68ee2dfd2f7f19a07a1a1318b242fadfac8f3664af1d2703ef0e37e39edf1f9
+2026-09-29T00:09:05.512+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.712013S
+2026-09-29T00:09:05.513+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:55943/pr02_isolated_identity?loggerLevel=OFF)
+2026-09-29T00:09:05.514+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-29T00:09:05.561+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 46 ms.
+2026-09-29T00:09:05.565+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.identity.IdentityIT]: IdentityIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-29T00:09:05.580+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.identity.IdentityIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-29T00:09:05.634+08:00 INFO  [-] c.paymentsledger.identity.IdentityIT - Starting IdentityIT using Java 21.0.12.1 with PID 86017 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds)
+2026-09-29T00:09:05.634+08:00 INFO  [-] c.paymentsledger.identity.IdentityIT - The following 1 profile is active: "api"
+2026-09-29T00:09:06.000+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-09-29T00:09:06.001+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-29T00:09:06.001+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-09-29T00:09:06.009+08:00 INFO  [-] o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-29T00:09:06.009+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 374 ms
+2026-09-29T00:09:06.044+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:55943/pr02_isolated_identity?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:06.074+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-29T00:09:06.078+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.008s)
+2026-09-29T00:09:06.089+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-29T00:09:06.109+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-29T00:09:06.112+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-29T00:09:06.114+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-29T00:09:06.132+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-29T00:09:06.212+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-29T00:09:06.263+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-29T00:09:06.306+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-29T00:09:06.346+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-29T00:09:06.384+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-09-29T00:09:06.448+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-09-29T00:09:06.502+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-09-29T00:09:06.565+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.348s)
+2026-09-29T00:09:06.903+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-09-29T00:09:06.983+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-29T00:09:06.992+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 55964 (http) with context path '/'
+2026-09-29T00:09:06.995+08:00 INFO  [-] c.paymentsledger.identity.IdentityIT - Started IdentityIT in 1.41 seconds (process running for 41.1)
+2026-09-29T00:09:07.226+08:00 INFO  [-] o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-29T00:09:07.226+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-09-29T00:09:07.226+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-09-29T00:09:07.246+08:00 WARN  [req_b7f6429cb8d246549046a6da29da349a] c.p.c.error.GlobalExceptionHandler - api_error code=SERVICE_UNAVAILABLE status=503 retryable=true
+2026-09-29T00:09:07.248+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000021 http://localhost:55964 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-09-29T00:09:08.255+08:00 WARN  [req_0222c8ad16b14111848ada5f4c1dd281] c.p.c.error.GlobalExceptionHandler - api_error code=SERVICE_UNAVAILABLE status=503 retryable=true
+2026-09-29T00:09:08.858+08:00 WARN  [req_4d9d331ceeb147fbb87f70e31089c528] c.p.c.error.GlobalExceptionHandler - api_error code=CURRENCY_NOT_ENABLED status=422 retryable=false
+2026-09-29T00:09:09.269+08:00 WARN  [req_75d964fd432d49bdba262f7004aba4cf] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-09-29T00:09:09.558+08:00 WARN  [req_4f04151c6dbe4162988911e2a5d8e379] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-29T00:09:09.650+08:00 WARN  [req_e55aaae721ce4c2f953c37b04699a2ac] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-29T00:09:09.787+08:00 WARN  [req_56d201373e2a4e3298e345de2c17a6a5] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-09-29T00:09:10.026+08:00 WARN  [req_e4394c4fec5b41b5b8805f4b20c16bb3] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.07 s -- in com.paymentsledger.identity.IdentityIT
+[INFO] Running com.paymentsledger.notification.NotificationPipelineIT
+2026-09-29T00:09:20.666+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:09:20.784+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: a715c12c872a01ff90ecc7dc3cca81fc054739aaf5d357fe4f52b9335d71869c
+2026-09-29T00:09:22.673+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT2.007662S
+2026-09-29T00:09:22.677+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF)
+2026-09-29T00:09:22.679+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-29T00:09:22.716+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 37 ms.
+2026-09-29T00:09:22.745+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:22.758+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-29T00:09:22.760+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.007s)
+2026-09-29T00:09:22.803+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-29T00:09:22.852+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-29T00:09:22.859+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-29T00:09:22.862+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-29T00:09:22.879+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-29T00:09:22.930+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-29T00:09:22.985+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-29T00:09:23.055+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-29T00:09:23.091+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-29T00:09:23.120+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-09-29T00:09:23.183+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-09-29T00:09:23.342+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-09-29T00:09:23.454+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.371s)
+2026-09-29T00:09:24.351+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:24.374+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.012s)
+2026-09-29T00:09:24.391+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:24.392+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:25.194+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:25.210+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.005s)
+2026-09-29T00:09:25.228+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:25.229+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:25.791+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:25.808+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.004s)
+2026-09-29T00:09:25.830+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:25.831+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:26.430+08:00 INFO  [-] c.p.notification.MerchantNotifier - Merchant notification attempt completed task=08deaccb-2a89-4c61-8d1f-767902baa07a event=f1ba4729-5c09-438a-bb06-df0ced3b73a9 outcome=RETRYABLE status=0
+2026-09-29T00:09:26.493+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:26.511+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.007s)
+2026-09-29T00:09:26.544+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:26.546+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:27.177+08:00 WARN  [-] c.p.notification.OutboxPublisher - Notification publication deferred event=64e97daf-5b7d-48c6-834b-71e7c09fb186 reason=BROKER_UNAVAILABLE
+2026-09-29T00:09:27.227+08:00 WARN  [-] c.p.notification.OutboxPublisher - Notification publication deferred event=64e97daf-5b7d-48c6-834b-71e7c09fb186 reason=BROKER_UNAVAILABLE
+2026-09-29T00:09:27.281+08:00 WARN  [-] c.p.notification.OutboxPublisher - Notification publication deferred event=64e97daf-5b7d-48c6-834b-71e7c09fb186 reason=BROKER_UNAVAILABLE
+2026-09-29T00:09:27.349+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:27.367+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.006s)
+2026-09-29T00:09:27.381+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:27.381+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:27.965+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:27.988+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.012s)
+2026-09-29T00:09:28.010+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:28.011+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:28.520+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:28.532+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.004s)
+2026-09-29T00:09:28.546+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:28.547+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:29.301+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:29.315+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.005s)
+2026-09-29T00:09:29.329+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:29.329+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:30.586+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:30.605+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.006s)
+2026-09-29T00:09:30.623+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:30.623+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:31.219+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:31.236+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.007s)
+2026-09-29T00:09:31.273+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:31.273+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:31.894+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:31.926+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.009s)
+2026-09-29T00:09:31.948+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:31.950+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:32.581+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:32.597+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.005s)
+2026-09-29T00:09:32.610+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:32.610+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:33.294+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:33.309+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.004s)
+2026-09-29T00:09:33.325+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:33.326+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:33.896+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:33.918+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.008s)
+2026-09-29T00:09:33.934+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:33.936+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:34.667+08:00 INFO  [-] c.p.notification.MerchantNotifier - Merchant notification attempt completed task=f2b4831d-2498-4d27-bcf0-4300bfcb357a event=22a30a39-4354-4e74-9384-bd8fd44ea26c outcome=PERMANENT_REJECT status=400
+2026-09-29T00:09:34.738+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56142/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:34.758+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.007s)
+2026-09-29T00:09:34.780+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:34.781+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.79 s -- in com.paymentsledger.notification.NotificationPipelineIT
+[INFO] Running com.paymentsledger.notification.RefundMerchantDeliveryIT
+2026-09-29T00:09:37.460+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:09:37.555+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 9a252f6613f3f074f0b94b10039dce3b6e72e0002291fa9f0d0621aa59ecb7f3
+2026-09-29T00:09:40.193+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT2.732732S
+2026-09-29T00:09:40.196+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:56643/test?loggerLevel=OFF)
+2026-09-29T00:09:40.197+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-29T00:09:40.262+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 64 ms.
+2026-09-29T00:09:40.263+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:09:40.388+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 3469dd6f33a1b54f89dfacf4283ff091eae50942bc260c91561251bf7de678e3
+2026-09-29T00:09:42.308+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT2.044894S
+2026-09-29T00:09:42.321+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:56675/test?loggerLevel=OFF)
+2026-09-29T00:09:42.426+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56643/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:42.455+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-29T00:09:42.457+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.014s)
+2026-09-29T00:09:42.501+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-29T00:09:42.550+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-29T00:09:42.553+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-29T00:09:42.556+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-29T00:09:42.608+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-29T00:09:42.778+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-29T00:09:42.869+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-29T00:09:42.934+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-29T00:09:42.992+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-29T00:09:43.040+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-09-29T00:09:43.147+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-09-29T00:09:43.264+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-09-29T00:09:43.340+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.535s)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.025 s -- in com.paymentsledger.notification.RefundMerchantDeliveryIT
+[INFO] Running com.paymentsledger.notification.NotificationMigrationIT
+2026-09-29T00:09:45.487+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:09:45.711+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: b58563b8c19f4d3a708097077213831b44e67a7b561261c2013c5ea3b5b2d00c
+2026-09-29T00:09:47.438+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.951089S
+2026-09-29T00:09:47.438+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:56747/test?loggerLevel=OFF)
+2026-09-29T00:09:47.439+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-29T00:09:47.466+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 27 ms.
+2026-09-29T00:09:47.491+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56747/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:47.513+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-29T00:09:47.514+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.004s)
+2026-09-29T00:09:47.523+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-29T00:09:47.571+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-29T00:09:47.575+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-29T00:09:47.580+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-29T00:09:47.600+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-29T00:09:47.649+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-29T00:09:47.712+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-29T00:09:47.756+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-29T00:09:47.782+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-29T00:09:47.806+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 6 migrations to schema "platform", now at version v6 (execution time 00:00.162s)
+2026-09-29T00:09:48.307+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56747/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:48.321+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.004s)
+2026-09-29T00:09:48.336+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 6
+2026-09-29T00:09:48.350+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-09-29T00:09:48.450+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-09-29T00:09:48.536+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-09-29T00:09:48.633+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 3 migrations to schema "platform", now at version v9 (execution time 00:00.244s)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.809 s -- in com.paymentsledger.notification.NotificationMigrationIT
+[INFO] Running com.paymentsledger.notification.MerchantDeliveryIT
+2026-09-29T00:09:49.297+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:09:49.451+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: ae042b858af99d6b0aa1b2ce11836d4ad68cf0825ca8e8d10738bf66fb6fb51a
+2026-09-29T00:09:51.028+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.730318S
+2026-09-29T00:09:51.034+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:56799/test?loggerLevel=OFF)
+2026-09-29T00:09:51.035+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-29T00:09:51.083+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 47 ms.
+2026-09-29T00:09:51.083+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:09:51.138+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 29211179b8e8ddaf59398731bdad3f02ea3c39fe9ed3eb2e947abd71eddcd067
+2026-09-29T00:09:52.437+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.353872S
+2026-09-29T00:09:52.437+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:56807/test?loggerLevel=OFF)
+2026-09-29T00:09:52.488+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56799/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:52.519+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-29T00:09:52.520+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.006s)
+2026-09-29T00:09:52.535+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-29T00:09:52.563+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-29T00:09:52.566+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-29T00:09:52.568+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-29T00:09:52.591+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-29T00:09:52.680+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-29T00:09:52.739+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-29T00:09:52.821+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-29T00:09:52.853+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-29T00:09:52.893+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-09-29T00:09:52.932+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-09-29T00:09:53.013+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-09-29T00:09:53.081+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.356s)
+2026-09-29T00:09:53.358+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56799/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:53.372+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.004s)
+2026-09-29T00:09:53.390+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:53.391+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:54.131+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56799/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:09:54.147+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.005s)
+2026-09-29T00:09:54.162+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:09:54.163+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:09:54.837+08:00 INFO  [-] c.p.notification.MerchantNotifier - Merchant notification attempt completed task=e5e00a5a-75b9-4f8b-9538-016291942c64 event=02e42c5c-42be-4dd4-a54c-c34740570ba8 outcome=RETRYABLE status=0
+2026-09-29T00:09:54.966+08:00 INFO  [-] c.p.notification.MerchantNotifier - Merchant notification attempt completed task=e5e00a5a-75b9-4f8b-9538-016291942c64 event=02e42c5c-42be-4dd4-a54c-c34740570ba8 outcome=DELIVERED status=200
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.570 s -- in com.paymentsledger.notification.MerchantDeliveryIT
+[INFO] Running com.paymentsledger.notification.NotificationWorkerWiringIT
+2026-09-29T00:09:55.882+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:09:55.945+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: b536eeacdc89eb72c5827cbcd061c351281c2fb310441d0538311121362a2855
+2026-09-29T00:09:58.716+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT2.834317S
+2026-09-29T00:09:58.718+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:56932/test?loggerLevel=OFF)
+2026-09-29T00:09:58.720+08:00 INFO  [-] tc.apache/kafka:3.9.0 - Creating container for image: apache/kafka:3.9.0
+2026-09-29T00:09:58.816+08:00 INFO  [-] tc.apache/kafka:3.9.0 - Container apache/kafka:3.9.0 is starting: 3cd0dc687d66487bdb62e195f116f155ff46b063d87cf41ced4acf17c5f4a99f
+2026-09-29T00:10:03.213+08:00 INFO  [-] tc.apache/kafka:3.9.0 - Container apache/kafka:3.9.0 started in PT4.492866S
+2026-09-29T00:10:03.295+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.notification.NotificationWorkerWiringIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-09-29T00:10:03.341+08:00 INFO  [-] c.p.n.NotificationWorkerWiringIT - Starting NotificationWorkerWiringIT using Java 21.0.12.1 with PID 86017 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds)
+2026-09-29T00:10:03.341+08:00 INFO  [-] c.p.n.NotificationWorkerWiringIT - The following 1 profile is active: "worker"
+2026-09-29T00:10:03.710+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=WORKER
+2026-09-29T00:10:03.756+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56932/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:10:03.795+08:00 INFO  [-] o.f.c.internal.database.base.Schema - Creating schema "platform" ...
+2026-09-29T00:10:03.815+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-29T00:10:03.882+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": null
+2026-09-29T00:10:03.886+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-29T00:10:03.889+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-29T00:10:03.908+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-29T00:10:03.983+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-29T00:10:04.057+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-29T00:10:04.107+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-29T00:10:04.167+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-29T00:10:04.222+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-09-29T00:10:04.267+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-09-29T00:10:04.330+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-09-29T00:10:04.448+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.403s)
+2026-09-29T00:10:05.106+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-09-29T00:10:05.194+08:00 INFO  [-] o.a.k.c.admin.AdminClientConfig - AdminClientConfig values:
+	auto.include.jmx.reporter = true
+	bootstrap.controllers = []
+	bootstrap.servers = [localhost:56966]
+	client.dns.lookup = use_all_dns_ips
+	client.id = payments-ledger-platform-admin-0
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	enable.metrics.push = true
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.header.urlencode = false
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+2026-09-29T00:10:05.256+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.9.2
+2026-09-29T00:10:05.256+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 5e9866f43ab8e7e4
+2026-09-29T00:10:05.256+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1790611805255
+2026-09-29T00:10:05.709+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - App info kafka.admin.client for payments-ledger-platform-admin-0 unregistered
+2026-09-29T00:10:05.712+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-29T00:10:05.712+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-29T00:10:05.712+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-29T00:10:05.739+08:00 INFO  [-] o.a.k.c.consumer.ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [localhost:56966]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-merchant-notifications-v1-1
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = merchant-notifications-v1
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.header.urlencode = false
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+2026-09-29T00:10:05.765+08:00 INFO  [-] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-29T00:10:05.815+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.9.2
+2026-09-29T00:10:05.815+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 5e9866f43ab8e7e4
+2026-09-29T00:10:05.815+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1790611805815
+2026-09-29T00:10:05.816+08:00 INFO  [-] o.a.k.c.c.i.ClassicKafkaConsumer - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Subscribed to topic(s): pr09-wiring
+2026-09-29T00:10:05.869+08:00 INFO  [-] c.p.n.NotificationWorkerWiringIT - Started NotificationWorkerWiringIT in 2.569 seconds (process running for 99.973)
+2026-09-29T00:10:05.890+08:00 INFO  [-] org.apache.kafka.clients.Metadata - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Cluster ID: 4L6g3nShT-eMCtK--X86sw
+2026-09-29T00:10:06.019+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Discovered group coordinator localhost:56966 (id: 2147483646 rack: null)
+2026-09-29T00:10:06.020+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] (Re-)joining group
+2026-09-29T00:10:06.041+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Request joining group due to: need to re-join with the given member-id: consumer-merchant-notifications-v1-1-95c34f14-7c8b-42b3-b93b-936df65796e2
+2026-09-29T00:10:06.042+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] (Re-)joining group
+2026-09-29T00:10:06.056+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Successfully joined group with generation Generation{generationId=1, memberId='consumer-merchant-notifications-v1-1-95c34f14-7c8b-42b3-b93b-936df65796e2', protocol='range'}
+2026-09-29T00:10:06.059+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Finished assignment for group at generation 1: {consumer-merchant-notifications-v1-1-95c34f14-7c8b-42b3-b93b-936df65796e2=Assignment(partitions=[pr09-wiring-0])}
+2026-09-29T00:10:06.107+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Successfully synced group in generation Generation{generationId=1, memberId='consumer-merchant-notifications-v1-1-95c34f14-7c8b-42b3-b93b-936df65796e2', protocol='range'}
+2026-09-29T00:10:06.107+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Notifying assignor about the new Assignment(partitions=[pr09-wiring-0])
+2026-09-29T00:10:06.112+08:00 INFO  [-] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Adding newly assigned partitions: pr09-wiring-0
+2026-09-29T00:10:06.134+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Found no committed offset for partition pr09-wiring-0
+2026-09-29T00:10:06.143+08:00 INFO  [-] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Revoke previously assigned partitions pr09-wiring-0
+2026-09-29T00:10:06.143+08:00 INFO  [-] o.s.k.l.KafkaMessageListenerContainer - merchant-notifications-v1: partitions revoked: [pr09-wiring-0]
+2026-09-29T00:10:06.143+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Member consumer-merchant-notifications-v1-1-95c34f14-7c8b-42b3-b93b-936df65796e2 sending LeaveGroup request to coordinator localhost:56966 (id: 2147483646 rack: null) due to the consumer unsubscribed from all topics
+2026-09-29T00:10:06.144+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Resetting generation and member id due to: consumer pro-actively leaving the group
+2026-09-29T00:10:06.144+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Request joining group due to: consumer pro-actively leaving the group
+2026-09-29T00:10:06.144+08:00 INFO  [-] o.a.k.c.c.i.ClassicKafkaConsumer - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Unsubscribed all topics or patterns and assigned partitions
+2026-09-29T00:10:06.145+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Resetting generation and member id due to: consumer pro-actively leaving the group
+2026-09-29T00:10:06.145+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-merchant-notifications-v1-1, groupId=merchant-notifications-v1] Request joining group due to: consumer pro-actively leaving the group
+2026-09-29T00:10:06.158+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-29T00:10:06.158+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-29T00:10:06.158+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-09-29T00:10:06.158+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-29T00:10:06.163+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - App info kafka.consumer for consumer-merchant-notifications-v1-1 unregistered
+2026-09-29T00:10:06.164+08:00 INFO  [-] o.s.k.l.KafkaMessageListenerContainer - merchant-notifications-v1: Consumer stopped
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.06 s -- in com.paymentsledger.notification.NotificationWorkerWiringIT
+[INFO] Running com.paymentsledger.notification.NotificationKafkaIT
+2026-09-29T00:10:07.948+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:10:08.200+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 1d761b5f1af1fd7abe68c1f3a82cc8421fee17e8bd30012d2d997c9c6677f93a
+2026-09-29T00:10:10.068+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT2.119789S
+2026-09-29T00:10:10.069+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:57061/test?loggerLevel=OFF)
+2026-09-29T00:10:10.070+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-09-29T00:10:10.106+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 36 ms.
+2026-09-29T00:10:10.106+08:00 INFO  [-] tc.apache/kafka:3.9.0 - Creating container for image: apache/kafka:3.9.0
+2026-09-29T00:10:10.230+08:00 INFO  [-] tc.apache/kafka:3.9.0 - Container apache/kafka:3.9.0 is starting: d65365d55b3486ee22dff00564619455c92e184ff306446a56ce15a3122758c7
+2026-09-29T00:10:11.333+08:00 WARN  [-] com.zaxxer.hikari.pool.PoolBase - payments-ledger-pool - Failed to validate connection org.postgresql.jdbc.PgConnection@2e534699 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-29T00:10:13.746+08:00 INFO  [-] tc.apache/kafka:3.9.0 - Container apache/kafka:3.9.0 started in PT3.639368S
+2026-09-29T00:10:13.800+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:57061/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:10:13.826+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-09-29T00:10:13.826+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.006s)
+2026-09-29T00:10:13.837+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-09-29T00:10:13.870+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-09-29T00:10:13.875+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-09-29T00:10:13.877+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-09-29T00:10:13.904+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-09-29T00:10:13.957+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-09-29T00:10:14.027+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-09-29T00:10:14.092+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-09-29T00:10:14.121+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-09-29T00:10:14.145+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-09-29T00:10:14.183+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-09-29T00:10:14.251+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-09-29T00:10:14.320+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.314s)
+2026-09-29T00:10:14.769+08:00 INFO  [-] o.a.k.c.producer.ProducerConfig - ProducerConfig values:
+	acks = -1
+	auto.include.jmx.reporter = true
+	batch.size = 16384
+	bootstrap.servers = [localhost:57090]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-1
+	compression.gzip.level = -1
+	compression.lz4.level = 9
+	compression.type = none
+	compression.zstd.level = 3
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 3000
+	enable.idempotence = true
+	enable.metrics.push = true
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 5000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.adaptive.partitioning.enable = true
+	partitioner.availability.timeout.ms = 0
+	partitioner.class = null
+	partitioner.ignore.keys = false
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.header.urlencode = false
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+
+2026-09-29T00:10:14.770+08:00 INFO  [-] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-29T00:10:14.778+08:00 INFO  [-] o.a.k.clients.producer.KafkaProducer - [Producer clientId=producer-1] Instantiated an idempotent producer.
+2026-09-29T00:10:14.788+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.9.2
+2026-09-29T00:10:14.788+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 5e9866f43ab8e7e4
+2026-09-29T00:10:14.788+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1790611814788
+2026-09-29T00:10:14.822+08:00 WARN  [-] o.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] The metadata response from the cluster reported a recoverable issue with correlation id 1 : {outage-f32c9b4d-4a1c-4618-bea7-6a90b2f9f220=UNKNOWN_TOPIC_OR_PARTITION}
+2026-09-29T00:10:14.823+08:00 INFO  [-] org.apache.kafka.clients.Metadata - [Producer clientId=producer-1] Cluster ID: 4L6g3nShT-eMCtK--X86sw
+2026-09-29T00:10:14.941+08:00 INFO  [-] o.a.k.c.p.i.TransactionManager - [Producer clientId=producer-1] ProducerId set to 0 with epoch 0
+2026-09-29T00:10:15.740+08:00 WARN  [-] com.zaxxer.hikari.pool.PoolBase - payments-ledger-pool - Failed to validate connection org.postgresql.jdbc.PgConnection@1fb7cc88 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-09-29T00:10:16.027+08:00 INFO  [-] o.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Disconnecting from node 1 due to request timeout.
+2026-09-29T00:10:16.029+08:00 INFO  [-] o.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Cancelled in-flight PRODUCE request with correlation id 7 due to node 1 being disconnected (elapsed time since creation: 1008ms, elapsed time since send: 1008ms, throttle time: 0ms, request timeout: 1000ms)
+2026-09-29T00:10:16.031+08:00 WARN  [-] o.a.k.c.producer.internals.Sender - [Producer clientId=producer-1] Got error produce response with correlation id 7 on topic-partition outage-f32c9b4d-4a1c-4618-bea7-6a90b2f9f220-0, retrying (2147483646 attempts left). Error: REQUEST_TIMED_OUT. Error Message: Disconnected from node 1 due to timeout
+2026-09-29T00:10:17.154+08:00 INFO  [-] o.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Disconnecting from node 1 due to request timeout.
+2026-09-29T00:10:17.156+08:00 INFO  [-] o.apache.kafka.clients.NetworkClient - [Producer clientId=producer-1] Cancelled in-flight API_VERSIONS request with correlation id 8 due to node 1 being disconnected (elapsed time since creation: 1068ms, elapsed time since send: 1068ms, throttle time: 0ms, request timeout: 1000ms)
+2026-09-29T00:10:18.091+08:00 WARN  [-] c.p.notification.OutboxPublisher - Notification publication deferred event=af156d2a-e11c-4667-972f-eccdf32021c6 reason=BROKER_UNAVAILABLE
+2026-09-29T00:10:18.190+08:00 INFO  [-] o.a.k.c.p.i.TransactionManager - [Producer clientId=producer-1] No inflight batches remaining for outage-f32c9b4d-4a1c-4618-bea7-6a90b2f9f220-0, last ack'd sequence for partition is -1, next sequence is 1. Going to bump epoch and reset sequence numbers.
+2026-09-29T00:10:18.190+08:00 INFO  [-] o.a.k.c.p.i.TransactionManager - [Producer clientId=producer-1] ProducerId set to 0 with epoch 1
+2026-09-29T00:10:18.366+08:00 INFO  [-] c.p.notification.OutboxPublisher - Notification published event=27c046c9-23f3-425b-8d35-da14147fb27b
+2026-09-29T00:10:18.367+08:00 INFO  [-] o.a.k.clients.producer.KafkaProducer - [Producer clientId=producer-1] Closing the Kafka producer with timeoutMillis = 9223372036854775807 ms.
+2026-09-29T00:10:18.373+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-29T00:10:18.373+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-29T00:10:18.373+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-09-29T00:10:18.373+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-29T00:10:18.373+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - App info kafka.producer for producer-1 unregistered
+2026-09-29T00:10:18.400+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:57061/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:10:18.417+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.006s)
+2026-09-29T00:10:18.432+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:10:18.433+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:10:18.896+08:00 INFO  [-] o.a.k.c.producer.ProducerConfig - ProducerConfig values:
+	acks = -1
+	auto.include.jmx.reporter = true
+	batch.size = 16384
+	bootstrap.servers = [localhost:57090]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-2
+	compression.gzip.level = -1
+	compression.lz4.level = 9
+	compression.type = none
+	compression.zstd.level = 3
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 3000
+	enable.idempotence = true
+	enable.metrics.push = true
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 5000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.adaptive.partitioning.enable = true
+	partitioner.availability.timeout.ms = 0
+	partitioner.class = null
+	partitioner.ignore.keys = false
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.header.urlencode = false
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+
+2026-09-29T00:10:18.897+08:00 INFO  [-] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-29T00:10:18.898+08:00 INFO  [-] o.a.k.clients.producer.KafkaProducer - [Producer clientId=producer-2] Instantiated an idempotent producer.
+2026-09-29T00:10:18.902+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.9.2
+2026-09-29T00:10:18.902+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 5e9866f43ab8e7e4
+2026-09-29T00:10:18.902+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1790611818902
+2026-09-29T00:10:18.924+08:00 INFO  [-] org.apache.kafka.clients.Metadata - [Producer clientId=producer-2] Cluster ID: 4L6g3nShT-eMCtK--X86sw
+2026-09-29T00:10:18.928+08:00 INFO  [-] o.a.k.c.p.i.TransactionManager - [Producer clientId=producer-2] ProducerId set to 1 with epoch 0
+2026-09-29T00:10:18.947+08:00 WARN  [-] o.apache.kafka.clients.NetworkClient - [Producer clientId=producer-2] The metadata response from the cluster reported a recoverable issue with correlation id 5 : {notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c=UNKNOWN_TOPIC_OR_PARTITION}
+2026-09-29T00:10:19.126+08:00 INFO  [-] o.a.k.c.consumer.ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [localhost:57090]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 1
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.header.urlencode = false
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+2026-09-29T00:10:19.126+08:00 INFO  [-] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-29T00:10:19.130+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.9.2
+2026-09-29T00:10:19.130+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 5e9866f43ab8e7e4
+2026-09-29T00:10:19.130+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1790611819130
+2026-09-29T00:10:19.130+08:00 INFO  [-] o.a.k.c.c.i.ClassicKafkaConsumer - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Subscribed to topic(s): notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c
+2026-09-29T00:10:19.136+08:00 INFO  [-] org.apache.kafka.clients.Metadata - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Cluster ID: 4L6g3nShT-eMCtK--X86sw
+2026-09-29T00:10:19.264+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Discovered group coordinator localhost:57090 (id: 2147483646 rack: null)
+2026-09-29T00:10:19.264+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] (Re-)joining group
+2026-09-29T00:10:19.279+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Request joining group due to: need to re-join with the given member-id: consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2-ff38a888-8d3a-4762-8a52-b6178cae0a3d
+2026-09-29T00:10:19.279+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] (Re-)joining group
+2026-09-29T00:10:19.289+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Successfully joined group with generation Generation{generationId=1, memberId='consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2-ff38a888-8d3a-4762-8a52-b6178cae0a3d', protocol='range'}
+2026-09-29T00:10:19.290+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Finished assignment for group at generation 1: {consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2-ff38a888-8d3a-4762-8a52-b6178cae0a3d=Assignment(partitions=[notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0])}
+2026-09-29T00:10:19.298+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Successfully synced group in generation Generation{generationId=1, memberId='consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2-ff38a888-8d3a-4762-8a52-b6178cae0a3d', protocol='range'}
+2026-09-29T00:10:19.298+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Notifying assignor about the new Assignment(partitions=[notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0])
+2026-09-29T00:10:19.298+08:00 INFO  [-] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Adding newly assigned partitions: notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0
+2026-09-29T00:10:19.304+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Found no committed offset for partition notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0
+2026-09-29T00:10:19.310+08:00 INFO  [-] o.a.k.c.c.i.SubscriptionState - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Resetting offset for partition notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[localhost:57090 (id: 1 rack: null)], epoch=0}}.
+2026-09-29T00:10:19.336+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Found no committed offset for partition notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0
+2026-09-29T00:10:19.337+08:00 INFO  [-] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Revoke previously assigned partitions notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0
+2026-09-29T00:10:19.337+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Member consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2-ff38a888-8d3a-4762-8a52-b6178cae0a3d sending LeaveGroup request to coordinator localhost:57090 (id: 2147483646 rack: null) due to the consumer is being closed
+2026-09-29T00:10:19.338+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Resetting generation and member id due to: consumer pro-actively leaving the group
+2026-09-29T00:10:19.338+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Request joining group due to: consumer pro-actively leaving the group
+2026-09-29T00:10:19.347+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-29T00:10:19.347+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-29T00:10:19.347+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-09-29T00:10:19.347+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-29T00:10:19.350+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - App info kafka.consumer for consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-2 unregistered
+2026-09-29T00:10:19.350+08:00 INFO  [-] o.a.k.c.consumer.ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [localhost:57090]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 1
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.header.urlencode = false
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+2026-09-29T00:10:19.350+08:00 INFO  [-] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-29T00:10:19.353+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.9.2
+2026-09-29T00:10:19.353+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 5e9866f43ab8e7e4
+2026-09-29T00:10:19.353+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1790611819353
+2026-09-29T00:10:19.353+08:00 INFO  [-] o.a.k.c.c.i.ClassicKafkaConsumer - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Subscribed to topic(s): notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c
+2026-09-29T00:10:19.363+08:00 INFO  [-] org.apache.kafka.clients.Metadata - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Cluster ID: 4L6g3nShT-eMCtK--X86sw
+2026-09-29T00:10:19.364+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Discovered group coordinator localhost:57090 (id: 2147483646 rack: null)
+2026-09-29T00:10:19.365+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] (Re-)joining group
+2026-09-29T00:10:19.373+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Request joining group due to: need to re-join with the given member-id: consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3-866da4a7-cc72-4346-be9e-30f71bf23eb1
+2026-09-29T00:10:19.373+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] (Re-)joining group
+2026-09-29T00:10:19.376+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Successfully joined group with generation Generation{generationId=3, memberId='consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3-866da4a7-cc72-4346-be9e-30f71bf23eb1', protocol='range'}
+2026-09-29T00:10:19.376+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Finished assignment for group at generation 3: {consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3-866da4a7-cc72-4346-be9e-30f71bf23eb1=Assignment(partitions=[notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0])}
+2026-09-29T00:10:19.379+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Successfully synced group in generation Generation{generationId=3, memberId='consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3-866da4a7-cc72-4346-be9e-30f71bf23eb1', protocol='range'}
+2026-09-29T00:10:19.379+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Notifying assignor about the new Assignment(partitions=[notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0])
+2026-09-29T00:10:19.379+08:00 INFO  [-] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Adding newly assigned partitions: notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0
+2026-09-29T00:10:19.381+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Found no committed offset for partition notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0
+2026-09-29T00:10:19.387+08:00 INFO  [-] o.a.k.c.c.i.SubscriptionState - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Resetting offset for partition notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[localhost:57090 (id: 1 rack: null)], epoch=0}}.
+2026-09-29T00:10:19.429+08:00 INFO  [-] o.a.k.c.c.i.ClassicKafkaConsumer - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Seeking to offset 1 for partition notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0
+2026-09-29T00:10:19.439+08:00 INFO  [-] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Revoke previously assigned partitions notification-ad0f40cd-1e9b-477c-8807-4c4753e65b1c-0
+2026-09-29T00:10:19.439+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Member consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3-866da4a7-cc72-4346-be9e-30f71bf23eb1 sending LeaveGroup request to coordinator localhost:57090 (id: 2147483646 rack: null) due to the consumer is being closed
+2026-09-29T00:10:19.439+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Resetting generation and member id due to: consumer pro-actively leaving the group
+2026-09-29T00:10:19.439+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3, groupId=crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6] Request joining group due to: consumer pro-actively leaving the group
+2026-09-29T00:10:19.446+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-29T00:10:19.446+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-29T00:10:19.446+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-09-29T00:10:19.446+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-29T00:10:19.449+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - App info kafka.consumer for consumer-crash-0ff7d79c-6bc6-4026-9c20-a2b7867be4a6-3 unregistered
+2026-09-29T00:10:19.449+08:00 INFO  [-] o.a.k.clients.producer.KafkaProducer - [Producer clientId=producer-2] Closing the Kafka producer with timeoutMillis = 9223372036854775807 ms.
+2026-09-29T00:10:19.451+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-29T00:10:19.452+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-29T00:10:19.452+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-09-29T00:10:19.452+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-29T00:10:19.452+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - App info kafka.producer for producer-2 unregistered
+2026-09-29T00:10:19.472+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:57061/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:10:19.486+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.004s)
+2026-09-29T00:10:19.523+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:10:19.525+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:10:20.008+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-09-29T00:10:20.111+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: b5a8a7892a2e30de78f055c93f2e185293ebc96677780ecda76180984a946b7f
+2026-09-29T00:10:21.534+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.525429S
+2026-09-29T00:10:21.535+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:57243/test?loggerLevel=OFF)
+2026-09-29T00:10:21.605+08:00 INFO  [-] o.a.k.c.producer.ProducerConfig - ProducerConfig values:
+	acks = -1
+	auto.include.jmx.reporter = true
+	batch.size = 16384
+	bootstrap.servers = [localhost:57090]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-3
+	compression.gzip.level = -1
+	compression.lz4.level = 9
+	compression.type = none
+	compression.zstd.level = 3
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 3000
+	enable.idempotence = true
+	enable.metrics.push = true
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 5000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.adaptive.partitioning.enable = true
+	partitioner.availability.timeout.ms = 0
+	partitioner.class = null
+	partitioner.ignore.keys = false
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.header.urlencode = false
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+
+2026-09-29T00:10:21.605+08:00 INFO  [-] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-29T00:10:21.606+08:00 INFO  [-] o.a.k.clients.producer.KafkaProducer - [Producer clientId=producer-3] Instantiated an idempotent producer.
+2026-09-29T00:10:21.608+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.9.2
+2026-09-29T00:10:21.608+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 5e9866f43ab8e7e4
+2026-09-29T00:10:21.608+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1790611821608
+2026-09-29T00:10:21.609+08:00 INFO  [-] o.a.k.c.consumer.ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [localhost:57090]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 1
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.header.urlencode = false
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+2026-09-29T00:10:21.609+08:00 INFO  [-] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-29T00:10:21.615+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.9.2
+2026-09-29T00:10:21.615+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 5e9866f43ab8e7e4
+2026-09-29T00:10:21.615+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1790611821615
+2026-09-29T00:10:21.615+08:00 INFO  [-] o.a.k.c.c.i.ClassicKafkaConsumer - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Subscribed to topic(s): refund-fc4cef5a-8896-428f-ac81-1b52d45aac79
+2026-09-29T00:10:21.628+08:00 INFO  [-] org.apache.kafka.clients.Metadata - [Producer clientId=producer-3] Cluster ID: 4L6g3nShT-eMCtK--X86sw
+2026-09-29T00:10:21.628+08:00 INFO  [-] o.a.k.c.p.i.TransactionManager - [Producer clientId=producer-3] ProducerId set to 2 with epoch 0
+2026-09-29T00:10:21.659+08:00 WARN  [-] o.apache.kafka.clients.NetworkClient - [Producer clientId=producer-3] The metadata response from the cluster reported a recoverable issue with correlation id 5 : {refund-fc4cef5a-8896-428f-ac81-1b52d45aac79=UNKNOWN_TOPIC_OR_PARTITION}
+2026-09-29T00:10:21.825+08:00 INFO  [-] org.apache.kafka.clients.Metadata - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Cluster ID: 4L6g3nShT-eMCtK--X86sw
+2026-09-29T00:10:21.827+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Discovered group coordinator localhost:57090 (id: 2147483646 rack: null)
+2026-09-29T00:10:21.828+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] (Re-)joining group
+2026-09-29T00:10:21.835+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Request joining group due to: need to re-join with the given member-id: consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4-8a2a5ed4-460f-49c3-9539-f18bd3a659c1
+2026-09-29T00:10:21.835+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] (Re-)joining group
+2026-09-29T00:10:21.838+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Successfully joined group with generation Generation{generationId=1, memberId='consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4-8a2a5ed4-460f-49c3-9539-f18bd3a659c1', protocol='range'}
+2026-09-29T00:10:21.839+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Finished assignment for group at generation 1: {consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4-8a2a5ed4-460f-49c3-9539-f18bd3a659c1=Assignment(partitions=[refund-fc4cef5a-8896-428f-ac81-1b52d45aac79-0])}
+2026-09-29T00:10:21.844+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Successfully synced group in generation Generation{generationId=1, memberId='consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4-8a2a5ed4-460f-49c3-9539-f18bd3a659c1', protocol='range'}
+2026-09-29T00:10:21.845+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Notifying assignor about the new Assignment(partitions=[refund-fc4cef5a-8896-428f-ac81-1b52d45aac79-0])
+2026-09-29T00:10:21.845+08:00 INFO  [-] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Adding newly assigned partitions: refund-fc4cef5a-8896-428f-ac81-1b52d45aac79-0
+2026-09-29T00:10:21.847+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Found no committed offset for partition refund-fc4cef5a-8896-428f-ac81-1b52d45aac79-0
+2026-09-29T00:10:21.852+08:00 INFO  [-] o.a.k.c.c.i.SubscriptionState - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Resetting offset for partition refund-fc4cef5a-8896-428f-ac81-1b52d45aac79-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[localhost:57090 (id: 1 rack: null)], epoch=0}}.
+2026-09-29T00:10:21.992+08:00 INFO  [-] c.p.notification.MerchantNotifier - Merchant notification attempt completed task=516ed60e-2440-4b38-b51e-cd0146a42e07 event=cb810c08-4c84-480d-8d2c-32e7e65bd5d6 outcome=RETRYABLE status=0
+2026-09-29T00:10:22.093+08:00 INFO  [-] c.p.notification.MerchantNotifier - Merchant notification attempt completed task=516ed60e-2440-4b38-b51e-cd0146a42e07 event=cb810c08-4c84-480d-8d2c-32e7e65bd5d6 outcome=DELIVERED status=200
+2026-09-29T00:10:22.121+08:00 INFO  [-] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Revoke previously assigned partitions refund-fc4cef5a-8896-428f-ac81-1b52d45aac79-0
+2026-09-29T00:10:22.121+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Member consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4-8a2a5ed4-460f-49c3-9539-f18bd3a659c1 sending LeaveGroup request to coordinator localhost:57090 (id: 2147483646 rack: null) due to the consumer is being closed
+2026-09-29T00:10:22.122+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Resetting generation and member id due to: consumer pro-actively leaving the group
+2026-09-29T00:10:22.122+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4, groupId=refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2] Request joining group due to: consumer pro-actively leaving the group
+2026-09-29T00:10:22.128+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-29T00:10:22.128+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-29T00:10:22.128+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-09-29T00:10:22.128+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-29T00:10:22.130+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - App info kafka.consumer for consumer-refund-group-bfc22c41-791b-4b99-9873-bf47bc18abb2-4 unregistered
+2026-09-29T00:10:22.130+08:00 INFO  [-] o.a.k.clients.producer.KafkaProducer - [Producer clientId=producer-3] Closing the Kafka producer with timeoutMillis = 9223372036854775807 ms.
+2026-09-29T00:10:22.132+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-29T00:10:22.132+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-29T00:10:22.132+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-09-29T00:10:22.132+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-29T00:10:22.132+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - App info kafka.producer for producer-3 unregistered
+2026-09-29T00:10:22.392+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:57061/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-09-29T00:10:22.408+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 9 migrations (execution time 00:00.006s)
+2026-09-29T00:10:22.452+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": 9
+2026-09-29T00:10:22.453+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Schema "platform" is up to date. No migration necessary.
+2026-09-29T00:10:23.076+08:00 INFO  [-] o.a.k.c.producer.ProducerConfig - ProducerConfig values:
+	acks = -1
+	auto.include.jmx.reporter = true
+	batch.size = 16384
+	bootstrap.servers = [localhost:57090]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = producer-4
+	compression.gzip.level = -1
+	compression.lz4.level = 9
+	compression.type = none
+	compression.zstd.level = 3
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 3000
+	enable.idempotence = true
+	enable.metrics.push = true
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 5000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.adaptive.partitioning.enable = true
+	partitioner.availability.timeout.ms = 0
+	partitioner.class = null
+	partitioner.ignore.keys = false
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 1000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.header.urlencode = false
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.ByteArraySerializer
+
+2026-09-29T00:10:23.077+08:00 INFO  [-] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-29T00:10:23.078+08:00 INFO  [-] o.a.k.clients.producer.KafkaProducer - [Producer clientId=producer-4] Instantiated an idempotent producer.
+2026-09-29T00:10:23.081+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.9.2
+2026-09-29T00:10:23.081+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 5e9866f43ab8e7e4
+2026-09-29T00:10:23.081+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1790611823081
+2026-09-29T00:10:23.081+08:00 INFO  [-] o.a.k.c.consumer.ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [localhost:57090]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-5
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = spring-group-635694ba-8bff-43eb-bb62-90a061696b18
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 1
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.header.urlencode = false
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+2026-09-29T00:10:23.082+08:00 INFO  [-] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-29T00:10:23.101+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.9.2
+2026-09-29T00:10:23.101+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 5e9866f43ab8e7e4
+2026-09-29T00:10:23.101+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1790611823101
+2026-09-29T00:10:23.101+08:00 INFO  [-] o.a.k.c.c.i.ClassicKafkaConsumer - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-5, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Subscribed to topic(s): spring-460b91f9-fc9d-414e-ad87-54241b409009
+2026-09-29T00:10:23.123+08:00 WARN  [-] o.apache.kafka.clients.NetworkClient - [Producer clientId=producer-4] The metadata response from the cluster reported a recoverable issue with correlation id 1 : {spring-460b91f9-fc9d-414e-ad87-54241b409009=UNKNOWN_TOPIC_OR_PARTITION}
+2026-09-29T00:10:23.123+08:00 INFO  [-] org.apache.kafka.clients.Metadata - [Producer clientId=producer-4] Cluster ID: 4L6g3nShT-eMCtK--X86sw
+2026-09-29T00:10:23.125+08:00 INFO  [-] o.a.k.c.p.i.TransactionManager - [Producer clientId=producer-4] ProducerId set to 3 with epoch 0
+2026-09-29T00:10:23.241+08:00 INFO  [-] o.a.k.c.consumer.ConsumerConfig - ConsumerConfig values:
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [localhost:57090]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6
+	client.rack =
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = spring-group-635694ba-8bff-43eb-bb62-90a061696b18
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.header.urlencode = false
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.ByteArrayDeserializer
+
+2026-09-29T00:10:23.241+08:00 INFO  [-] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-29T00:10:23.244+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.9.2
+2026-09-29T00:10:23.244+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 5e9866f43ab8e7e4
+2026-09-29T00:10:23.244+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1790611823244
+2026-09-29T00:10:23.244+08:00 INFO  [-] o.a.k.c.c.i.ClassicKafkaConsumer - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Subscribed to topic(s): spring-460b91f9-fc9d-414e-ad87-54241b409009
+2026-09-29T00:10:23.250+08:00 INFO  [-] org.apache.kafka.clients.Metadata - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Cluster ID: 4L6g3nShT-eMCtK--X86sw
+2026-09-29T00:10:23.251+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Discovered group coordinator localhost:57090 (id: 2147483646 rack: null)
+2026-09-29T00:10:23.251+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] (Re-)joining group
+2026-09-29T00:10:23.256+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Request joining group due to: need to re-join with the given member-id: consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6-edebf7b6-1676-44ad-bb52-fc19674e66db
+2026-09-29T00:10:23.256+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] (Re-)joining group
+2026-09-29T00:10:23.259+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Successfully joined group with generation Generation{generationId=1, memberId='consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6-edebf7b6-1676-44ad-bb52-fc19674e66db', protocol='range'}
+2026-09-29T00:10:23.259+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Finished assignment for group at generation 1: {consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6-edebf7b6-1676-44ad-bb52-fc19674e66db=Assignment(partitions=[spring-460b91f9-fc9d-414e-ad87-54241b409009-0])}
+2026-09-29T00:10:23.262+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Successfully synced group in generation Generation{generationId=1, memberId='consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6-edebf7b6-1676-44ad-bb52-fc19674e66db', protocol='range'}
+2026-09-29T00:10:23.262+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Notifying assignor about the new Assignment(partitions=[spring-460b91f9-fc9d-414e-ad87-54241b409009-0])
+2026-09-29T00:10:23.262+08:00 INFO  [-] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Adding newly assigned partitions: spring-460b91f9-fc9d-414e-ad87-54241b409009-0
+2026-09-29T00:10:23.263+08:00 INFO  [-] o.s.k.l.KafkaMessageListenerContainer - spring-group-635694ba-8bff-43eb-bb62-90a061696b18: partitions assigned: [spring-460b91f9-fc9d-414e-ad87-54241b409009-0]
+2026-09-29T00:10:23.265+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Found no committed offset for partition spring-460b91f9-fc9d-414e-ad87-54241b409009-0
+2026-09-29T00:10:23.270+08:00 INFO  [-] o.a.k.c.c.i.SubscriptionState - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Resetting offset for partition spring-460b91f9-fc9d-414e-ad87-54241b409009-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[localhost:57090 (id: 1 rack: null)], epoch=0}}.
+2026-09-29T00:10:23.296+08:00 INFO  [-] org.apache.kafka.clients.Metadata - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-5, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Cluster ID: 4L6g3nShT-eMCtK--X86sw
+2026-09-29T00:10:23.296+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-5, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Discovered group coordinator localhost:57090 (id: 2147483646 rack: null)
+2026-09-29T00:10:23.301+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-5, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Found no committed offset for partition spring-460b91f9-fc9d-414e-ad87-54241b409009-0
+2026-09-29T00:10:24.349+08:00 INFO  [-] o.a.k.c.c.i.ClassicKafkaConsumer - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Seeking to offset 0 for partition spring-460b91f9-fc9d-414e-ad87-54241b409009-0
+2026-09-29T00:10:24.349+08:00 INFO  [-] o.s.k.l.KafkaMessageListenerContainer - Record in retry and not yet recovered
+2026-09-29T00:10:24.373+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-5, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Resetting generation and member id due to: consumer pro-actively leaving the group
+2026-09-29T00:10:24.373+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-5, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Request joining group due to: consumer pro-actively leaving the group
+2026-09-29T00:10:24.374+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-29T00:10:24.374+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-29T00:10:24.374+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-09-29T00:10:24.374+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-29T00:10:24.378+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - App info kafka.consumer for consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-5 unregistered
+2026-09-29T00:10:24.378+08:00 INFO  [-] o.a.k.clients.producer.KafkaProducer - [Producer clientId=producer-4] Closing the Kafka producer with timeoutMillis = 9223372036854775807 ms.
+2026-09-29T00:10:24.380+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-29T00:10:24.380+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-29T00:10:24.380+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-09-29T00:10:24.380+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-29T00:10:24.380+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - App info kafka.producer for producer-4 unregistered
+2026-09-29T00:10:24.381+08:00 INFO  [-] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Revoke previously assigned partitions spring-460b91f9-fc9d-414e-ad87-54241b409009-0
+2026-09-29T00:10:24.381+08:00 INFO  [-] o.s.k.l.KafkaMessageListenerContainer - spring-group-635694ba-8bff-43eb-bb62-90a061696b18: partitions revoked: [spring-460b91f9-fc9d-414e-ad87-54241b409009-0]
+2026-09-29T00:10:24.381+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Member consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6-edebf7b6-1676-44ad-bb52-fc19674e66db sending LeaveGroup request to coordinator localhost:57090 (id: 2147483646 rack: null) due to the consumer unsubscribed from all topics
+2026-09-29T00:10:24.381+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Resetting generation and member id due to: consumer pro-actively leaving the group
+2026-09-29T00:10:24.381+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Request joining group due to: consumer pro-actively leaving the group
+2026-09-29T00:10:24.381+08:00 INFO  [-] o.a.k.c.c.i.ClassicKafkaConsumer - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Unsubscribed all topics or patterns and assigned partitions
+2026-09-29T00:10:24.381+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Resetting generation and member id due to: consumer pro-actively leaving the group
+2026-09-29T00:10:24.381+08:00 INFO  [-] o.a.k.c.c.i.ConsumerCoordinator - [Consumer clientId=consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6, groupId=spring-group-635694ba-8bff-43eb-bb62-90a061696b18] Request joining group due to: consumer pro-actively leaving the group
+2026-09-29T00:10:24.873+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-29T00:10:24.873+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-29T00:10:24.873+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-09-29T00:10:24.873+08:00 INFO  [-] o.a.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-29T00:10:24.879+08:00 INFO  [-] o.a.kafka.common.utils.AppInfoParser - App info kafka.consumer for consumer-spring-group-635694ba-8bff-43eb-bb62-90a061696b18-6 unregistered
+2026-09-29T00:10:24.879+08:00 INFO  [-] o.s.k.l.KafkaMessageListenerContainer - spring-group-635694ba-8bff-43eb-bb62-90a061696b18: Consumer stopped
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 71, Failures: 0, Errors: 0, Skipped: 0
+[INFO]

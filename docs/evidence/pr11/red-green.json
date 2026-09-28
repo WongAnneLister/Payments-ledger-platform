@@ -1,0 +1,24 @@
+{
+  "logs": [
+    "financial-red.txt",
+    "schema-red.txt",
+    "webhook-red.txt",
+    "source-recovery-red.txt",
+    "integration-first.txt",
+    "hardening-red.txt",
+    "review-red.txt",
+    "late-bt-conflict-red.txt",
+    "focused-green.txt",
+    "initial-full-green.txt",
+    "historical-conflict-red.txt",
+    "historical-conflict-green.txt",
+    "anchor-conflict-red.txt",
+    "anchor-conflict-green.txt",
+    "pre-quality-interrupted.txt"
+  ],
+  "notes": [
+    "RED logs establish missing functionality or regression before fixes; intermediate integration logs include diagnosed errors and are not passing evidence.",
+    "pre-quality-interrupted was stopped after review found a new gap; it is not passing evidence.",
+    "Final clean verify is authoritative for delivered source; immutable source hashes are recorded."
+  ]
+}

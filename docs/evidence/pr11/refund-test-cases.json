@@ -1,0 +1,114 @@
+[
+  {
+    "suite": "com.paymentsledger.financialingestion.FinancialRulesTest",
+    "tests": [
+      "chargeUsesActualGrossFeeAndNetInMinorUnits",
+      "canonicalFactsDoNotDependOnJacksonTimeSerialization",
+      "suspenseUsesSignedNetAndNeverCreatesEmptyJournal",
+      "fxFeeIsIsolated",
+      "refundPreservesPositiveAndNegativeFeeSigns",
+      "classifierQuarantinesDomainsFxAndBadSignsAndKeepsFutureDependenciesPending",
+      "failedRefundReturnWithWrongPrincipalSignIsIsolated",
+      "failedRefundReturnUsesNewPositivePrincipalAndActualFeeEvidence",
+      "overlapUsesSevenBusinessDatesAcrossDstRatherThan168Hours"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payment.RefundRequestsTest",
+    "tests": [
+      "strictMoneyBoundaryAndStableFingerprint"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.notification.NotificationKafkaIT",
+    "tests": [
+      "pausedBrokerLeavesDurableWorkAndUnpausePublishes",
+      "brokerDuplicateAfterSendBeforeMarkAndCommitBeforeAckCreatesOneTask",
+      "canonicalRefundTravelsThroughKafkaAndMerchantRetryWithOneIndependentEffect",
+      "configuredSpringListenerDoesNotCommitDatabaseFailuresAndRecoversDurably"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.notification.RefundMerchantDeliveryIT",
+    "tests": [
+      "refundEffectsSurviveLostResponsesAndBusinessDuplicatesWithoutFulfillingOrders"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payment.RefundCoreIT",
+    "tests": [
+      "pendingHoldsSuccessMovesOnceAndOlderPendingCannotRewind",
+      "historicalUnmatchedObservationCanBeReconciledAfterTheExactChargeArrives",
+      "ambiguousOverlapCannotBeUnfrozen",
+      "contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(String, String, String, String, String, String)[1]",
+      "contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(String, String, String, String, String, String)[2]",
+      "contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(String, String, String, String, String, String)[3]",
+      "contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(String, String, String, String, String, String)[4]",
+      "contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(String, String, String, String, String, String)[5]",
+      "auditedUnfreezeRequiresResolvedControlAndIsIdempotent",
+      "externalOverlapIsRetainedAndFreezesNewReservations",
+      "runtimeCannotForgeEvidenceOrScopeAndNormalAmountsAreSeparatelyNonnegative",
+      "competingSixHundredReservationsHaveOneWinner",
+      "sourceObservationCannotClaimAnotherProviderScopePayment",
+      "rollbackNeverLeavesReservationOrOutbox",
+      "repeatedFailureAndCancellationReleaseOnceAndDoNotCollideNotifications",
+      "twoSuccessfulRefundsOnSamePaymentHaveSeparateTerminalNotificationIdentities",
+      "idempotencyAndClientKeyNeverReserveTwiceAndRejectChangedPayload",
+      "olderNonterminalObservationAllowsTerminalAndBtEnrichment(String)[1]",
+      "olderNonterminalObservationAllowsTerminalAndBtEnrichment(String)[2]",
+      "refundSchemaExistsAndNormalControlEnforcesIndividualNonnegativeAmounts"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payment.RefundFinancialIT",
+    "tests": [
+      "returnBeforeDebitRetainsPartialFinancialStatusUntilBothActualFactsPost",
+      "failedWithoutAnyBtDoesNotInventFundsAndWrongAmountCannotPost",
+      "refundBtWaitsForAssociationThenPostsEvenWhileBusinessPending",
+      "failedRefundReturnIsANewJournalWithActualFeesAndNeverDeletesDebit",
+      "latePostedBtConflictIsVisibleWithoutChangingOriginalJournal",
+      "workerDiscoversRefundSourceFromBtWithoutWebhookOrLocalRefund"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payment.RefundHttpIT",
+    "tests": [
+      "missingKeyForgedScopeCurrencyAndMoneyAreRejected",
+      "acceptedReservationReplayAndScopedGetFollowContract",
+      "writeOnlyRefundCallerMayCreateButCannotGet"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payment.RefundRecoveryIT",
+    "tests": [
+      "staleLeaseCannotFreezeControlWhenConflictingAnchorsAreObserved",
+      "externalConflictStopsAnAlreadyPreparedRequest",
+      "anchorConflictFreezeAndEscalationRollbackTogether",
+      "conflictingStaleSuccessAnchorsFreezeControlAndRetainTheEntireHold",
+      "expiredKeyEscalatesWithoutSendingAndKeepsHold",
+      "externalPendingUsesSharedQueryOnlyRecoveryEvenWithoutAnotherWebhook",
+      "anchoredUnknownEscalatesAfterAgeButStillQueriesBeforeEscalating",
+      "l2ReopensTerminalRefundWhoseFinancialEvidenceIsMissing",
+      "timeoutHoldsAndRetryUsesSameOperationThenKnownIdQueries",
+      "staleWorkerOnlyAppendsObservationAndRecoveryQueriesItsAnchor",
+      "leaseLostBeforeDispatchCannotIssueProviderCall",
+      "webhookBetweenClaimAndDispatchPreventsCreate"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payment.RefundSchemaIT",
+    "tests": [
+      "v8UpgradePreservesPaymentOperationAndNotificationBytes"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payment.RefundWebhookIT",
+    "tests": [
+      "inboxCompletionFailureRollsBackRefundControlAndTerminalOutbox",
+      "externalRefundIsProcessedAndDuplicateOrOldPendingCannotUndoSuccess",
+      "staleInboxOwnerCannotApplyRefundAfterLeaseReclaimed",
+      "refundBeforeCaptureAssociationRetainsObservationAndReplaysAfterQuery",
+      "changedRefundMoneyKeepsOriginalFactAndFreezesControl"
+    ]
+  }
+]

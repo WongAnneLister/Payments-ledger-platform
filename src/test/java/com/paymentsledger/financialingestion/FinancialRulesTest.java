@@ -54,4 +54,21 @@ class FinancialRulesTest {
         assertThat(FinancialFacts.immutable(numeric,fact("charge",100,3,"PAYMENTS"))).isEqualTo(FinancialFacts.immutable(iso,fact("charge",100,3,"PAYMENTS")));
     }
 
+    @Test void failedRefundReturnUsesNewPositivePrincipalAndActualFeeEvidence(){
+        for(long fee:new long[]{0,30,-30}) {
+            var returned=new BalanceTransactionFact("bt_return","refund_failure",1000,fee,1000-fee,"JPY","PAYMENTS","re_1","refund","pending",Instant.parse("2026-03-09T04:00:00Z"),Instant.parse("2026-03-10T04:00:00Z"),List.of(),"b".repeat(64));
+            var kind=new FinancialEventNormalizer().classify(returned);
+            assertThat(kind.name()).isEqualTo("REFUND_FAILURE");
+            var command=new BTJournalMapper().map(scope,returned,kind,accounts);
+            assertThat(command.entries()).contains(new PostingLine(accounts.get("PSP_FUNDS"),Side.DEBIT,1000-fee),new PostingLine(accounts.get("SALES_RETURNS"),Side.CREDIT,1000));
+            if(fee!=0)assertThat(command.entries()).contains(new PostingLine(accounts.get("PSP_FEE_EXPENSE"),fee>0?Side.DEBIT:Side.CREDIT,Math.abs(fee)));
+            assertThat(command.eventKey()).endsWith(":bt_return");
+        }
+    }
+
+    @Test void failedRefundReturnWithWrongPrincipalSignIsIsolated(){
+        var invalid=new BalanceTransactionFact("bt_bad","refund_failure",-1000,0,-1000,"JPY","PAYMENTS","re_1","refund","pending",Instant.parse("2026-03-09T04:00:00Z"),Instant.parse("2026-03-10T04:00:00Z"),List.of(),"c".repeat(64));
+        assertThat(new FinancialEventNormalizer().classify(invalid)).isEqualTo(FinancialEventNormalizer.Kind.QUARANTINE);
+    }
+
 }

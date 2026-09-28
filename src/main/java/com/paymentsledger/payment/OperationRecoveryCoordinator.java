@@ -11,18 +11,22 @@ import static com.paymentsledger.payment.PaymentRepository.*;
 @Component
 public class OperationRecoveryCoordinator {
  private static final Logger LOG=LoggerFactory.getLogger(OperationRecoveryCoordinator.class);
- private final PaymentRepository repository;private final PaymentExecutor executor;private final OperationLeaseService leases;private final RecoveryPolicy policy;
- @Autowired public OperationRecoveryCoordinator(PaymentRepository r,PaymentExecutor e){this(r,e,r.recoveryPolicy());}
- public OperationRecoveryCoordinator(PaymentRepository r,PaymentExecutor e,RecoveryPolicy p){repository=r;executor=e;policy=p;leases=new OperationLeaseService(r);r.recoveryPolicy(p);}
+ private final PaymentRepository repository;private final PaymentExecutor executor;private final OperationLeaseService leases;private final RecoveryPolicy policy;private final RefundExecutor refunds;
+ @Autowired public OperationRecoveryCoordinator(PaymentRepository r,PaymentExecutor e,org.springframework.beans.factory.ObjectProvider<RefundExecutor> refunds){this(r,e,refunds.getIfAvailable(),r.recoveryPolicy());}
+ public OperationRecoveryCoordinator(PaymentRepository r,PaymentExecutor e){this(r,e,null,r.recoveryPolicy());}
+ public OperationRecoveryCoordinator(PaymentRepository r,PaymentExecutor e,RecoveryPolicy p){this(r,e,null,p);}
+ public OperationRecoveryCoordinator(PaymentRepository r,PaymentExecutor e,RefundExecutor refunds,RecoveryPolicy p){repository=r;executor=e;this.refunds=refunds;policy=p;leases=new OperationLeaseService(r);r.recoveryPolicy(p);}
  public void recoverDue(int limit){
   outsideTransaction();
-  for(UUID operation:repository.due(limit,executor.providerName())){
-   try{var claim=leases.acquire(operation,executor.providerName());if(claim!=null)recover(claim);}
+  for(UUID operation:repository.due(limit,providerName())){
+   try{var claim=leases.acquire(operation,providerName());if(claim!=null)recover(claim);}
    catch(com.paymentsledger.common.error.ApiException bindingChanged){/* Binding disabled after listing: durable task remains queued. */}
   }
  }
- public void scanL2(int limit){outsideTransaction();repository.wakeL2(limit,executor.providerName());}
+ public void scanL2(int limit){outsideTransaction();repository.wakeL2(limit,providerName());}
+ private String providerName(){return executor.providerName()!=null?executor.providerName():refunds==null?null:refunds.providerName();}
  private void recover(Claim claim){
+  if("CREATE_REFUND".equals(claim.type()) || "QUERY_REFUND".equals(claim.type())){if(refunds!=null)refunds.recover(claim);return;}
   String anchor=repository.recoveryAnchor(claim);
   if("CONFLICTING_SESSION_ANCHORS".equals(anchor)){repository.conflictingAnchor(claim);escalate(claim,"CONFLICTING_SESSION_ANCHORS");return;}
   Instant first=instant(claim.operation(),"first_send_at");

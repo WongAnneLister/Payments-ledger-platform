@@ -1,0 +1,350 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 11 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 123 source files with javac [debug parameters release 21] to target/classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ???????????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ??????, ??? -Xlint:deprecation ?????
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 67 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.notification.RefundMerchantDeliveryIT
+23:27:30.136 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+23:27:30.139 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+23:27:30.157 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+23:27:30.480 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+23:27:30.481 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+23:27:30.498 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+23:27:30.533 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+23:27:30.761 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+23:27:30.870 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 38bce694a0bba22a92305d3bb069fb73ad2ccde75a42605846c7c88f09d88986
+23:27:31.587 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT1.053647S
+23:27:31.597 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+23:27:31.597 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+23:27:31.597 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+23:27:31.598 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+23:27:31.742 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 06a37ff12ee4b4fb32fee73dbbbe8e14afa54e1c9b218bec440cfae5d2012505
+23:27:33.550 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.951866S
+23:27:33.552 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:63055/test?loggerLevel=OFF)
+23:27:33.563 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+23:27:33.767 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 203 ms.
+23:27:33.767 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+23:27:33.870 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: d67a46c4acd88dc45a5c3263eefc465672bd31199f0494b90af4c07e683a0c30
+23:27:36.218 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT2.45082S
+23:27:36.219 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:63078/test?loggerLevel=OFF)
+23:27:36.589 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63055/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:36.670 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+23:27:36.676 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.043s)
+23:27:36.743 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+23:27:36.828 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+23:27:36.838 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+23:27:36.843 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+23:27:36.927 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+23:27:37.062 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+23:27:37.193 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+23:27:37.787 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+23:27:37.868 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+23:27:37.945 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+23:27:38.086 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+23:27:38.219 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+23:27:38.334 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:01.046s)
+23:27:39.024 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Starting...
+23:27:39.050 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7d21852b
+23:27:39.052 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Start completed.
+23:27:39.948 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Shutdown initiated...
+23:27:39.950 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Shutdown completed.
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 10.40 s <<< FAILURE! -- in com.paymentsledger.notification.RefundMerchantDeliveryIT
+[ERROR] com.paymentsledger.notification.RefundMerchantDeliveryIT.refundEffectsSurviveLostResponsesAndBusinessDuplicatesWithoutFulfillingOrders -- Time elapsed: 3.708 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: RETRYABLE
+ but was: PERMANENT_REJECT
+	at com.paymentsledger.notification.RefundMerchantDeliveryIT.refundEffectsSurviveLostResponsesAndBusinessDuplicatesWithoutFulfillingOrders(RefundMerchantDeliveryIT.java:31)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] Running com.paymentsledger.payment.RefundCoreIT
+23:27:40.521 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+23:27:40.651 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 4f11bfa00792fe36ab4f7c725f8ace1981f08cd6ba181b3b8354399a0cbb80b3
+23:27:43.364 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT2.840535S
+23:27:43.374 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:63159/test?loggerLevel=OFF)
+23:27:43.380 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+23:27:43.466 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 86 ms.
+23:27:43.548 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63159/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:43.740 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+23:27:43.743 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.042s)
+23:27:43.791 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+23:27:43.862 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+23:27:43.867 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+23:27:43.868 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+23:27:43.915 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+23:27:44.039 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+23:27:44.147 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+23:27:44.234 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+23:27:44.276 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+23:27:44.311 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+23:27:44.460 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+23:27:44.575 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+23:27:44.794 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.679s)
+23:27:45.152 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Starting...
+23:27:45.186 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@f723cdb
+23:27:45.187 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Start completed.
+23:27:45.839 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Shutdown initiated...
+23:27:45.867 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Shutdown completed.
+23:27:45.908 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63159/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:45.954 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.026s)
+23:27:45.983 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+23:27:45.986 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+23:27:46.435 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Starting...
+23:27:46.457 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@273fa9e
+23:27:46.457 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Start completed.
+23:27:46.847 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Shutdown initiated...
+23:27:46.854 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Shutdown completed.
+23:27:46.885 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63159/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:46.904 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.008s)
+23:27:46.920 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+23:27:46.920 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+23:27:47.439 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-4 - Starting...
+23:27:47.455 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-4 - Added connection org.postgresql.jdbc.PgConnection@49cb3881
+23:27:47.455 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-4 - Start completed.
+23:27:47.743 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-4 - Shutdown initiated...
+23:27:47.787 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-4 - Shutdown completed.
+23:27:47.821 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63159/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:47.849 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.006s)
+23:27:47.867 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+23:27:47.868 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+23:27:48.102 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-5 - Starting...
+23:27:48.116 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-5 - Added connection org.postgresql.jdbc.PgConnection@257f30f7
+23:27:48.117 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-5 - Start completed.
+23:27:48.276 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-5 - Shutdown initiated...
+23:27:48.284 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-5 - Shutdown completed.
+23:27:48.319 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63159/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:48.340 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.008s)
+23:27:48.358 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+23:27:48.359 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+23:27:48.531 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-6 - Starting...
+23:27:48.554 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-6 - Added connection org.postgresql.jdbc.PgConnection@6cbb7a7d
+23:27:48.555 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-6 - Start completed.
+23:27:48.696 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-6 - Shutdown initiated...
+23:27:48.698 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-6 - Shutdown completed.
+23:27:48.714 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63159/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:48.729 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.005s)
+23:27:48.743 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+23:27:48.744 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+23:27:48.952 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-7 - Starting...
+23:27:48.976 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-7 - Added connection org.postgresql.jdbc.PgConnection@4602f874
+23:27:48.976 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-7 - Start completed.
+23:27:49.066 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-7 - Shutdown initiated...
+23:27:49.066 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-7 - Shutdown completed.
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.070 s -- in com.paymentsledger.payment.RefundCoreIT
+[INFO] Running com.paymentsledger.payment.RefundRequestsTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.018 s -- in com.paymentsledger.payment.RefundRequestsTest
+[INFO] Running com.paymentsledger.payment.RefundWebhookIT
+23:27:49.599 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+23:27:49.766 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 86988f9a71bcecbc247ac7fa5b62ca046d568a311e3c853f216c16fb92fae7e9
+23:27:52.072 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT2.473629S
+23:27:52.073 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:63347/test?loggerLevel=OFF)
+23:27:52.075 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+23:27:52.117 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 42 ms.
+23:27:52.147 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63347/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:52.161 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+23:27:52.162 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.005s)
+23:27:52.208 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+23:27:52.231 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+23:27:52.234 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+23:27:52.236 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+23:27:52.255 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+23:27:52.302 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+23:27:52.369 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+23:27:52.431 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+23:27:52.472 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+23:27:52.536 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+23:27:52.588 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+23:27:52.661 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+23:27:52.738 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.363s)
+23:27:52.982 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-8 - Starting...
+23:27:52.989 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-8 - Added connection org.postgresql.jdbc.PgConnection@584ca390
+23:27:52.990 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-8 - Start completed.
+23:27:53.435 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-8 - Shutdown initiated...
+23:27:53.483 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-8 - Shutdown completed.
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 4.193 s <<< FAILURE! -- in com.paymentsledger.payment.RefundWebhookIT
+[ERROR] com.paymentsledger.payment.RefundWebhookIT.externalRefundIsProcessedAndDuplicateOrOldPendingCannotUndoSuccess -- Time elapsed: 1.363 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "DONE"
+ but was: "WAITING"
+	at com.paymentsledger.payment.RefundWebhookIT.externalRefundIsProcessedAndDuplicateOrOldPendingCannotUndoSuccess(RefundWebhookIT.java:51)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] Running com.paymentsledger.payment.RefundFinancialIT
+23:27:53.797 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+23:27:54.088 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: d7e7cfffcd52159dd5dd6610701c61e153370408f5fdffa44bee89072c5c9569
+23:27:56.710 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT2.912654S
+23:27:56.711 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:63424/test?loggerLevel=OFF)
+23:27:56.712 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+23:27:56.770 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 58 ms.
+23:27:56.805 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63424/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:56.819 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+23:27:56.820 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.005s)
+23:27:56.829 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+23:27:56.876 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+23:27:56.883 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+23:27:56.888 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+23:27:56.932 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+23:27:57.026 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+23:27:57.076 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+23:27:57.132 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+23:27:57.176 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+23:27:57.209 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+23:27:57.257 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+23:27:57.349 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+23:27:57.413 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.387s)
+23:27:57.872 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-9 - Starting...
+23:27:57.904 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-9 - Added connection org.postgresql.jdbc.PgConnection@621f23ac
+23:27:57.904 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-9 - Start completed.
+23:27:58.445 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-9 - Shutdown initiated...
+23:27:58.464 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-9 - Shutdown completed.
+23:27:58.480 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63424/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:58.493 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.005s)
+23:27:58.509 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+23:27:58.510 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+23:27:58.681 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-10 - Starting...
+23:27:58.690 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-10 - Added connection org.postgresql.jdbc.PgConnection@68aec50
+23:27:58.690 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-10 - Start completed.
+23:27:59.020 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-10 - Shutdown initiated...
+23:27:59.044 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-10 - Shutdown completed.
+23:27:59.060 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63424/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:59.071 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.004s)
+23:27:59.085 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+23:27:59.086 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+23:27:59.245 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-11 - Starting...
+23:27:59.257 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-11 - Added connection org.postgresql.jdbc.PgConnection@74c121d4
+23:27:59.257 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-11 - Start completed.
+23:27:59.707 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-11 - Shutdown initiated...
+23:27:59.740 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-11 - Shutdown completed.
+23:27:59.774 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:63424/test?loggerLevel=OFF (PostgreSQL 16.14)
+23:27:59.793 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.009s)
+23:27:59.814 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+23:27:59.815 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+23:27:59.973 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-12 - Starting...
+23:27:59.983 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-12 - Added connection org.postgresql.jdbc.PgConnection@30159886
+23:27:59.983 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-12 - Start completed.
+23:28:00.422 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-12 - Shutdown initiated...
+23:28:00.453 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-12 - Shutdown completed.
+[ERROR] Tests run: 4, Failures: 2, Errors: 2, Skipped: 0, Time elapsed: 6.973 s <<< FAILURE! -- in com.paymentsledger.payment.RefundFinancialIT
+[ERROR] com.paymentsledger.payment.RefundFinancialIT.returnBeforeDebitRetainsPartialFinancialStatusUntilBothActualFactsPost -- Time elapsed: 1.687 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "POSTED"
+ but was: "PENDING_EVIDENCE"
+	at com.paymentsledger.payment.RefundFinancialIT.returnBeforeDebitRetainsPartialFinancialStatusUntilBothActualFactsPost(RefundFinancialIT.java:80)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.payment.RefundFinancialIT.failedWithoutAnyBtDoesNotInventFundsAndWrongAmountCannotPost -- Time elapsed: 0.580 s <<< ERROR!
+com.paymentsledger.common.error.ApiException: Payment request cannot be completed: NOT_FOUND
+	at com.paymentsledger.payment.PaymentRepository.error(PaymentRepository.java:43)
+	at com.paymentsledger.payment.RefundRepository.lambda$read$12(RefundRepository.java:139)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:140)
+	at com.paymentsledger.payment.RefundRepository.read(RefundRepository.java:137)
+	at com.paymentsledger.payment.RefundFinancialIT.failedWithoutAnyBtDoesNotInventFundsAndWrongAmountCannotPost(RefundFinancialIT.java:87)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.payment.RefundFinancialIT.refundBtWaitsForAssociationThenPostsEvenWhileBusinessPending -- Time elapsed: 0.695 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "POSTED"
+ but was: "PENDING_EVIDENCE"
+	at com.paymentsledger.payment.RefundFinancialIT.refundBtWaitsForAssociationThenPostsEvenWhileBusinessPending(RefundFinancialIT.java:58)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.payment.RefundFinancialIT.failedRefundReturnIsANewJournalWithActualFeesAndNeverDeletesDebit -- Time elapsed: 0.711 s <<< ERROR!
+com.paymentsledger.common.error.ApiException: Payment request cannot be completed: NOT_FOUND
+	at com.paymentsledger.payment.PaymentRepository.error(PaymentRepository.java:43)
+	at com.paymentsledger.payment.RefundRepository.lambda$read$12(RefundRepository.java:139)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:140)
+	at com.paymentsledger.payment.RefundRepository.read(RefundRepository.java:137)
+	at com.paymentsledger.payment.RefundFinancialIT.failedRefundReturnIsANewJournalWithActualFeesAndNeverDeletesDebit(RefundFinancialIT.java:67)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] Running com.paymentsledger.financialingestion.FinancialRulesTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.168 s -- in com.paymentsledger.financialingestion.FinancialRulesTest
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   RefundMerchantDeliveryIT.refundEffectsSurviveLostResponsesAndBusinessDuplicatesWithoutFulfillingOrders:31
+expected: RETRYABLE
+ but was: PERMANENT_REJECT
+[ERROR]   RefundFinancialIT.refundBtWaitsForAssociationThenPostsEvenWhileBusinessPending:58
+expected: "POSTED"
+ but was: "PENDING_EVIDENCE"
+[ERROR]   RefundFinancialIT.returnBeforeDebitRetainsPartialFinancialStatusUntilBothActualFactsPost:80
+expected: "POSTED"
+ but was: "PENDING_EVIDENCE"
+[ERROR]   RefundWebhookIT.externalRefundIsProcessedAndDuplicateOrOldPendingCannotUndoSuccess:51
+expected: "DONE"
+ but was: "WAITING"
+[ERROR] Errors:
+[ERROR]   RefundFinancialIT.failedRefundReturnIsANewJournalWithActualFeesAndNeverDeletesDebit:67 ? Api Payment request cannot be completed: NOT_FOUND
+[ERROR]   RefundFinancialIT.failedWithoutAnyBtDoesNotInventFundsAndWrongAmountCannotPost:87 ? Api Payment request cannot be completed: NOT_FOUND
+[INFO]
+[ERROR] Tests run: 22, Failures: 4, Errors: 2, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  37.994 s
+[INFO] Finished at: 2026-09-28T23:28:01+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

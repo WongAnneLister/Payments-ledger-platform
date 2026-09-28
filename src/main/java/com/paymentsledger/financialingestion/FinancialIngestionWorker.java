@@ -19,10 +19,16 @@ public final class FinancialIngestionWorker {
     private final FinancialReplayService replay;
     private final ProviderScope scope;
     private final Clock clock;
+    private final RefundSourceResolver refundSources;
 
     public FinancialIngestionWorker(JdbcTemplate jdbc, FinancialImportService importer,
             FinancialReplayService replay, ProviderScope scope, Clock clock) {
+        this(jdbc,importer,replay,scope,clock,RefundSourceResolver.unavailable());
+    }
+    public FinancialIngestionWorker(JdbcTemplate jdbc,FinancialImportService importer,
+            FinancialReplayService replay,ProviderScope scope,Clock clock,RefundSourceResolver refundSources){
         this.jdbc=jdbc; this.importer=importer; this.replay=replay; this.scope=scope; this.clock=clock;
+        this.refundSources=refundSources;
     }
 
     @Scheduled(scheduler="financialIngestionScheduler", fixedDelayString="${platform.financial-ingestion.poll-ms:300000}",
@@ -79,7 +85,17 @@ public final class FinancialIngestionWorker {
     private void replayPending() {
         var ids = jdbc.queryForList("SELECT bt_id FROM platform.balance_transaction WHERE "+SCOPE+
                 " AND state='PENDING_EVIDENCE' ORDER BY updated_at,id LIMIT 25",String.class,scopeArgs());
-        for (String id : ids) guarded("REPLAY_ITEM", () -> replay.replay(scope,id));
+        for (String id : ids) guarded("REPLAY_ITEM", () -> {
+            // Persist unresolved replay priority before a possibly unavailable source query.
+            // A missing refund never monopolizes the bounded queue, and all network I/O is outside replay's transaction.
+            String state=replay.replay(scope,id);
+            if("PENDING_EVIDENCE".equals(state)){
+                var sources=jdbc.queryForList("SELECT source_object_id FROM platform.balance_transaction WHERE "+SCOPE+
+                        " AND bt_id=? AND source_object_type='refund' AND source_object_id IS NOT NULL",String.class,
+                        scope.organizationId(),scope.environmentId(),scope.providerAccountId(),scope.livemode(),id);
+                if(!sources.isEmpty()){refundSources.resolve(scope,sources.getFirst());replay.replay(scope,id);}
+            }
+        });
     }
 
     private void guarded(String stage, Runnable operation) {

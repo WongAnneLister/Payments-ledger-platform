@@ -1,0 +1,294 @@
+00:06:10.255 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+00:06:10.257 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+00:06:10.278 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+00:06:10.646 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+00:06:10.647 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+00:06:10.668 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+00:06:10.720 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+00:06:10.807 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+00:06:10.907 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: cc781271fd9d5c0a52cbc9c3ebbcdc7783b1cb0080518f0412724f18e259da4e
+00:06:11.687 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.966796S
+00:06:11.694 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+00:06:11.694 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+00:06:11.695 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+00:06:11.695 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+00:06:11.757 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: b486ddacb95385a2d6e6db42ce00f20b37b11e8992d2403fe4b7c50f63669bce
+00:06:13.587 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.891447S
+00:06:13.589 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:53551/test?loggerLevel=OFF)
+00:06:13.601 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+00:06:13.775 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 173 ms.
+00:06:14.028 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53551/test?loggerLevel=OFF (PostgreSQL 16.14)
+00:06:14.095 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+00:06:14.098 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.021s)
+00:06:14.115 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+00:06:14.189 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+00:06:14.201 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+00:06:14.209 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+00:06:14.241 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+00:06:14.319 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+00:06:14.445 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+00:06:14.506 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+00:06:14.563 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+00:06:14.615 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+00:06:14.667 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+00:06:14.751 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+00:06:14.835 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 9 migrations to schema "platform", now at version v9 (execution time 00:00.443s)
+00:06:15.304 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Starting...
+00:06:15.326 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@631cb129
+00:06:15.327 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Start completed.
+00:06:15.719 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Shutdown initiated...
+00:06:15.774 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Shutdown completed.
+00:06:15.808 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53551/test?loggerLevel=OFF (PostgreSQL 16.14)
+00:06:15.850 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.028s)
+00:06:15.909 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+00:06:15.911 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+00:06:16.176 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Starting...
+00:06:16.188 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@21ae657b
+00:06:16.188 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Start completed.
+00:06:16.501 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Shutdown initiated...
+00:06:16.526 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Shutdown completed.
+00:06:16.547 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53551/test?loggerLevel=OFF (PostgreSQL 16.14)
+00:06:16.565 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.006s)
+00:06:16.582 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+00:06:16.583 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+00:06:16.785 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Starting...
+00:06:16.795 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@566e142
+00:06:16.795 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Start completed.
+00:06:17.036 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Shutdown initiated...
+00:06:17.038 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Shutdown completed.
+00:06:17.059 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53551/test?loggerLevel=OFF (PostgreSQL 16.14)
+00:06:17.080 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.008s)
+00:06:17.118 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+00:06:17.119 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+00:06:17.314 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-4 - Starting...
+00:06:17.322 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-4 - Added connection org.postgresql.jdbc.PgConnection@5382184b
+00:06:17.322 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-4 - Start completed.
+00:06:17.578 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-4 - Shutdown initiated...
+00:06:17.593 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-4 - Shutdown completed.
+00:06:17.615 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53551/test?loggerLevel=OFF (PostgreSQL 16.14)
+00:06:17.634 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.007s)
+00:06:17.651 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+00:06:17.652 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+00:06:17.858 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-5 - Starting...
+00:06:17.869 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-5 - Added connection org.postgresql.jdbc.PgConnection@24c685e7
+00:06:17.869 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-5 - Start completed.
+00:06:18.075 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-5 - Shutdown initiated...
+00:06:18.097 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-5 - Shutdown completed.
+00:06:18.120 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53551/test?loggerLevel=OFF (PostgreSQL 16.14)
+00:06:18.137 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.007s)
+00:06:18.154 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+00:06:18.155 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+00:06:18.311 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-6 - Starting...
+00:06:18.319 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-6 - Added connection org.postgresql.jdbc.PgConnection@1ac6dd3d
+00:06:18.319 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-6 - Start completed.
+00:06:18.570 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-6 - Shutdown initiated...
+00:06:18.600 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-6 - Shutdown completed.
+00:06:18.628 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53551/test?loggerLevel=OFF (PostgreSQL 16.14)
+00:06:18.647 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.005s)
+00:06:18.660 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 9
+00:06:18.661 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+00:06:18.781 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-7 - Starting...
+00:06:18.789 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-7 - Added connection org.postgresql.jdbc.PgConnection@6da4feeb
+00:06:18.789 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-7 - Start completed.
+00:06:18.988 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-7 - Shutdown initiated...
+00:06:19.014 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-7 - Shutdown completed.
+[ERROR] Tests run: 7, Failures: 5, Errors: 0, Skipped: 0, Time elapsed: 9.208 s <<< FAILURE! -- in com.paymentsledger.payment.RefundCoreIT
+[ERROR] com.paymentsledger.payment.RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(String, String, String, String, String, String)[1] -- Time elapsed: 1.968 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting code to raise a throwable.
+	at com.paymentsledger.payment.RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(RefundCoreIT.java:145)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.Optional.ifPresent(Optional.java:178)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.payment.RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(String, String, String, String, String, String)[2] -- Time elapsed: 0.740 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting code to raise a throwable.
+	at com.paymentsledger.payment.RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(RefundCoreIT.java:145)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.Optional.ifPresent(Optional.java:178)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.payment.RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(String, String, String, String, String, String)[3] -- Time elapsed: 0.510 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting code to raise a throwable.
+	at com.paymentsledger.payment.RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(RefundCoreIT.java:145)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.Optional.ifPresent(Optional.java:178)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.payment.RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(String, String, String, String, String, String)[4] -- Time elapsed: 0.554 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting code to raise a throwable.
+	at com.paymentsledger.payment.RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(RefundCoreIT.java:145)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.Optional.ifPresent(Optional.java:178)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.payment.RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(String, String, String, String, String, String)[5] -- Time elapsed: 0.503 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting code to raise a throwable.
+	at com.paymentsledger.payment.RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen(RefundCoreIT.java:145)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.Optional.ifPresent(Optional.java:178)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.stream.ReferencePipeline$7$1.accept(ReferencePipeline.java:276)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] Failures:
+[ERROR]   RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen:145
+Expecting code to raise a throwable.
+[ERROR]   RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen:145
+Expecting code to raise a throwable.
+[ERROR]   RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen:145
+Expecting code to raise a throwable.
+[ERROR]   RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen:145
+Expecting code to raise a throwable.
+[ERROR]   RefundCoreIT.contradictoryHistoricalTerminalOrBtEvidenceCannotBeUnfrozen:145
+Expecting code to raise a throwable.
+[ERROR] Tests run: 7, Failures: 5, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.6:verify (default-cli) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr11-refunds/target/failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

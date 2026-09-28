@@ -29,7 +29,8 @@ public class FinancialReplayService {
         var kind=normalizer.classify(fact);
         UUID payment=null;
         if(kind==FinancialEventNormalizer.Kind.CHARGE){var a=charge(scope,fact.sourceObjectId());if(a!=null)payment=(UUID)a.get("payment_id");}
-        if(kind==FinancialEventNormalizer.Kind.REFUND)payment=refunds.find(scope,fact.sourceObjectId()).map(RefundEvidencePort.Evidence::paymentId).orElse(null);
+        boolean refundMovement=kind==FinancialEventNormalizer.Kind.REFUND||kind==FinancialEventNormalizer.Kind.REFUND_FAILURE;
+        if(refundMovement)payment=refunds.find(scope,fact.sourceObjectId()).map(RefundEvidencePort.Evidence::paymentId).orElse(null);
         Map<String,Object> paymentRow=null;
         if(payment!=null)paymentRow=one("SELECT * FROM platform.payment WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? FOR UPDATE",payment,scope.organizationId(),scope.environmentId(),scope.providerAccountId());
         var row=bt(scope,btId,true);
@@ -47,10 +48,15 @@ public class FinancialReplayService {
             if(attempt==null||paymentRow==null||attempt.get("balance_transaction_id")==null||!Boolean.TRUE.equals(attempt.get("captured"))||!"succeeded".equals(attempt.get("provider_status")))return mark(row,"PENDING_EVIDENCE","CAPTURE_EVIDENCE_REQUIRED");
             if(!payment.equals(attempt.get("payment_id"))||!fact.btId().equals(attempt.get("balance_transaction_id"))||!fact.currency().equalsIgnoreCase((String)attempt.get("currency"))||attempt.get("amount_captured_minor")==null||fact.amountMinor()!=((Number)attempt.get("amount_captured_minor")).longValue()||!"SUCCEEDED".equals(paymentRow.get("payment_status"))||"CONFLICT".equals(paymentRow.get("resolution_status")))return quarantine(row,"CAPTURE_EVIDENCE_MISMATCH");
         }
-        if(kind==FinancialEventNormalizer.Kind.REFUND){
+        UUID localRefundId=null;
+        if(refundMovement){
             var refund=refunds.find(scope,fact.sourceObjectId()).orElse(null);
             if(refund==null||paymentRow==null||!refund.evidenceVerified())return mark(row,"PENDING_EVIDENCE","REFUND_EVIDENCE_REQUIRED");
-            if(!Objects.equals(payment,refund.paymentId())||!Objects.equals(fact.sourceObjectId(),refund.refundId())||!Objects.equals(fact.btId(),refund.balanceTransactionId())||!fact.currency().equalsIgnoreCase(refund.currency())||fact.amountMinor()==Long.MIN_VALUE||refund.amountMinor()!=-fact.amountMinor()||!fact.currency().equalsIgnoreCase((String)paymentRow.get("currency")))return quarantine(row,"REFUND_EVIDENCE_MISMATCH");
+            boolean returned=kind==FinancialEventNormalizer.Kind.REFUND_FAILURE;
+            String expectedBt=returned?refund.failureBalanceTransactionId():refund.balanceTransactionId();
+            if(expectedBt==null)return mark(row,"PENDING_EVIDENCE","REFUND_BT_LINK_REQUIRED");
+            if(!Objects.equals(payment,refund.paymentId())||!Objects.equals(fact.sourceObjectId(),refund.refundId())||!Objects.equals(fact.btId(),expectedBt)||!fact.currency().equalsIgnoreCase(refund.currency())||fact.amountMinor()==Long.MIN_VALUE||refund.amountMinor()!=(returned?fact.amountMinor():-fact.amountMinor())||!fact.currency().equalsIgnoreCase((String)paymentRow.get("currency")))return quarantine(row,"REFUND_EVIDENCE_MISMATCH");
+            localRefundId=refund.localRefundId();
         }
         if(kind==FinancialEventNormalizer.Kind.UNKNOWN&&fact.netMinor()==0)return mark(row,"ZERO","UNKNOWN_SOURCE_ZERO_MOVEMENT");
         Map<String,UUID> accounts=new HashMap<>();
@@ -60,7 +66,7 @@ public class FinancialReplayService {
         catch(IllegalArgumentException missing){return mark(row,"PENDING_EVIDENCE",missing.getMessage());}
         catch(ArithmeticException invalid){return quarantine(row,"MINOR_UNIT_OVERFLOW");}
         UUID journal=posting.post(new LedgerScope(scope.organizationId(),scope.environmentId(),fact.currency().toUpperCase(Locale.ROOT),scope.providerAccountId()),command);
-        jdbc.update("UPDATE platform.balance_transaction SET state='POSTED',journal_id=?,payment_id=?,reason=?,updated_at=now(),version=version+1 WHERE id=?",journal,payment,kind==FinancialEventNormalizer.Kind.UNKNOWN?"UNKNOWN_SOURCE":null,row.get("id"));
+        jdbc.update("UPDATE platform.balance_transaction SET state='POSTED',journal_id=?,payment_id=?,refund_id=?,reason=?,updated_at=now(),version=version+1 WHERE id=?",journal,payment,localRefundId,kind==FinancialEventNormalizer.Kind.UNKNOWN?"UNKNOWN_SOURCE":null,row.get("id"));
         if(kind==FinancialEventNormalizer.Kind.UNKNOWN)recordQuarantine(row,"UNKNOWN_SOURCE");
         if(kind==FinancialEventNormalizer.Kind.CHARGE){
             // Already owns payment(20); this financial-only update cannot emit a duplicate payment.succeeded event.

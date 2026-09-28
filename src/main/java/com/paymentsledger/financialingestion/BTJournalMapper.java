@@ -13,7 +13,7 @@ public final class BTJournalMapper {
         add(lines,accounts,"PSP_FUNDS",fact.netMinor());
         switch(kind) {
             case CHARGE -> {add(lines,accounts,"PSP_FEE_EXPENSE",fact.feeMinor());add(lines,accounts,"SALES_REVENUE",Math.negateExact(fact.amountMinor()));}
-            case REFUND -> {add(lines,accounts,"PSP_FEE_EXPENSE",fact.feeMinor());add(lines,accounts,"SALES_RETURNS",Math.negateExact(fact.amountMinor()));}
+            case REFUND, REFUND_FAILURE -> {add(lines,accounts,"PSP_FEE_EXPENSE",fact.feeMinor());add(lines,accounts,"SALES_RETURNS",Math.negateExact(fact.amountMinor()));}
             case UNKNOWN -> add(lines,accounts,"SUSPENSE",Math.negateExact(fact.netMinor()));
             default -> throw new IllegalArgumentException("Evidence is not eligible for posting");
         }

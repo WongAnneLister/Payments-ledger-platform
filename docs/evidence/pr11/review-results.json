@@ -1,0 +1,28 @@
+{
+  "specReview": {
+    "reviewer": "pr11_spec_review",
+    "status": "PASS",
+    "scope": "Frozen PR11 prompt, refund and shared operation state machines, final worktree source",
+    "fixedFindings": [
+      "External pending refunds lacked durable query-only recovery",
+      "Historical source observations prevented legitimate audited unfreeze after exact dependency resolution",
+      "Late immutable BT conflict was not reflected in refund financialStatus",
+      "Historical terminal or BT contradictions must block audited unfreeze"
+    ],
+    "verification": "Reviewed final guard and regressions; reviewer ran no Maven"
+  },
+  "qualityReview": {
+    "reviewer": "pr11_quality_review",
+    "status": "PASS",
+    "findings": [
+      {
+        "priority": "P1",
+        "issue": "Conflicting successful refund recovery anchors escalated without freezing additional reservations",
+        "status": "FIXED_AND_REREVIEWED"
+      }
+    ],
+    "verification": "Read-only review confirmed one owned lease check, atomic freeze/conflict/escalation, H preserved, stale control immutability, and rollback regressions; final test results recorded separately"
+  },
+  "mainIntegration": "NOT_REQUESTED_IN_PR11_TURN",
+  "realStripeRefundLifecycle": "NOT_RUN"
+}
