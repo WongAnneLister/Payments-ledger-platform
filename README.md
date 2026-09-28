@@ -2,7 +2,7 @@
 
 Stripe 支付网关与复式账本。模块化单体，API / Worker 分角色运行，共享同一个 PostgreSQL 事务域。
 
-**当前状态：PR09 Outbox、Kafka 与商户通知已接入。** 已实现可信身份、不可变账本、Fake/Stripe 适配器、业务支付 API 和最小测试页面。支付支持持久任务、租约重领、权威查询与不安全重试的调查升级。PR08 接收原始签名回调、持久去重、异步归并支付事实并等待缺失依赖。PR05 已实测付款、退款及真实回调验签；PR09 将确认支付事件经 Outbox / Kafka 持久投递给商户；支付自动记账、退款业务与 L3 外部回补仍由后续 PR 接入。
+**当前状态：PR10 BT 导入与资金入账已接入。** 已实现可信身份、不可变账本、Fake/Stripe 适配器、业务支付 API、持久恢复、Webhook 和 Outbox / Kafka 商户通知。PR10 支持固定窗口分页与断点恢复，将通过归属验证的 Charge 资金流水按实际金额、手续费和净额记账，保留冲突、隔离及待依赖流水。退款基础分录已实现，完整退款业务由 PR11 接入，L3 外部回补与独立资金对账由 PR15 接入。PR05 已实测付款、退款及真实回调验签；各期实际验证来源以 evidence 记录为准。
 运行说明见 [身份配置](docs/runbook/identity-and-fixtures.md)、[账本核心](docs/runbook/ledger-core.md)、[Provider 模拟器](docs/runbook/provider-simulator.md)和[Stripe 契约验证](docs/runbook/stripe-contract-check.md)。本地 fixture 通过不代表真实 Stripe 契约通过。
 设计基线见 [`docs/`](docs/)；本 README 只讲怎么跑起来。
 
@@ -105,6 +105,8 @@ curl -s localhost:8081/actuator/health    # Worker 角色
 回调接收配置、处理语义与验证来源见[PR08 Webhook Inbox 手册](docs/runbook/webhook-inbox.md)。
 
 商户通知配置、幂等履约与故障验证见 [PR09 商户通知手册](docs/runbook/merchant-notifications.md)。
+
+资金流水导入、期初政策与异常重放见 [PR10 BT 导入手册](docs/runbook/bt-ingestion.md)。
 
 后台恢复配置、保留窗口与人工调查边界见[PR07 恢复手册](docs/runbook/operation-recovery.md)。真实 Stripe 的无 ID 未知创建默认不自动重发；Fake 的窗口实验不等于真实账户验证。
 

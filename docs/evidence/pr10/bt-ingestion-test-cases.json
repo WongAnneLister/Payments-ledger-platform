@@ -1,0 +1,67 @@
+[
+  {
+    "suite": "com.paymentsledger.financialingestion.FinancialIngestionWorkerTest",
+    "tests": [
+      "apiCannotEnableSchedulerEvenWithExplicitFlag",
+      "enabledWorkerRequiresExplicitTrustedScopeAndProvider",
+      "slowFinancialWorkDoesNotOccupyTheDefaultScheduler",
+      "workerIsDisabledUntilExplicitlyEnabled"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.financialingestion.FinancialRulesTest",
+    "tests": [
+      "chargeUsesActualGrossFeeAndNetInMinorUnits",
+      "canonicalFactsDoNotDependOnJacksonTimeSerialization",
+      "suspenseUsesSignedNetAndNeverCreatesEmptyJournal",
+      "fxFeeIsIsolated",
+      "refundPreservesPositiveAndNegativeFeeSigns",
+      "classifierQuarantinesDomainsFxAndBadSignsAndKeepsFutureDependenciesPending",
+      "overlapUsesSevenBusinessDatesAcrossDstRatherThan168Hours"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.financialingestion.FinancialIngestionIT",
+    "tests": [
+      "concurrentDuplicateImportsAndReplayHaveOneBtOneJournalAndRebuildMatches",
+      "missingStatusRemainsDurableRejectedObservation",
+      "invalidRefreshStatusPreservesPendingAndRecordsEvidence",
+      "interruptedPaginationResumesDurableCursorAndCompletesOnlyOnTerminalPage",
+      "pageCursorFailureRollsBackEvidenceAndFactsAndCanResume",
+      "incompleteProviderAndEmptyContinuationAreRecordedWithoutCompletion",
+      "sameBtAmountOrCurrencyConflictRetainsOriginalAndJournal",
+      "retriesWholeLocalTransactionOnSerializationFailureWithoutRefetching",
+      "availabilityRefreshIsRecordedWithoutSecondJournal",
+      "signedSuspenseAndUnavailableDependenciesPreserveEvidence",
+      "missingProvisionedAccountStaysPendingAndFeeOrderDoesNotConflict",
+      "cutoffExcludesHistoryAndPolicyFreezesAfterAcceptance",
+      "runtimeCannotChangeImmutableFactOrCrossScopeBinding",
+      "availabilityProjectionMovesBucketsWithoutChangingLedgerTotal",
+      "joinedTransactionDoesNotRetryInsideAnAbortedOuterTransaction",
+      "staleConcurrentSameWindowPageIsRecordedWithoutSecondAcceptance",
+      "cursorCycleDuplicateIdsOutOfWindowAndVersionDriftNeverComplete",
+      "trustedRefundReplayUsesRealScopedDependencyAndActualNegativeFee",
+      "cutoffExcludesExactInclusiveSnapshotBoundary",
+      "runtimeCannotAttachAnotherWindowsObservationOrReassignCursor"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.financialingestion.FinancialSchemaIT",
+    "tests": [
+      "financialTriggerFunctionsCannotBeAttachedToTempTables",
+      "durableSchemaExistsAndRuntimeCannotProvisionOrMutateEvidence"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payment.PaymentFinancialIngestionIT",
+    "tests": [
+      "paymentFinancialUpdateFailureRollsBackJournalAndProjectionTogether",
+      "btBeforeLocalCaptureWaitsAndConvergesAfterAuthoritativeQuery",
+      "recognizedChargeTypeCaseDoesNotLosePostedCoverage",
+      "configuredWorkerReplaysDurableBtAndDoesNotRepeatCompletedDailyEnumeration",
+      "delayedBtPostsAndRepeatedAuthoritativeQueriesPreserveFinancialState",
+      "concurrentQueryWebhookAndBtReplayKeepOneCaptureOneFinancialJournal",
+      "rejectedHistoricalWindowDoesNotBlockNewBackfillOrDailyOverlap"
+    ]
+  }
+]

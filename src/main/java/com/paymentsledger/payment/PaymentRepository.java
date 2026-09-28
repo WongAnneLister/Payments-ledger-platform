@@ -305,7 +305,7 @@ public class PaymentRepository {
         if(observedIntent!=null && p.get("payment_intent_id")!=null && !observedIntent.equals(p.get("payment_intent_id"))){conflict=true;observedIntent=null;}
         for(var charge:facts.charges()){
             var previousAttempt=one("SELECT * FROM platform.payment_attempt WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_object_id=?",p.get("organization_id"),p.get("environment_id"),p.get("provider_account_id"),charge.chargeId());
-            if(previousAttempt!=null && (!payment.equals(previousAttempt.get("payment_id")) || !Objects.equals(charge.paymentIntentId(),previousAttempt.get("payment_intent_id")) || !charge.currency().equalsIgnoreCase(previousAttempt.get("currency").toString()) || charge.amountMinor()!=number(previousAttempt,"amount_minor") || Boolean.TRUE.equals(previousAttempt.get("captured")) && charge.captured() && !Objects.equals(charge.amountCapturedMinor(),previousAttempt.get("amount_captured_minor")))){conflict=true;continue;}
+            if(previousAttempt!=null && (previousAttempt.get("balance_transaction_id")!=null && charge.balanceTransactionId()!=null && !charge.balanceTransactionId().equals(previousAttempt.get("balance_transaction_id")) || !payment.equals(previousAttempt.get("payment_id")) || !Objects.equals(charge.paymentIntentId(),previousAttempt.get("payment_intent_id")) || !charge.currency().equalsIgnoreCase(previousAttempt.get("currency").toString()) || charge.amountMinor()!=number(previousAttempt,"amount_minor") || Boolean.TRUE.equals(previousAttempt.get("captured")) && charge.captured() && !Objects.equals(charge.amountCapturedMinor(),previousAttempt.get("amount_captured_minor")))){conflict=true;continue;}
             if(previousAttempt!=null && !charge.captured() && facts.confirmedAt().isBefore(instant(previousAttempt,"fetched_at")))continue;
             if(charge.captured() && charge.status().equals("succeeded")){
                 var normalized=new LinkedHashMap<String,Object>();normalized.put("charge_id",charge.chargeId());normalized.put("payment_intent_id",charge.paymentIntentId());normalized.put("payment_id",payment.toString());normalized.put("amount_minor",charge.amountMinor());normalized.put("amount_captured_minor",charge.amountCapturedMinor());normalized.put("currency",charge.currency().toUpperCase(Locale.ROOT));
@@ -317,7 +317,17 @@ public class PaymentRepository {
         }
         long captured=jdbc.queryForObject("SELECT coalesce(sum(amount_captured_minor),0) FROM platform.payment_attempt WHERE payment_id=? AND captured AND provider_status='succeeded'",Long.class,payment);
         String state=str(p,"payment_status"),providerStatus=str(p,"provider_status"),financial=str(p,"financial_status");
-        if(captured>0){if(state.equals("CANCELED"))conflict=true;else state="SUCCEEDED";financial="PENDING_EVIDENCE";if(captured>number(p,"amount_minor"))conflict=true;}
+        if(captured>0){
+            if(state.equals("CANCELED"))conflict=true;else state="SUCCEEDED";
+            long covered=jdbc.queryForObject("""
+                    SELECT coalesce(sum(amount_minor),0) FROM platform.balance_transaction
+                    WHERE payment_id=? AND state='POSTED' AND lower(business_type)='charge'
+                    """,Long.class,payment);
+            if("CONFLICT".equals(financial)||covered>captured)financial="CONFLICT";
+            else if(covered==captured)financial="POSTED";
+            else financial=covered>0?"PARTIALLY_POSTED":"PENDING_EVIDENCE";
+            if(captured>number(p,"amount_minor"))conflict=true;
+        }
         else if(!stale && !Set.of("SUCCEEDED","CANCELED").contains(state)){
             if(facts.intent()!=null){providerStatus=facts.intent().status();state=switch(providerStatus){case "requires_action"->"REQUIRES_ACTION";case "requires_payment_method"->facts.session()!=null && facts.session().status()==CheckoutSessionStatus.OPEN?"AWAITING_CUSTOMER":"PROCESSING";default->"PROCESSING";};}
             else if(facts.session()!=null){providerStatus=sessionStatus(facts.session());state=facts.session().status()==CheckoutSessionStatus.OPEN?"AWAITING_CUSTOMER":"PROCESSING";}

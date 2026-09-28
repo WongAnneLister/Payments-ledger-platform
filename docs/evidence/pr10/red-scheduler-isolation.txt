@@ -1,0 +1,90 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 10 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 62 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr10-bt-ingestion/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr10-bt-ingestion/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr10-bt-ingestion/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr10-bt-ingestion/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr10-bt-ingestion/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.financialingestion.FinancialIngestionWorkerTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+22:09:43.816 [main] INFO org.springframework.scheduling.config.TaskSchedulerRouter -- No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+22:09:43.835 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'financialIngestionWorker' defined in com.paymentsledger.financialingestion.FinancialIngestionConfiguration: Failed to instantiate [com.paymentsledger.financialingestion.FinancialIngestionWorker]: Factory method 'financialIngestionWorker' threw exception with message: Financial ingestion requires configured scope UUIDs
+22:09:43.842 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'financialImportService' defined in com.paymentsledger.financialingestion.FinancialIngestionConfiguration: Unsatisfied dependency expressed through method 'financialImportService' parameter 0: No qualifying bean of type 'org.springframework.jdbc.core.JdbcTemplate' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+22:09:43.859 [main] INFO org.springframework.scheduling.config.TaskSchedulerRouter -- No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.198 s <<< FAILURE! -- in com.paymentsledger.financialingestion.FinancialIngestionWorkerTest
+[ERROR] com.paymentsledger.financialingestion.FinancialIngestionWorkerTest.slowFinancialWorkDoesNotOccupyTheDefaultScheduler -- Time elapsed: 0.026 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "financialIngestionScheduler"
+ but was: ""
+	at com.paymentsledger.financialingestion.FinancialIngestionWorkerTest.lambda$slowFinancialWorkDoesNotOccupyTheDefaultScheduler$6(FinancialIngestionWorkerTest.java:53)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.accept(AbstractApplicationContextRunner.java:469)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.consumeAssertableContext(AbstractApplicationContextRunner.java:385)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.lambda$run$0(AbstractApplicationContextRunner.java:363)
+	at org.springframework.boot.test.util.TestPropertyValues.lambda$applyToSystemProperties$1(TestPropertyValues.java:174)
+	at org.springframework.boot.test.util.TestPropertyValues.applyToSystemProperties(TestPropertyValues.java:188)
+	at org.springframework.boot.test.util.TestPropertyValues.applyToSystemProperties(TestPropertyValues.java:173)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.lambda$run$1(AbstractApplicationContextRunner.java:363)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.withContextClassLoader(AbstractApplicationContextRunner.java:391)
+	at org.springframework.boot.test.context.runner.AbstractApplicationContextRunner.run(AbstractApplicationContextRunner.java:362)
+	at com.paymentsledger.financialingestion.FinancialIngestionWorkerTest.slowFinancialWorkDoesNotOccupyTheDefaultScheduler(FinancialIngestionWorkerTest.java:50)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   FinancialIngestionWorkerTest.slowFinancialWorkDoesNotOccupyTheDefaultScheduler:50->lambda$slowFinancialWorkDoesNotOccupyTheDefaultScheduler$6:53
+expected: "financialIngestionScheduler"
+ but was: ""
+[INFO]
+[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.365 s
+[INFO] Finished at: 2026-09-28T22:09:43+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr10-bt-ingestion/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

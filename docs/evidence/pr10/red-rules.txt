@@ -1,0 +1,60 @@
+[ERROR] Tests run: 5, Failures: 1, Errors: 4, Skipped: 0, Time elapsed: 0.070 s <<< FAILURE! -- in com.paymentsledger.financialingestion.FinancialRulesTest
+[ERROR] com.paymentsledger.financialingestion.FinancialRulesTest.chargeUsesActualGrossFeeAndNetInMinorUnits -- Time elapsed: 0.020 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.paymentsledger.ledger.PostingCommand.entries()" because "command" is null
+	at com.paymentsledger.financialingestion.FinancialRulesTest.chargeUsesActualGrossFeeAndNetInMinorUnits(FinancialRulesTest.java:19)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.financialingestion.FinancialRulesTest.suspenseUsesSignedNetAndNeverCreatesEmptyJournal -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.paymentsledger.ledger.PostingCommand.entries()" because "command" is null
+	at com.paymentsledger.financialingestion.FinancialRulesTest.suspenseUsesSignedNetAndNeverCreatesEmptyJournal(FinancialRulesTest.java:31)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.financialingestion.FinancialRulesTest.refundPreservesPositiveAndNegativeFeeSigns -- Time elapsed: 0.002 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.paymentsledger.ledger.PostingCommand.entries()" because "command" is null
+	at com.paymentsledger.financialingestion.FinancialRulesTest.refundPreservesPositiveAndNegativeFeeSigns(FinancialRulesTest.java:24)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.financialingestion.FinancialRulesTest.classifierQuarantinesDomainsFxAndBadSignsAndKeepsFutureDependenciesPending -- Time elapsed: 0.027 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: CHARGE
+ but was: null
+	at com.paymentsledger.financialingestion.FinancialRulesTest.classifierQuarantinesDomainsFxAndBadSignsAndKeepsFutureDependenciesPending(FinancialRulesTest.java:37)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.financialingestion.FinancialRulesTest.overlapUsesSevenBusinessDatesAcrossDstRatherThan168Hours -- Time elapsed: 0.006 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.paymentsledger.financialingestion.ImportWindows$Window.from()" because "window" is null
+	at com.paymentsledger.financialingestion.FinancialRulesTest.overlapUsesSevenBusinessDatesAcrossDstRatherThan168Hours(FinancialRulesTest.java:45)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] Failures:
+[ERROR]   FinancialRulesTest.classifierQuarantinesDomainsFxAndBadSignsAndKeepsFutureDependenciesPending:37
+expected: CHARGE
+ but was: null
+[ERROR] Errors:
+[ERROR]   FinancialRulesTest.chargeUsesActualGrossFeeAndNetInMinorUnits:19 NullPointer Cannot invoke "com.paymentsledger.ledger.PostingCommand.entries()" because "command" is null
+[ERROR]   FinancialRulesTest.overlapUsesSevenBusinessDatesAcrossDstRatherThan168Hours:45 NullPointer Cannot invoke "com.paymentsledger.financialingestion.ImportWindows$Window.from()" because "window" is null
+[ERROR]   FinancialRulesTest.refundPreservesPositiveAndNegativeFeeSigns:24 NullPointer Cannot invoke "com.paymentsledger.ledger.PostingCommand.entries()" because "command" is null
+[ERROR]   FinancialRulesTest.suspenseUsesSignedNetAndNeverCreatesEmptyJournal:31 NullPointer Cannot invoke "com.paymentsledger.ledger.PostingCommand.entries()" because "command" is null
+[ERROR] Tests run: 5, Failures: 1, Errors: 4, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr10-bt-ingestion/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -1,9 +1,10 @@
 /**
- * Balance Transaction 导入、分页完整性与 PSP 资金入账。对应规格中的 financial_ingestion 模块。
+ * Durable provider evidence, fixed-window enumeration and crash-safe financial replay (PR10).
  *
- * <p>首次实现：PR10。PR01 只建立模块包边界，不含业务实现。
- *
- * <p>模块纪律：模块之间通过应用服务接口调用，<b>不跨模块直接操作对方的表</b>；
- * 账本写入一律经 {@code ledger} 模块的唯一过账入口（ADR-0004）。
+ * <p>The orchestrator reads scoped payment attempts and holds the payment control row at rank 20
+ * before associating a charge and atomically updating only its financial dimension. Refund identity
+ * is supplied by a trusted local dependency port. All Journal and balance writes use
+ * {@link com.paymentsledger.ledger.LedgerPostingService}; provider calls occur outside transactions.
+ * Availability is a read-only projection over accepted BT evidence, separate from ledger balances.
  */
 package com.paymentsledger.financialingestion;

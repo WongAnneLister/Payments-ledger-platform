@@ -42,6 +42,12 @@ spring:
     default-property-inclusion: non_null
 
 platform:
+  financial-ingestion:
+    enabled: ${FINANCIAL_INGESTION_ENABLED:false}
+    organization-id: ${FINANCIAL_INGESTION_ORGANIZATION_ID:}
+    environment-id: ${FINANCIAL_INGESTION_ENVIRONMENT_ID:}
+    provider-account-id: ${FINANCIAL_INGESTION_PROVIDER_ACCOUNT_ID:}
+    poll-ms: ${FINANCIAL_INGESTION_POLL_MS:300000}
   messaging:
     enabled: ${PAYMENT_MESSAGING_ENABLED:false}
     topic: ${PAYMENT_NOTIFICATION_TOPIC:payment-notifications-v1}

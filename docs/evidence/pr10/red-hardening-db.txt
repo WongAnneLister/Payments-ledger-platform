@@ -1,0 +1,295 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 10 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- failsafe:3.5.6:integration-test (default-cli) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.financialingestion.FinancialIngestionIT
+21:58:22.288 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+21:58:22.291 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+21:58:22.306 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+21:58:22.585 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+21:58:22.586 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+21:58:22.598 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+21:58:22.643 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+21:58:22.729 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+21:58:22.819 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: eab74bdfb6553583f15d088845a494ed6dace0ee896ee58da546b9d505e69240
+21:58:23.316 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.672445S
+21:58:23.323 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+21:58:23.323 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+21:58:23.323 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+21:58:23.324 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+21:58:23.385 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 3fe731c410997c3a3fcdf8e4f6333a988a7d9bebba41aa0ea56afc093f6b832c
+21:58:24.709 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.385514S
+21:58:24.711 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF)
+21:58:24.719 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+21:58:24.856 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 137 ms.
+21:58:25.056 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:25.099 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+21:58:25.102 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.015s)
+21:58:25.113 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+21:58:25.157 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+21:58:25.171 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+21:58:25.175 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+21:58:25.203 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+21:58:25.250 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+21:58:25.306 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+21:58:25.353 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+21:58:25.396 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+21:58:25.431 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+21:58:25.475 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+21:58:25.522 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 8 migrations to schema "platform", now at version v8 (execution time 00:00.239s)
+21:58:26.035 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:26.053 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.007s)
+21:58:26.068 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:26.069 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:26.306 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:26.323 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.006s)
+21:58:26.338 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:26.339 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:26.623 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:26.641 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.006s)
+21:58:26.668 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:26.669 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:27.053 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:27.086 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.013s)
+21:58:27.122 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:27.122 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:27.416 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:27.431 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.006s)
+21:58:27.449 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:27.449 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:27.755 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:27.769 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.005s)
+21:58:27.783 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:27.783 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:28.119 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:28.132 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.004s)
+21:58:28.146 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:28.147 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:28.489 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:28.502 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.005s)
+21:58:28.517 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:28.518 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:28.855 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:28.870 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.007s)
+21:58:28.902 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:28.904 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:29.502 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:29.515 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.004s)
+21:58:29.530 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:29.530 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:29.922 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:29.959 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.008s)
+21:58:29.976 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:29.977 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:30.258 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:30.270 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.004s)
+21:58:30.284 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:30.285 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:30.513 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:30.525 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.004s)
+21:58:30.540 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:30.541 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:30.771 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:30.784 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.004s)
+21:58:30.799 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:30.799 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:30.953 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:30.965 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.004s)
+21:58:30.980 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:30.981 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:31.242 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:31.255 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.004s)
+21:58:31.266 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:31.267 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:31.724 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:31.755 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.022s)
+21:58:31.770 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:31.771 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:32.189 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:32.200 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.004s)
+21:58:32.216 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:32.216 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+21:58:32.426 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54578/test?loggerLevel=OFF (PostgreSQL 16.14)
+21:58:32.438 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 8 migrations (execution time 00:00.004s)
+21:58:32.453 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 8
+21:58:32.454 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+[ERROR] Tests run: 20, Failures: 4, Errors: 2, Skipped: 0, Time elapsed: 10.73 s <<< FAILURE! -- in com.paymentsledger.financialingestion.FinancialIngestionIT
+[ERROR] com.paymentsledger.financialingestion.FinancialIngestionIT.missingStatusRemainsDurableRejectedObservation -- Time elapsed: 0.259 s <<< ERROR!
+org.springframework.dao.DataIntegrityViolationException:
+PreparedStatementCallback; SQL [INSERT INTO platform.balance_transaction(organization_id,environment_id,provider_account_id,livemode,bt_id,amount_minor,fee_minor,net_minor,currency,source_object_id,source_object_type,business_type,balance_domain,provider_created_at,available_on,provider_status,raw_digest,api_version,fetched_at,immutable_fact,fact,first_observation_id)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?::jsonb,?::jsonb,?) ON CONFLICT(organization_id,provider_account_id,livemode,bt_id) DO NOTHING
+]; ERROR: null value in column "provider_status" of relation "balance_transaction" violates not-null constraint
+  ???Failing row contains (0bba7fdd-c29a-4fca-9123-ed2c20d3c420, 00000000-0000-0000-0000-000000000001, 00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000004, f, missing_status, 1, 0, 1, USD, src, unknown, adjustment, PAYMENTS, 2026-03-01 08:00:01+08, 2026-03-02 08:00:00+08, null, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, v1, 2026-03-02 08:01:40+08, {"btId": "missing_status", "type": "adjustment", "currency": "US..., {"btId": "missing_status", "type": "adjustment", "status": null,..., 7af49881-1586-4944-99e2-1da8f472fd9b, PENDING_EVIDENCE, null, null, null, 2026-09-28 21:58:26.252053+08, 2026-09-28 21:58:26.252053+08, 0).
+	at org.springframework.jdbc.support.SQLStateSQLExceptionTranslator.doTranslate(SQLStateSQLExceptionTranslator.java:140)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:116)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:677)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:972)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:1016)
+	at org.springframework.jdbc.core.JdbcTemplate.update(JdbcTemplate.java:1026)
+	at com.paymentsledger.financialingestion.FinancialImportService.accept(FinancialImportService.java:102)
+	at com.paymentsledger.financialingestion.FinancialImportService.lambda$importPage$1(FinancialImportService.java:60)
+	at com.paymentsledger.financialingestion.FinancialTransactions.lambda$run$0(FinancialTransactions.java:13)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:140)
+	at com.paymentsledger.financialingestion.FinancialTransactions.run(FinancialTransactions.java:13)
+	at com.paymentsledger.financialingestion.FinancialImportService.importPage(FinancialImportService.java:48)
+	at com.paymentsledger.financialingestion.FinancialIngestionIT.missingStatusRemainsDurableRejectedObservation(FinancialIngestionIT.java:182)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.postgresql.util.PSQLException: ERROR: null value in column "provider_status" of relation "balance_transaction" violates not-null constraint
+  ???Failing row contains (0bba7fdd-c29a-4fca-9123-ed2c20d3c420, 00000000-0000-0000-0000-000000000001, 00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000004, f, missing_status, 1, 0, 1, USD, src, unknown, adjustment, PAYMENTS, 2026-03-01 08:00:01+08, 2026-03-02 08:00:00+08, null, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, v1, 2026-03-02 08:01:40+08, {"btId": "missing_status", "type": "adjustment", "currency": "US..., {"btId": "missing_status", "type": "adjustment", "status": null,..., 7af49881-1586-4944-99e2-1da8f472fd9b, PENDING_EVIDENCE, null, null, null, 2026-09-28 21:58:26.252053+08, 2026-09-28 21:58:26.252053+08, 0).
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2993)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2656)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:446)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:533)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:449)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:197)
+	at org.postgresql.jdbc.PgPreparedStatement.executeUpdate(PgPreparedStatement.java:158)
+	at org.springframework.jdbc.core.JdbcTemplate.lambda$update$2(JdbcTemplate.java:977)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:658)
+	... 13 more
+
+[ERROR] com.paymentsledger.financialingestion.FinancialIngestionIT.invalidRefreshStatusPreservesPendingAndRecordsEvidence -- Time elapsed: 0.325 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "REJECTED"
+ but was: "ACCEPTED"
+	at com.paymentsledger.financialingestion.FinancialIngestionIT.invalidRefreshStatusPreservesPendingAndRecordsEvidence(FinancialIngestionIT.java:206)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.financialingestion.FinancialIngestionIT.availabilityProjectionMovesBucketsWithoutChangingLedgerTotal -- Time elapsed: 0.256 s <<< ERROR!
+org.springframework.jdbc.BadSqlGrammarException: StatementCallback; bad SQL grammar [SELECT * FROM platform.psp_availability_projection]
+	at org.springframework.jdbc.support.SQLStateSQLExceptionTranslator.doTranslate(SQLStateSQLExceptionTranslator.java:134)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:116)
+	at org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:408)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:476)
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:486)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:519)
+	at org.springframework.jdbc.core.JdbcTemplate.queryForMap(JdbcTemplate.java:513)
+	at com.paymentsledger.financialingestion.FinancialIngestionIT.availabilityProjectionMovesBucketsWithoutChangingLedgerTotal(FinancialIngestionIT.java:188)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: org.postgresql.util.PSQLException: ERROR: relation "platform.psp_availability_projection" does not exist
+  ???15
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2993)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2656)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:446)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:533)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:449)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:371)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:356)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:332)
+	at org.postgresql.jdbc.PgStatement.executeQuery(PgStatement.java:282)
+	at org.springframework.jdbc.core.JdbcTemplate$1QueryStatementCallback.doInStatement(JdbcTemplate.java:463)
+	at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:393)
+	... 8 more
+
+[ERROR] com.paymentsledger.financialingestion.FinancialIngestionIT.joinedTransactionDoesNotRetryInsideAnAbortedOuterTransaction -- Time elapsed: 0.183 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting AtomicInteger(3) to have value:
+  1
+but did not.
+	at com.paymentsledger.financialingestion.FinancialIngestionIT.joinedTransactionDoesNotRetryInsideAnAbortedOuterTransaction(FinancialIngestionIT.java:225)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.financialingestion.FinancialIngestionIT.cutoffExcludesExactInclusiveSnapshotBoundary -- Time elapsed: 0.237 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "EXCLUDED"
+ but was: "POSTED"
+	at com.paymentsledger.financialingestion.FinancialIngestionIT.cutoffExcludesExactInclusiveSnapshotBoundary(FinancialIngestionIT.java:200)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.financialingestion.FinancialIngestionIT.runtimeCannotAttachAnotherWindowsObservationOrReassignCursor -- Time elapsed: 0.244 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting code to raise a throwable.
+	at com.paymentsledger.financialingestion.FinancialIngestionIT.runtimeCannotAttachAnotherWindowsObservationOrReassignCursor(FinancialIngestionIT.java:214)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   FinancialIngestionIT.cutoffExcludesExactInclusiveSnapshotBoundary:200
+expected: "EXCLUDED"
+ but was: "POSTED"
+[ERROR]   FinancialIngestionIT.invalidRefreshStatusPreservesPendingAndRecordsEvidence:206
+expected: "REJECTED"
+ but was: "ACCEPTED"
+[ERROR]   FinancialIngestionIT.joinedTransactionDoesNotRetryInsideAnAbortedOuterTransaction:225
+Expecting AtomicInteger(3) to have value:
+  1
+but did not.
+[ERROR]   FinancialIngestionIT.runtimeCannotAttachAnotherWindowsObservationOrReassignCursor:214
+Expecting code to raise a throwable.
+[ERROR] Errors:
+[ERROR]   FinancialIngestionIT.availabilityProjectionMovesBucketsWithoutChangingLedgerTotal:188 ? BadSqlGrammar StatementCallback; bad SQL grammar [SELECT * FROM platform.psp_availability_projection]
+[ERROR]   FinancialIngestionIT.missingStatusRemainsDurableRejectedObservation:182 ? DataIntegrityViolation PreparedStatementCallback; SQL [INSERT INTO platform.balance_transaction(organization_id,environment_id,provider_account_id,livemode,bt_id,amount_minor,fee_minor,net_minor,currency,source_object_id,source_object_type,business_type,balance_domain,provider_created_at,available_on,provider_status,raw_digest,api_version,fetched_at,immutable_fact,fact,first_observation_id)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?::jsonb,?::jsonb,?) ON CONFLICT(organization_id,provider_account_id,livemode,bt_id) DO NOTHING
+]; ERROR: null value in column "provider_status" of relation "balance_transaction" violates not-null constraint
+  ???Failing row contains (0bba7fdd-c29a-4fca-9123-ed2c20d3c420, 00000000-0000-0000-0000-000000000001, 00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000004, f, missing_status, 1, 0, 1, USD, src, unknown, adjustment, PAYMENTS, 2026-03-01 08:00:01+08, 2026-03-02 08:00:00+08, null, aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, v1, 2026-03-02 08:01:40+08, {"btId": "missing_status", "type": "adjustment", "currency": "US..., {"btId": "missing_status", "type": "adjustment", "status": null,..., 7af49881-1586-4944-99e2-1da8f472fd9b, PENDING_EVIDENCE, null, null, null, 2026-09-28 21:58:26.252053+08, 2026-09-28 21:58:26.252053+08, 0).
+[INFO]
+[ERROR] Tests run: 20, Failures: 4, Errors: 2, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- failsafe:3.5.6:verify (default-cli) @ payments-ledger-platform ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  12.034 s
+[INFO] Finished at: 2026-09-28T21:58:33+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.6:verify (default-cli) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr10-bt-ingestion/target/failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

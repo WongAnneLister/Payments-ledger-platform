@@ -1,0 +1,19 @@
+# PR10 — Durable Balance Transaction ingestion
+
+Baseline: `9234f63` (PR09). Scope is the frozen PR10 prompt, PRD FR-REC-01, AccountScope, ADR-0007/0008 and posting examples. The user's request to execute PR10 authorizes implementation of this scope.
+
+## Design
+
+Use the existing BalanceTransactionPort outside transactions and LedgerPostingService inside short READ COMMITTED transactions. No public import endpoint. Add a worker-only opt-in scheduler plus internal controlled methods for fixed-window import, resume, replay and pending refresh. Persist provider observations before classification; immutable canonical BT identity is organization + provider account + livemode + BT ID, excluding currency. Conflicting amount, fee, net, currency, source, domain, type or created time preserves the original and creates a durable conflict. Availability may refresh without another Journal.
+
+Separate page acceptance from business posting: page records and cursor advance atomically, then replay durable unprocessed BT records through the normalizer. A crash leaves resumable pages or pending classification. Pin scope, business timezone, UTC created boundaries, API evidence version and high water. Complete only on a valid terminal page; reject cursor cycles, repeated/missing boundaries and out-of-window evidence. Completion means enumeration finished, not independent financial reconciliation. Keep unresolved/quarantined counts visible. Default overlap is seven local business dates, DST uses ZonedDateTime boundaries; historical backfill and pending-ID refresh are separate recorded runs.
+
+Charge classification requires an existing scoped successful captured payment_attempt with matching charge, BT identity, currency and captured amount; no invented customer/order. Refund mappings exist but production dependencies remain pending until PR11 supplies persisted refund business evidence. Dispute and payout evidence remains pending for PR13/14. Verified payments-domain unknown business types map signed net PSP↔SUSPENSE with UNKNOWN_SOURCE recorded. FX, unsupported domains, ambiguous ownership and sign/evidence failures quarantine. Zero-net unknown observations do not create empty Journals. Use only actual fee evidence, never a guessed rate.
+
+Lock payment before financial event/accounts; atomically post and update the payment's financial dimension and required notification state. Payment observation replay must not regress POSTED to PENDING_EVIDENCE. Reuse PR09's canonical payment Outbox mechanism; no new merchant fulfillment event for the same success. Provision required ledger accounts through migration/operator configuration, with no importer balance write. Migration explicitly revokes inherited privileges before minimum grants. Imported facts, observations and conflicts are append-only; mutable control/status columns are guarded.
+
+Opening policy is explicit per provider scope: empty-account zero opening or verified opening cutoff. Imports at or before a configured opening cutoff must not post; changing the cutoff after accepted financial history is rejected. Do not silently infer a zero opening for a migrated account.
+
+## Validation and boundaries
+
+Real PostgreSQL tests cover paging interruption/resume and invalid pages, concurrent/repeated imports, conflicts including currency change, charge/refund arithmetic, missing dependency and replay, signed suspense, unsupported domains/FX, pending-to-available, JPY, DST and opening overlap. Independently scan Journal cardinality and rebuild projections. Test opt-in worker wiring and payment observation replay. Full Maven clean verify, contract/docs checks and evidence archive follow independent specification and quality review. No claim of independent source completeness (PR15), real Stripe import or real merchant delivery without an executed probe.

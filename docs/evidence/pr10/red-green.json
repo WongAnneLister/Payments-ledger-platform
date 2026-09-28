@@ -1,0 +1,51 @@
+{
+  "red": [
+    {
+      "stage": "rules",
+      "expectedMissingBehavior": "Missing classifier/mapping/window behavior",
+      "report": "red-rules.txt"
+    },
+    {
+      "stage": "schema",
+      "expectedMissingBehavior": "Missing V8 tables and trigger guards",
+      "report": "red-schema.txt"
+    },
+    {
+      "stage": "worker",
+      "expectedMissingBehavior": "Enabled Worker was not instantiated",
+      "report": "red-worker.txt"
+    },
+    {
+      "stage": "core-and-payment",
+      "expectedMissingBehavior": "Import/replay stubs did not persist or post",
+      "report": "red-core-and-payment.txt"
+    },
+    {
+      "stage": "hardening-rules",
+      "expectedMissingBehavior": "Unsupported FX fee classification and evidence serialization",
+      "report": "red-hardening-rules.txt"
+    },
+    {
+      "stage": "hardening-db",
+      "report": "red-hardening-db.txt"
+    },
+    {
+      "stage": "case-coverage",
+      "report": "red-case-coverage.txt"
+    },
+    {
+      "stage": "scheduler-isolation",
+      "report": "red-scheduler-isolation.txt"
+    },
+    {
+      "stage": "window-fairness",
+      "report": "red-window-fairness.txt"
+    }
+  ],
+  "green": [
+    "focused-core-green.txt",
+    "focused-quality-green.txt",
+    "migration-green.txt",
+    "build-output.txt"
+  ]
+}
