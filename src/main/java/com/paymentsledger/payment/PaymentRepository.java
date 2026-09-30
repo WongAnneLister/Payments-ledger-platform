@@ -1,5 +1,6 @@
 package com.paymentsledger.payment;
 
+import com.paymentsledger.revenueshare.RevenueShareService;
 import com.fasterxml.jackson.databind.*;
 import com.paymentsledger.common.error.*;
 import com.paymentsledger.identity.*;
@@ -17,6 +18,7 @@ import org.springframework.transaction.support.*;
 /** Explicit short transactions; no provider port is reachable from this class. */
 @Repository
 public class PaymentRepository {
+    private RevenueShareService shares=RevenueShareService.disabled();
     private final JdbcTemplate jdbc;
     private final TransactionTemplate tx;
     private final ObjectMapper json;
@@ -30,8 +32,10 @@ public class PaymentRepository {
         this.jdbc=jdbc;this.tx=new TransactionTemplate(transactions);this.tx.setIsolationLevel(org.springframework.transaction.TransactionDefinition.ISOLATION_READ_COMMITTED);this.json=json;this.clock=clock;
     }
     public Instant now(){return clock.instant();}
-    @org.springframework.beans.factory.annotation.Autowired
     public PaymentRepository(JdbcTemplate jdbc,PlatformTransactionManager transactions,ObjectMapper json,Clock clock,org.springframework.core.env.Environment environment){this(jdbc,transactions,json,clock);this.configuration=environment;this.recoveryPolicy=RecoveryPolicy.from(environment);}
+    public PaymentRepository(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,Clock clock,RevenueShareService shares){this(jdbc,tx,json,clock);this.shares=shares;}
+    @org.springframework.beans.factory.annotation.Autowired
+    public PaymentRepository(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,Clock clock,org.springframework.core.env.Environment env,RevenueShareService shares){this(jdbc,tx,json,clock,env);this.shares=shares;}
     public record Intent(UUID paymentId,UUID operationId,boolean replay){}
     public record Claim(UUID operationId,UUID paymentId,UUID token,long version,String type,Map<String,Object> operation,Map<String,Object> payment){}
     public record Observation(String type,ProviderCallResult<?> result,String externalId){}
@@ -89,6 +93,7 @@ public class PaymentRepository {
                  AND p.valid_from<=? AND p.valid_until>? AND s.valid_from<=? AND s.valid_until>?
                 """,c.organizationId(),c.environmentId(),request.productRef(),request.priceVersion(),Timestamp.from(clock.instant()),Timestamp.from(clock.instant()),Timestamp.from(clock.instant()),Timestamp.from(clock.instant()));
             if(price==null)throw error(ErrorCode.NOT_FOUND);
+            RevenueShareService.validatePolicy(decode(price.get("policy_snapshot"),com.fasterxml.jackson.databind.JsonNode.class));
             long amount;try{amount=Math.multiplyExact(number(price,"amount_minor"),request.quantity());}catch(ArithmeticException e){throw error(ErrorCode.AMOUNT_MISMATCH);}
             if(amount!=request.amountMinor() || !request.currency().equals(price.get("currency")))throw error(ErrorCode.AMOUNT_MISMATCH);
             UUID order=PaymentIds.newId(),payment=PaymentIds.newId(),operation=UUID.randomUUID();
@@ -282,7 +287,7 @@ public class PaymentRepository {
         Instant next=now().plus(recoveryPolicy.delay(operation,((Number)op.get("attempt_count")).intValue()));
         jdbc.update("UPDATE platform.recovery_task SET status=?,available_at=?,lease_until=null,lease_token=null,version=version+1,updated_at=? WHERE operation_id=?",done?"DONE":"WAITING",Timestamp.from(next),Timestamp.from(now()),operation);
     }
-    private void markUnknown(UUID payment,boolean conflict){jdbc.update("UPDATE platform.payment SET resolution_status=CASE WHEN resolution_status='CONFLICT' OR ? THEN 'CONFLICT' ELSE 'UNKNOWN' END,unresolved_since=coalesce(unresolved_since,?),payment_status=CASE WHEN payment_status='CREATED' THEN 'PROCESSING' ELSE payment_status END,version=version+1,updated_at=now() WHERE id=?",conflict,Timestamp.from(now()),payment);}
+    private void markUnknown(UUID payment,boolean conflict){jdbc.update("UPDATE platform.payment SET resolution_status=CASE WHEN resolution_status='CONFLICT' OR ? THEN 'CONFLICT' ELSE 'UNKNOWN' END,unresolved_since=coalesce(unresolved_since,?),payment_status=CASE WHEN payment_status='CREATED' THEN 'PROCESSING' ELSE payment_status END,version=version+1,updated_at=now() WHERE id=?",conflict,Timestamp.from(now()),payment);shares.reconcile(payment,"payment.resolution");}
     void mergeQuery(UUID payment,UUID operation,List<Observation> observations,Facts facts){transaction(()->{
         lockPayment(payment);
         observations(operation,payment,null,observations);boolean applicable=merge(payment,facts);
@@ -303,6 +308,10 @@ public class PaymentRepository {
     private boolean merge(UUID payment,Facts facts){return merge(payment,facts,true);}
     private boolean merge(UUID payment,Facts facts,boolean query){
         var p=one("SELECT * FROM platform.payment WHERE id=? FOR UPDATE",payment);
+        if(shares.enabled()){
+            shares.lock(payment);
+            com.paymentsledger.financialingestion.FinancialSourceLocks.lock(jdbc,payment,facts.charges().stream().map(ChargeFact::chargeId).toList());
+        }
         boolean stale=facts.paymentVersion()!=null && facts.paymentVersion()!=number(p,"version")
                 || instant(p,"last_provider_confirmed_at")!=null && facts.confirmedAt().toEpochMilli()<instant(p,"last_provider_confirmed_at").toEpochMilli();
         if(!query){
@@ -350,6 +359,7 @@ public class PaymentRepository {
         var session=stale?null:facts.session();var intent=stale?null:facts.intent();
         String resolution=conflict?"CONFLICT":stale?str(p,"resolution_status"):facts.complete()?"KNOWN":"UNKNOWN";
         jdbc.update("UPDATE platform.payment SET payment_status=?,provider_status=?,resolution_status=?,unresolved_since=CASE WHEN ?='KNOWN' THEN NULL ELSE coalesce(unresolved_since,?) END,financial_status=?,captured_amount_minor=greatest(captured_amount_minor,?),checkout_session_id=coalesce(checkout_session_id,?),payment_intent_id=coalesce(payment_intent_id,?),latest_charge_id=coalesce(?,latest_charge_id),hosted_url=CASE WHEN ? THEN ? ELSE hosted_url END,last_provider_confirmed_at=CASE WHEN ? THEN ? ELSE last_provider_confirmed_at END,version=version+1,updated_at=now() WHERE id=? AND version=?",state,providerStatus,resolution,resolution,Timestamp.from(now()),financial,captured,observedSession,observedIntent,intent==null?null:intent.latestChargeId(),session!=null && (query || session.hostedUrl()!=null),session==null?null:session.hostedUrl(),!stale&&facts.complete()&&!facts.conflict(),Timestamp.from(facts.confirmedAt()),payment,number(p,"version"));
+        shares.reconcile(payment,"payment.observation");
         if(query && !stale && facts.complete() && !facts.conflict())jdbc.update("UPDATE platform.payment SET last_query_confirmed_at=? WHERE id=?",Timestamp.from(facts.confirmedAt()),payment);
         if(!query && !stale)jdbc.update("UPDATE platform.payment SET last_webhook_created_at=? WHERE id=?",Timestamp.from(facts.confirmedAt()),payment);
         return !stale && "KNOWN".equals(resolution);

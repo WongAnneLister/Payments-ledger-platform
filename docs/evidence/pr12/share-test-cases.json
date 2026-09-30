@@ -1,0 +1,52 @@
+[
+  {
+    "suite": "com.paymentsledger.revenueshare.RevenueShareConfigurationTest",
+    "tests": [
+      "applicationGraphEnablesHooksAndAllowsExplicitRolloutFlag",
+      "workerRunsABoundedScopedBatch",
+      "compatibilityNoOpDoesNotNeedATransaction",
+      "enabledLockRequiresAnExistingTransaction"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.revenueshare.SharePolicyTest",
+    "tests": [
+      "cumulativeCeilingMatchesIndependentIntegerModel",
+      "validatesExactRatesAndUniquePartners"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payment.RevenueShareLifecycleIT",
+    "tests": [
+      "quarantinedNewBtForKnownChargeWithdrawsShareBeforeCommit",
+      "unknownKeepsReducedShareAndDefinitiveRejectRestoresOnce",
+      "sourceAssociationLocksBtInTheSameOrderAsBatchImport",
+      "postedCaptureConflictWithdrawsShareWithoutMutatingOriginalFunds",
+      "externalConflictWithdrawsEverythingAndAuditedUnfreezeRestores",
+      "refundAndCatchUpCompeteThroughPostgresParentLock",
+      "concurrentRefundAssociationCannotLeaveShareAboveConflictCeiling",
+      "firstPostedCaptureThenReservationAndRepeatedFailureAreAtomic",
+      "successMovesHoldToRefundWithoutSecondReversalAndPolicySnapshotStaysFrozen",
+      "conflictingPaymentObservationWithdrawsAccrualInTheSameTransaction",
+      "captureJournalAndFirstAllocationRollbackTogether",
+      "allocationFailureRollsBackRefundHoldOperationAndJournal"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.revenueshare.RevenueShareCoreIT",
+    "tests": [
+      "reservedEligibilityPolicyCanWithdrawAndRestoreOnceAndHandlesCannotEscapeTransaction",
+      "failedLegacySnapshotRotatesWithoutStarvingLaterEligiblePayments",
+      "multiplePartnersShareOnlyOneInternalAccountPairAndRoundCumulatively",
+      "historicalPostedCaptureCatchesUpOnlyOnceAndQueriesHonorTenantCurrency",
+      "excessCoverageAndUnassociatedQuarantinedCanonicalSourceBothBlockSharing",
+      "historyAndProjectionCannotBeDirectlyRewrittenOrLinkedToAnotherJournal"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.revenueshare.RevenueShareSchemaIT",
+    "tests": [
+      "v9UpgradeRestrictsHistoryAndProvisioningAndPreservesPaymentSnapshot"
+    ]
+  }
+]

@@ -1,0 +1,41 @@
+{
+  "specReview": {
+    "reviewer": "independent pr12_spec_review agent",
+    "status": "PASS",
+    "findingsResolved": [
+      {
+        "issue": "Malformed known-source BT quarantine skipped parent discovery and share withdrawal",
+        "regression": "RevenueShareLifecycleIT.quarantinedNewBtForKnownChargeWithdrawsShareBeforeCommit",
+        "red": "expected zero, retained 2000",
+        "fix": "Resolve canonical source ownership independently of financial classification; reconcile in the same transaction"
+      },
+      {
+        "issue": "Source association could commit between owner discovery and BT conflict acceptance",
+        "regression": "RevenueShareLifecycleIT.concurrentRefundAssociationCannotLeaveShareAboveConflictCeiling",
+        "red": "expected zero, retained 1200",
+        "fix": "Association writers lock existing BTs after business locks; importer/replay recheck ownership under BT locks and retry local transaction"
+      },
+      {
+        "issue": "Source writers and batch importer locked BTs in different orders",
+        "regression": "RevenueShareLifecycleIT.sourceAssociationLocksBtInTheSameOrderAsBatchImport",
+        "red": "NOWAIT 55P03 proved second BT locked before first",
+        "fix": "Use provider BT ID C collation ordering consistently"
+      }
+    ]
+  },
+  "qualityReview": {
+    "reviewer": "independent pr12_quality_review agent",
+    "status": "PASS",
+    "critical": [],
+    "important": [],
+    "minor": [],
+    "checked": [
+      "atomic journal/adjustment/allocation and refund state",
+      "business/BT/ledger lock ordering and association retry",
+      "V10 scope/immutability/history/ceiling/runtime permissions",
+      "cumulative rounding and generation idempotency",
+      "Spring wiring, legacy constructors, deferred Outbox and catch-up"
+    ],
+    "verification": "Read focused 25-test success and git diff --check; did not run Maven. Final full verify is separate evidence."
+  }
+}

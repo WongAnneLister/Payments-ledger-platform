@@ -42,6 +42,9 @@ spring:
     default-property-inclusion: non_null
 
 platform:
+  revenue-share:
+    enabled: ${REVENUE_SHARE_ENABLED:true}
+    poll-ms: ${REVENUE_SHARE_POLL_MS:300000}
   financial-ingestion:
     enabled: ${FINANCIAL_INGESTION_ENABLED:false}
     organization-id: ${FINANCIAL_INGESTION_ORGANIZATION_ID:}

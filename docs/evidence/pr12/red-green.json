@@ -1,0 +1,19 @@
+{
+  "logs": [
+    "policy-red.txt",
+    "quarantine-red.txt",
+    "association-race-red.txt",
+    "focused-green.txt",
+    "bt-lock-order-red.txt"
+  ],
+  "notes": [
+    "Policy RED: two assertion failures before policy implementation.",
+    "Quarantine RED: expected zero share, retained 2000; fixed canonical source discovery independent of classification.",
+    "Association race RED: expected zero share, retained 1200; fixed source-BT serialization and bounded local transaction retry.",
+    "Focused GREEN: 6 unit + 19 integration tests passed after fixes.",
+    "BT lock-order RED: 55P03 NOWAIT failure proves a later BT was locked before the first BT; fixed C-collated provider BT ordering.",
+    "Earlier fixture/setup errors are not treated as meaningful regression RED.",
+    "Independent quotient/remainder oracle runs 10000 generated cases inside one JUnit test; these are not 10000 test methods.",
+    "Final clean verify and source hashes identify delivered code."
+  ]
+}

@@ -30,7 +30,7 @@ class RefundSchemaIT {
   assertThat(admin.queryForObject("SELECT to_regclass('platform.refund') IS NULL",Boolean.class)).isTrue();
   assertThatThrownBy(()->admin.update("INSERT INTO platform.provider_operation(organization_id,environment_id,application_id,provider_account_id,currency,operation_target,refund_id,operation_type,operation_key,request_fingerprint,command,expires_at) SELECT organization_id,environment_id,application_id,provider_account_id,currency,'REFUND',gen_random_uuid(),'CREATE_CHECKOUT','forbidden-refund','fp','{}',expires_at FROM platform.payment")).isInstanceOf(org.springframework.dao.DataAccessException.class);
   var migration=Flyway.configure().dataSource(DB.getJdbcUrl(),DB.getUsername(),DB.getPassword()).schemas("platform").load();
-  assertThat(migration.migrate().migrationsExecuted).isEqualTo(1);assertThat(migration.migrate().migrationsExecuted).isZero();
+  assertThat(migration.migrate().migrationsExecuted).isEqualTo(2);assertThat(migration.migrate().migrationsExecuted).isZero();
   var jdbc=new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(),"payments_app","pr02_test_only"));
   assertThat(jdbc.queryForObject("SELECT payload FROM platform.outbox_event LIMIT 1",String.class)).isEqualTo(before);
   assertThat(jdbc.queryForObject("SELECT operation_key FROM platform.provider_operation",String.class)).isEqualTo("original");

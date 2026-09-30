@@ -1,0 +1,40 @@
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.265 s <<< FAILURE! -- in com.paymentsledger.revenueshare.SharePolicyTest
+[ERROR] com.paymentsledger.revenueshare.SharePolicyTest.cumulativeCeilingMatchesIndependentIntegerModel -- Time elapsed: 0.061 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 2000L
+ but was: 0L
+	at com.paymentsledger.revenueshare.SharePolicyTest.cumulativeCeilingMatchesIndependentIntegerModel(SharePolicyTest.java:10)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.revenueshare.SharePolicyTest.validatesExactRatesAndUniquePartners -- Time elapsed: 0.055 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expected size: 2 but was: 0 in:
+[]
+	at com.paymentsledger.revenueshare.SharePolicyTest.validatesExactRatesAndUniquePartners(SharePolicyTest.java:22)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] Failures:
+[ERROR]   SharePolicyTest.cumulativeCeilingMatchesIndependentIntegerModel:10
+expected: 2000L
+ but was: 0L
+[ERROR]   SharePolicyTest.validatesExactRatesAndUniquePartners:22
+Expected size: 2 but was: 0 in:
+[]
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr12-revenue-share/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

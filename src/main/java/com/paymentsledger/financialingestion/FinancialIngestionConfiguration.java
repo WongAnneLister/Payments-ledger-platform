@@ -1,5 +1,6 @@
 package com.paymentsledger.financialingestion;
 
+import com.paymentsledger.revenueshare.RevenueShareService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.ledger.LedgerPostingService;
 import com.paymentsledger.provider.BalanceTransactionPort;
@@ -37,14 +38,14 @@ public class FinancialIngestionConfiguration {
     }
 
     @Bean FinancialImportService financialImportService(JdbcTemplate jdbc, PlatformTransactionManager transactions,
-            ObjectMapper mapper, BalanceTransactionPort provider, Clock clock) {
-        return new FinancialImportService(jdbc, transactions, mapper, provider, clock);
+            ObjectMapper mapper, BalanceTransactionPort provider, Clock clock,ObjectProvider<RevenueShareService> shares) {
+        return new FinancialImportService(jdbc, transactions, mapper, provider, clock,shares.getIfAvailable(RevenueShareService::disabled));
     }
 
     @Bean FinancialReplayService financialReplayService(JdbcTemplate jdbc, PlatformTransactionManager transactions,
-            ObjectMapper mapper, LedgerPostingService posting, ObjectProvider<RefundEvidencePort> refunds) {
+            ObjectMapper mapper, LedgerPostingService posting, ObjectProvider<RefundEvidencePort> refunds,ObjectProvider<RevenueShareService> shares) {
         return new FinancialReplayService(jdbc, transactions, mapper, posting,
-                refunds.getIfAvailable(RefundEvidencePort::unavailable));
+                refunds.getIfAvailable(RefundEvidencePort::unavailable),shares.getIfAvailable(RevenueShareService::disabled));
     }
 
     @Bean FinancialIngestionWorker financialIngestionWorker(JdbcTemplate jdbc, FinancialImportService importer,

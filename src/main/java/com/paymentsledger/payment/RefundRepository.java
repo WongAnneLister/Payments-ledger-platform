@@ -1,5 +1,6 @@
 package com.paymentsledger.payment;
 
+import com.paymentsledger.revenueshare.RevenueShareService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.common.error.*;
 import com.paymentsledger.identity.*;
@@ -18,11 +19,14 @@ import static com.paymentsledger.payment.PaymentRepository.*;
 /** Payment/control locks serialize reservations; authoritative observations never perform provider I/O. */
 @Repository
 public class RefundRepository {
+    private RevenueShareService shares=RevenueShareService.disabled();
  private final JdbcTemplate jdbc; private final TransactionTemplate tx; private final PaymentRepository operations;private RefundEligibilityPolicy eligibility=RefundEligibilityPolicy.unrestricted();
  private static final String SCOPE="organization_id,environment_id,application_id,provider_account_id,currency";
  public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager manager,ObjectMapper json,Clock clock){this(jdbc,manager,json,clock,new PaymentRepository(jdbc,manager,json,clock));}
  public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager manager,ObjectMapper json,Clock clock,PaymentRepository operations){this.jdbc=jdbc;this.tx=new TransactionTemplate(manager);this.operations=operations;}
- @Autowired public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager manager,ObjectMapper json,Clock clock,PaymentRepository operations,org.springframework.beans.factory.ObjectProvider<RefundEligibilityPolicy> policies){this(jdbc,manager,json,clock,operations);this.eligibility=policies.getIfAvailable(RefundEligibilityPolicy::unrestricted);}
+ public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager manager,ObjectMapper json,Clock clock,PaymentRepository operations,org.springframework.beans.factory.ObjectProvider<RefundEligibilityPolicy> policies){this(jdbc,manager,json,clock,operations);this.eligibility=policies.getIfAvailable(RefundEligibilityPolicy::unrestricted);}
+ public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,Clock clock,PaymentRepository operations,RevenueShareService shares){this(jdbc,tx,json,clock,operations);this.shares=shares;}
+ @Autowired public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,Clock clock,PaymentRepository operations,org.springframework.beans.factory.ObjectProvider<RefundEligibilityPolicy> policies,RevenueShareService shares){this(jdbc,tx,json,clock,operations,policies);this.shares=shares;}
  public record Intent(UUID refundId,UUID operationId,boolean replay){}
  private Map<String,Object> one(String sql,Object...args){var rows=jdbc.queryForList(sql,args);return rows.isEmpty()?null:rows.getFirst();}
  private String scopeKey(TenantContext c){return c.organizationId()+":"+c.environmentId()+":"+c.applicationId();}
@@ -53,7 +57,7 @@ public class RefundRepository {
    var command=new CreateRefundCommand(new ProviderScope(c.organizationId(),c.environmentId(),c.allowedProviderAccountId(),false),"refund_create_"+operation,str(payment,"latest_charge_id"),null,request.amountMinor(),providerReason(request.reason()));
    jdbc.update("INSERT INTO platform.provider_operation(id,"+SCOPE+",operation_target,refund_id,operation_type,operation_key,request_fingerprint,command,expires_at) VALUES (?,?,?,?,?,?,'REFUND',?,'CREATE_REFUND',?,?,?::jsonb,?)",operation,c.organizationId(),c.environmentId(),c.applicationId(),c.allowedProviderAccountId(),request.currency(),refund,command.operationIdempotencyKey(),request.fingerprint(),operations.encode(command),Timestamp.from(operations.now().plus(Duration.ofDays(1))));
    jdbc.update("INSERT INTO platform.recovery_task("+SCOPE+",operation_id,refund_id,available_at) VALUES (?,?,?,?,?,?,?,?)",c.organizationId(),c.environmentId(),c.applicationId(),c.allowedProviderAccountId(),request.currency(),operation,refund,Timestamp.from(operations.now()));
-   insertApi(c,request,key,refund,operation);return new Intent(refund,operation,false);
+   insertApi(c,request,key,refund,operation);shares.reconcile(request.paymentId(),"refund.reserve:"+refund);return new Intent(refund,operation,false);
   });
  }
  /** Conservative audited unfreeze. Unresolved reservations or ambiguous source associations require investigation. */
@@ -88,7 +92,7 @@ public class RefundRepository {
    var before=Map.of("controlState","EXTERNAL_CONFLICT","capturedMinor",control.get("captured_minor"),"refundedMinor",succeeded,"reservedMinor",0,"version",expectedVersion);
    var after=Map.of("controlState","NORMAL","capturedMinor",control.get("captured_minor"),"refundedMinor",succeeded,"reservedMinor",0,"version",expectedVersion+1);
    jdbc.update("INSERT INTO platform.refund_control_audit(organization_id,environment_id,provider_account_id,payment_id,observation_id,audit_key,before_state,after_state) VALUES (?,?,?,?,?,?,?::jsonb,?::jsonb)",scope.organizationId(),scope.environmentId(),scope.providerAccountId(),paymentId,observationId,auditKey,operations.encode(before),operations.encode(after));
-   jdbc.update("UPDATE platform.refund_control SET control_state='NORMAL',version=version+1,updated_at=now() WHERE payment_id=?",paymentId);return null;
+   jdbc.update("UPDATE platform.refund_control SET control_state='NORMAL',version=version+1,updated_at=now() WHERE payment_id=?",paymentId);shares.reconcile(paymentId,"refund.unfreeze:"+auditKey);return null;
   });
  }
  private String providerReason(String r){return switch(r){case "DUPLICATE"->"duplicate";case "FRAUDULENT"->"fraudulent";case "REQUESTED_BY_CUSTOMER"->"requested_by_customer";default->null;};}
@@ -108,6 +112,12 @@ public class RefundRepository {
  /** Caller authenticates provider scope; null local id never guesses an ambiguous reservation by amount. */
  public UUID accept(ProviderScope scope,RefundFact fact,ProviderEvidence evidence,UUID localRefundId){return tx.execute(status->acceptLocked(scope,fact,evidence,localRefundId));}
  private UUID acceptLocked(ProviderScope scope,RefundFact fact,ProviderEvidence evidence,UUID localRefundId){
+  UUID accepted=mergeFact(scope,fact,evidence,localRefundId);
+  UUID parent=accepted==null?paymentForCharge(scope,fact.chargeId()):uuid(refund(accepted),"payment_id");
+  if(parent!=null)shares.reconcile(parent,"refund.fact:"+fact.refundId());
+  return accepted;
+ }
+ private UUID mergeFact(ProviderScope scope,RefundFact fact,ProviderEvidence evidence,UUID localRefundId){
   if(scope.livemode())throw error(ErrorCode.FORBIDDEN);
   UUID paymentId=paymentForCharge(scope,fact.chargeId());
   var bound=lookup(scope,fact.refundId());
@@ -116,6 +126,10 @@ public class RefundRepository {
   if(local!=null)paymentId=uuid(local,"payment_id");
   if(paymentId==null){observe(scope,fact,evidence,null,null);return null;}
   var payment=one("SELECT * FROM platform.payment WHERE id=? FOR UPDATE",paymentId);control(payment);
+  if(shares.enabled()){
+   shares.lock(paymentId);
+   com.paymentsledger.financialingestion.FinancialSourceLocks.lock(jdbc,paymentId,List.of(fact.refundId()));
+  }
   bound=lookup(scope,fact.refundId());
   if(bound!=null && local==null)local=bound;
   if(bound!=null && local!=null && !bound.get("id").equals(local.get("id"))){
@@ -181,6 +195,7 @@ public class RefundRepository {
   jdbc.update("UPDATE platform.refund_control SET control_state='EXTERNAL_CONFLICT',version=version+1,updated_at=now() WHERE payment_id=?",claim.paymentId());
   jdbc.update("UPDATE platform.refund SET resolution_status='CONFLICT',unresolved_since=coalesce(unresolved_since,?),version=version+1,updated_at=now() WHERE id=?",Timestamp.from(operations.now()),id);
   // Ownership was checked under the retained operation lock. Do not recheck wall-clock expiry after changing business state.
+  shares.reconcile(claim.paymentId(),"refund.anchor-conflict");
   operations.escalateOwned(claim,"CONFLICTING_REFUND_ANCHORS");return null;
  });}
  void finish(Claim claim,ProviderCallResult<RefundFact> result,boolean query){operations.transaction(()->{
@@ -195,6 +210,7 @@ public class RefundRepository {
    jdbc.update("UPDATE platform.refund_control SET reserved_minor=reserved_minor-?,version=version+1 WHERE payment_id=?",current.get("amount_minor"),current.get("payment_id"));
    jdbc.update("UPDATE platform.refund SET refund_status='FAILED',resolution_status='KNOWN',version=version+1,updated_at=now() WHERE id=?",id);
   }else if(!terminal(str(current,"refund_status")))jdbc.update("UPDATE platform.refund SET resolution_status=CASE WHEN resolution_status='CONFLICT' THEN 'CONFLICT' ELSE 'UNKNOWN' END,unresolved_since=coalesce(unresolved_since,?),version=version+1 WHERE id=?",Timestamp.from(operations.now()),id);
+  if(result.payload()==null || (result.classification()!=ProviderCallClassification.SUCCESS && result.classification()!=ProviderCallClassification.AUTH_REQUIRED))shares.reconcile(claim.paymentId(),"refund.operation:"+claim.operationId());
   current=refund(id);String resolution=str(current,"resolution_status");
   Instant unresolved=instant(current,"unresolved_since");
   if(!"KNOWN".equals(resolution) && unresolved!=null && !unresolved.plus(operations.recoveryPolicy().unresolvedAge()).isAfter(operations.now())){

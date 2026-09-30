@@ -1,5 +1,6 @@
 package com.paymentsledger.financialingestion;
 
+import com.paymentsledger.revenueshare.RevenueShareService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.provider.*;
@@ -13,6 +14,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 /** Controlled internal API. Fetches outside transactions; evidence, accepted page and cursor commit together. */
 public class FinancialImportService {
+    private RevenueShareService shares=RevenueShareService.disabled();
     private final JdbcTemplate jdbc;
     private final FinancialTransactions transactions;
     private final ObjectMapper mapper;
@@ -21,6 +23,7 @@ public class FinancialImportService {
     public FinancialImportService(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper mapper,BalanceTransactionPort provider,Clock clock){
         this.jdbc=jdbc;this.transactions=new FinancialTransactions(tx);this.mapper=mapper.copy().findAndRegisterModules();this.provider=provider;this.clock=clock;
     }
+    public FinancialImportService(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,BalanceTransactionPort provider,Clock clock,RevenueShareService shares){this(jdbc,tx,json,provider,clock);this.shares=shares;}
     public UUID createWindow(ProviderScope scope,Instant from,Instant until,String purpose){
         new ImportWindows.Window(from,until);
         if(!Set.of("OVERLAP","BACKFILL").contains(purpose))throw new IllegalArgumentException("Unsupported import purpose");
@@ -55,9 +58,12 @@ public class FinancialImportService {
                 jdbc.update("UPDATE platform.import_window SET last_error=?,updated_at=now(),version=version+1 WHERE id=?",invalid,windowId);
                 return result.classification()==ProviderCallClassification.SUCCESS?"REJECTED":"RETRY";
             }
+            var shareLocks=shares.lockAll(affectedPayments(scope,result.payload().items()));
             policy(scope); // protects policy freezing against concurrent controlled configuration changes
             var page=result.payload();
             for(var fact:page.items().stream().sorted(Comparator.comparing(BalanceTransactionFact::btId)).toList())accept(scope,fact,result.evidence(),observation);
+            verifyOwners(scope,page.items(),shareLocks);
+            shares.reconcileAll(shareLocks,"bt.import:"+windowId);
             jdbc.update("INSERT INTO platform.import_page(window_id,request_cursor,next_cursor,terminal,observation_id,bt_ids) VALUES (?,?,?,?,?,?::text[])",windowId,Objects.toString(query.startingAfterCursor(),""),page.nextCursor(),!page.hasMore(),observation,textArray(page.items().stream().map(BalanceTransactionFact::btId).toList()));
             jdbc.update("UPDATE platform.import_cursor SET next_cursor=?,api_version=coalesce(api_version,?),version=version+1,updated_at=now() WHERE window_id=?",page.nextCursor(),result.evidence().apiVersion(),windowId);
             jdbc.update("UPDATE platform.import_window SET state=?,completed_at=?,last_error=null,updated_at=now(),version=version+1 WHERE id=?",page.hasMore()?"INCOMPLETE":"COMPLETE",page.hasMore()?null:ts(clock.instant()),windowId);
@@ -78,8 +84,30 @@ public class FinancialImportService {
             else if(result.payload().createdAt()==null)error="MISSING_CREATED_TIME";
             else if(!supportedStatus(result.payload()))error="UNSUPPORTED_BT_STATUS";
             if(error!=null){quarantine(scope,observation,(UUID)existing.get("id"),error);return "REJECTED";}
-            policy(scope);accept(scope,result.payload(),result.evidence(),observation);return "ACCEPTED";
+            var shareLocks=shares.lockAll(affectedPayments(scope,List.of(result.payload())));
+            policy(scope);accept(scope,result.payload(),result.evidence(),observation);
+            verifyOwners(scope,List.of(result.payload()),shareLocks);
+            shares.reconcileAll(shareLocks,"bt.refresh:"+btId);return "ACCEPTED";
         });
+    }
+    private void verifyOwners(ProviderScope scope,List<BalanceTransactionFact> facts,List<RevenueShareService.Locked> locks){
+        if(shares.enabled() && !new HashSet<>(locks.stream().map(RevenueShareService.Locked::paymentId).toList()).containsAll(affectedPayments(scope,facts)))
+            throw new FinancialTransactions.AssociationChanged();
+    }
+    /** Resolve only canonical stored source ownership before acquiring BT row locks. */
+    private Set<UUID> affectedPayments(ProviderScope scope,List<BalanceTransactionFact> facts){
+        if(!shares.enabled())return Set.of();
+        var ids=new HashSet<UUID>();
+        for(var fact:facts){
+            var stored=bt(scope,fact.btId(),false);
+            if(stored!=null && stored.get("payment_id")!=null)ids.add((UUID)stored.get("payment_id"));
+            String source=stored==null?fact.sourceObjectId():(String)stored.get("source_object_id");
+            String type=stored==null?fact.sourceObjectType():(String)stored.get("source_object_type");
+            if(source==null)continue;
+            if("charge".equals(type))ids.addAll(jdbc.queryForList("SELECT payment_id FROM platform.payment_attempt WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_object_id=?",UUID.class,scope.organizationId(),scope.environmentId(),scope.providerAccountId(),source));
+            if("refund".equals(type))ids.addAll(jdbc.queryForList("SELECT payment_id FROM platform.refund WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_refund_id=?",UUID.class,scope.organizationId(),scope.environmentId(),scope.providerAccountId(),source));
+        }
+        return ids;
     }
     private String validate(ListBalanceTransactionsQuery query,Map<String,Object> current,ProviderCallResult<BalanceTransactionPage> result){
         if(result.classification()!=ProviderCallClassification.SUCCESS||result.payload()==null)return "INCOMPLETE_PROVIDER_PAGE";

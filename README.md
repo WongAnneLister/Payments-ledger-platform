@@ -2,7 +2,7 @@
 
 Stripe 支付网关与复式账本。模块化单体，API / Worker 分角色运行，共享同一个 PostgreSQL 事务域。
 
-**当前状态：PR11 退款闭环已接入。** 已实现可信身份、不可变账本、Fake/Stripe 适配器、支付与退款 API、共享操作恢复、Webhook 和 Outbox / Kafka 商户通知。BT 导入支持分页断点恢复、实际金额/手续费入账、去重、隔离与依赖等待。PR11 增加并发退款预占、外部退款冲突冻结、退款流水与失败返还、无回调时的来源查询。分润、争议与独立完整性对账分别由 PR12、PR13、PR15 接入。[退款运行说明](docs/runbook/refunds.md)介绍状态和恢复行为。PR05 已实测付款、退款及真实回调验签；各期实际验证来源以 evidence 记录为准。
+**当前状态：PR12 内部分润已接入。** 已实现可信身份、不可变账本、Fake/Stripe 适配器、支付与退款 API、共享操作恢复、Webhook 和 Outbox / Kafka 商户通知。BT 导入支持实际金额/手续费入账、去重、隔离与依赖等待；内部分润按下单快照和累计退款额度计提，退款预占、释放和冲突处理会原子调整分润凭证，并支持历史补计提。[分润运行说明](docs/runbook/revenue-share.md)介绍规则和启用方式。争议及独立完整性对账分别由 PR13、PR15 接入。PR05 已实测付款、退款及真实回调验签；各期实际验证来源以 evidence 记录为准。
 运行说明见 [身份配置](docs/runbook/identity-and-fixtures.md)、[账本核心](docs/runbook/ledger-core.md)、[Provider 模拟器](docs/runbook/provider-simulator.md)和[Stripe 契约验证](docs/runbook/stripe-contract-check.md)。本地 fixture 通过不代表真实 Stripe 契约通过。
 设计基线见 [`docs/`](docs/)；本 README 只讲怎么跑起来。
 

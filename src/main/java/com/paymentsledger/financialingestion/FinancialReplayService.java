@@ -1,5 +1,6 @@
 package com.paymentsledger.financialingestion;
 
+import com.paymentsledger.revenueshare.RevenueShareService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.provider.*;
@@ -12,6 +13,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 /** Replays durable facts. Payment(20) is locked before BT serialization and ledger(70/80); no external I/O. */
 public class FinancialReplayService {
+    private RevenueShareService shares=RevenueShareService.disabled();
     private final JdbcTemplate jdbc;
     private final FinancialTransactions transactions;
     private final ObjectMapper mapper;
@@ -22,18 +24,28 @@ public class FinancialReplayService {
     public FinancialReplayService(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper mapper,LedgerPostingService posting,RefundEvidencePort refunds){
         this.jdbc=jdbc;this.transactions=new FinancialTransactions(tx);this.mapper=mapper.copy().findAndRegisterModules();this.posting=posting;this.refunds=refunds;
     }
+    public FinancialReplayService(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,LedgerPostingService posting,RefundEvidencePort refunds,RevenueShareService shares){this(jdbc,tx,json,posting,refunds);this.shares=shares;}
     public String replay(ProviderScope scope,String btId){return transactions.run(()->{
         var initial=bt(scope,btId,false);
         if(initial==null)throw new IllegalArgumentException("Unknown balance transaction");
         var fact=decode(initial.get("fact").toString());
         var kind=normalizer.classify(fact);
-        UUID payment=null;
-        if(kind==FinancialEventNormalizer.Kind.CHARGE){var a=charge(scope,fact.sourceObjectId());if(a!=null)payment=(UUID)a.get("payment_id");}
+        // Source ownership is independent of amount/domain classification, including quarantined facts.
+        UUID payment=sourcePayment(scope,fact);
         boolean refundMovement=kind==FinancialEventNormalizer.Kind.REFUND||kind==FinancialEventNormalizer.Kind.REFUND_FAILURE;
-        if(refundMovement)payment=refunds.find(scope,fact.sourceObjectId()).map(RefundEvidencePort.Evidence::paymentId).orElse(null);
         Map<String,Object> paymentRow=null;
         if(payment!=null)paymentRow=one("SELECT * FROM platform.payment WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? FOR UPDATE",payment,scope.organizationId(),scope.environmentId(),scope.providerAccountId());
+        // Acquire rank 20/30/50 before BT and journal locks; reuse the handle after posting.
+        var shareLocks=payment==null?null:shares.lock(payment);
+        String outcome=replayLocked(scope,btId,fact,kind,payment,paymentRow,refundMovement);
+        if(shareLocks!=null)shares.reconcile(shareLocks,"bt:"+btId);
+        return outcome;
+    });}
+    private String replayLocked(ProviderScope scope,String btId,BalanceTransactionFact fact,
+            FinancialEventNormalizer.Kind kind,UUID payment,Map<String,Object> paymentRow,boolean refundMovement){
         var row=bt(scope,btId,true);
+        // Association writers lock this same BT. If discovery raced their commit, restart before posting.
+        if(shares.enabled() && !Objects.equals(payment,sourcePayment(scope,fact)))throw new FinancialTransactions.AssociationChanged();
         String state=(String)row.get("state");
         if(!"PENDING_EVIDENCE".equals(state))return state;
         var policy=one("SELECT * FROM platform.ingestion_policy WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=?",scope.organizationId(),scope.environmentId(),scope.providerAccountId(),scope.livemode());
@@ -76,7 +88,12 @@ public class FinancialReplayService {
             jdbc.update("UPDATE platform.payment SET financial_status=?,version=version+1,updated_at=now() WHERE id=?",financial,payment);
         }
         return "POSTED";
-    });}
+    }
+    private UUID sourcePayment(ProviderScope scope,BalanceTransactionFact fact){
+        if("charge".equals(fact.sourceObjectType())){var a=charge(scope,fact.sourceObjectId());return a==null?null:(UUID)a.get("payment_id");}
+        if("refund".equals(fact.sourceObjectType()))return refunds.find(scope,fact.sourceObjectId()).map(RefundEvidencePort.Evidence::paymentId).orElse(null);
+        return null;
+    }
     private String mark(Map<String,Object> row,String state,String reason){jdbc.update("UPDATE platform.balance_transaction SET state=?,reason=?,updated_at=now(),version=version+1 WHERE id=?",state,reason,row.get("id"));return state;}
     private String quarantine(Map<String,Object> row,String reason){recordQuarantine(row,reason);return mark(row,"QUARANTINED",reason);}
     private void recordQuarantine(Map<String,Object> row,String reason){jdbc.update("INSERT INTO platform.quarantine_observation(organization_id,environment_id,provider_account_id,livemode,observation_id,balance_transaction_id,reason) VALUES (?,?,?,?,?,?,?)",row.get("organization_id"),row.get("environment_id"),row.get("provider_account_id"),row.get("livemode"),row.get("first_observation_id"),row.get("id"),reason);}
