@@ -1,0 +1,19 @@
+{
+  "logs": [
+    "ingress-red.txt",
+    "webhook-hook-red.txt",
+    "core-red.txt",
+    "terminal-contradiction-red.txt",
+    "account-lock-order-red.txt",
+    "focused-green.txt"
+  ],
+  "notes": [
+    "Ingress RED: native du_ source was unrecognized and sanitized webhook omitted deadline/BT IDs.",
+    "Webhook hook RED: posted share2000 remained2000 after warning event; expected0.",
+    "Core RED includes preliminary setup/compile diagnostic output followed by actual missing allocator/schema assertion failures; only assertion failures establish behavior RED.",
+    "Terminal contradiction RED: newer unknown status after settled win retained2000 instead of0. The other case in that same log failed on test-role permissions and is not behavior RED.",
+    "Account lock order RED: independent fixed fixture yielded NOWAIT55P03, proving replay held PSP while waiting on earlier share account.",
+    "Focused GREEN:34unit+25integration; final clean verify is authoritative for delivered sources.",
+    "Intermediate setup failures (visibleAt=null, API-version fixture mismatch, alias collision, test-role row-lock permission) are diagnosed failures, not passing evidence."
+  ]
+}

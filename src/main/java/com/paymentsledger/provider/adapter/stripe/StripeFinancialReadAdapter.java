@@ -182,7 +182,7 @@ public final class StripeFinancialReadAdapter implements BalanceTransactionPort,
         if (source == null) return null;
         if (source.startsWith("ch_")) return "charge";
         if (source.startsWith("re_")) return "refund";
-        if (source.startsWith("dp_")) return "dispute";
+        if ((source.startsWith("dp_") || source.startsWith("du_"))) return "dispute";
         if (source.startsWith("po_")) return "payout";
         return null;
     }

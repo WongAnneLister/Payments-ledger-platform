@@ -46,4 +46,16 @@ class WebhookNormalizerTest {
         assertThat(WebhookNormalizer.digest(first.toString().getBytes(StandardCharsets.UTF_8)))
                 .isNotEqualTo(WebhookNormalizer.digest(reordered.toString().getBytes(StandardCharsets.UTF_8)));
     }
+    @Test void disputeProjectionKeepsDeadlineAndOnlyBtIdentities() throws Exception {
+        var safe=WebhookNormalizer.sanitize(mapper.readTree("""
+         {"id":"du_test","object":"dispute","charge":{"id":"ch_test"},"status":"needs_response",
+          "evidence_details":{"due_by":1800000000,"submission_count":1},
+          "evidence":{"customer_email_address":"private@example.com"},
+          "balance_transactions":[{"id":"txn_one","amount":-3000,"secret":"hidden"},"txn_two"]}
+         """),mapper);
+        assertThat(safe.path("evidence_details").path("due_by").asLong()).isEqualTo(1800000000);
+        assertThat(safe.path("balance_transactions").toString()).isEqualTo("[\"txn_one\",\"txn_two\"]");
+        assertThat(safe.toString()).doesNotContain("private@","hidden","submission_count","-3000");
+    }
+
 }

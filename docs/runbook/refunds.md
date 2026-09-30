@@ -45,7 +45,7 @@ Dashboard 退款保存为外部事实，并冻结 `EXTERNAL_CONFLICT` 控制行�
 
 `refund.succeeded`、`refund.failed`、`refund.canceled` 在状态事务内写入原 Outbox，包含稳定 eventId、refundId、paymentId 与每笔退款的业务去重键；沿用 Kafka、Consumer Inbox、签名商户通知与失败重试。退款通知不触发发货；模拟商户在独立数据库记录一次退款效果后才响应。
 
-PR12 已将预占、成功、失败、取消、恢复与外部冲突接入同一事务，按新额度同步追加分润调整凭证，详见[分润运行说明](revenue-share.md)。`RefundEligibilityPolicy` 是 PR13 争议阻断接入点；本期不能宣称已经完成争议验收。
+PR12 已将预占、成功、失败、取消、恢复与外部冲突接入同一事务，按新额度同步追加分润调整凭证，详见[分润运行说明](revenue-share.md)。`RefundEligibilityPolicy` 已接入 PR13，阻断争议会拒绝新的普通退款。争议与既有或外部退款重叠时保留双方事实并冻结调查，详见[争议运行说明](disputes.md)。
 
 退款事务代码位于 `payment` 包以复用既有操作仓库的事务/租约边界；资金证据适配在 `refund` 包，Webhook 处理在 `webhook` 包。不会新增任意公共过账入口，余额只由 `LedgerPostingService` 更新。
 

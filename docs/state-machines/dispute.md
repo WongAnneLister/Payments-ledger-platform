@@ -1,6 +1,6 @@
 # 状态机：Dispute
 
-版本：PR00 · 状态：冻结设计，未实施
+版本：PR00 冻结设计 · PR13 已实施，验证见[争议运行说明](../runbook/disputes.md)
 
 关联：[PRD §7](../product/payment-platform-prd.md) · [账本科目](../ledger/accounts.md) · [手算示例争议分支](../ledger/posting-examples.md) · [退款状态机](refund.md) · [不变量 I-04](../ledger/invariants.md)
 

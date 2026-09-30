@@ -13,6 +13,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 /** Replays durable facts. Payment(20) is locked before BT serialization and ledger(70/80); no external I/O. */
 public class FinancialReplayService {
+    private com.paymentsledger.dispute.DisputeService disputes;
     private RevenueShareService shares=RevenueShareService.disabled();
     private final JdbcTemplate jdbc;
     private final FinancialTransactions transactions;
@@ -25,6 +26,7 @@ public class FinancialReplayService {
         this.jdbc=jdbc;this.transactions=new FinancialTransactions(tx);this.mapper=mapper.copy().findAndRegisterModules();this.posting=posting;this.refunds=refunds;
     }
     public FinancialReplayService(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,LedgerPostingService posting,RefundEvidencePort refunds,RevenueShareService shares){this(jdbc,tx,json,posting,refunds);this.shares=shares;}
+    public FinancialReplayService(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,LedgerPostingService posting,RefundEvidencePort refunds,RevenueShareService shares,com.paymentsledger.dispute.DisputeService disputes){this(jdbc,tx,json,posting,refunds,shares);this.disputes=disputes;}
     public String replay(ProviderScope scope,String btId){return transactions.run(()->{
         var initial=bt(scope,btId,false);
         if(initial==null)throw new IllegalArgumentException("Unknown balance transaction");
@@ -54,6 +56,12 @@ public class FinancialReplayService {
         if(jdbc.queryForObject("SELECT count(*) FROM platform.bt_evidence_conflict WHERE balance_transaction_id=?",Long.class,row.get("id"))>0)return quarantine(row,"EVIDENCE_CONFLICT");
         if(jdbc.queryForObject("SELECT count(*) FROM platform.org_currency_enabled WHERE organization_id=? AND environment_id=? AND currency=?",Long.class,scope.organizationId(),scope.environmentId(),fact.currency().toUpperCase(Locale.ROOT))==0)return quarantine(row,"CURRENCY_NOT_ENABLED");
         if(kind==FinancialEventNormalizer.Kind.QUARANTINE)return quarantine(row,"DOMAIN_FX_OR_SIGN_MISMATCH");
+        // Capture/refund can be followed by share journals; lock the same global account union as disputes.
+        if(payment!=null&&disputes!=null&&shares.enabled())jdbc.queryForObject("SELECT platform.lock_dispute_accounts(?)",Object.class,payment);
+        if(kind==FinancialEventNormalizer.Kind.DISPUTE){
+            if(disputes==null||paymentRow==null)return mark(row,"PENDING_EVIDENCE","DISPUTE_EVIDENCE_REQUIRED");
+            return disputes.postLocked(scope,fact,(UUID)row.get("id"));
+        }
         if(kind==FinancialEventNormalizer.Kind.PENDING)return mark(row,"PENDING_EVIDENCE","BUSINESS_DEPENDENCY_REQUIRED");
         if(kind==FinancialEventNormalizer.Kind.CHARGE){
             var attempt=charge(scope,fact.sourceObjectId());
@@ -92,6 +100,7 @@ public class FinancialReplayService {
     private UUID sourcePayment(ProviderScope scope,BalanceTransactionFact fact){
         if("charge".equals(fact.sourceObjectType())){var a=charge(scope,fact.sourceObjectId());return a==null?null:(UUID)a.get("payment_id");}
         if("refund".equals(fact.sourceObjectType()))return refunds.find(scope,fact.sourceObjectId()).map(RefundEvidencePort.Evidence::paymentId).orElse(null);
+        if("dispute".equals(fact.sourceObjectType())&&disputes!=null){var d=disputes.lookup(scope,fact.sourceObjectId());return d==null?null:(UUID)d.get("payment_id");}
         return null;
     }
     private String mark(Map<String,Object> row,String state,String reason){jdbc.update("UPDATE platform.balance_transaction SET state=?,reason=?,updated_at=now(),version=version+1 WHERE id=?",state,reason,row.get("id"));return state;}

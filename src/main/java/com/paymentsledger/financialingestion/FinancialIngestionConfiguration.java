@@ -43,13 +43,13 @@ public class FinancialIngestionConfiguration {
     }
 
     @Bean FinancialReplayService financialReplayService(JdbcTemplate jdbc, PlatformTransactionManager transactions,
-            ObjectMapper mapper, LedgerPostingService posting, ObjectProvider<RefundEvidencePort> refunds,ObjectProvider<RevenueShareService> shares) {
+            ObjectMapper mapper, LedgerPostingService posting, ObjectProvider<RefundEvidencePort> refunds,ObjectProvider<RevenueShareService> shares,ObjectProvider<com.paymentsledger.dispute.DisputeService> disputes) {
         return new FinancialReplayService(jdbc, transactions, mapper, posting,
-                refunds.getIfAvailable(RefundEvidencePort::unavailable),shares.getIfAvailable(RevenueShareService::disabled));
+                refunds.getIfAvailable(RefundEvidencePort::unavailable),shares.getIfAvailable(RevenueShareService::disabled),disputes.getIfAvailable());
     }
 
     @Bean FinancialIngestionWorker financialIngestionWorker(JdbcTemplate jdbc, FinancialImportService importer,
-            FinancialReplayService replay, Clock clock,ObjectProvider<RefundSourceResolver> refundSources,
+            FinancialReplayService replay, Clock clock,ObjectProvider<RefundSourceResolver> refundSources,ObjectProvider<DisputeSourceResolver> disputeSources,
             @Value("${platform.financial-ingestion.organization-id:}") String organization,
             @Value("${platform.financial-ingestion.environment-id:}") String environment,
             @Value("${platform.financial-ingestion.provider-account-id:}") String providerAccount) {
@@ -60,6 +60,6 @@ public class FinancialIngestionConfiguration {
         } catch (IllegalArgumentException invalid) {
             throw new IllegalArgumentException("Financial ingestion requires configured scope UUIDs");
         }
-        return new FinancialIngestionWorker(jdbc, importer, replay, scope, clock,refundSources.getIfAvailable(RefundSourceResolver::unavailable));
+        return new FinancialIngestionWorker(jdbc, importer, replay, scope, clock,refundSources.getIfAvailable(RefundSourceResolver::unavailable),disputeSources.getIfAvailable(DisputeSourceResolver::unavailable));
     }
 }

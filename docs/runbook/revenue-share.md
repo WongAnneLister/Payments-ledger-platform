@@ -30,4 +30,4 @@ Worker 在启用财务导入并配置组织、环境和 Provider 账户后，每
 
 `RevenueShareService.allocations(TenantContext,paymentId)` 与 `adjustments(...)` 提供内部 scoped 查询，供 PR16 接入权限控制后的运营入口。本期没有合作方实付 API、Stripe Connect 调用或对外分润管理页面。
 
-`ShareEligibilityPolicy` 预留争议阻断接入；PR13 尚未实现的争议观察、胜诉证据与恢复流程不能视为本期验收通过。本期验证来源见 [PR12 验证报告](../evidence/pr12/README.md)。
+`ShareEligibilityPolicy` 已由 PR13 接入争议阻断，胜诉需补齐资金证据且清除所有阻断后才能恢复；详见[争议运行说明](disputes.md)。PR12 原始验证来源见 [PR12 验证报告](../evidence/pr12/README.md)，新增跨域验收见 [PR13 验证报告](../evidence/pr13/README.md)。

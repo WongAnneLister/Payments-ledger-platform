@@ -21,6 +21,17 @@ public final class WebhookNormalizer {
             else if(NUMBERS.contains(k)&&v.isIntegralNumber()&&v.canConvertToLong())result.set(k,v);
             else if(Set.of("captured","paid","automatic","livemode").contains(k)&&v.isBoolean())result.set(k,v);
         });
+        if("dispute".equals(object.path("object").asText())){
+            var due=object.path("evidence_details").path("due_by");
+            if(due.isIntegralNumber()&&due.canConvertToLong()&&due.longValue()>=0)result.putObject("evidence_details").set("due_by",due);
+            var links=object.path("balance_transactions");
+            if(links.isArray()&&links.size()<=100){
+                var ids=mapper.createArrayNode();boolean valid=true;
+                for(var link:links){var id=link.isObject()?link.path("id"):link;
+                    if(!id.isTextual()||!id.textValue().matches("[A-Za-z0-9_]{1,255}")){valid=false;break;}ids.add(id.textValue());}
+                if(valid)result.set("balance_transactions",ids);
+            }
+        }
         JsonNode payment=object.path("metadata").path("payment_id");
         if(payment.isTextual()&&(payment.textValue().matches("pay_[0-9A-HJKMNP-TV-Z]{26}")||payment.textValue().matches("[0-9a-fA-F-]{36}")))result.putObject("metadata").set("payment_id",payment);
         return result;

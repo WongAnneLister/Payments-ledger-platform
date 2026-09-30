@@ -1,0 +1,117 @@
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.031 s <<< FAILURE! -- in com.paymentsledger.dispute.DisputeAmountsTest
+[ERROR] com.paymentsledger.dispute.DisputeAmountsTest.returnUsesReceivableThenConfirmedLossThenSuspense -- Time elapsed: 0.019 s <<< ERROR!
+java.lang.NoSuchMethodError: 'void org.assertj.core.api.Assertions.fail(java.lang.String)'
+	at com.paymentsledger.dispute.DisputeAmountsTest.returnUsesReceivableThenConfirmedLossThenSuspense(DisputeAmountsTest.java:8)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] Errors:
+[ERROR]   DisputeAmountsTest.returnUsesReceivableThenConfirmedLossThenSuspense:8 NoSuchMethod 'void org.assertj.core.api.Assertions.fail(java.lang.String)'
+[ERROR] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-cli) on project payments-ledger-platform:
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr13-disputes/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+00:41:34.749 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+00:41:34.752 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+00:41:34.768 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+00:41:35.069 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+00:41:35.070 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+00:41:35.097 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+00:41:35.128 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+00:41:35.236 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+00:41:35.327 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 194330decdec55a595b2809ab3c4332eba76b8c518a979f6b8c89e16fc8d3235
+00:41:35.987 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.858448S
+00:41:36.005 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+00:41:36.006 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+00:41:36.006 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+00:41:36.006 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+00:41:36.054 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: b4c0fdde1a4ae31cf52b5fd8067d559dc2d3a7fabb38159feb43a891fe319693
+00:41:37.676 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.670102S
+00:41:37.680 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:62092/test?loggerLevel=OFF)
+00:41:37.689 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+00:41:37.875 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 185 ms.
+00:41:38.076 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:62092/test?loggerLevel=OFF (PostgreSQL 16.14)
+00:41:38.122 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+00:41:38.124 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 10 migrations (execution time 00:00.020s)
+00:41:38.140 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+00:41:38.200 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+00:41:38.210 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+00:41:38.215 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+00:41:38.248 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+00:41:38.357 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+00:41:38.415 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+00:41:38.489 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+00:41:38.542 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+00:41:38.574 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+00:41:38.631 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+00:41:38.689 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+00:41:38.748 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "10 - revenue share"
+00:41:38.781 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 10 migrations to schema "platform", now at version v10 (execution time 00:00.412s)
+00:41:38.809 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:62092/test?loggerLevel=OFF (PostgreSQL 16.14)
+00:41:38.851 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 10 migrations (execution time 00:00.018s)
+00:41:38.879 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 10
+00:41:38.881 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 4.538 s <<< FAILURE! -- in com.paymentsledger.dispute.DisputeSchemaIT
+[ERROR] com.paymentsledger.dispute.DisputeSchemaIT.upgradeProvidesScopedImmutableDisputeHistoryAndRestrictedAccountProvisioning -- Time elapsed: 1.042 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 1
+ but was: 0
+	at com.paymentsledger.dispute.DisputeSchemaIT.upgradeProvidesScopedImmutableDisputeHistoryAndRestrictedAccountProvisioning(DisputeSchemaIT.java:15)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] Failures:
+[ERROR]   DisputeSchemaIT.upgradeProvidesScopedImmutableDisputeHistoryAndRestrictedAccountProvisioning:15
+expected: 1
+ but was: 0
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.6:verify (default-cli) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr13-disputes/target/failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.028 s <<< FAILURE! -- in com.paymentsledger.dispute.DisputeAmountsTest
+[ERROR] com.paymentsledger.dispute.DisputeAmountsTest.returnUsesReceivableThenConfirmedLossThenSuspense -- Time elapsed: 0.016 s <<< FAILURE!
+java.lang.AssertionError: Dispute return allocator is required
+	at com.paymentsledger.dispute.DisputeAmountsTest.returnUsesReceivableThenConfirmedLossThenSuspense(DisputeAmountsTest.java:8)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] Failures:
+[ERROR]   DisputeAmountsTest.returnUsesReceivableThenConfirmedLossThenSuspense:8 Dispute return allocator is required
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-cli) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr13-disputes/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

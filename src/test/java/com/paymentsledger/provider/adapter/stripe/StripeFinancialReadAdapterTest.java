@@ -66,6 +66,14 @@ class StripeFinancialReadAdapterTest {
         }
     }
 
+
+    @Test void nativeDisputeSourceIdIsNotAnUnknownAdjustment() {
+        var http=new StripeTestTransport().reply(200,bt("txn_1","payments","\"du_fixture\""));
+        var result=new StripeFinancialReadAdapter(http.gateway()).getBalanceTransaction(SCOPE,"txn_1");
+        assertThat(result.classification()).isEqualTo(SUCCESS);
+        assertThat(result.payload().sourceObjectType()).isEqualTo("dispute");
+    }
+
     @Test void manualPayoutCannotBeUsedToInferMembership() {
         var http = new StripeTestTransport().reply(200,payout(false));
         var result = new StripeFinancialReadAdapter(http.gateway()).listBalanceTransactions(btQuery(null, 10, "po_fixture"));

@@ -1,0 +1,82 @@
+[
+  {
+    "suite": "com.paymentsledger.dispute.DisputeAmountsTest",
+    "tests": [
+      "negativeBalanceCannotBecomeAValidReturnAllocation",
+      "returnUsesReceivableThenConfirmedLossThenSuspense",
+      "largeReturnDoesNotOverflowWhenOutstandingBalancesHaveLargeSum"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest",
+    "tests": [
+      "missingDomainAndBrokenSignedArithmeticFailClosed",
+      "fractionalUtcBoundsRoundUpToPreserveIntegerTimestampMembership",
+      "automaticPayoutIsVerifiedBeforeMembershipQuery",
+      "completeEmptyPagesAreSuccessfulObservations",
+      "balanceIsCurrentSignedPaymentsObservationAndMissingCurrencyIsUnavailable",
+      "incompleteEmptyPagesAndMissingPaginationStateFailClosed",
+      "manualPayoutCannotBeUsedToInferMembership",
+      "disputeReadsPreserveRelationshipsDueDateAndPagination",
+      "everyListItemMustHaveExplicitTestMode",
+      "balanceTransactionsKeepSignedMoneyDomainFeesAndUtcPagination",
+      "paginationCannotRepeatRequestedCursorOrDuplicateIds",
+      "balanceRequiresExplicitTestModeAndBothCurrencyBuckets",
+      "reportRunIsNotPretendedToBeHistoricalBalanceProof",
+      "nativeDisputeSourceIdIsNotAnUnknownAdjustment",
+      "transactionDigestIncludesSourceRelationshipAndObservationTimes",
+      "transactionDomainComesFromBalanceTypeAndUnknownSourcesStayUnknown",
+      "sourceTypeUsesExpandedObjectAndChecksItsMode",
+      "payoutReadsPreserveFailureRelationshipAndPagination"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.webhook.WebhookNormalizerTest",
+    "tests": [
+      "disputeProjectionKeepsDeadlineAndOnlyBtIdentities",
+      "semanticIdentityIgnoresSerializationOrderButRetainsChangedFacts",
+      "keepsCorrelationButDropsCustomerDetailsAndExpandedObjectContents",
+      "malformedTypesCannotBecomeFinancialFacts"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.dispute.DisputeCoreIT",
+    "tests": [
+      "staleStatusCannotRegressTerminalStateButRetainsNewFinancialReference",
+      "scopedProviderIdentityDoesNotLeakLookup",
+      "unboundCurrencyConflictBindsTrustedPaymentAndRetainsBothObservations",
+      "missingChargeRetainsEvidenceAndUnknownBtLinksWithoutCreatingMoney"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.dispute.DisputeSchemaIT",
+    "tests": [
+      "upgradeProvidesScopedImmutableDisputeHistoryAndRestrictedAccountProvisioning"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payment.DisputeLifecycleIT",
+    "tests": [
+      "warningWebhookWithdrawsShareWithoutMovingProviderFunds",
+      "newerContradictoryTerminalObservationBlocksPreviouslyRestoredShare",
+      "lateReturnAllocatesReceivableThenExistingLossThenSuspense",
+      "feeOnlyReturnUsesItsActualSignedFee",
+      "btBeforeDisputeUsesQueryRecoveryAndReturnBeforeDebitWaits",
+      "returnedMoneyBeforeWonWaitsForKnownDisputeWorkerQuery",
+      "multipleWarningsRestoreOnlyAfterTheLastBlockerClears",
+      "staleWebhookLeaseCannotApplyDisputeAndAckFailureRollsBack",
+      "capturePrelocksShareAndProviderAccountsInOneGlobalOrder",
+      "shareJournalFailureRollsBackDisputeAndEvidence",
+      "wonNeedsActualReturnAndDoesNotInventFeeRefund",
+      "disputeQueriesRespectApplicationAndCurrencyScope",
+      "postedDisputeIdentityIsImmutableAndLaterDebitReblocksSharing",
+      "concurrentRefundAndDisputeSerializeOnThePayment",
+      "lateConflictingDisputeBtWithdrawsRestoredShareInTheImportTransaction",
+      "externalRefundAndDisputeFactsAreBothRetainedWithoutAddingDisputeToR",
+      "failingKnownSourceDoesNotStarveAnotherDispute",
+      "excessReturnStaysInSuspenseAndCannotRestoreShare",
+      "disputeFinancialHistoryFailureRollsBackBtJournalAndCounters",
+      "lossReclassifiesOnceAndLateWinReturnsAgainstThatLoss"
+    ]
+  }
+]

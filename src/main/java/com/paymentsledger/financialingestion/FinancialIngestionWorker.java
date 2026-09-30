@@ -20,6 +20,7 @@ public final class FinancialIngestionWorker {
     private final ProviderScope scope;
     private final Clock clock;
     private final RefundSourceResolver refundSources;
+    private DisputeSourceResolver disputeSources=DisputeSourceResolver.unavailable();
 
     public FinancialIngestionWorker(JdbcTemplate jdbc, FinancialImportService importer,
             FinancialReplayService replay, ProviderScope scope, Clock clock) {
@@ -30,6 +31,8 @@ public final class FinancialIngestionWorker {
         this.jdbc=jdbc; this.importer=importer; this.replay=replay; this.scope=scope; this.clock=clock;
         this.refundSources=refundSources;
     }
+
+    public FinancialIngestionWorker(JdbcTemplate jdbc,FinancialImportService importer,FinancialReplayService replay,ProviderScope scope,Clock clock,RefundSourceResolver refundSources,DisputeSourceResolver disputeSources){this(jdbc,importer,replay,scope,clock,refundSources);this.disputeSources=disputeSources;}
 
     @Scheduled(scheduler="financialIngestionScheduler", fixedDelayString="${platform.financial-ingestion.poll-ms:300000}",
             initialDelayString="${platform.financial-ingestion.poll-ms:300000}")
@@ -94,6 +97,10 @@ public final class FinancialIngestionWorker {
                         " AND bt_id=? AND source_object_type='refund' AND source_object_id IS NOT NULL",String.class,
                         scope.organizationId(),scope.environmentId(),scope.providerAccountId(),scope.livemode(),id);
                 if(!sources.isEmpty()){refundSources.resolve(scope,sources.getFirst());replay.replay(scope,id);}
+                var disputes=jdbc.queryForList("SELECT source_object_id FROM platform.balance_transaction WHERE "+SCOPE+
+                        " AND bt_id=? AND source_object_type='dispute' AND source_object_id IS NOT NULL",String.class,
+                        scope.organizationId(),scope.environmentId(),scope.providerAccountId(),scope.livemode(),id);
+                if(!disputes.isEmpty()){disputeSources.resolve(scope,disputes.getFirst());replay.replay(scope,id);}
             }
         });
     }

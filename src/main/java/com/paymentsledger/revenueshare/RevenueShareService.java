@@ -36,6 +36,10 @@ public final class RevenueShareService {
   var payments=new ArrayList<Map<String,Object>>();
   for(UUID id:ids){var p=one("SELECT * FROM platform.payment WHERE id=? FOR UPDATE",id);if(p==null)throw new ApiException(ErrorCode.NOT_FOUND,"Payment not found");payments.add(p);}
   for(UUID id:ids)jdbc.queryForList("SELECT payment_id FROM platform.refund_control WHERE payment_id=? FOR UPDATE",id);
+  if(!ids.isEmpty()){
+   String parameters=String.join(",",Collections.nCopies(ids.size(),"?"));
+   jdbc.queryForList("SELECT id FROM platform.dispute WHERE payment_id IN ("+parameters+") ORDER BY id FOR UPDATE",ids.toArray());
+  }
   for(var p:payments){
    UUID id=uuid(p,"id");var order=one("SELECT share_policy_snapshot FROM platform.business_order WHERE id=?",p.get("business_order_id"));
    var policy=validatePolicy(json(order.get("share_policy_snapshot")));

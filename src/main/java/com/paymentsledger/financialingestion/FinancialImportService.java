@@ -106,6 +106,7 @@ public class FinancialImportService {
             if(source==null)continue;
             if("charge".equals(type))ids.addAll(jdbc.queryForList("SELECT payment_id FROM platform.payment_attempt WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_object_id=?",UUID.class,scope.organizationId(),scope.environmentId(),scope.providerAccountId(),source));
             if("refund".equals(type))ids.addAll(jdbc.queryForList("SELECT payment_id FROM platform.refund WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_refund_id=?",UUID.class,scope.organizationId(),scope.environmentId(),scope.providerAccountId(),source));
+            if("dispute".equals(type))ids.addAll(jdbc.queryForList("SELECT payment_id FROM platform.dispute WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_dispute_id=? AND payment_id IS NOT NULL",UUID.class,scope.organizationId(),scope.environmentId(),scope.providerAccountId(),source));
         }
         return ids;
     }

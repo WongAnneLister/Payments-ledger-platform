@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.paymentsledger.payment.DisputeLifecycleIT
+-------------------------------------------------------------------------------
+Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.38 s -- in com.paymentsledger.payment.DisputeLifecycleIT

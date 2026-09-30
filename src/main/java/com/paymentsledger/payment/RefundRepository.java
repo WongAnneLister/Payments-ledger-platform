@@ -19,6 +19,7 @@ import static com.paymentsledger.payment.PaymentRepository.*;
 /** Payment/control locks serialize reservations; authoritative observations never perform provider I/O. */
 @Repository
 public class RefundRepository {
+    private com.paymentsledger.dispute.DisputeService disputes;
     private RevenueShareService shares=RevenueShareService.disabled();
  private final JdbcTemplate jdbc; private final TransactionTemplate tx; private final PaymentRepository operations;private RefundEligibilityPolicy eligibility=RefundEligibilityPolicy.unrestricted();
  private static final String SCOPE="organization_id,environment_id,application_id,provider_account_id,currency";
@@ -26,7 +27,9 @@ public class RefundRepository {
  public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager manager,ObjectMapper json,Clock clock,PaymentRepository operations){this.jdbc=jdbc;this.tx=new TransactionTemplate(manager);this.operations=operations;}
  public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager manager,ObjectMapper json,Clock clock,PaymentRepository operations,org.springframework.beans.factory.ObjectProvider<RefundEligibilityPolicy> policies){this(jdbc,manager,json,clock,operations);this.eligibility=policies.getIfAvailable(RefundEligibilityPolicy::unrestricted);}
  public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,Clock clock,PaymentRepository operations,RevenueShareService shares){this(jdbc,tx,json,clock,operations);this.shares=shares;}
- @Autowired public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,Clock clock,PaymentRepository operations,org.springframework.beans.factory.ObjectProvider<RefundEligibilityPolicy> policies,RevenueShareService shares){this(jdbc,tx,json,clock,operations,policies);this.shares=shares;}
+ public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,Clock clock,PaymentRepository operations,org.springframework.beans.factory.ObjectProvider<RefundEligibilityPolicy> policies,RevenueShareService shares){this(jdbc,tx,json,clock,operations,policies);this.shares=shares;}
+ public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,Clock clock,PaymentRepository operations,RevenueShareService shares,com.paymentsledger.dispute.DisputeService disputes){this(jdbc,tx,json,clock,operations,shares);this.disputes=disputes;this.eligibility=(tenant,payment,control)->{if(disputes.blocks(uuid(payment,"id")))throw error(ErrorCode.REFUND_BLOCKED);};}
+ @Autowired public RefundRepository(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,Clock clock,PaymentRepository operations,org.springframework.beans.factory.ObjectProvider<RefundEligibilityPolicy> policies,RevenueShareService shares,com.paymentsledger.dispute.DisputeService disputes){this(jdbc,tx,json,clock,operations,policies,shares);this.disputes=disputes;}
  public record Intent(UUID refundId,UUID operationId,boolean replay){}
  private Map<String,Object> one(String sql,Object...args){var rows=jdbc.queryForList(sql,args);return rows.isEmpty()?null:rows.getFirst();}
  private String scopeKey(TenantContext c){return c.organizationId()+":"+c.environmentId()+":"+c.applicationId();}
@@ -114,7 +117,7 @@ public class RefundRepository {
  private UUID acceptLocked(ProviderScope scope,RefundFact fact,ProviderEvidence evidence,UUID localRefundId){
   UUID accepted=mergeFact(scope,fact,evidence,localRefundId);
   UUID parent=accepted==null?paymentForCharge(scope,fact.chargeId()):uuid(refund(accepted),"payment_id");
-  if(parent!=null)shares.reconcile(parent,"refund.fact:"+fact.refundId());
+  if(parent!=null){if(disputes!=null)disputes.observeRefundOverlap(parent);shares.reconcile(parent,"refund.fact:"+fact.refundId());}
   return accepted;
  }
  private UUID mergeFact(ProviderScope scope,RefundFact fact,ProviderEvidence evidence,UUID localRefundId){
