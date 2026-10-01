@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.paymentsledger.revenueshare.RevenueShareCoreIT
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.141 s -- in com.paymentsledger.revenueshare.RevenueShareCoreIT

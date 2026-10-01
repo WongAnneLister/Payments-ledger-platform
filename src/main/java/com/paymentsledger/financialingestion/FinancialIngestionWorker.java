@@ -20,6 +20,7 @@ public final class FinancialIngestionWorker {
     private final ProviderScope scope;
     private final Clock clock;
     private final RefundSourceResolver refundSources;
+    private PayoutSourceResolver payoutSources=PayoutSourceResolver.unavailable();
     private DisputeSourceResolver disputeSources=DisputeSourceResolver.unavailable();
 
     public FinancialIngestionWorker(JdbcTemplate jdbc, FinancialImportService importer,
@@ -33,6 +34,8 @@ public final class FinancialIngestionWorker {
     }
 
     public FinancialIngestionWorker(JdbcTemplate jdbc,FinancialImportService importer,FinancialReplayService replay,ProviderScope scope,Clock clock,RefundSourceResolver refundSources,DisputeSourceResolver disputeSources){this(jdbc,importer,replay,scope,clock,refundSources);this.disputeSources=disputeSources;}
+
+    public FinancialIngestionWorker(JdbcTemplate jdbc,FinancialImportService importer,FinancialReplayService replay,ProviderScope scope,Clock clock,RefundSourceResolver refundSources,DisputeSourceResolver disputeSources,PayoutSourceResolver payoutSources){this(jdbc,importer,replay,scope,clock,refundSources,disputeSources);this.payoutSources=payoutSources;}
 
     @Scheduled(scheduler="financialIngestionScheduler", fixedDelayString="${platform.financial-ingestion.poll-ms:300000}",
             initialDelayString="${platform.financial-ingestion.poll-ms:300000}")
@@ -101,6 +104,10 @@ public final class FinancialIngestionWorker {
                         " AND bt_id=? AND source_object_type='dispute' AND source_object_id IS NOT NULL",String.class,
                         scope.organizationId(),scope.environmentId(),scope.providerAccountId(),scope.livemode(),id);
                 if(!disputes.isEmpty()){disputeSources.resolve(scope,disputes.getFirst());replay.replay(scope,id);}
+                var payouts=jdbc.queryForList("SELECT source_object_id FROM platform.balance_transaction WHERE "+SCOPE+
+                        " AND bt_id=? AND source_object_type='payout' AND source_object_id IS NOT NULL",String.class,
+                        scope.organizationId(),scope.environmentId(),scope.providerAccountId(),scope.livemode(),id);
+                if(!payouts.isEmpty()){payoutSources.resolve(scope,payouts.getFirst());replay.replay(scope,id);}
             }
         });
     }

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "evidenceType": "SIMULATED_BANK_EVIDENCE",
+  "fixtureId": "demo-payout-credit-v1",
+  "bankAccountRef": "sim-bank-1",
+  "currency": "USD",
+  "coverageFrom": "2026-03-01T00:00:00Z",
+  "coverageUntil": "2026-03-02T00:00:00Z",
+  "complete": true,
+  "lines": [
+    {
+      "lineId": "demo-payout-credit-line-1",
+      "kind": "CREDIT",
+      "bookedAt": "2026-03-01T00:03:20Z",
+      "principalMinor": 5700,
+      "feeMinor": 0,
+      "payoutReferences": [
+        "po_demo"
+      ]
+    }
+  ]
+}

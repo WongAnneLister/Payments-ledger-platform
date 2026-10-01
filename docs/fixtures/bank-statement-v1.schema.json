@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "bank-statement-v1.schema.json",
+  "title": "Simulated bank statement v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "evidenceType",
+    "fixtureId",
+    "bankAccountRef",
+    "currency",
+    "coverageFrom",
+    "coverageUntil",
+    "complete",
+    "lines"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "evidenceType": {
+      "const": "SIMULATED_BANK_EVIDENCE"
+    },
+    "fixtureId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,255}$"
+    },
+    "bankAccountRef": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,255}$"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Za-z]{3}$"
+    },
+    "coverageFrom": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "coverageUntil": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "complete": {
+      "type": "boolean"
+    },
+    "lines": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lineId",
+          "kind",
+          "bookedAt",
+          "principalMinor",
+          "feeMinor",
+          "payoutReferences"
+        ],
+        "properties": {
+          "lineId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.:-]{1,255}$"
+          },
+          "kind": {
+            "enum": [
+              "CREDIT",
+              "RETURN"
+            ]
+          },
+          "bookedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "principalMinor": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9223372036854775807
+          },
+          "feeMinor": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          },
+          "payoutReferences": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_]{1,255}$"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$comment": "Importer additionally enforces half-open coverage, fee<=principal, RETURN fee=0, unique source line IDs, trusted enabled test scope, and semantic identity."
+}

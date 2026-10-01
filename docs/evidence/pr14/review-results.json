@@ -1,0 +1,34 @@
+{
+  "scope": "PR14 payout ingestion, actual balance transaction accounting and simulated bank evidence",
+  "specReview": {
+    "reviewer": "pr14_spec_review",
+    "result": "PASS",
+    "remainingConcreteGaps": [],
+    "resolvedFindings": [
+      "Refresh automatic membership from a new immutable payout observation after an earlier empty page.",
+      "Reject membership currency mismatches.",
+      "Compare immutable monetary facts without treating availability refreshes as conflicting money.",
+      "Enforce scoped read-run, observation and payout lineage, including rejection of manual membership runs."
+    ]
+  },
+  "qualityReview": {
+    "reviewer": "pr14_quality_review",
+    "result": "PASS",
+    "remainingCriticalOrImportantFindings": [],
+    "resolvedFindings": [
+      "A consumed shared bank line outside the arrival window, allocated to another payout, must not produce SHORT_RECEIPT. Require an actual MATCH to this payout within the accepted date window."
+    ]
+  },
+  "regressions": {
+    "queryReviewRed": "4 assertion failures, 0 errors",
+    "shortReceiptRed": "1 assertion failure, 0 errors: expected WAITING_EVIDENCE, actual SHORT_RECEIPT",
+    "finalFocusedGreen": "32 unit tests and 35 integration tests passed, 0 failures/errors/skips",
+    "finalFullVerification": "See verification.json and build-output.txt; final verification includes all fixes."
+  },
+  "externalEvidenceLimits": {
+    "stripeListRead": "VERIFIED: HTTP 200, zero payout items",
+    "stripePayoutObjectAndReturn": "NOT_RUN: empty test-account payout list",
+    "activePayoutCreation": "N/A_OPTIONAL_NOT_CALLED",
+    "bank": "SIMULATED_BANK_EVIDENCE only"
+  }
+}

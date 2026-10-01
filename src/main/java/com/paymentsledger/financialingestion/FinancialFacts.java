@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.paymentsledger.provider.ProviderModels.*;
 import java.util.*;
 
-final class FinancialFacts {
+public final class FinancialFacts {
     private FinancialFacts(){}
-    static ObjectNode immutable(ObjectMapper mapper,BalanceTransactionFact fact){
+    public static ObjectNode immutable(ObjectMapper mapper,BalanceTransactionFact fact){
         ObjectNode result=mapper.valueToTree(fact);
         result.remove(List.of("status","availableOn","rawDigest"));
         result.put("currency",fact.currency().toUpperCase(Locale.ROOT));

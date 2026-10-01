@@ -1,0 +1,21 @@
+{
+  "logs": [
+    "classification-red.txt",
+    "core-schema-red.txt",
+    "bank-idempotency-red.txt",
+    "core-review-red.txt",
+    "query-review-red.txt",
+    "short-receipt-red.txt",
+    "focused-green.txt"
+  ],
+  "notes": [
+    "Classification RED expectedPAYOUT actualPENDING.",
+    "Core schema RED expected1 new migration actual0; missing reflection-loaded service was an expected absent API error, not a behavior assertion.",
+    "Bank idempotency RED returned a different UUID on duplicate import; other bank cases could not find unimplemented persisted lines. Core/schema8passed.",
+    "Core review RED stale unknown poisoned newer state; scoped accessors were absent (NoSuchMethod).",
+    "Query review RED four behavior failures: source version refresh after empty page, cross-provider lineage, mutable availability false conflict, wrong membership currency.",
+    "Short receipt RED expected WAITING_EVIDENCE for out-of-window shared line allocated to another payout but got SHORT_RECEIPT.",
+    "Intermediate V12 parser and JSON integer representation failures are diagnosed failures, not passing evidence.",
+    "Final full clean verification, not intermediate logs, is authoritative for delivered source."
+  ]
+}

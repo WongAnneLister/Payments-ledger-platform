@@ -17,10 +17,12 @@ public class WebhookProcessor {
     private final WebhookInboxRepository inbox;private final PaymentRepository payments;private final ObjectMapper json;private final Clock clock;
     private final RefundWebhookHandler refunds;
     private DisputeWebhookHandler disputes;
+    private PayoutWebhookHandler payouts;
     public WebhookProcessor(WebhookInboxRepository inbox,PaymentRepository payments,ObjectMapper json,Clock clock){this(inbox,payments,json,clock,null);}
     public WebhookProcessor(WebhookInboxRepository inbox,PaymentRepository payments,ObjectMapper json,Clock clock,RefundWebhookHandler refunds){this.inbox=inbox;this.payments=payments;this.json=json;this.clock=clock;this.refunds=refunds;}
-    @org.springframework.beans.factory.annotation.Autowired
     public WebhookProcessor(WebhookInboxRepository inbox,PaymentRepository payments,ObjectMapper json,Clock clock,RefundWebhookHandler refunds,DisputeWebhookHandler disputes){this(inbox,payments,json,clock,refunds);this.disputes=disputes;}
+    @org.springframework.beans.factory.annotation.Autowired
+    public WebhookProcessor(WebhookInboxRepository inbox,PaymentRepository payments,ObjectMapper json,Clock clock,RefundWebhookHandler refunds,DisputeWebhookHandler disputes,PayoutWebhookHandler payouts){this(inbox,payments,json,clock,refunds,disputes);this.payouts=payouts;}
     public int processDue(int limit){
         if(TransactionSynchronizationManager.isActualTransactionActive())throw new IllegalStateException("Webhook processing must start outside transactions");
         var claims=inbox.claimDue(limit);for(var claim:claims){try{process(claim);}catch(RuntimeException failure){inbox.retry(claim);}}return claims.size();
@@ -28,6 +30,7 @@ public class WebhookProcessor {
     public void process(WebhookInboxRepository.Claim claim){
         JsonNode object;try{object=json.readTree(claim.row().get("object_snapshot").toString());}catch(Exception e){throw new IllegalStateException("Invalid controlled webhook snapshot",e);}
         String type=text(object,"object"),objectId=text(object,"id"),pi=type.equals("payment_intent")?objectId:text(object,"payment_intent");
+        if("payout".equals(type)&&payouts!=null){payouts.process(claim,object);return;}
         if("dispute".equals(type)&&disputes!=null){disputes.process(claim,object);return;}
         if("refund".equals(type)&&refunds!=null){refunds.process(claim,object);return;}
         UUID candidate=null;String candidateError=null;

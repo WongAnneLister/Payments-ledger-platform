@@ -37,7 +37,7 @@ class FinancialRulesTest {
         assertThat(normalizer.classify(fact("charge",100,3,"PAYMENTS"))).isEqualTo(FinancialEventNormalizer.Kind.CHARGE);
         for(var f:List.of(fact("charge",-100,3,"PAYMENTS"),fact("refund",100,0,"PAYMENTS"),fact("adjustment",1,0,"ISSUING"),fact("currency_conversion",1,0,"PAYMENTS")))
             assertThat(normalizer.classify(f)).isEqualTo(FinancialEventNormalizer.Kind.QUARANTINE);
-        assertThat(normalizer.classify(fact("payout",-100,0,"PAYMENTS"))).isEqualTo(FinancialEventNormalizer.Kind.PENDING);
+        assertThat(normalizer.classify(fact("payout",-100,0,"PAYMENTS"))).isEqualTo(FinancialEventNormalizer.Kind.PAYOUT);
         assertThat(normalizer.classify(fact("adjustment",-100,0,"PAYMENTS"))).isEqualTo(FinancialEventNormalizer.Kind.UNKNOWN);
     }
     @Test void overlapUsesSevenBusinessDatesAcrossDstRatherThan168Hours(){
@@ -71,4 +71,10 @@ class FinancialRulesTest {
         assertThat(new FinancialEventNormalizer().classify(invalid)).isEqualTo(FinancialEventNormalizer.Kind.QUARANTINE);
     }
 
+    @Test void payoutBtClassificationKeepsPrincipalDirectionAndValidatedSourceSeparate(){
+        var normalizer=new FinancialEventNormalizer();
+        assertThat(normalizer.classify(fact("payout",-5700,30,"PAYMENTS")).name()).isEqualTo("PAYOUT");
+        var returned=new BalanceTransactionFact("bt_return","payout_failure",5700,-30,5730,"USD","PAYMENTS","po_1","payout","available",Instant.parse("2026-03-01T01:00:00Z"),Instant.parse("2026-03-02T00:00:00Z"),List.of(),null);
+        assertThat(normalizer.classify(returned).name()).isEqualTo("PAYOUT");
+    }
 }

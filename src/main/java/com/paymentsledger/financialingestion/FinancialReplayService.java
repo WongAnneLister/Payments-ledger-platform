@@ -14,6 +14,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 /** Replays durable facts. Payment(20) is locked before BT serialization and ledger(70/80); no external I/O. */
 public class FinancialReplayService {
     private com.paymentsledger.dispute.DisputeService disputes;
+    private com.paymentsledger.payout.PayoutService payouts;
     private RevenueShareService shares=RevenueShareService.disabled();
     private final JdbcTemplate jdbc;
     private final FinancialTransactions transactions;
@@ -27,6 +28,7 @@ public class FinancialReplayService {
     }
     public FinancialReplayService(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,LedgerPostingService posting,RefundEvidencePort refunds,RevenueShareService shares){this(jdbc,tx,json,posting,refunds);this.shares=shares;}
     public FinancialReplayService(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,LedgerPostingService posting,RefundEvidencePort refunds,RevenueShareService shares,com.paymentsledger.dispute.DisputeService disputes){this(jdbc,tx,json,posting,refunds,shares);this.disputes=disputes;}
+    public FinancialReplayService(JdbcTemplate jdbc,PlatformTransactionManager tx,ObjectMapper json,LedgerPostingService posting,RefundEvidencePort refunds,RevenueShareService shares,com.paymentsledger.dispute.DisputeService disputes,com.paymentsledger.payout.PayoutService payouts){this(jdbc,tx,json,posting,refunds,shares,disputes);this.payouts=payouts;}
     public String replay(ProviderScope scope,String btId){return transactions.run(()->{
         var initial=bt(scope,btId,false);
         if(initial==null)throw new IllegalArgumentException("Unknown balance transaction");
@@ -39,15 +41,20 @@ public class FinancialReplayService {
         if(payment!=null)paymentRow=one("SELECT * FROM platform.payment WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? FOR UPDATE",payment,scope.organizationId(),scope.environmentId(),scope.providerAccountId());
         // Acquire rank 20/30/50 before BT and journal locks; reuse the handle after posting.
         var shareLocks=payment==null?null:shares.lock(payment);
-        String outcome=replayLocked(scope,btId,fact,kind,payment,paymentRow,refundMovement);
+        var payoutRow=payouts!=null&&"payout".equals(fact.sourceObjectType())?payouts.lock(scope,fact.sourceObjectId()):null;
+        String outcome=replayLocked(scope,btId,fact,kind,payment,paymentRow,refundMovement,payoutRow);
         if(shareLocks!=null)shares.reconcile(shareLocks,"bt:"+btId);
         return outcome;
     });}
     private String replayLocked(ProviderScope scope,String btId,BalanceTransactionFact fact,
-            FinancialEventNormalizer.Kind kind,UUID payment,Map<String,Object> paymentRow,boolean refundMovement){
+            FinancialEventNormalizer.Kind kind,UUID payment,Map<String,Object> paymentRow,boolean refundMovement,Map<String,Object> payoutRow){
         var row=bt(scope,btId,true);
         // Association writers lock this same BT. If discovery raced their commit, restart before posting.
         if(shares.enabled() && !Objects.equals(payment,sourcePayment(scope,fact)))throw new FinancialTransactions.AssociationChanged();
+        if(payouts!=null&&"payout".equals(fact.sourceObjectType())){
+            var current=payouts.lookup(scope,fact.sourceObjectId());
+            if(!Objects.equals(payoutRow==null?null:payoutRow.get("id"),current==null?null:current.get("id")))throw new FinancialTransactions.AssociationChanged();
+        }
         String state=(String)row.get("state");
         if(!"PENDING_EVIDENCE".equals(state))return state;
         var policy=one("SELECT * FROM platform.ingestion_policy WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=?",scope.organizationId(),scope.environmentId(),scope.providerAccountId(),scope.livemode());
@@ -58,6 +65,10 @@ public class FinancialReplayService {
         if(kind==FinancialEventNormalizer.Kind.QUARANTINE)return quarantine(row,"DOMAIN_FX_OR_SIGN_MISMATCH");
         // Capture/refund can be followed by share journals; lock the same global account union as disputes.
         if(payment!=null&&disputes!=null&&shares.enabled())jdbc.queryForObject("SELECT platform.lock_dispute_accounts(?)",Object.class,payment);
+        if(kind==FinancialEventNormalizer.Kind.PAYOUT){
+            if(payouts==null||payoutRow==null)return mark(row,"PENDING_EVIDENCE","PAYOUT_EVIDENCE_REQUIRED");
+            return payouts.postLocked(scope,fact,(UUID)row.get("id"));
+        }
         if(kind==FinancialEventNormalizer.Kind.DISPUTE){
             if(disputes==null||paymentRow==null)return mark(row,"PENDING_EVIDENCE","DISPUTE_EVIDENCE_REQUIRED");
             return disputes.postLocked(scope,fact,(UUID)row.get("id"));

@@ -1,0 +1,96 @@
+[
+  {
+    "suite": "com.paymentsledger.financialingestion.FinancialRulesTest",
+    "tests": [
+      "chargeUsesActualGrossFeeAndNetInMinorUnits",
+      "canonicalFactsDoNotDependOnJacksonTimeSerialization",
+      "suspenseUsesSignedNetAndNeverCreatesEmptyJournal",
+      "payoutBtClassificationKeepsPrincipalDirectionAndValidatedSourceSeparate",
+      "fxFeeIsIsolated",
+      "refundPreservesPositiveAndNegativeFeeSigns",
+      "classifierQuarantinesDomainsFxAndBadSignsAndKeepsFutureDependenciesPending",
+      "failedRefundReturnWithWrongPrincipalSignIsIsolated",
+      "failedRefundReturnUsesNewPositivePrincipalAndActualFeeEvidence",
+      "overlapUsesSevenBusinessDatesAcrossDstRatherThan168Hours"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest",
+    "tests": [
+      "missingDomainAndBrokenSignedArithmeticFailClosed",
+      "fractionalUtcBoundsRoundUpToPreserveIntegerTimestampMembership",
+      "automaticPayoutIsVerifiedBeforeMembershipQuery",
+      "completeEmptyPagesAreSuccessfulObservations",
+      "balanceIsCurrentSignedPaymentsObservationAndMissingCurrencyIsUnavailable",
+      "incompleteEmptyPagesAndMissingPaginationStateFailClosed",
+      "manualPayoutCannotBeUsedToInferMembership",
+      "disputeReadsPreserveRelationshipsDueDateAndPagination",
+      "everyListItemMustHaveExplicitTestMode",
+      "balanceTransactionsKeepSignedMoneyDomainFeesAndUtcPagination",
+      "paginationCannotRepeatRequestedCursorOrDuplicateIds",
+      "balanceRequiresExplicitTestModeAndBothCurrencyBuckets",
+      "reportRunIsNotPretendedToBeHistoricalBalanceProof",
+      "nativeDisputeSourceIdIsNotAnUnknownAdjustment",
+      "transactionDigestIncludesSourceRelationshipAndObservationTimes",
+      "transactionDomainComesFromBalanceTypeAndUnknownSourcesStayUnknown",
+      "sourceTypeUsesExpandedObjectAndChecksItsMode",
+      "payoutReadsPreserveFailureRelationshipAndPagination"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.bank.PayoutLifecycleIT",
+    "tests": [
+      "laterProviderObservationCreatesNewAutomaticMembershipReadAfterEmptyPage",
+      "payoutWebhookAcceptAndAckAreAtomicAndPaidCreatesNoBankCash",
+      "queryReadEvidenceCannotCrossProviderScopeAndManualRunCannotForgeMembership",
+      "paidAndOutgoingRemainTransitUntilSimulatedBankEvidence",
+      "receiptAfterFullReturnKeepsConflictEvidenceWithoutDoubleAllocation",
+      "membershipRefreshOnlyComparesImmutableMoneyIdentity",
+      "separatePostgresConnectionsRaceForSingleBankLineWithoutOverAllocation",
+      "automaticMembershipUsesProviderFilteredPageAndManualNeverGuesses",
+      "membershipCurrencyMustMatchPayoutAndMutableAvailabilityDoesNotConflict",
+      "returnBeforeOutgoingWaitsThenReplaysExactlyOnce",
+      "amountOverflowInvalidSchemaDuplicateCrossFileAndRuntimeTamperingRejectAtomically",
+      "splitLineFeesAreExactAndDoNotConsumeExtraPrincipal",
+      "financialWorkerQueriesMissingPayoutAndKnownWorkerPersistsRefreshRotation",
+      "wrongDateDoesNotMatchAndFullyMatchedIdempotencyCannotAllocateTwice",
+      "bankReceiptThenReturnUsesSuspenseUntilExplicitBankClawback",
+      "payoutReadWindowPersistsQueryFactsAndMissingSourceRecoveryRunsOutsideTransaction",
+      "actualPspFeesStaySeparateFromPrincipalIncludingSignedFeeReturn",
+      "outOfWindowSharedLineAllocatedToAnotherPayoutCannotProveShortReceipt",
+      "wrongReferenceCurrencyDateAndNonSimulatedSourceHaveNoFinancialEffects",
+      "matchInsertFailureRollsBackJournalProjectionAndBothCounters",
+      "importerAndMatchAreIdempotentButChangedIdentityRejects",
+      "noBankBeforeReturnRestoresPspWithoutBankCash",
+      "partialCompleteEvidenceCanShowShortButIncompleteEvidenceWaits"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payout.PayoutCoreIT",
+    "tests": [
+      "staleObservationRetainsRawFactWithoutRegressingTerminalStatus",
+      "partialReturnOnlyConsumesAvailableTransitAndPreservesFees",
+      "outgoingAndFailureRestoreProviderFundsWithoutBankCash",
+      "unknownProviderStatusCannotMoveMoney",
+      "returnBeforeOutRemainsPending",
+      "staleUnknownStateRemainsRawEvidenceWithoutPoisoningNewerKnownState",
+      "wrongLinkedBtCreatesCaseAndQuarantinesWithoutMoney",
+      "declaredPayoutIdentityCannotBeChangedByLaterObservation",
+      "paidOnlyRetainsObservationAndNeverCreatesBankCash",
+      "unbackedCountersAndHistoryMutationAreRejected",
+      "readOnlyEvidenceMethodsAreScopedToProviderAndPayout"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.payout.PayoutSchemaIT",
+    "tests": [
+      "upgradeFromV11ProvidesAppendOnlyHistoryAndNarrowProvisioningPrivileges"
+    ]
+  },
+  {
+    "suite": "com.paymentsledger.provider.adapter.stripe.PayoutRealReadIT",
+    "tests": [
+      "listAndReadExistingTestPayoutWithoutCreatingFundsOperations"
+    ]
+  }
+]

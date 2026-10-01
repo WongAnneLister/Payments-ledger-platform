@@ -1,6 +1,6 @@
 # 状态机：Payout 与银行匹配
 
-版本：PR00 · 状态：冻结设计，未实施
+版本：PR00 冻结设计 · PR14 已实施，见[运行说明](../runbook/payout-bank.md)
 
 关联：[PRD §8](../product/payment-platform-prd.md) · [账本科目](../ledger/accounts.md) · [不变量 I-06](../ledger/invariants.md) · [手算示例路线 A / §5.3](../ledger/posting-examples.md)
 
