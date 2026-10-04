@@ -1,0 +1,105 @@
+{
+  "classificationNote": "Only assertion failures are behavioral/schema RED. Earlier compile errors, SQL setup/permission errors and skipTests invocations are not represented as feature RED proof. worker-resume-red contains an initial fair-scheduling assertion whose oracle was corrected; only the corrected worker-fair-red is used as that behavior proof.",
+  "cycles": [
+    {
+      "red": "source-final-gates-red.txt",
+      "tests": 3,
+      "failures": 3,
+      "errors": 0,
+      "issues": [
+        "frozen report task retry",
+        "recovered GET without native operation",
+        "cross-provider run linkage"
+      ],
+      "green": "source-final-gates-green.txt"
+    },
+    {
+      "red": "worker-fair-red.txt",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "issue": "unavailable early windows starve later windows"
+    },
+    {
+      "red": "core-safety-red.txt",
+      "tests": 28,
+      "failures": 4,
+      "errors": 0,
+      "issues": [
+        "historical source status",
+        "balanced payout fee tamper",
+        "provider domain isolation",
+        "unprovisioned scope"
+      ]
+    },
+    {
+      "red": "review-safety-red.txt",
+      "tests": 4,
+      "failures": 4,
+      "errors": 0,
+      "issues": [
+        "BT conflict before link",
+        "BT conflict before fulfillment",
+        "durable replay batches",
+        "local mapping defect without independent closing"
+      ]
+    },
+    {
+      "red": "cutoff-freeze-red-recovery-green.txt",
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "issues": [
+        "half-open midnight boundary",
+        "concurrent append after report freeze"
+      ],
+      "parentFixesPassed": 3
+    },
+    {
+      "red": "fee-direction-opening-red.txt",
+      "tests": 4,
+      "failures": 4,
+      "errors": 0,
+      "issues": [
+        "fee direction schema absence",
+        "known opening difference suppressed"
+      ]
+    },
+    {
+      "red": "fee-sign-bank-pins-red.txt",
+      "tests": 4,
+      "failures": 4,
+      "errors": 0,
+      "issues": [
+        "actual payout expense/rebate signs",
+        "missing frozen bank inputs"
+      ]
+    },
+    {
+      "red": "completeness-budget-red.txt",
+      "tests": 36,
+      "failures": 1,
+      "errors": 0,
+      "issue": "drain budget101 enqueues before refusing; Core32+schema3 passed"
+    },
+    {
+      "red": "report-completeness-red.txt",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "issue": "FAIL outcomes hide unclassified evidence and mark run COMPLETE"
+    },
+    {
+      "red": "quality-boundaries-red.txt",
+      "tests": 3,
+      "failures": 3,
+      "errors": 0,
+      "issues": [
+        "multi-currency/domain report isolation",
+        "pending report retry on classification or thrown fetch failure"
+      ],
+      "green": "quality-final-focused-green.txt"
+    }
+  ],
+  "finalGreen": "verification.json"
+}

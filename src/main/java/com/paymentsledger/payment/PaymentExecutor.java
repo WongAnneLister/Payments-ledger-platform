@@ -57,6 +57,9 @@ public class PaymentExecutor {
     private static boolean success(ProviderCallResult<?> result){return result.payload()!=null && (result.classification()==ProviderCallClassification.SUCCESS || result.classification()==ProviderCallClassification.AUTH_REQUIRED);}
     public void refresh(UUID payment){
         outsideTransaction();var p=repository.payment(payment);if(p==null || p.get("checkout_session_id")==null && p.get("payment_intent_id")==null)return;
+        // Recovered captures have immutable source provenance, not a CREATE_CHECKOUT operation.
+        // L3 refreshes their provider evidence through its existing durable task.
+        if("RECONCILIATION".equals(p.get("origin")))return;
         var query=query(p);repository.mergeQuery(payment,repository.createOperation(payment),query.observations(),query.facts());
     }
     ProviderQueryService.Queried query(Map<String,Object> payment){return new ProviderQueryService(repository,checkout,intents,charges).query(payment);}

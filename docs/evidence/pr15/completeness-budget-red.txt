@@ -1,0 +1,319 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 17 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 160 source files with javac [debug parameters release 21] to target/classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ???????????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ??????, ??? -Xlint:deprecation ?????
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 91 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- failsafe:3.5.6:integration-test (default-cli) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.reconciliation.ReconciliationCoreIT
+11:33:17.663 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+11:33:17.665 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+11:33:17.680 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+11:33:17.997 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+11:33:17.998 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+11:33:18.014 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+11:33:18.084 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+11:33:18.186 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+11:33:18.289 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 422e78ed0cbc5474f85b488cc7c2ef0a43175bf8a7233f6785dbc50c8522e01e
+11:33:18.859 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.77504S
+11:33:18.875 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+11:33:18.876 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+11:33:18.876 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+11:33:18.877 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+11:33:18.920 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: a5a6506e80c7814abb590d51aaadaadbc86f5723c04dcdc865aa570ed7d3d551
+11:33:20.489 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.612148S
+11:33:20.489 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF)
+11:33:20.496 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+11:33:20.627 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 130 ms.
+11:33:20.853 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:20.917 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+11:33:20.920 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.022s)
+11:33:20.934 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+11:33:20.973 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+11:33:20.986 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+11:33:20.990 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+11:33:21.016 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+11:33:21.071 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+11:33:21.121 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+11:33:21.163 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+11:33:21.191 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+11:33:21.270 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+11:33:21.371 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+11:33:21.428 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+11:33:21.479 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "10 - revenue share"
+11:33:21.511 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "11 - dispute lifecycle"
+11:33:21.559 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "12 - payout bank evidence"
+11:33:21.615 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "13 - payout query evidence"
+11:33:21.639 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "14 - reconciliation evidence"
+11:33:21.666 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "15 - reconciliation source recovery"
+11:33:21.714 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 15 migrations to schema "platform", now at version v15 (execution time 00:00.489s)
+11:33:22.338 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:22.358 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.009s)
+11:33:22.374 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:22.374 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:22.998 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:23.010 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.005s)
+11:33:23.022 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:23.023 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:23.469 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:23.495 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.006s)
+11:33:23.510 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:23.512 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:24.051 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:24.071 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.011s)
+11:33:24.113 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:24.114 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:24.705 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:24.733 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.011s)
+11:33:24.750 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:24.751 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:25.436 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:25.467 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.012s)
+11:33:25.487 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:25.488 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:25.932 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:25.945 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.005s)
+11:33:25.959 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:25.960 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:26.571 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:26.598 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.019s)
+11:33:26.617 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:26.618 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:26.989 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:27.006 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.006s)
+11:33:27.022 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:27.022 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:27.474 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:27.486 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:27.512 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:27.513 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:27.935 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:27.946 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:27.961 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:27.961 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:28.293 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:28.304 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:28.316 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:28.317 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:28.764 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:28.775 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.005s)
+11:33:28.788 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:28.789 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:29.127 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:29.164 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.026s)
+11:33:29.185 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:29.186 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:29.543 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:29.553 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:29.567 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:29.568 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:29.848 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:29.860 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:29.873 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:29.873 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:30.189 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:30.199 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.005s)
+11:33:30.210 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:30.210 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:30.492 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:30.502 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:30.513 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:30.513 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:30.848 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:30.858 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:30.899 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:30.901 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:31.495 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:31.529 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.020s)
+11:33:31.559 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:31.560 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:32.006 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:32.018 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:32.030 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:32.031 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:32.710 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:32.722 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:32.736 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:32.736 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:33.080 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:33.090 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:33.100 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:33.101 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:33.390 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:33.402 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.005s)
+11:33:33.417 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:33.418 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:33.704 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:33.714 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:33.726 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:33.726 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:34.023 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:34.033 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:34.046 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:34.046 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:34.718 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:34.729 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:34.741 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:34.742 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:35.084 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:35.097 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.005s)
+11:33:35.109 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:35.109 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:35.450 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:35.463 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.006s)
+11:33:35.475 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:35.476 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:35.751 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:35.762 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:35.773 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:35.774 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:33:36.071 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:53861/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:36.081 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.003s)
+11:33:36.093 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:36.094 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+[INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 19.26 s -- in com.paymentsledger.reconciliation.ReconciliationCoreIT
+[INFO] Running com.paymentsledger.reconciliation.ReconciliationSchemaIT
+11:33:36.876 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+11:33:36.973 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 8f1b863a65e6e19c1cc994e610535981aefd4679810c2f09ef41f4a7c49047f9
+11:33:37.985 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.108894S
+11:33:37.985 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:54929/test?loggerLevel=OFF)
+11:33:37.986 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+11:33:38.008 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 21 ms.
+11:33:38.031 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54929/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:38.042 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+11:33:38.043 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:38.051 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+11:33:38.072 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+11:33:38.075 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+11:33:38.077 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+11:33:38.091 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+11:33:38.126 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+11:33:38.166 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+11:33:38.206 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+11:33:38.227 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+11:33:38.247 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+11:33:38.276 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+11:33:38.321 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+11:33:38.364 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "10 - revenue share"
+11:33:38.407 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "11 - dispute lifecycle"
+11:33:38.440 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "12 - payout bank evidence"
+11:33:38.482 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "13 - payout query evidence"
+11:33:38.508 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 13 migrations to schema "platform", now at version v13 (execution time 00:00.306s)
+11:33:38.521 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54929/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:38.532 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:38.543 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 13
+11:33:38.546 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "14 - reconciliation evidence"
+11:33:38.573 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "15 - reconciliation source recovery"
+11:33:38.602 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 2 migrations to schema "platform", now at version v15 (execution time 00:00.040s)
+11:33:38.726 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54929/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:38.736 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.004s)
+11:33:38.747 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:33:38.748 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.004 s -- in com.paymentsledger.reconciliation.ReconciliationSchemaIT
+[INFO] Running com.paymentsledger.payment.ReconciliationRecoveryIT
+11:33:38.888 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+11:33:38.928 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: bbfd1eb73082696fdbb1129f03196c080b8b8eabc490e7cf1ed604a9181895c5
+11:33:39.981 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.092594S
+11:33:39.982 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:54981/test?loggerLevel=OFF)
+11:33:39.982 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+11:33:40.020 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 37 ms.
+11:33:40.036 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:54981/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:33:40.047 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+11:33:40.047 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.003s)
+11:33:40.054 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+11:33:40.071 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+11:33:40.073 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+11:33:40.074 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+11:33:40.088 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+11:33:40.122 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+11:33:40.158 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+11:33:40.200 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+11:33:40.219 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+11:33:40.241 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+11:33:40.271 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+11:33:40.310 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+11:33:40.353 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "10 - revenue share"
+11:33:40.396 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "11 - dispute lifecycle"
+11:33:40.436 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "12 - payout bank evidence"
+11:33:40.479 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "13 - payout query evidence"
+11:33:40.505 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "14 - reconciliation evidence"
+11:33:40.537 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "15 - reconciliation source recovery"
+11:33:40.568 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 15 migrations to schema "platform", now at version v15 (execution time 00:00.353s)
+11:33:40.965 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Starting...
+11:33:40.981 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5fa5c8cf
+11:33:40.981 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Start completed.
+11:33:41.058 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Shutdown initiated...
+11:33:41.059 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Shutdown completed.
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 2.504 s <<< FAILURE! -- in com.paymentsledger.payment.ReconciliationRecoveryIT
+[ERROR] com.paymentsledger.payment.ReconciliationRecoveryIT.invalidDrainBudgetIsRejectedBeforeAnyTaskIsCreated -- Time elapsed: 1.041 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 0L
+ but was: 1L
+	at com.paymentsledger.payment.ReconciliationRecoveryIT.invalidDrainBudgetIsRejectedBeforeAnyTaskIsCreated(ReconciliationRecoveryIT.java:202)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   ReconciliationRecoveryIT.invalidDrainBudgetIsRejectedBeforeAnyTaskIsCreated:202
+expected: 0L
+ but was: 1L
+[INFO]
+[ERROR] Tests run: 36, Failures: 1, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- failsafe:3.5.6:verify (default-cli) @ payments-ledger-platform ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  31.753 s
+[INFO] Finished at: 2026-10-04T11:33:41+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.6:verify (default-cli) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/target/failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

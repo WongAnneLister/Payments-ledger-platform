@@ -1,6 +1,8 @@
 # 七项资金不变量：提交强制与独立核对
 
-版本：PR00 · 状态：冻结设计，未实施
+版本：PR15 · 状态：本地提交约束与七项夜间扫描已实施；外部一致性依赖完整、可比的独立证据
+
+运行入口、报告版本和证据边界见[对账运行说明](../runbook/reconciliation.md)。七项扫描把 I-01/I-02 合并为封存与双向覆盖检查，另列 BT 页面/事件覆盖；不会增加资金不变量。
 
 关联：[PRD §10](../product/payment-platform-prd.md) · [验收 §3](../product/payment-platform-acceptance.md) · [账本科目](accounts.md) · [手算示例](posting-examples.md) · [需求映射 §3](../spec/requirements-map.md)
 

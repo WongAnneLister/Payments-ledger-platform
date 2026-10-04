@@ -1,0 +1,35 @@
+{
+  "evidenceScope": "PostgreSQL/Provider fixtures. Statuses describe local fixture coverage only; real historical Stripe reports and bank settlement remain NOT_RUN.",
+  "cases": {
+    "AC-V1-15": [
+      "OperationRecoveryIT",
+      "ReconciliationRecoveryIT"
+    ],
+    "AC-V1-16": [
+      "OperationRecoveryIT",
+      "RefundRecoveryIT",
+      "ReconciliationRecoveryIT"
+    ],
+    "AC-V1-27": [
+      "PayoutLifecycleIT",
+      "ReconciliationCoreIT"
+    ],
+    "AC-V1-28": [
+      "ReconciliationRecoveryIT"
+    ],
+    "AC-V1-29": [
+      "ReconciliationCoreIT",
+      "FeeArithmeticTest"
+    ],
+    "AC-V1-30": [
+      "ReconciliationWindowsTest",
+      "ReconciliationCoreIT"
+    ],
+    "AC-V1-33": [
+      "ReconciliationCoreIT",
+      "ReconciliationRecoveryIT",
+      "ReconciliationSchemaIT"
+    ]
+  },
+  "finalStatusSource": "verification.json"
+}

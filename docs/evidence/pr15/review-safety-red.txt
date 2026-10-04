@@ -1,0 +1,209 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 17 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 91 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- failsafe:3.5.6:integration-test (default-cli) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.reconciliation.ReconciliationCoreIT
+11:18:11.844 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+11:18:11.846 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+11:18:11.860 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+11:18:12.146 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+11:18:12.146 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+11:18:12.159 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+11:18:12.191 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+11:18:12.272 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+11:18:12.358 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 5dee032ff7f2490eb66b96c1a01eafeafcc810a81f6aaeaa0fefa5efe9f43ae0
+11:18:12.807 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.616261S
+11:18:12.813 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+11:18:12.813 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+11:18:12.813 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+11:18:12.813 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+11:18:12.872 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 49f468c2bfaec5537dc5337a835302167b5e063584cebc835c96d11b36908c1b
+11:18:14.149 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.335433S
+11:18:14.150 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:64011/test?loggerLevel=OFF)
+11:18:14.157 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+11:18:14.297 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 139 ms.
+11:18:14.468 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:64011/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:18:14.519 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+11:18:14.522 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.020s)
+11:18:14.536 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+11:18:14.571 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+11:18:14.601 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+11:18:14.606 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+11:18:14.633 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+11:18:14.684 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+11:18:14.730 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+11:18:14.784 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+11:18:14.813 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+11:18:14.844 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+11:18:14.878 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+11:18:14.923 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+11:18:14.977 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "10 - revenue share"
+11:18:15.009 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "11 - dispute lifecycle"
+11:18:15.047 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "12 - payout bank evidence"
+11:18:15.092 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "13 - payout query evidence"
+11:18:15.121 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "14 - reconciliation evidence"
+11:18:15.159 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "15 - reconciliation source recovery"
+11:18:15.195 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 15 migrations to schema "platform", now at version v15 (execution time 00:00.429s)
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 4.137 s <<< FAILURE! -- in com.paymentsledger.reconciliation.ReconciliationCoreIT
+[ERROR] com.paymentsledger.reconciliation.ReconciliationCoreIT.missingIndependentClosingCannotHideDefiniteLocalBtMappingViolation -- Time elapsed: 1.423 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "FAIL"
+ but was: "INCOMPLETE"
+	at com.paymentsledger.reconciliation.ReconciliationCoreIT.missingIndependentClosingCannotHideDefiniteLocalBtMappingViolation(ReconciliationCoreIT.java:334)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] Running com.paymentsledger.payment.ReconciliationRecoveryIT
+11:18:15.941 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+11:18:16.036 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: cb2d0d8fc5ef45f67bcc0f31a6b610759ed6a5d140f2091589e3542510404620
+11:18:17.132 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.19122S
+11:18:17.132 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:64074/test?loggerLevel=OFF)
+11:18:17.132 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+11:18:17.153 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 20 ms.
+11:18:17.173 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:64074/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:18:17.188 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+11:18:17.189 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.006s)
+11:18:17.196 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+11:18:17.214 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+11:18:17.217 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+11:18:17.218 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+11:18:17.233 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+11:18:17.281 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+11:18:17.313 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+11:18:17.351 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+11:18:17.376 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+11:18:17.399 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+11:18:17.449 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+11:18:17.500 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+11:18:17.544 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "10 - revenue share"
+11:18:17.572 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "11 - dispute lifecycle"
+11:18:17.605 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "12 - payout bank evidence"
+11:18:17.648 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "13 - payout query evidence"
+11:18:17.671 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "14 - reconciliation evidence"
+11:18:17.696 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "15 - reconciliation source recovery"
+11:18:17.743 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 15 migrations to schema "platform", now at version v15 (execution time 00:00.371s)
+11:18:18.152 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Starting...
+11:18:18.166 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@740b6628
+11:18:18.167 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Start completed.
+11:18:18.913 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Shutdown initiated...
+11:18:18.914 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Shutdown completed.
+11:18:18.942 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:64074/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:18:18.959 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.007s)
+11:18:18.973 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:18:18.973 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:18:19.144 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Starting...
+11:18:19.150 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@28ee0a3c
+11:18:19.151 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Start completed.
+11:18:19.287 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Shutdown initiated...
+11:18:19.297 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Shutdown completed.
+11:18:19.312 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:64074/test?loggerLevel=OFF (PostgreSQL 16.14)
+11:18:19.324 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 15 migrations (execution time 00:00.005s)
+11:18:19.336 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+11:18:19.338 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+11:18:19.520 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Starting...
+11:18:19.526 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@32507479
+11:18:19.526 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Start completed.
+11:18:19.615 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Shutdown initiated...
+11:18:19.616 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Shutdown completed.
+[ERROR] Tests run: 3, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 3.901 s <<< FAILURE! -- in com.paymentsledger.payment.ReconciliationRecoveryIT
+[ERROR] com.paymentsledger.payment.ReconciliationRecoveryIT.moreThanOneReplayBatchRemainsOpenUntilAllFactsWereAttempted -- Time elapsed: 1.765 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: null
+ but was: 2026-10-04T08:01:40.000 (java.sql.Timestamp)
+	at com.paymentsledger.payment.ReconciliationRecoveryIT.moreThanOneReplayBatchRemainsOpenUntilAllFactsWereAttempted(ReconciliationRecoveryIT.java:197)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.payment.ReconciliationRecoveryIT.conflictDiscoveredAfterLinkPreventsHistoricalFulfillment -- Time elapsed: 0.378 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+Expecting value to be false but was true
+	at com.paymentsledger.payment.ReconciliationRecoveryIT.conflictDiscoveredAfterLinkPreventsHistoricalFulfillment(ReconciliationRecoveryIT.java:190)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.payment.ReconciliationRecoveryIT.conflictingBtCannotCreateRecoveredPaymentOrHistoricalNotification -- Time elapsed: 0.317 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 0L
+ but was: 1L
+	at com.paymentsledger.payment.ReconciliationRecoveryIT.conflictingBtCannotCreateRecoveredPaymentOrHistoricalNotification(ReconciliationRecoveryIT.java:186)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   ReconciliationRecoveryIT.conflictDiscoveredAfterLinkPreventsHistoricalFulfillment:190
+Expecting value to be false but was true
+[ERROR]   ReconciliationRecoveryIT.conflictingBtCannotCreateRecoveredPaymentOrHistoricalNotification:186
+expected: 0L
+ but was: 1L
+[ERROR]   ReconciliationRecoveryIT.moreThanOneReplayBatchRemainsOpenUntilAllFactsWereAttempted:197
+expected: null
+ but was: 2026-10-04T08:01:40.000 (java.sql.Timestamp)
+[ERROR]   ReconciliationCoreIT.missingIndependentClosingCannotHideDefiniteLocalBtMappingViolation:334
+expected: "FAIL"
+ but was: "INCOMPLETE"
+[INFO]
+[ERROR] Tests run: 4, Failures: 4, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- failsafe:3.5.6:verify (default-cli) @ payments-ledger-platform ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  12.648 s
+[INFO] Finished at: 2026-10-04T11:18:19+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.6:verify (default-cli) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr15-reconciliation/target/failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

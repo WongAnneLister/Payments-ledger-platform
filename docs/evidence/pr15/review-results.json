@@ -1,0 +1,26 @@
+{
+  "specReview": {
+    "status": "PASS",
+    "reviewer": "pr15_spec_review",
+    "initialFindings": [
+      "BT evidence conflict could authorize recovery and fulfillment",
+      "midnight from boundary incorrectly included in opening",
+      "payout fee sign follows principal incorrectly",
+      "fixed replay batch prematurely freezes",
+      "definite PSP mapping/opening violation masked by missing evidence"
+    ],
+    "additionalEvidence": "all scoped bank statements/unmatched lines/entries and times pinned; concurrent evidence insert guarded with FOR SHARE",
+    "final": "All findings addressed; no remaining concrete blocking spec gap."
+  },
+  "qualityReview": {
+    "status": "PASS",
+    "reviewer": "pr15_quality_review",
+    "initialFindings": [
+      "foreign currency/domain facts incorrectly block scoped report",
+      "transient fetch abandons previously pending report"
+    ],
+    "redProof": "quality-boundaries-red.txt: 3 tests, 3 assertion failures, 0 errors",
+    "final": "Account-wide coverage retained; scoped checks filter unrelated money. Pending report ID retained through transient/throw fetches before deadline. No remaining actionable blocker."
+  },
+  "reviewLimit": "Independent read-only review; parent ran all Maven verification commands serially."
+}

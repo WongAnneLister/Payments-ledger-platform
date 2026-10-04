@@ -1,0 +1,270 @@
+[
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationWindowsTest.localMidnightsProduce23And25HourWindows",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.FeeArithmeticTest.exactSignedPercentageAndFlatFeeDoNotOverflowIntermediateLong",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationSchemaIT.feeDirectionIsVersionedAndDefaultsToPrincipalCompatibility",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationSchemaIT.evidenceChecksAndFeeConfigurationHaveMinimalPrivileges",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationSchemaIT.upgradesV13AndReapplyHasNoPendingMigration",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoverySchemaIT.upgradePr14AddsReconciliationAndExtendsExistingRecoveryThenReapplyIsEmpty",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.openingJournalAndHistoricalBtAreNotCountedTwice",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.payoutReturnRebateModelMatchesNegativeFeeOnPositivePrincipal",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.feeModelMismatchPreservesActualFeeAndVersionedResidual",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.effectiveShareWithoutJournalHistoryFailsCoverageAndCap",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.windowCompleteFlagCannotHideMissingAcceptedPage",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.confirmedPspReturnPassesPayoutWithoutFabricatedBankReceipt",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.missingFeeModelIsExplicitAndCannotChangeActualMoney",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.missingIndependentClosingCannotHideDefiniteLocalBtMappingViolation",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.providerSourceCannotBelongToTwoBalanceDomains",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.balancedPayoutFeeEntryTamperFailsIndependentPayoutCheck",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.racingEvidenceInsertCannotAppendAfterFrozenSnapshot",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.absentIndependentClosingAndNonterminalPaginationRemainIncomplete",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.partialBankWithoutCompletenessRemainsIncomplete",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.payoutExpenseModelMatchesPositiveFeeOnNegativePrincipal",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.wrongAccountOrCurrentCutoffCannotServeAsYesterdayClosing",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.projectionTamperingIsDetectedIndependently",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.canonicalSourceAmountMismatchFailsTransactionComparison",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.journalWithoutAcceptedEventFailsReverseCoverage",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.historicalRefundDebitWithLaterFailedStatusIsIncompleteRatherThanFalseMismatch",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.accountWidePagesRetainCoverageWithoutLeakingOtherMoneyScopes",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.payoutCountersWithoutAuthoritativeFinancialHistoryFail",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.pendingAvailabilityRefreshDoesNotAlterFrozenInputOrMoney",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.resumeDuplicateAndLateOverlappingRunKeepOneJournalPerBt",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.arbitraryOpeningCannotMakeThreeSidesAgree",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.missingProvisionedLedgerScopeStillPersistsSevenIncompleteResults",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.acceptedEventWithoutJournalFailsFirstCheck",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.exactBusinessWindowStartIsDeltaUnderZeroOpeningPolicy",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.definiteFailuresCannotHideUnclassifiedInputsInOverallCompleteness",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.completeBankShortReceiptFailsAgainOnFreshNightlyVersion",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.reservationControlWithoutBackingRefundFailsReconstruction",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.definiteOpeningMismatchFailsEvenWithUnrelatedUnresolvedRefund",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.scopedQueryAndImmutableChildrenRejectCrossScopeAndAdminMutation",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.independentClosingDetectsOmittedExternalRefundAndPersistsSevenImmutableOutcomes",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT.nonBtPspMovementWithoutBusinessCutoffIsIncomplete",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.metadataOnlyEvenMatchingUniqueAmountIsInsufficient",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.conflictingChargeAmountRefusesLinkAndRetainsException",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.moreThanOneReplayBatchRemainsOpenUntilAllFactsWereAttempted",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.unavailableReadWaitsThenLeaseRetryUsesTheSameTask",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.disabledCurrencyPreventsAssociationEvenWithValidServerBinding",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.incompleteOldWindowsDoNotStarveLaterWindows",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.transientReportFetchKeepsPendingIdUntilAvailable",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.sourceLeaseCanContinueAfterFrozenIncompleteReportWithoutRewritingItsExceptions",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.recoveredPaymentCanBeReadWithoutInventingNativeCreateOperation",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.trustedExistingOrderRestoresMissingPaymentAndPostsOnceWithReconciliationOrigin",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.expiredOrDisabledOrderEligibilityNeverTriggersHistoricalFulfillment",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.pendingPeriodReportResumesWithFetchWithoutRequestingAnotherReport",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.runtimeCannotFabricateTrustedOrderBinding",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.staleLeaseCannotLinkButExpiryAllowsAnotherOwner",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.conflictDiscoveredAfterLinkPreventsHistoricalFulfillment",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.scopedRunCannotBeEnqueuedByAnotherProviderAccount",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.injectedProvenanceFailureRollsBackPaymentAndNotification",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.serverNativeCheckoutObservationCreatesDurableBinding",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.forgedRecoveryRunCannotCrossProviderScopeOnPaymentInsert",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.sourceVersionMismatchCannotMixQueryProofWithPinnedBtPage",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.noOrderPreservesUnallocatedEvidenceWithoutInventingBusinessOrFulfillment",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.invalidDrainBudgetIsRejectedBeforeAnyTaskIsCreated",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.conflictingBtCannotCreateRecoveredPaymentOrHistoricalNotification",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.thrownReportFetchKeepsPendingIdUntilAvailable",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.concurrentClaimersShareOneDurableSourceTask",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.workerBuildsSevenBusinessWindowsAndKeepsMissingReportIncomplete",
+    "outcome": "PASS"
+  },
+  {
+    "name": "com.paymentsledger.payment.ReconciliationRecoveryIT.independentPeriodReportIsReadOutsideTransactionAndComparedAtExactCutoffs",
+    "outcome": "PASS"
+  }
+]

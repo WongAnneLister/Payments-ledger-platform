@@ -1,0 +1,15 @@
+{
+  "fixtureId": "pr15-independent-closing-v1",
+  "evidenceType": "INDEPENDENT_FIXTURE",
+  "notRealAccountEvidence": true,
+  "currency": "USD",
+  "domain": "PAYMENTS",
+  "openingMinor": 0,
+  "importedNetMinor": 1000,
+  "externalRefundMissingFromImportMinor": 100,
+  "independentClosingMinor": 900,
+  "expectedResidualMinor": 100,
+  "expectedCheck5": "FAIL",
+  "oracle": "External constants authored independently; production calculations are not used to derive expected closing.",
+  "coveredBy": "ReconciliationCoreIT.independentClosingDetectsOmittedExternalRefundAndPersistsSevenImmutableOutcomes"
+}
