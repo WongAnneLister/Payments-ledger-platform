@@ -1,0 +1,230 @@
+[
+  {
+    "class": "com.paymentsledger.payment.PaymentRealContractIT",
+    "test": "realAuthenticatedApplicationCreatesQueriesAndExpiresHostedSession",
+    "status": "SKIPPED",
+    "seconds": "0.0"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "allReadResourcesReturnCamelCaseContractAndPartnerOnlyOwnAllocation",
+    "status": "PASS",
+    "seconds": "3.253"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "rejectedOpsReadsAreAuditedWithoutCallerScopeOrSecrets",
+    "status": "PASS",
+    "seconds": "0.813"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "pendingTaskFilterIncludesWaitingAndReadyTasks",
+    "status": "PASS",
+    "seconds": "0.817"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "cappedTraceShowsNewestEvidenceAndDeclaresIncompleteSections",
+    "status": "PASS",
+    "seconds": "1.732"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "adjustmentAliasesShareOneIdempotencyNamespace",
+    "status": "PASS",
+    "seconds": "0.691"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "runEvidenceReferencesAreDiscoverableWithoutRawPayload",
+    "status": "PASS",
+    "seconds": "0.645"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "realBankMatchingPersistsOneJournalAndShortReceiptTruth",
+    "status": "PASS",
+    "seconds": "0.765"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "otherRunEvidenceCannotResolveExceptionButOwnRunEvidenceCan",
+    "status": "PASS",
+    "seconds": "0.836"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "exceptionLatestDispositionFollowsSerializedActionOrderNotTransactionStart",
+    "status": "PASS",
+    "seconds": "0.737"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "everyWriteDenialIsAuditedWithoutRawReason",
+    "status": "PASS",
+    "seconds": "0.9"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "runCheckResultUsesOnlyOutcomeAndPrioritizesDefiniteFailure",
+    "status": "PASS",
+    "seconds": "1.079"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "bankLegacyTranslationDigestAndDuplicateFixtureAreSafe",
+    "status": "PASS",
+    "seconds": "0.824"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "partialRefundEvidenceDoesNotBecomePostedAndTimelinePreservesObservationTime",
+    "status": "PASS",
+    "seconds": "0.848"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "everyFrozenReadRouteAuthenticatesAndAuthorizes",
+    "status": "PASS",
+    "seconds": "2.41"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "directUnrelatedJournalEvidenceCannotResolveException",
+    "status": "PASS",
+    "seconds": "0.917"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "nativePaymentAndRefundResourceIdsAreAccepted",
+    "status": "PASS",
+    "seconds": "0.724"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "reviewerCanInspectScopedDraftThroughApiAndForeignSelectorsAreRejected",
+    "status": "PASS",
+    "seconds": "0.896"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "replayAuditReportsCurrentResourceWhileOriginalResponseIsPreserved",
+    "status": "PASS",
+    "seconds": "1.266"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "reconciliationReplayConflictCurrencyAndTrustedScope",
+    "status": "PASS",
+    "seconds": "1.055"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "exceptionAuditBeforeReflectsSerializedCurrentDisposition",
+    "status": "PASS",
+    "seconds": "0.7"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "requiredFieldsAndRoleMatrixReturnControlledErrors",
+    "status": "PASS",
+    "seconds": "2.755"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "resolutionJournalMustBelongToTheExceptionAdjustment",
+    "status": "PASS",
+    "seconds": "1.103"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "concurrentApprovalAndPostingFailureRollbackLeaveOneFinalJournal",
+    "status": "PASS",
+    "seconds": "2.116"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "auditFailureRollsBackSuccessfulApprovalAndCanRetry",
+    "status": "PASS",
+    "seconds": "1.886"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "scopedExceptionEvidenceAndRetryNeverResetFinalLeaseOrExpiredUnknown",
+    "status": "PASS",
+    "seconds": "1.443"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "authenticatedFilterDenialsAndMalformedPathNeverPersistSecrets",
+    "status": "PASS",
+    "seconds": "0.603"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "sourceRetryUsesWorkerTaskThenBalanceTransactionLockOrder",
+    "status": "PASS",
+    "seconds": "0.682"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "adjustmentRequiresScopedEvidenceAndIndependentApprovalPostsExactlyOnce",
+    "status": "PASS",
+    "seconds": "1.127"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "truncatedJournalHistoryDoesNotMislabelCompleteRevenueShareLines",
+    "status": "PASS",
+    "seconds": "2.391"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "targetDetailsIncludeTheirApprovedManualAdjustmentJournal",
+    "status": "PASS",
+    "seconds": "1.711"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsApiIT",
+    "test": "reconciliationCompletedDayUsesConfiguredBusinessZoneOnly",
+    "status": "PASS",
+    "seconds": "0.701"
+  },
+  {
+    "class": "com.paymentsledger.provider.adapter.stripe.PayoutRealReadIT",
+    "test": "listAndReadExistingTestPayoutWithoutCreatingFundsOperations",
+    "status": "SKIPPED",
+    "seconds": "0.0"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsSchemaIT",
+    "test": "upgradesV15AndHasImmutableOpsEvidenceAndApprovalConstraints",
+    "status": "PASS",
+    "seconds": "0.102"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsSchemaIT",
+    "test": "runtimeAdjustmentTargetMustExistAndMatchScopeCurrencyAndProvider",
+    "status": "PASS",
+    "seconds": "0.185"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsSchemaIT",
+    "test": "runtimeCannotDeleteOpsOrAlterAuditAndHistoricalEvidence",
+    "status": "PASS",
+    "seconds": "0.079"
+  },
+  {
+    "class": "com.paymentsledger.ops.OpsSchemaIT",
+    "test": "runtimeSqlCannotCrossScopeEvidenceSelfApproveOrAlterFinalDecision",
+    "status": "PASS",
+    "seconds": "0.215"
+  },
+  {
+    "class": "com.paymentsledger.provider.adapter.stripe.StripeRealContractIT",
+    "test": "testModeContractEvidence",
+    "status": "SKIPPED",
+    "seconds": "0.0"
+  }
+]

@@ -1,0 +1,292 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 18 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 165 source files with javac [debug parameters release 21] to target/classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ???????????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ??????, ??? -Xlint:deprecation ?????
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 93 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.reconciliation.ReconciliationWindowsTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.055 s -- in com.paymentsledger.reconciliation.ReconciliationWindowsTest
+[INFO] Running com.paymentsledger.identity.AuthenticationFilterTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+14:15:01.914 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+14:15:02.267 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+14:15:02.588 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+14:15:02.885 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=WORKER
+14:15:03.192 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+14:15:03.495 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.565 s -- in com.paymentsledger.identity.AuthenticationFilterTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- jar:3.4.2:jar (default-jar) @ payments-ledger-platform ---
+[INFO] Building jar: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- spring-boot:3.5.16:repackage (repackage) @ payments-ledger-platform ---
+[INFO] Replacing main artifact /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar.original
+[INFO]
+[INFO] --- failsafe:3.5.6:integration-test (default) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.ops.OpsSchemaIT
+14:15:04.612 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+14:15:04.614 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+14:15:04.629 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+14:15:04.882 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+14:15:04.883 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+14:15:04.894 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+14:15:04.924 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+14:15:05.006 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+14:15:05.214 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 5fcf53edd134bab9ec00cfd17a8ea067e840cc880732ff444fc57f1462a11131
+14:15:05.975 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT1.050856S
+14:15:05.988 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+14:15:05.988 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+14:15:05.988 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+14:15:05.989 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+14:15:06.268 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 21b7dbc4c236509d7093a3306dcca637883494fa0a4099bdb3c003ef656d426c
+14:15:07.963 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.974162S
+14:15:07.972 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:64707/test?loggerLevel=OFF)
+14:15:07.990 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+14:15:08.139 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 149 ms.
+14:15:08.339 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:64707/test?loggerLevel=OFF (PostgreSQL 16.14)
+14:15:08.419 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+14:15:08.427 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 16 migrations (execution time 00:00.047s)
+14:15:08.446 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+14:15:08.489 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+14:15:08.496 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+14:15:08.501 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+14:15:08.527 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+14:15:08.579 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+14:15:08.633 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+14:15:08.742 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+14:15:08.773 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+14:15:08.813 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+14:15:08.860 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+14:15:08.908 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+14:15:08.964 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "10 - revenue share"
+14:15:08.995 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "11 - dispute lifecycle"
+14:15:09.035 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "12 - payout bank evidence"
+14:15:09.085 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "13 - payout query evidence"
+14:15:09.111 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "14 - reconciliation evidence"
+14:15:09.141 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "15 - reconciliation source recovery"
+14:15:09.179 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 15 migrations to schema "platform", now at version v15 (execution time 00:00.492s)
+14:15:09.217 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:64707/test?loggerLevel=OFF (PostgreSQL 16.14)
+14:15:09.242 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 16 migrations (execution time 00:00.009s)
+14:15:09.257 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+14:15:09.268 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "16 - ops commands approval audit"
+14:15:09.302 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 1 migration to schema "platform", now at version v16 (execution time 00:00.027s)
+14:15:09.500 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:64707/test?loggerLevel=OFF (PostgreSQL 16.14)
+14:15:09.518 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 16 migrations (execution time 00:00.008s)
+14:15:09.535 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 16
+14:15:09.536 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.278 s -- in com.paymentsledger.ops.OpsSchemaIT
+[INFO] Running com.paymentsledger.ops.OpsApiIT
+14:15:09.987 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+14:15:10.062 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 2625f63c4e1fe4653fbde873c23c358a75363ee78621e9d1bdc61c4583d048e6
+14:15:11.379 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.391703S
+14:15:11.379 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:64775/test?loggerLevel=OFF)
+14:15:11.380 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+14:15:11.401 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 20 ms.
+14:15:11.460 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.paymentsledger.ops.OpsApiIT]: OpsApiIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+14:15:11.534 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ops.OpsApiIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-04T14:15:11.763+08:00 INFO  [-] com.paymentsledger.ops.OpsApiIT - Starting OpsApiIT using Java 21.0.12.1 with PID 64285 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops)
+2026-10-04T14:15:11.764+08:00 INFO  [-] com.paymentsledger.ops.OpsApiIT - The following 2 profiles are active: "api", "test"
+2026-10-04T14:15:12.431+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-10-04T14:15:12.442+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-04T14:15:12.442+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-10-04T14:15:12.465+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-04T14:15:12.465+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 694 ms
+2026-10-04T14:15:12.559+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:64775/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-10-04T14:15:12.572+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-10-04T14:15:12.573+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 16 migrations (execution time 00:00.004s)
+2026-10-04T14:15:12.581+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-10-04T14:15:12.598+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-10-04T14:15:12.601+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-10-04T14:15:12.602+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-10-04T14:15:12.616+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-10-04T14:15:12.665+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-10-04T14:15:12.703+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-10-04T14:15:12.744+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-10-04T14:15:12.767+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-10-04T14:15:12.793+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-10-04T14:15:12.834+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-10-04T14:15:12.920+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-10-04T14:15:12.977+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "10 - revenue share"
+2026-10-04T14:15:13.011+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "11 - dispute lifecycle"
+2026-10-04T14:15:13.054+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "12 - payout bank evidence"
+2026-10-04T14:15:13.103+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "13 - payout query evidence"
+2026-10-04T14:15:13.130+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "14 - reconciliation evidence"
+2026-10-04T14:15:13.165+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "15 - reconciliation source recovery"
+2026-10-04T14:15:13.221+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "16 - ops commands approval audit"
+2026-10-04T14:15:13.249+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 16 migrations to schema "platform", now at version v16 (execution time 00:00.481s)
+2026-10-04T14:15:13.606+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-10-04T14:15:14.011+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-10-04T14:15:14.152+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 64814 (http) with context path '/'
+2026-10-04T14:15:14.167+08:00 INFO  [-] com.paymentsledger.ops.OpsApiIT - Started OpsApiIT in 2.576 seconds (process running for 9.861)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-10-04T14:15:15.189+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-04T14:15:15.190+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-04T14:15:15.190+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-10-04T14:15:16.637+08:00 WARN  [req_45a17a6338b54ca7abcf7612a3368537] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:16.729+08:00 WARN  [req_fb66a9cbee674bd8af3f0ff2e31522c6] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:16.813+08:00 WARN  [req_910565ba02b448f7af40b3f146cbf5ab] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:16.898+08:00 WARN  [req_19eec28a4043433eb558d41de7b7b1b8] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:16.984+08:00 WARN  [req_62773da24a484bbebd139d28985a7f74] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:17.067+08:00 WARN  [req_93e330d180d14ec3b44c81ebface166b] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:17.158+08:00 WARN  [req_9d9faaed84b04a4b9158c300155bc88b] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:17.241+08:00 WARN  [req_1762588f1bfd48a39e583e499c86fcd2] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:17.324+08:00 WARN  [req_177742782733423ba4a2c1399a323cd0] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:17.411+08:00 WARN  [req_02542a01b98348c682125ba10c05e2be] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:17.499+08:00 WARN  [req_456c5fd62aba40449422463f9d68050f] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:17.612+08:00 WARN  [req_5ee3b38c346a45c2b64e58274c2ab25b] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:17.738+08:00 WARN  [req_76518bf6b68444b0a03270e6b5016c5a] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:17.839+08:00 WARN  [req_6f132caa68fb4e699bbb616428359e11] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:17.928+08:00 WARN  [req_4c5fc88dc9284a488a869fd9f8d6e057] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-04T14:15:18.474+08:00 WARN  [req_808827b3e15a47afa91fb3b1bc706a10] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:18.586+08:00 WARN  [req_ec627a5ed4bd4a568e1d4451bb1630be] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:18.913+08:00 WARN  [req_7b61c992d68a49f2843373955a28fb2c] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:18.999+08:00 WARN  [req_8ad45cb483ce42938a2f8646364edd4b] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:19.115+08:00 WARN  [req_94aebfe974d7496aa10bbdd8d5d27214] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:19.240+08:00 WARN  [req_3977343f42fe4087a0e40011e4790c84] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:20.536+08:00 WARN  [req_37e0a615f0754a58b99862352ff75c94] c.p.c.error.GlobalExceptionHandler - api_error code=IMPORT_DUPLICATE_CONFLICT status=409 retryable=false
+2026-10-04T14:15:20.621+08:00 WARN  [req_1b7588ef673045569b379cb90a555442] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-04T14:15:21.194+08:00 WARN  [req_0bfc236bd15e48a69e00c46ffbba63bc] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:21.277+08:00 WARN  [req_9f22d3161feb4914ae5a4be77128d391] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:21.366+08:00 WARN  [req_4c679579fb884a36a2bd23419f2ee2c9] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:21.457+08:00 WARN  [req_336aa84fd9b6470dbd4fa7e57e63b3f4] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:21.548+08:00 WARN  [req_e57e0bde681d426fb687f5689f8fdaee] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:21.653+08:00 WARN  [req_bb2525d7f04d4cc48b67d9650813be12] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:21.738+08:00 WARN  [req_d699d72e8b65480897427dce006ae2fe] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:21.819+08:00 WARN  [req_ab44bf264a5a4e66a38dceabf3778895] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:21.914+08:00 WARN  [req_1c9a27a74fd8405c93cd8ed86231bfd4] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:22.013+08:00 WARN  [req_b67242c2365f47caa743d7b2e55910f5] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:22.211+08:00 WARN  [req_118a5b48adbb4fc6950812fdc1ff87da] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:22.299+08:00 WARN  [req_012a6a4a608748acbbdc75cb06462c93] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:22.393+08:00 WARN  [req_f42000d1416b42098aa29defba859b65] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:22.589+08:00 WARN  [req_4ed2ec95b67c4bf1bbbb9b2e676a36dc] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:22.681+08:00 WARN  [req_a8c05af403db48bd921ec1aced8383b6] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:22.771+08:00 WARN  [req_67f7d73f20f84fa1a09f2dbcf23d7694] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:22.954+08:00 WARN  [req_e80bc7d2e3ab4ddc9ad93efe1cf2d7c9] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:15:23.765+08:00 WARN  [req_a93b6cd8370443d19983eaad36f6c9a3] c.p.c.error.GlobalExceptionHandler - api_error code=IDEMPOTENCY_CONFLICT status=409 retryable=false
+2026-10-04T14:15:23.852+08:00 WARN  [req_b4a39b11e3c34725b88b69bacdee0f4c] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:23.941+08:00 WARN  [req_05b62be8ed2c4788920e355451b53e79] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:15:24.032+08:00 WARN  [req_9045418b65aa49f79e45afc26428a377] c.p.c.error.GlobalExceptionHandler - api_error code=CURRENCY_NOT_ENABLED status=422 retryable=false
+2026-10-04T14:15:25.789+08:00 WARN  [req_c80e1f4f97fa43178b847c05120b809a] c.p.c.error.GlobalExceptionHandler - api_error code=APPROVAL_SELF_NOT_ALLOWED status=403 retryable=false
+2026-10-04T14:15:26.263+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000085 http://localhost:64814 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-10-04T14:15:28.161+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000087 http://localhost:64814 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-10-04T14:15:30.275+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000089 http://localhost:64814 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-10-04T14:15:33.220+08:00 WARN  [req_1d8c2e9a2d8946ff8e0371f02918c73d] c.p.c.error.GlobalExceptionHandler - api_error code=ADJUSTMENT_EVIDENCE_REQUIRED status=422 retryable=false
+2026-10-04T14:15:33.453+08:00 WARN  [req_fadbdb99fc9244ea929298c68e77ca6d] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+[ERROR] Tests run: 10, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 24.65 s <<< FAILURE! -- in com.paymentsledger.ops.OpsApiIT
+[ERROR] com.paymentsledger.ops.OpsApiIT.auditFailureRollsBackSuccessfulApprovalAndCanRetry -- Time elapsed: 1.861 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 503 SERVICE_UNAVAILABLE
+ but was: 200 OK
+	at com.paymentsledger.ops.OpsApiIT.auditFailureRollsBackSuccessfulApprovalAndCanRetry(OpsApiIT.java:115)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.ops.OpsApiIT.scopedExceptionEvidenceAndRetryNeverResetFinalLeaseOrExpiredUnknown -- Time elapsed: 2.103 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 422 UNPROCESSABLE_ENTITY
+ but was: 503 SERVICE_UNAVAILABLE
+	at com.paymentsledger.ops.OpsApiIT.scopedExceptionEvidenceAndRetryNeverResetFinalLeaseOrExpiredUnknown(OpsApiIT.java:88)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   OpsApiIT.auditFailureRollsBackSuccessfulApprovalAndCanRetry:115
+expected: 503 SERVICE_UNAVAILABLE
+ but was: 200 OK
+[ERROR]   OpsApiIT.scopedExceptionEvidenceAndRetryNeverResetFinalLeaseOrExpiredUnknown:88
+expected: 422 UNPROCESSABLE_ENTITY
+ but was: 503 SERVICE_UNAVAILABLE
+[INFO]
+[ERROR] Tests run: 12, Failures: 2, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- failsafe:3.5.6:verify (default) @ payments-ledger-platform ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  39.705 s
+[INFO] Finished at: 2026-10-04T14:15:34+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.6:verify (default) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/target/failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

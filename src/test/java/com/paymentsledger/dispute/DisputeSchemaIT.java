@@ -12,7 +12,7 @@ class DisputeSchemaIT {
  @Test void upgradeProvidesScopedImmutableDisputeHistoryAndRestrictedAccountProvisioning(){
   Flyway.configure().dataSource(DB.getJdbcUrl(),DB.getUsername(),DB.getPassword()).schemas("platform").target("10").load().migrate();
   var migration=Flyway.configure().dataSource(DB.getJdbcUrl(),DB.getUsername(),DB.getPassword()).schemas("platform").load();
-  assertThat(migration.migrate().migrationsExecuted).isEqualTo(5);
+  assertThat(migration.migrate().migrationsExecuted).isEqualTo(6);
   assertThat(migration.migrate().migrationsExecuted).isZero();
   var jdbc=new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(),"payments_app","pr02_test_only"));
   for(String table:new String[]{"dispute_observation","dispute_case","dispute_bt_link","dispute_financial_fact"}) {

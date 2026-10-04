@@ -1,0 +1,586 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 18 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 93 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.reconciliation.ReconciliationWindowsTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 s -- in com.paymentsledger.reconciliation.ReconciliationWindowsTest
+[INFO] Running com.paymentsledger.identity.AuthenticationFilterTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+14:37:27.565 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+14:37:27.910 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+14:37:28.240 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+14:37:28.546 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=WORKER
+14:37:28.852 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+14:37:29.149 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.493 s -- in com.paymentsledger.identity.AuthenticationFilterTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- jar:3.4.2:jar (default-jar) @ payments-ledger-platform ---
+[INFO]
+[INFO] --- spring-boot:3.5.16:repackage (repackage) @ payments-ledger-platform ---
+[INFO] Replacing main artifact /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar.original
+[INFO]
+[INFO] --- failsafe:3.5.6:integration-test (default) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.ops.OpsSchemaIT
+14:37:29.844 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+14:37:29.846 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+14:37:29.861 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+14:37:30.161 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+14:37:30.162 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+14:37:30.172 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+14:37:30.199 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+14:37:30.281 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+14:37:30.354 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: c18a4d88021a7c6085a4830af1891d9a72b444101847feb7d706e169b5aa19d4
+14:37:30.712 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.513173S
+14:37:30.750 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+14:37:30.750 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+14:37:30.751 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+14:37:30.751 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+14:37:30.788 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 2bbe89b96f263ca6613197515dd5b6d5661dd8d4e2a858ffbd9ebd790a1fbc80
+14:37:31.985 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.233474S
+14:37:31.986 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:65462/test?loggerLevel=OFF)
+14:37:31.994 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+14:37:32.124 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 130 ms.
+14:37:32.275 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:65462/test?loggerLevel=OFF (PostgreSQL 16.14)
+14:37:32.325 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "platform"."flyway_schema_history" does not exist yet
+14:37:32.327 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 16 migrations (execution time 00:00.020s)
+14:37:32.338 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "platform"."flyway_schema_history" ...
+14:37:32.374 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": << Empty Schema >>
+14:37:32.381 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "1 - baseline"
+14:37:32.385 [main] WARN org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+14:37:32.416 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "2 - identity and scoped configuration"
+14:37:32.463 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "3 - immutable ledger"
+14:37:32.503 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "4 - business payments"
+14:37:32.553 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "5 - operation recovery"
+14:37:32.579 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "6 - webhook inbox"
+14:37:32.608 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "7 - payment notifications"
+14:37:32.645 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "8 - financial ingestion"
+14:37:32.688 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "9 - refund lifecycle"
+14:37:32.760 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "10 - revenue share"
+14:37:32.794 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "11 - dispute lifecycle"
+14:37:32.831 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "12 - payout bank evidence"
+14:37:32.877 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "13 - payout query evidence"
+14:37:32.903 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "14 - reconciliation evidence"
+14:37:32.932 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "15 - reconciliation source recovery"
+14:37:32.967 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 15 migrations to schema "platform", now at version v15 (execution time 00:00.381s)
+14:37:32.995 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:65462/test?loggerLevel=OFF (PostgreSQL 16.14)
+14:37:33.011 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 16 migrations (execution time 00:00.008s)
+14:37:33.038 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 15
+14:37:33.049 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "platform" to version "16 - ops commands approval audit"
+14:37:33.088 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 1 migration to schema "platform", now at version v16 (execution time 00:00.031s)
+14:37:33.196 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:65462/test?loggerLevel=OFF (PostgreSQL 16.14)
+14:37:33.210 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 16 migrations (execution time 00:00.006s)
+14:37:33.224 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "platform": 16
+14:37:33.224 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "platform" is up to date. No migration necessary.
+[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 4.178 s <<< FAILURE! -- in com.paymentsledger.ops.OpsSchemaIT
+[ERROR] com.paymentsledger.ops.OpsSchemaIT.runtimeAdjustmentTargetMustExistAndMatchScopeCurrencyAndProvider -- Time elapsed: 0.204 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting code to raise a throwable.
+	at com.paymentsledger.ops.OpsSchemaIT.runtimeAdjustmentTargetMustExistAndMatchScopeCurrencyAndProvider(OpsSchemaIT.java:168)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] Running com.paymentsledger.ops.OpsApiIT
+14:37:34.088 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+14:37:34.133 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: c361169b76e4213d830658e06368ce13c5d962b4a3d95476d936b54a51a31bff
+14:37:35.190 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.101592S
+14:37:35.190 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:49181/test?loggerLevel=OFF)
+14:37:35.191 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+14:37:35.222 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 31 ms.
+14:37:35.267 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.paymentsledger.ops.OpsApiIT]: OpsApiIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+14:37:35.340 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ops.OpsApiIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-04T14:37:35.551+08:00 INFO  [-] com.paymentsledger.ops.OpsApiIT - Starting OpsApiIT using Java 21.0.12.1 with PID 71749 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops)
+2026-10-04T14:37:35.551+08:00 INFO  [-] com.paymentsledger.ops.OpsApiIT - The following 2 profiles are active: "api", "test"
+2026-10-04T14:37:36.225+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-10-04T14:37:36.234+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-04T14:37:36.234+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-10-04T14:37:36.253+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-04T14:37:36.253+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 694 ms
+2026-10-04T14:37:36.348+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:49181/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-10-04T14:37:36.370+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-10-04T14:37:36.371+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 16 migrations (execution time 00:00.005s)
+2026-10-04T14:37:36.380+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-10-04T14:37:36.403+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-10-04T14:37:36.406+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-10-04T14:37:36.407+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-10-04T14:37:36.422+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-10-04T14:37:36.460+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-10-04T14:37:36.493+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-10-04T14:37:36.529+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-10-04T14:37:36.552+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-10-04T14:37:36.575+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-10-04T14:37:36.607+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-10-04T14:37:36.653+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-10-04T14:37:36.699+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "10 - revenue share"
+2026-10-04T14:37:36.729+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "11 - dispute lifecycle"
+2026-10-04T14:37:36.763+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "12 - payout bank evidence"
+2026-10-04T14:37:36.801+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "13 - payout query evidence"
+2026-10-04T14:37:36.823+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "14 - reconciliation evidence"
+2026-10-04T14:37:36.849+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "15 - reconciliation source recovery"
+2026-10-04T14:37:36.881+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "16 - ops commands approval audit"
+2026-10-04T14:37:36.914+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 16 migrations to schema "platform", now at version v16 (execution time 00:00.358s)
+2026-10-04T14:37:37.258+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-10-04T14:37:37.685+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-10-04T14:37:37.815+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 49224 (http) with context path '/'
+2026-10-04T14:37:37.824+08:00 INFO  [-] com.paymentsledger.ops.OpsApiIT - Started OpsApiIT in 2.425 seconds (process running for 8.288)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+2026-10-04T14:37:38.803+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-04T14:37:38.803+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-04T14:37:38.804+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-10-04T14:37:40.289+08:00 WARN  [req_04693f50f9534804bd76f32b405bd519] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:40.377+08:00 WARN  [req_dd285126af864a34ae47b2b0516ad862] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:40.459+08:00 WARN  [req_9d32fa47589f4898bbdc1cfef9e18fae] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:40.554+08:00 WARN  [req_992589db9c1e4602ab83dafdcedc89a3] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:40.639+08:00 WARN  [req_3ac04b412b284a38be894f6dfc67aca7] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:40.723+08:00 WARN  [req_df0da862ef714b0e8b9c5a8f2cb72a93] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:40.812+08:00 WARN  [req_c6f8fc2af4294e43ac65fa541ced25f3] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:40.897+08:00 WARN  [req_4702c741c2ec448fb80522f95295e5d7] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:40.981+08:00 WARN  [req_907ba21c432845cda57be89278c3c871] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:41.067+08:00 WARN  [req_4b515324ad754cb381b1c3a66f7bfc03] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:41.153+08:00 WARN  [req_468e26a8cc234af98c7a04d687f87b6d] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:41.238+08:00 WARN  [req_7fe4edfb827243d8a6d8778fabde564b] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:41.324+08:00 WARN  [req_1d0684f99d1e4ddfaee4ab7638cf44db] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:41.407+08:00 WARN  [req_bd784dcb8a7c4a94a3c84e064e31237f] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:41.491+08:00 WARN  [req_7ed7649f32b34e91bba5fef82dc1cdca] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-04T14:37:41.971+08:00 WARN  [req_42206d730a5540878d95d4cac664a134] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:45.099+08:00 WARN  [req_29670ee963e54919b8e402d8269cda00] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:45.184+08:00 WARN  [req_b4224237cdcb4faaa6c1fee34d03fd05] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:45.270+08:00 WARN  [req_c1e450ab741140b49a4c90e12583656d] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:45.363+08:00 WARN  [req_cd6572c939ba4228a4a584a2e733d6d1] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:45.469+08:00 WARN  [req_181125b25ee144b388892441b4721b20] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:45.556+08:00 WARN  [req_38c1ab1c5bc242759c3d8ab202796b5d] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:46.842+08:00 WARN  [req_86a38131e6fc4303a2e65d0cc06e799b] c.p.c.error.GlobalExceptionHandler - api_error code=IMPORT_DUPLICATE_CONFLICT status=409 retryable=false
+2026-10-04T14:37:46.923+08:00 WARN  [req_833272559dee4b03b3f0b583c8be69b8] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-04T14:37:48.054+08:00 WARN  [req_ab5bcbfe34e94a52ab865ad529d26481] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:48.140+08:00 WARN  [req_3b0c8fd377ab4002a9ece3fe85118bc7] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:48.223+08:00 WARN  [req_c697348a7ada40ecb2923635f6492793] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:48.310+08:00 WARN  [req_779816d0301345eca30403642d0931e9] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:48.393+08:00 WARN  [req_f9a6325387144cb1aad57f2887587541] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:48.492+08:00 WARN  [req_12b76c52cea4432b96c79e2cd598f1c8] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:48.577+08:00 WARN  [req_1a52ce3607ab4a13a63dbbc532744c12] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:48.659+08:00 WARN  [req_cce4d1ebd1b84250ad9b60a111f9745f] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:48.742+08:00 WARN  [req_6c1f9ef1871145b5943acbba22d2698a] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:48.825+08:00 WARN  [req_920c7f0a2f3e426387b8ae92949c592d] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:48.994+08:00 WARN  [req_f93e86cb7b0548d4b3d08062546aa210] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:49.078+08:00 WARN  [req_c4666332716f432aad3d492c2f4e14a6] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:49.174+08:00 WARN  [req_70d7fd3a0c164725bb5316cd9ea8a667] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:49.367+08:00 WARN  [req_ae15aa0fd3f3458394f009d735df8f47] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:49.448+08:00 WARN  [req_485db26f7f604ce0a8d6d7f391994c87] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:49.533+08:00 WARN  [req_11bcb6e35e634f55af1fc1b7c24a4867] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:49.705+08:00 WARN  [req_72f8ed13b6664e5ba6376c5b4baf3751] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:51.941+08:00 WARN  [req_3df6630f8ab0458782de935dd6e90646] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:52.021+08:00 WARN  [req_d84560f27213430f8b1460ee7d1e190f] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:52.841+08:00 WARN  [req_105bc53bdbf444aa841fd16a404af4c4] c.p.c.error.GlobalExceptionHandler - api_error code=IDEMPOTENCY_CONFLICT status=409 retryable=false
+2026-10-04T14:37:52.926+08:00 WARN  [req_dc3597b6585542668ea93ca80be75775] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:53.012+08:00 WARN  [req_41f6b149d8bc453685519ef46068a57e] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-04T14:37:53.099+08:00 WARN  [req_73ae6f84e5e1433fa757f6df0e59f348] c.p.c.error.GlobalExceptionHandler - api_error code=CURRENCY_NOT_ENABLED status=422 retryable=false
+2026-10-04T14:37:54.335+08:00 WARN  [req_a56620179817479eaceab98d96253ec4] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-04T14:37:54.419+08:00 WARN  [req_1179c230d0d641d0be6a65b74f73c55c] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-04T14:37:54.502+08:00 WARN  [req_0cd97eebdbcb4a3eba0a1b901bddacd1] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-04T14:37:54.586+08:00 WARN  [req_4413c028feb74e78a91c1bfec967c6dd] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-04T14:37:54.671+08:00 WARN  [req_a236046f7e76468c8c4dc608a1d47d6f] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-04T14:37:54.767+08:00 WARN  [req_b0b0dd6ac20b4020b495287a4ae0cd56] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-04T14:37:54.854+08:00 WARN  [req_6428986904fe4489a4a52dba32d38c6e] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:54.937+08:00 WARN  [req_97e03463ea794e84a6bf0e7174823784] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.021+08:00 WARN  [req_0e1aa7eb417e4df59e21c4d706bcce3a] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.109+08:00 WARN  [req_7072671c9681483ab4c33e084b7ffff5] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.195+08:00 WARN  [req_248416a2a5484ef1aca68af390c8e0b7] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.282+08:00 WARN  [req_e1a1665c42924610a2a7d8237afa3c99] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.366+08:00 WARN  [req_5bf80d230ad84f569d3d5fd5b2f99948] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.449+08:00 WARN  [req_6c8c1c3824d84f8bb8dd1b8f5106b0af] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.529+08:00 WARN  [req_b141e25bc56743e09305a09e91538c67] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.612+08:00 WARN  [req_5c020a1f468d478daac67b0b5fb2a9bd] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.698+08:00 WARN  [req_f6deea41434540078e83c8e235810591] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.782+08:00 WARN  [req_371bea773d454005b5f8d905b4b0b053] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.867+08:00 WARN  [req_9e7c2c3062814f5eab78ad19f14b4c8b] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:55.951+08:00 WARN  [req_565e6cd90cca459ca834e61f946df375] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:56.037+08:00 WARN  [req_e005d07b0032401f8cb6754c11d075ec] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:56.119+08:00 WARN  [req_974b9aa8f9b848e7a7fb1f834da03ac1] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:56.234+08:00 WARN  [req_2833bcdd6a0c4eb688a46b32f43e6842] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:56.320+08:00 WARN  [req_b1609103843b4424a2b39afd3f948ff1] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:56.406+08:00 WARN  [req_081ec5590d94419da1b7818ec1a5cc3e] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-04T14:37:56.583+08:00 WARN  [req_c41e97c1ace34a5dbc4efb43287b5d51] c.p.c.error.GlobalExceptionHandler - api_error code=IDEMPOTENCY_KEY_REQUIRED status=400 retryable=false
+2026-10-04T14:37:57.291+08:00 WARN  [req_6cc0699bf7f14624aadc7c6af5eee9ec] c.p.c.error.GlobalExceptionHandler - api_error code=ADJUSTMENT_EVIDENCE_REQUIRED status=422 retryable=false
+2026-10-04T14:37:58.091+08:00 WARN  [req_a96f0cb0094d44eab1424213a653b957] c.p.c.error.GlobalExceptionHandler - api_error code=APPROVAL_SELF_NOT_ALLOWED status=403 retryable=false
+2026-10-04T14:37:58.414+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000151 http://localhost:49224 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-10-04T14:38:00.185+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000153 http://localhost:49224 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-10-04T14:38:02.135+08:00 WARN  [req_a086a3cdaa104c5d8d170728268159bb] c.p.c.error.GlobalExceptionHandler - api_error code=ADJUSTMENT_EVIDENCE_REQUIRED status=422 retryable=false
+2026-10-04T14:38:02.221+08:00 WARN  [req_76bc156027284770bdba3f68b66e777d] c.p.c.error.GlobalExceptionHandler - api_error code=ADJUSTMENT_EVIDENCE_REQUIRED status=422 retryable=false
+2026-10-04T14:38:02.592+08:00 WARN  [req_1aa1a4dcca1a42f3b8ade2ce8a042a07] c.p.c.error.GlobalExceptionHandler - api_error code=EVIDENCE_CONFLICT status=409 retryable=false
+2026-10-04T14:38:02.692+08:00 WARN  [req_ac3d5651c92343f090954292c2825aaa] c.p.c.error.GlobalExceptionHandler - api_error code=EVIDENCE_CONFLICT status=409 retryable=false
+2026-10-04T14:38:02.798+08:00 WARN  [req_d5438d41eff04c92bc33658c5dd216a2] c.p.c.error.GlobalExceptionHandler - api_error code=EVIDENCE_CONFLICT status=409 retryable=false
+2026-10-04T14:38:03.359+08:00 WARN  [req_2859c2026abd4bf29d6aca79b23dd7e0] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-04T14:38:03.853+08:00 WARN  [req_29cf7257da1e4abca790f5ce74bc74c6] c.p.c.error.GlobalExceptionHandler - api_error code=ADJUSTMENT_EVIDENCE_REQUIRED status=422 retryable=false
+2026-10-04T14:38:04.028+08:00 WARN  [req_4401225f87c74a29bceb8a0d891d69c6] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+[ERROR] Tests run: 24, Failures: 8, Errors: 0, Skipped: 0, Time elapsed: 31.30 s <<< FAILURE! -- in com.paymentsledger.ops.OpsApiIT
+[ERROR] com.paymentsledger.ops.OpsApiIT.rejectedOpsReadsAreAuditedWithoutCallerScopeOrSecrets -- Time elapsed: 0.570 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 2L
+ but was: 0L
+	at com.paymentsledger.ops.OpsApiIT.rejectedOpsReadsAreAuditedWithoutCallerScopeOrSecrets(OpsApiIT.java:1112)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.ops.OpsApiIT.pendingTaskFilterIncludesWaitingAndReadyTasks -- Time elapsed: 0.629 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 1
+ but was: 0
+	at com.paymentsledger.ops.OpsApiIT.pendingTaskFilterIncludesWaitingAndReadyTasks(OpsApiIT.java:979)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.ops.OpsApiIT.adjustmentAliasesShareOneIdempotencyNamespace -- Time elapsed: 0.622 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 409 CONFLICT
+ but was: 201 CREATED
+	at com.paymentsledger.ops.OpsApiIT.adjustmentAliasesShareOneIdempotencyNamespace(OpsApiIT.java:919)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.ops.OpsApiIT.otherRunEvidenceCannotResolveExceptionButOwnRunEvidenceCan -- Time elapsed: 0.634 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 422 UNPROCESSABLE_ENTITY
+ but was: 200 OK
+	at com.paymentsledger.ops.OpsApiIT.otherRunEvidenceCannotResolveExceptionButOwnRunEvidenceCan(OpsApiIT.java:1056)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.ops.OpsApiIT.runCheckResultUsesOnlyOutcomeAndPrioritizesDefiniteFailure -- Time elapsed: 0.649 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "INCOMPLETE"
+ but was: "FAIL"
+	at com.paymentsledger.ops.OpsApiIT.runCheckResultUsesOnlyOutcomeAndPrioritizesDefiniteFailure(OpsApiIT.java:947)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.ops.OpsApiIT.directUnrelatedJournalEvidenceCannotResolveException -- Time elapsed: 0.871 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 422 UNPROCESSABLE_ENTITY
+ but was: 200 OK
+	at com.paymentsledger.ops.OpsApiIT.directUnrelatedJournalEvidenceCannotResolveException(OpsApiIT.java:1016)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.ops.OpsApiIT.exceptionAuditBeforeReflectsSerializedCurrentDisposition -- Time elapsed: 0.646 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "INVESTIGATING"
+ but was: "OPEN"
+	at com.paymentsledger.ops.OpsApiIT.exceptionAuditBeforeReflectsSerializedCurrentDisposition(OpsApiIT.java:1097)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.ops.OpsApiIT.reconciliationCompletedDayUsesConfiguredBusinessZoneOnly -- Time elapsed: 0.431 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting code not to raise a throwable but caught
+  "com.paymentsledger.common.error.ApiException: Invalid operations command
+	at com.paymentsledger.ops.OpsCommandService.invalid(OpsCommandService.java:912)
+	at com.paymentsledger.ops.OpsCommandService.createRun(OpsCommandService.java:174)
+	at com.paymentsledger.ops.OpsCommandService.lambda$execute$0(OpsCommandService.java:121)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:140)
+	at com.paymentsledger.ops.OpsCommandService.execute(OpsCommandService.java:80)
+	at com.paymentsledger.ops.OpsApiIT.lambda$reconciliationCompletedDayUsesConfiguredBusinessZoneOnly$10(OpsApiIT.java:1164)
+	at org.assertj.core.api.ThrowableAssert.catchThrowable(ThrowableAssert.java:66)
+	at org.assertj.core.api.AssertionsForClassTypes.catchThrowable(AssertionsForClassTypes.java:908)
+	at org.assertj.core.api.AssertionsForClassTypes.assertThatCode(AssertionsForClassTypes.java:879)
+	at org.assertj.core.api.Assertions.assertThatCode(Assertions.java:1396)
+	at com.paymentsledger.ops.OpsApiIT.reconciliationCompletedDayUsesConfiguredBusinessZoneOnly(OpsApiIT.java:1161)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:775)
+	at org.junit.platform.commons.support.ReflectionSupport.invokeMethod(ReflectionSupport.java:479)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:161)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:152)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:91)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:112)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:94)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:87)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:216)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:212)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:137)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:156)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:201)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:170)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:94)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:59)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:142)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$1(InterceptingLauncher.java:39)
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25)
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:38)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithoutCancellationToken(LauncherAdapter.java:60)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:52)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+"
+	at com.paymentsledger.ops.OpsApiIT.reconciliationCompletedDayUsesConfiguredBusinessZoneOnly(OpsApiIT.java:1170)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   OpsApiIT.adjustmentAliasesShareOneIdempotencyNamespace:919
+expected: 409 CONFLICT
+ but was: 201 CREATED
+[ERROR]   OpsApiIT.directUnrelatedJournalEvidenceCannotResolveException:1016
+expected: 422 UNPROCESSABLE_ENTITY
+ but was: 200 OK
+[ERROR]   OpsApiIT.exceptionAuditBeforeReflectsSerializedCurrentDisposition:1097
+expected: "INVESTIGATING"
+ but was: "OPEN"
+[ERROR]   OpsApiIT.otherRunEvidenceCannotResolveExceptionButOwnRunEvidenceCan:1056
+expected: 422 UNPROCESSABLE_ENTITY
+ but was: 200 OK
+[ERROR]   OpsApiIT.pendingTaskFilterIncludesWaitingAndReadyTasks:979
+expected: 1
+ but was: 0
+[ERROR]   OpsApiIT.reconciliationCompletedDayUsesConfiguredBusinessZoneOnly:1170
+Expecting code not to raise a throwable but caught
+  "com.paymentsledger.common.error.ApiException: Invalid operations command
+	at com.paymentsledger.ops.OpsCommandService.invalid(OpsCommandService.java:912)
+	at com.paymentsledger.ops.OpsCommandService.createRun(OpsCommandService.java:174)
+	at com.paymentsledger.ops.OpsCommandService.lambda$execute$0(OpsCommandService.java:121)
+	at org.springframework.transaction.support.TransactionTemplate.execute(TransactionTemplate.java:140)
+	at com.paymentsledger.ops.OpsCommandService.execute(OpsCommandService.java:80)
+	at com.paymentsledger.ops.OpsApiIT.lambda$reconciliationCompletedDayUsesConfiguredBusinessZoneOnly$10(OpsApiIT.java:1164)
+	at org.assertj.core.api.ThrowableAssert.catchThrowable(ThrowableAssert.java:66)
+	at org.assertj.core.api.AssertionsForClassTypes.catchThrowable(AssertionsForClassTypes.java:908)
+	at org.assertj.core.api.AssertionsForClassTypes.assertThatCode(AssertionsForClassTypes.java:879)
+	at org.assertj.core.api.Assertions.assertThatCode(Assertions.java:1396)
+	at com.paymentsledger.ops.OpsApiIT.reconciliationCompletedDayUsesConfiguredBusinessZoneOnly(OpsApiIT.java:1161)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:775)
+	at org.junit.platform.commons.support.ReflectionSupport.invokeMethod(ReflectionSupport.java:479)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:161)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:152)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:91)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:112)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:94)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:87)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:216)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:212)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:137)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:156)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:201)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:170)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:94)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:59)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:142)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$1(InterceptingLauncher.java:39)
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25)
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:38)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithoutCancellationToken(LauncherAdapter.java:60)
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:52)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+"
+[ERROR]   OpsApiIT.rejectedOpsReadsAreAuditedWithoutCallerScopeOrSecrets:1112
+expected: 2L
+ but was: 0L
+[ERROR]   OpsApiIT.runCheckResultUsesOnlyOutcomeAndPrioritizesDefiniteFailure:947
+expected: "INCOMPLETE"
+ but was: "FAIL"
+[ERROR]   OpsSchemaIT.runtimeAdjustmentTargetMustExistAndMatchScopeCurrencyAndProvider:168
+Expecting code to raise a throwable.
+[INFO]
+[ERROR] Tests run: 28, Failures: 9, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- failsafe:3.5.6:verify (default) @ payments-ledger-platform ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  43.814 s
+[INFO] Finished at: 2026-10-04T14:38:05+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.6:verify (default) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr16-ops/target/failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

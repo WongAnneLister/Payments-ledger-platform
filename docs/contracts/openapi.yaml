@@ -535,7 +535,7 @@ paths:
       security:
         - OpsBearer: [ops:read]
       parameters:
-        - $ref: '#/components/parameters/PaymentIdPath'
+        - { name: paymentId, in: path, required: true, schema: { $ref: '#/components/schemas/OpsResourceId' } }
       responses:
         '200':
           description: 运营支付详情
@@ -555,7 +555,7 @@ paths:
       security:
         - OpsBearer: [ops:read]
       parameters:
-        - $ref: '#/components/parameters/RefundIdPath'
+        - { name: refundId, in: path, required: true, schema: { $ref: '#/components/schemas/OpsResourceId' } }
       responses:
         '200':
           description: 运营退款详情
@@ -578,7 +578,7 @@ paths:
         - name: disputeId
           in: path
           required: true
-          schema: { $ref: '#/components/schemas/ResourceId' }
+          schema: { $ref: '#/components/schemas/OpsResourceId' }
       responses:
         '200':
           description: 运营争议详情
@@ -603,7 +603,7 @@ paths:
         - name: payoutId
           in: path
           required: true
-          schema: { $ref: '#/components/schemas/ResourceId' }
+          schema: { $ref: '#/components/schemas/OpsResourceId' }
       responses:
         '200':
           description: 运营出款详情
@@ -625,7 +625,7 @@ paths:
       security:
         - OpsBearer: [ops:read]
       parameters:
-        - $ref: '#/components/parameters/PaymentIdPath'
+        - { name: paymentId, in: path, required: true, schema: { $ref: '#/components/schemas/OpsResourceId' } }
       responses:
         '200':
           description: 分润明细
@@ -645,6 +645,7 @@ paths:
       security:
         - OpsBearer: [ops:read]
       parameters:
+        - { name: providerAccountId, in: query, required: false, schema: { type: string, format: uuid }, description: 已启用 test 提供方选择器，必须位于可信组织/环境；余额包含该提供方及共享内部科目 }
         - { name: businessOrderId, in: query, required: false, schema: { type: string } }
         - { name: balanceTransactionId, in: query, required: false, schema: { type: string } }
         - { name: eventKey, in: query, required: false, schema: { type: string } }
@@ -673,7 +674,7 @@ paths:
         - name: journalId
           in: path
           required: true
-          schema: { $ref: '#/components/schemas/ResourceId' }
+          schema: { $ref: '#/components/schemas/OpsResourceId' }
       responses:
         '200':
           description: 凭证详情
@@ -695,6 +696,7 @@ paths:
       security:
         - OpsBearer: [ops:read]
       parameters:
+        - { name: providerAccountId, in: query, required: false, schema: { type: string, format: uuid }, description: 已启用 test 提供方选择器，必须位于可信组织/环境；余额包含该提供方及共享内部科目 }
         - { name: currency, in: query, required: false, schema: { $ref: '#/components/schemas/Currency' } }
         - { name: accountPurpose, in: query, required: false, schema: { type: string } }
         - { name: asOf, in: query, required: false, schema: { type: string, format: date-time } }
@@ -721,7 +723,7 @@ paths:
         - name: runId
           in: path
           required: true
-          schema: { $ref: '#/components/schemas/ResourceId' }
+          schema: { $ref: '#/components/schemas/OpsResourceId' }
       responses:
         '200':
           description: 对账运行
@@ -741,6 +743,7 @@ paths:
       security:
         - OpsBearer: [ops:read]
       parameters:
+        - { name: providerAccountId, in: query, required: false, schema: { type: string, format: uuid }, description: 已启用 test 提供方选择器，必须位于可信组织/环境；余额包含该提供方及共享内部科目 }
         - { name: type, in: query, required: false, schema: { $ref: '#/components/schemas/ExceptionType' } }
         - { name: status, in: query, required: false, schema: { $ref: '#/components/schemas/ExceptionStatus' } }
         - $ref: '#/components/parameters/LimitQuery'
@@ -763,6 +766,7 @@ paths:
       security:
         - OpsBearer: [ops:read]
       parameters:
+        - { name: providerAccountId, in: query, required: false, schema: { type: string, format: uuid }, description: 已启用 test 提供方选择器，必须位于可信组织/环境；余额包含该提供方及共享内部科目 }
         - { name: taskType, in: query, required: false, schema: { type: string } }
         - { name: status, in: query, required: false, schema: { type: string } }
         - $ref: '#/components/parameters/LimitQuery'
@@ -869,7 +873,7 @@ paths:
         - name: exceptionId
           in: path
           required: true
-          schema: { $ref: '#/components/schemas/ResourceId' }
+          schema: { $ref: '#/components/schemas/OpsResourceId' }
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
       requestBody:
         required: true
@@ -903,7 +907,7 @@ paths:
         - name: taskId
           in: path
           required: true
-          schema: { $ref: '#/components/schemas/ResourceId' }
+          schema: { $ref: '#/components/schemas/OpsResourceId' }
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
       requestBody:
         required: true
@@ -958,6 +962,25 @@ paths:
         '403': { $ref: '#/components/responses/Forbidden' }
         '422': { $ref: '#/components/responses/UnprocessableEntity' }
 
+  /ops/adjustments/{adjustmentId}:
+    get:
+      tags: [ops-read]
+      summary: 审批前查看范围内的调整草案与证据
+      operationId: opsGetAdjustment
+      security:
+        - OpsBearer: [ops:read]
+      parameters:
+        - { name: adjustmentId, in: path, required: true, schema: { $ref: '#/components/schemas/OpsResourceId' } }
+      responses:
+        '200':
+          description: 脱敏草案；理由仅提供摘要与长度
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/OpsAdjustmentDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
   /ops/adjustments/{adjustmentId}/approve:
     post:
       tags: [ops-write]
@@ -978,7 +1001,7 @@ paths:
         - name: adjustmentId
           in: path
           required: true
-          schema: { $ref: '#/components/schemas/ResourceId' }
+          schema: { $ref: '#/components/schemas/OpsResourceId' }
         - $ref: '#/components/parameters/IdempotencyKeyRequired'
       requestBody:
         required: true
@@ -1370,6 +1393,12 @@ components:
       description: 本地资源 ID（ULID 前缀形式）
       pattern: '^[a-z]+_[0-9A-HJKMNP-TV-Z]{26}$'
       example: "pay_01HZX9K2M4N6P8Q0R2S4T6V8W0"
+
+    OpsResourceId:
+      description: 运营兼容既有本地 ULID 前缀 ID 和持久化 UUID；所有输入仍按可信组织/环境解析
+      oneOf:
+        - $ref: '#/components/schemas/ResourceId'
+        - { type: string, format: uuid, pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$' }
 
     Currency:
       type: string
@@ -1904,6 +1933,8 @@ components:
         runId: { type: string }
         runType: { type: string, enum: [TRANSACTION_LEVEL, BALANCE_LEVEL, PAYOUT_BANK_LEVEL, NIGHTLY_ALL] }
         status: { type: string, enum: [CREATED, FETCHING, VALIDATING, COMPLETED, INCOMPLETE, FAILED] }
+        evidence: { type: array, items: { $ref: '#/components/schemas/ReconciliationEvidenceSummary' } }
+        checks: { type: array, items: { $ref: '#/components/schemas/OpsReconciliationCheck' } }
         checkResult: { $ref: '#/components/schemas/CheckResult' }
         dataCompleteness: { $ref: '#/components/schemas/DataCompleteness' }
         businessDate: { type: string, format: date }
@@ -1929,6 +1960,9 @@ components:
       required: [exceptionId, type, status, createdAt]
       properties:
         exceptionId: { type: string }
+        runId: { type: string, format: uuid }
+        findingReason: { type: string, description: 不可变历史发现的原始受控原因码 }
+        inputVersions: { type: object, additionalProperties: true, description: 不可变规则与输入证据版本 }
         type: { $ref: '#/components/schemas/ExceptionType' }
         status: { $ref: '#/components/schemas/ExceptionStatus' }
         currency: { $ref: '#/components/schemas/Currency' }
@@ -1978,27 +2012,32 @@ components:
         - $ref: '#/components/schemas/PaymentResource'
         - type: object
           properties:
+            traceCompleteness: { type: string, enum: [COMPLETE, INCOMPLETE], description: 仅表示追踪摘要是否截断，与资金状态和对账数据完整度独立 }
+            truncatedSections: { type: array, items: { type: string, enum: [journals, balanceTransactions, operations, bankEvidence, exceptions, providerObservations, revenueShares, lines] }, description: 每个原始追踪集合最多返回最新 100 项，按时间正序展示；timeline 合并已选证据；存在更多历史记录时明确标记截断 }
+            balanceTransactions: { type: array, items: { $ref: '#/components/schemas/OpsBalanceTransactionEvidence' } }
+            bankEvidence: { type: array, items: { $ref: '#/components/schemas/OpsBankEvidence' } }
+            providerObservations: { type: array, items: { $ref: '#/components/schemas/OpsProviderObservation' } }
             journals:
               type: array
               items: { $ref: '#/components/schemas/JournalSummary' }
             balanceTransactionIds: { type: array, items: { type: string } }
             operations: { type: array, items: { $ref: '#/components/schemas/TaskItem' } }
             exceptions: { type: array, items: { $ref: '#/components/schemas/ExceptionItem' } }
-            timeline:
-              type: array
-              items:
-                type: object
-                properties:
-                  at: { type: string, format: date-time }
-                  kind: { type: string }
-                  summary: { type: string }
-                  evidenceRef: { type: string, nullable: true }
+            timeline: { type: array, items: { $ref: '#/components/schemas/OpsTimelineItem' } }
 
     OpsRefundDetail:
       allOf:
         - $ref: '#/components/schemas/RefundResource'
         - type: object
           properties:
+            traceCompleteness: { type: string, enum: [COMPLETE, INCOMPLETE], description: 仅表示追踪摘要是否截断，与资金状态和对账数据完整度独立 }
+            truncatedSections: { type: array, items: { type: string, enum: [journals, balanceTransactions, operations, bankEvidence, exceptions, providerObservations, revenueShares, lines] }, description: 每个原始追踪集合最多返回最新 100 项，按时间正序展示；timeline 合并已选证据；存在更多历史记录时明确标记截断 }
+            timeline: { type: array, items: { $ref: '#/components/schemas/OpsTimelineItem' } }
+            balanceTransactionIds: { type: array, items: { type: string } }
+            exceptions: { type: array, items: { $ref: '#/components/schemas/ExceptionItem' } }
+            balanceTransactions: { type: array, items: { $ref: '#/components/schemas/OpsBalanceTransactionEvidence' } }
+            bankEvidence: { type: array, items: { $ref: '#/components/schemas/OpsBankEvidence' } }
+            providerObservations: { type: array, items: { $ref: '#/components/schemas/OpsProviderObservation' } }
             journals:
               type: array
               items: { $ref: '#/components/schemas/JournalSummary' }
@@ -2009,6 +2048,16 @@ components:
       type: object
       required: [disputeId, providerStatus, localHandling, amountMinor, currency]
       properties:
+        traceCompleteness: { type: string, enum: [COMPLETE, INCOMPLETE], description: 仅表示追踪摘要是否截断，与资金状态和对账数据完整度独立 }
+        truncatedSections: { type: array, items: { type: string, enum: [journals, balanceTransactions, operations, bankEvidence, exceptions, providerObservations, revenueShares, lines] }, description: 每个原始追踪集合最多返回最新 100 项，按时间正序展示；timeline 合并已选证据；存在更多历史记录时明确标记截断 }
+        createdAt: { type: string, format: date-time }
+        lastObservedAt: { type: string, format: date-time }
+        timeline: { type: array, items: { $ref: '#/components/schemas/OpsTimelineItem' } }
+        balanceTransactionIds: { type: array, items: { type: string } }
+        exceptions: { type: array, items: { $ref: '#/components/schemas/ExceptionItem' } }
+        balanceTransactions: { type: array, items: { $ref: '#/components/schemas/OpsBalanceTransactionEvidence' } }
+        bankEvidence: { type: array, items: { $ref: '#/components/schemas/OpsBankEvidence' } }
+        operations: { type: array, items: { $ref: '#/components/schemas/TaskItem' } }
         disputeId: { type: string }
         chargeId: { type: string }
         paymentId: { type: string, nullable: true }
@@ -2029,6 +2078,18 @@ components:
       type: object
       required: [payoutId, providerStatus, amountMinor, currency, bankMatchState]
       properties:
+        traceCompleteness: { type: string, enum: [COMPLETE, INCOMPLETE], description: 仅表示追踪摘要是否截断，与资金状态和对账数据完整度独立 }
+        truncatedSections: { type: array, items: { type: string, enum: [journals, balanceTransactions, operations, bankEvidence, exceptions, providerObservations, revenueShares, lines] }, description: 每个原始追踪集合最多返回最新 100 项，按时间正序展示；timeline 合并已选证据；存在更多历史记录时明确标记截断 }
+        createdAt: { type: string, format: date-time }
+        lastObservedAt: { type: string, format: date-time }
+        arrivalDate: { type: string, format: date-time, nullable: true }
+        timeline: { type: array, items: { $ref: '#/components/schemas/OpsTimelineItem' } }
+        balanceTransactionIds: { type: array, items: { type: string } }
+        exceptions: { type: array, items: { $ref: '#/components/schemas/ExceptionItem' } }
+        operations: { type: array, items: { $ref: '#/components/schemas/TaskItem' } }
+        journals: { type: array, items: { $ref: '#/components/schemas/JournalSummary' } }
+        bankEvidence: { type: array, items: { $ref: '#/components/schemas/OpsBankEvidence' } }
+        balanceTransactions: { type: array, items: { $ref: '#/components/schemas/OpsBalanceTransactionEvidence' } }
         payoutId: { type: string }
         providerStatus: { type: string, enum: [pending, in_transit, paid, failed, canceled] }
         automatic: { type: boolean }
@@ -2051,21 +2112,113 @@ components:
       type: object
       required: [paymentId, lines]
       properties:
+        traceCompleteness: { type: string, enum: [COMPLETE, INCOMPLETE], description: 仅表示追踪摘要是否截断，与资金状态和对账数据完整度独立 }
+        truncatedSections: { type: array, items: { type: string, enum: [journals, balanceTransactions, operations, bankEvidence, exceptions, providerObservations, revenueShares, lines] }, description: 每个原始追踪集合最多返回最新 100 项，按时间正序展示；timeline 合并已选证据；存在更多历史记录时明确标记截断 }
         paymentId: { type: string }
         policyVersion: { type: integer }
         policySnapshot: { type: object, additionalProperties: true, description: 下单时不可变 JSON 快照 }
         lines: { type: array, items: { $ref: '#/components/schemas/RevenueShareLine' } }
         journals: { type: array, items: { $ref: '#/components/schemas/JournalSummary' } }
 
+    OpsTimelineItem:
+      type: object
+      required: [at, kind, summary]
+      properties:
+        at: { type: string, format: date-time }
+        kind: { type: string }
+        summary: { type: string }
+        evidenceRef: { type: string, nullable: true }
+
+    ReconciliationEvidenceSummary:
+      type: object
+      required: [id, evidenceRef, kind, source, version, digest, createdAt]
+      description: 仅提供当前可信范围内该运行的结构化证据索引；不返回原始 payload 或凭据。
+      properties:
+        id: { type: string, format: uuid }
+        evidenceRef: { type: string, example: 'reconciliation-evidence:00000000-0000-0000-0000-000000000001' }
+        kind: { type: string }
+        source: { type: string }
+        version: { type: string }
+        digest: { type: string }
+        createdAt: { type: string, format: date-time }
+
+    OpsReconciliationCheck:
+      type: object
+      required: [checkNumber, name, outcome, residual, reason, owner, inputVersions, completeness, snapshot]
+      properties:
+        checkNumber: { type: integer, minimum: 1, maximum: 7 }
+        name: { type: string }
+        outcome: { $ref: '#/components/schemas/CheckResult' }
+        residual: { type: integer, format: int64 }
+        reason: { type: string }
+        owner: { type: string }
+        inputVersions: { type: object, additionalProperties: true }
+        completeness: { type: object, additionalProperties: true }
+        snapshot: { type: string }
+
+    OpsBalanceTransactionEvidence:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        btId: { type: string }
+        providerStatus: { type: string }
+        businessType: { type: string }
+        amountMinor: { type: integer, format: int64 }
+        feeMinor: { type: integer, format: int64 }
+        netMinor: { type: integer, format: int64 }
+        currency: { $ref: '#/components/schemas/Currency' }
+        balanceDomain: { type: string }
+        sourceObjectId: { type: string, nullable: true }
+        sourceObjectType: { type: string, nullable: true }
+        providerCreatedAt: { type: string, format: date-time }
+        availableOn: { type: string, format: date-time, nullable: true }
+        fetchedAt: { type: string, format: date-time }
+        apiVersion: { type: string }
+        rawDigest: { type: string, nullable: true }
+        journalId: { type: string, format: uuid, nullable: true }
+
+    OpsProviderObservation:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        callType: { type: string }
+        classification: { type: string }
+        externalObjectId: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+        fetchedAt: { type: string, format: date-time, nullable: true }
+        apiVersion: { type: string, nullable: true }
+        rawDigest: { type: string, nullable: true }
+        httpStatus: { type: string, nullable: true }
+
+    OpsBankEvidence:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        statementId: { type: string, format: uuid }
+        kind: { type: string, enum: [CREDIT, RETURN] }
+        bookedAt: { type: string, format: date-time }
+        principalMinor: { type: integer, format: int64 }
+        feeMinor: { type: integer, format: int64 }
+        journalId: { type: string, format: uuid }
+        fixtureId: { type: string }
+        digest: { type: string }
+        complete: { type: boolean }
+        coverageFrom: { type: string, format: date-time }
+        coverageUntil: { type: string, format: date-time }
+
     ReconciliationRunCreateRequest:
       type: object
       required: [runType, businessDate, currency, reason]
       additionalProperties: false
       properties:
+        organizationId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        environmentId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        livemode: { type: boolean, enum: [false] }
+        providerAccountId: { type: string, format: uuid, description: 可选已启用 test 提供方选择器，必须位于可信组织/环境 }
         runType: { type: string, enum: [TRANSACTION_LEVEL, BALANCE_LEVEL, PAYOUT_BANK_LEVEL, NIGHTLY_ALL] }
         businessDate: { type: string, format: date, description: 按业务时区转换为明确 UTC 区间 }
         currency: { $ref: '#/components/schemas/Currency' }
-        overlapLookbackDays: { type: integer, minimum: 0, default: 7 }
+        overlapLookbackDays: { type: integer, minimum: 0, maximum: 31, default: 7 }
         reason: { type: string, minLength: 1, maxLength: 500 }
 
     BankStatementImportRequest:
@@ -2073,10 +2226,25 @@ components:
       required: [fixtureId, schemaVersion, contentDigest, lines, reason]
       additionalProperties: false
       properties:
+        organizationId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        environmentId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        livemode: { type: boolean, enum: [false] }
+        providerAccountId: { type: string, format: uuid, description: 可选已启用 test 提供方选择器，必须位于可信组织/环境 }
         fixtureId: { type: string, description: 模拟银行 fixture 稳定标识 }
         schemaVersion: { type: string }
-        contentDigest: { type: string, description: 文件内容 SHA-256；重复摘要不重复匹配 }
+        contentDigest:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+          description: |
+            UTF-8 紧凑 JSON 的 SHA-256。移除 reason/contentDigest 和身份断言及 providerAccountId 选择器；
+            lines 按 lineNo 升序，递归按对象键排序，保留其他数组顺序。
+            所有文件字段（包含 description、coverage、bankAccountRef）参与摘要；description 不持久化。
+            未显式提供覆盖窗口时 complete=false，不能推断完整性；同摘要返回原批次且不重复匹配。
         reason: { type: string }
+        bankAccountRef: { type: string, description: 模拟银行稳定账户引用，默认 ops-simulated-bank }
+        coverageFrom: { type: string, format: date-time, description: 必须与 coverageUntil 同时提供 }
+        coverageUntil: { type: string, format: date-time }
+        complete: { type: boolean, default: false, description: 仅显式覆盖窗口可以声明完整 }
         lines:
           type: array
           minItems: 1
@@ -2109,6 +2277,10 @@ components:
       required: [actionType, reason]
       additionalProperties: false
       properties:
+        organizationId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        environmentId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        livemode: { type: boolean, enum: [false] }
+        providerAccountId: { type: string, format: uuid, description: 可选已启用 test 提供方选择器，必须位于可信组织/环境 }
         actionType: { type: string, enum: [INVESTIGATE, WAIT_EVIDENCE, RESOLVE, REOPEN] }
         reason: { type: string, minLength: 1, maxLength: 1000 }
         evidenceRefs:
@@ -2131,6 +2303,10 @@ components:
       required: [reason]
       additionalProperties: false
       properties:
+        organizationId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        environmentId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        livemode: { type: boolean, enum: [false] }
+        providerAccountId: { type: string, format: uuid, description: 可选已启用 test 提供方选择器，必须位于可信组织/环境 }
         reason: { type: string, minLength: 1, maxLength: 500 }
 
     TaskRetryResult:
@@ -2150,6 +2326,10 @@ components:
       required: [targetType, targetId, reason, evidenceRefs, proposedEntries]
       additionalProperties: false
       properties:
+        organizationId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        environmentId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        livemode: { type: boolean, enum: [false] }
+        providerAccountId: { type: string, format: uuid, description: 可选已启用 test 提供方选择器，必须位于可信组织/环境 }
         targetType: { type: string, enum: [PAYMENT, REFUND, DISPUTE, PAYOUT, BALANCE, EXCEPTION] }
         targetId: { type: string }
         reason: { type: string, minLength: 1, maxLength: 1000 }
@@ -2168,8 +2348,25 @@ components:
       required: [decision, reason]
       additionalProperties: false
       properties:
+        organizationId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        environmentId: { type: string, format: uuid, description: 仅与可信身份核对，不用于授权 }
+        livemode: { type: boolean, enum: [false] }
+        providerAccountId: { type: string, format: uuid, description: 可选已启用 test 提供方选择器，必须位于可信组织/环境 }
         decision: { type: string, enum: [APPROVE, REJECT] }
         reason: { type: string, minLength: 1, maxLength: 1000 }
+
+    OpsAdjustmentDetail:
+      allOf:
+        - $ref: '#/components/schemas/AdjustmentResource'
+        - type: object
+          required: [proposedEntries, evidenceRefs, reasonDigest, reasonLength, currency]
+          properties:
+            proposedEntries: { type: array, items: { $ref: '#/components/schemas/JournalEntryLine' } }
+            evidenceRefs: { type: array, items: { type: string } }
+            reasonDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+            reasonLength: { type: integer, minimum: 1, maximum: 1000 }
+            currency: { $ref: '#/components/schemas/Currency' }
+            providerAccountId: { type: string, format: uuid, nullable: true }
 
     AdjustmentResource:
       type: object

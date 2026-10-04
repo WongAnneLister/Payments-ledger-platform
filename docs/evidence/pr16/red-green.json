@@ -1,0 +1,1251 @@
+{
+  "runs": [
+    {
+      "phase": "baseline",
+      "buildStatus": "PASS",
+      "suiteResults": [
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.IdentityIT"
+        }
+      ],
+      "artifact": "baseline.txt"
+    },
+    {
+      "phase": "initial-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 2,
+          "failures": 1,
+          "errors": 1,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 4,
+          "failures": 4,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "initial-red.txt"
+    },
+    {
+      "phase": "bank-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 1,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "bank-red.txt"
+    },
+    {
+      "phase": "first-green",
+      "buildStatus": "PASS",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "first-green.txt"
+    },
+    {
+      "phase": "safety-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 10,
+          "failures": 2,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "safety-red.txt"
+    },
+    {
+      "phase": "native-id-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 1,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "native-id-red.txt"
+    },
+    {
+      "phase": "query-evidence-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 13,
+          "failures": 2,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "query-evidence-red.txt"
+    },
+    {
+      "phase": "review-draft-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 1,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "review-draft-red.txt"
+    },
+    {
+      "phase": "second-green",
+      "buildStatus": "PASS",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "second-green.txt"
+    },
+    {
+      "phase": "final-safety-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 16,
+          "failures": 2,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "final-safety-red.txt"
+    },
+    {
+      "phase": "final-focused-green",
+      "buildStatus": "PASS",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 16,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "final-focused-green.txt"
+    },
+    {
+      "phase": "review-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 23,
+          "failures": 7,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "review-red.txt"
+    },
+    {
+      "phase": "review-boundaries-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 4,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 24,
+          "failures": 8,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "review-boundaries-red.txt"
+    },
+    {
+      "phase": "review-green",
+      "buildStatus": "PASS",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "review-green.txt"
+    },
+    {
+      "phase": "audit-evidence-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 2,
+          "failures": 2,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "audit-evidence-red.txt"
+    },
+    {
+      "phase": "audit-evidence-green",
+      "buildStatus": "PASS",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 26,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "audit-evidence-green.txt"
+    },
+    {
+      "phase": "quality-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 30,
+          "failures": 4,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "quality-red.txt"
+    },
+    {
+      "phase": "quality-first-green-failure",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 30,
+          "failures": 5,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "quality-first-green-failure.txt"
+    },
+    {
+      "phase": "trace-attribution-red",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 6,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "trace-attribution-red.txt"
+    },
+    {
+      "phase": "quality-green",
+      "buildStatus": "PASS",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 31,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        }
+      ],
+      "artifact": "quality-green.txt"
+    },
+    {
+      "phase": "pre-quality-full-failure",
+      "buildStatus": "FAIL",
+      "suiteResults": [
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.webhook.WebhookNormalizerTest"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.FeeArithmeticTest"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ledger.LedgerRulesTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+        },
+        {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.TestModeGuardTest"
+        },
+        {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.IdentityRulesTest"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ApplicationContextTest"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.config.RunRoleConfigTest"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.notification.HttpMerchantTransportTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.notification.NotificationTargetPolicyTest"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.notification.NotificationConfigurationTest"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.notification.NotificationSignatureTest"
+        },
+        {
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.PaymentControllerTest"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.PaymentIdsTest"
+        },
+        {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.PaymentRequestsTest"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.RecoveryPolicyTest"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.RefundRequestsTest"
+        },
+        {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.ProviderModelsTest"
+        },
+        {
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest"
+        },
+        {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.adapter.stripe.StripeGatewayTest"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.adapter.stripe.StripeAdapterConfigurationTest"
+        },
+        {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.adapter.stripe.StripePaymentsAdapterTest"
+        },
+        {
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.adapter.stripe.StripeLifecycleProbeTest"
+        },
+        {
+          "tests": 17,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.fake.FakeProviderConfigurationTest"
+        },
+        {
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.fake.FakeStateStoreTest"
+        },
+        {
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.fake.FakeStripeProviderTest"
+        },
+        {
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.fake.FakeEvidenceTest"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.fake.ProviderSimulatorReplayTest"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.dispute.DisputeAmountsTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.common.request.RequestIdFilterTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.common.error.ErrorContractTest"
+        },
+        {
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.financialingestion.FinancialRulesTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.financialingestion.FinancialIngestionWorkerTest"
+        },
+        {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.revenueshare.SharePolicyTest"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.revenueshare.RevenueShareConfigurationTest"
+        },
+        {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.webhook.StripeWebhookHttpIT"
+        },
+        {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.webhook.WebhookSchemaIT"
+        },
+        {
+          "tests": 34,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationCoreIT"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationSchemaIT"
+        },
+        {
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ledger.LedgerDatabaseIT"
+        },
+        {
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ledger.LedgerServiceIT"
+        },
+        {
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.identity.IdentityIT"
+        },
+        {
+          "tests": 16,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.notification.NotificationPipelineIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.notification.RefundMerchantDeliveryIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.notification.NotificationMigrationIT"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.notification.MerchantDeliveryIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.notification.NotificationWorkerWiringIT"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.notification.NotificationKafkaIT"
+        },
+        {
+          "tests": 23,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.bank.PayoutLifecycleIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.ReconciliationRecoverySchemaIT"
+        },
+        {
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.RefundRecoveryIT"
+        },
+        {
+          "tests": 8,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.PaymentHttpIT"
+        },
+        {
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.DisputeLifecycleIT"
+        },
+        {
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.WebhookProcessingIT"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.RefundHttpIT"
+        },
+        {
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.PaymentOutboxIT"
+        },
+        {
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.RefundCoreIT"
+        },
+        {
+          "tests": 27,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.ReconciliationRecoveryIT"
+        },
+        {
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.RevenueShareLifecycleIT"
+        },
+        {
+          "tests": 27,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.PaymentCoreIT"
+        },
+        {
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.PaymentFinancialIngestionIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "suite": "com.paymentsledger.payment.PaymentRealContractIT"
+        },
+        {
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.WebhookAssociationIT"
+        },
+        {
+          "tests": 23,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.OperationRecoveryIT"
+        },
+        {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.RefundWebhookIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.RefundSchemaIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.RecoverySchemaIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.PaymentSchemaIT"
+        },
+        {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.RefundFinancialIT"
+        },
+        {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ApiRoleHealthIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "suite": "com.paymentsledger.provider.adapter.stripe.PayoutRealReadIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "suite": "com.paymentsledger.provider.adapter.stripe.StripeRealContractIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.provider.fake.FakeTransactionBoundaryIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.FlywayBaselineIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.dispute.DisputeSchemaIT"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.dispute.DisputeCoreIT"
+        },
+        {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsSchemaIT"
+        },
+        {
+          "tests": 26,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.ops.OpsApiIT"
+        },
+        {
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.financialingestion.FinancialIngestionIT"
+        },
+        {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.financialingestion.FinancialSchemaIT"
+        },
+        {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.WorkerRoleHealthIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.revenueshare.RevenueShareSchemaIT"
+        },
+        {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.revenueshare.RevenueShareCoreIT"
+        },
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payout.PayoutSchemaIT"
+        },
+        {
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payout.PayoutCoreIT"
+        }
+      ],
+      "artifact": "pre-quality-full-failure.txt"
+    },
+    {
+      "phase": "payment-http-diagnostic",
+      "buildStatus": "PASS",
+      "suiteResults": [
+        {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.reconciliation.ReconciliationWindowsTest"
+        },
+        {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suite": "com.paymentsledger.payment.PaymentHttpIT"
+        }
+      ],
+      "artifact": "payment-http-diagnostic.txt"
+    }
+  ],
+  "interpretation": [
+    "Initial RED includes an absent-relation schema error, separate from behavior assertion failures.",
+    "Audit rollback, native IDs, refund partial evidence, payout short receipt, draft viewing, required fields and unrelated resolution journal defects were observed as assertion failures before fixes.",
+    "Extra schema/selector/role/formatting coverage passing without a separate RED is coverage only, not claimed as a failing regression cycle.",
+    "Four quality regressions cover recovery lock order, serialized exception action order, scoped adjustment Journal links and explicit capped trace completeness.",
+    "A pre-quality full build failed one unchanged legacy cancellation assertion during extensive clock/starvation gaps; unchanged focused PaymentHttpIT rerun passed. Final clean build is recorded separately.",
+    "All fixtures use local model/provider simulator or simulated bank evidence; no real account writes."
+  ]
+}

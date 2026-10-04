@@ -9,6 +9,8 @@ import java.util.Map;
 /** Client assertions may be checked, but never used to construct identity. */
 final class ScopeAssertions {
     private final Map<String,String> expected;
+    private boolean ops;
+    private java.util.function.Predicate<String> providerAssertion=value->false;
     ScopeAssertions(TenantContext c) {
         expected=Map.of("organizationid",c.organizationId().toString(),"environmentid",c.environmentId().toString(),
                 "applicationid",c.applicationId().toString(),"provideraccountid",c.allowedProviderAccountId().toString(),
@@ -16,11 +18,14 @@ final class ScopeAssertions {
                 "livemode","false");
     }
     ScopeAssertions(OpsContext c) {
+        ops=true;
         expected=Map.of("organizationid",c.organizationId().toString(),"environmentid",c.environmentId().toString(),"livemode","false");
     }
+    ScopeAssertions(OpsContext c,java.util.function.Predicate<String> providerAssertion){this(c);this.providerAssertion=providerAssertion;}
     void check(String field,String value) {
         String key=field.replace("-","").replace("_","").toLowerCase(Locale.ROOT);
         if(key.startsWith("x")) key=key.substring(1);
+        if(ops && java.util.Set.of("provideraccountid","allowedprovideraccountid","accountid").contains(key)){if(!providerAssertion.test(value))throw TenantAccessGuard.forbidden();return;}
         if(java.util.Set.of("organizationid","environmentid","applicationid","provideraccountid","allowedprovideraccountid","accountid","livemode").contains(key)
                 && !java.util.Objects.equals(expected.get(key),value)) throw TenantAccessGuard.forbidden();
     }

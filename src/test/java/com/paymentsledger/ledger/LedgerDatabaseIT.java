@@ -186,7 +186,7 @@ class LedgerDatabaseIT {
         String url=PG.getJdbcUrl().replace("/"+PG.getDatabaseName(),"/ledger_upgrade");
         Flyway.configure().dataSource(url,PG.getUsername(),PG.getPassword()).target("2").load().migrate();
         try(var c=DriverManager.getConnection(url,PG.getUsername(),PG.getPassword())){sql(c,"INSERT INTO platform.organization(code) VALUES ('survives')");}
-        assertThat(Flyway.configure().dataSource(url,PG.getUsername(),PG.getPassword()).load().migrate().migrationsExecuted).isEqualTo(13); // V3 ledger through V15 reconciliation recovery
+        assertThat(Flyway.configure().dataSource(url,PG.getUsername(),PG.getPassword()).load().migrate().migrationsExecuted).isEqualTo(14); // V3 ledger through V16 ops approval/audit
         try(var c=DriverManager.getConnection(url,PG.getUsername(),PG.getPassword());var s=c.createStatement();var r=s.executeQuery("SELECT code FROM platform.organization")){r.next();assertThat(r.getString(1)).isEqualTo("survives");}
     }
 }

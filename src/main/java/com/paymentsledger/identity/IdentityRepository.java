@@ -64,6 +64,11 @@ public class IdentityRepository {
         if (results.isEmpty()) tokens.rejectUnknown(token);
         return results.getFirst();
     }
+    /** A client provider selector is an assertion inside the trusted ops organization/environment. */
+    public boolean ownsOpsProvider(OpsContext context,String value) {
+        UUID id;try{id=UUID.fromString(value);}catch(RuntimeException failure){return false;}
+        return jdbc.queryForObject("SELECT count(*) FROM platform.provider_account WHERE id=? AND organization_id=? AND environment_id=? AND status='ACTIVE' AND NOT livemode",Long.class,id,context.organizationId(),context.environmentId())==1;
+    }
     public record ApplicationView(UUID id, String code) { }
     public ApplicationView application(TenantContext context, UUID id) {
         TenantAccessGuard.require(context);

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.paymentsledger.ops.OpsApiIT
+-------------------------------------------------------------------------------
+Tests run: 31, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 41.42 s -- in com.paymentsledger.ops.OpsApiIT

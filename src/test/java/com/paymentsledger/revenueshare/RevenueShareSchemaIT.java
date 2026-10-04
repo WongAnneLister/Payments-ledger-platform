@@ -26,7 +26,7 @@ class RevenueShareSchemaIT {
   """);
   String before=admin.queryForObject("SELECT share_policy_snapshot::text FROM platform.business_order",String.class);
   var flyway=Flyway.configure().dataSource(DB.getJdbcUrl(),DB.getUsername(),DB.getPassword()).schemas("platform").load();
-  assertThat(flyway.migrate().migrationsExecuted).isEqualTo(6);assertThat(flyway.migrate().migrationsExecuted).isZero();
+  assertThat(flyway.migrate().migrationsExecuted).isEqualTo(7);assertThat(flyway.migrate().migrationsExecuted).isZero();
   var jdbc=new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(),"payments_app","pr02_test_only"));
   assertThat(jdbc.queryForObject("SELECT share_policy_snapshot::text FROM platform.business_order",String.class)).isEqualTo(before);
   jdbc.queryForObject("SELECT platform.ensure_share_accounts((SELECT id FROM platform.payment))",Object.class);

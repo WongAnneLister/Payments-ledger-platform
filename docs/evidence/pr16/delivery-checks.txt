@@ -1,0 +1,19 @@
+$ python3 scripts/ci/check_openapi.py
+parsed: paths=28 schemas=66
+$ref: total=95 unresolved=0
+
+PASS: OpenAPI contract checks
+exitCode=0
+$ python3 scripts/ci/check_doc_links.py
+markdown files=94 relative links checked=322 broken=0
+
+PASS: all relative documentation links resolve
+exitCode=0
+$ python3 /tmp/pr16-delivery-checks.py
+PASS configured-secret scan (values never printed)
+exitCode=0
+$ git diff --check
+exitCode=0
+PASS acceptance mappings reference actual tests
+PASS staged build inputs match tested hashes (verified after staging)
+PASS git diff --cached --check

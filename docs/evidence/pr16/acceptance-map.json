@@ -1,0 +1,36 @@
+{
+  "evidenceScope": "Local PostgreSQL/HTTP/API fixtures only. No new real Stripe or bank writes. Real historical Stripe report and real bank settlement remain NOT_RUN.",
+  "cases": {
+    "AC-V1-01": [
+      "OpsApiIT.everyFrozenReadRouteAuthenticatesAndAuthorizes",
+      "OpsApiIT.allReadResourcesReturnCamelCaseContractAndPartnerOnlyOwnAllocation",
+      "OpsApiIT.requiredFieldsAndRoleMatrixReturnControlledErrors",
+      "OpsApiIT.reviewerCanInspectScopedDraftThroughApiAndForeignSelectorsAreRejected",
+      "OpsApiIT.rejectedOpsReadsAreAuditedWithoutCallerScopeOrSecrets",
+      "OpsSchemaIT.runtimeSqlCannotCrossScopeEvidenceSelfApproveOrAlterFinalDecision",
+      "OpsApiIT.cappedTraceShowsNewestEvidenceAndDeclaresIncompleteSections",
+      "OpsApiIT.truncatedJournalHistoryDoesNotMislabelCompleteRevenueShareLines",
+      "OpsApiIT.targetDetailsIncludeTheirApprovedManualAdjustmentJournal"
+    ],
+    "AC-V1-31": [
+      "OpsApiIT.reconciliationReplayConflictCurrencyAndTrustedScope",
+      "OpsApiIT.bankLegacyTranslationDigestAndDuplicateFixtureAreSafe",
+      "OpsApiIT.realBankMatchingPersistsOneJournalAndShortReceiptTruth",
+      "OpsApiIT.adjustmentRequiresScopedEvidenceAndIndependentApprovalPostsExactlyOnce",
+      "OpsApiIT.concurrentApprovalAndPostingFailureRollbackLeaveOneFinalJournal",
+      "OpsApiIT.auditFailureRollsBackSuccessfulApprovalAndCanRetry",
+      "OpsApiIT.scopedExceptionEvidenceAndRetryNeverResetFinalLeaseOrExpiredUnknown",
+      "OpsApiIT.resolutionJournalMustBelongToTheExceptionAdjustment",
+      "OpsApiIT.directUnrelatedJournalEvidenceCannotResolveException",
+      "OpsApiIT.otherRunEvidenceCannotResolveExceptionButOwnRunEvidenceCan",
+      "OpsApiIT.exceptionAuditBeforeReflectsSerializedCurrentDisposition",
+      "OpsApiIT.sourceRetryUsesWorkerTaskThenBalanceTransactionLockOrder",
+      "OpsApiIT.exceptionLatestDispositionFollowsSerializedActionOrderNotTransactionStart",
+      "OpsSchemaIT.upgradesV15AndHasImmutableOpsEvidenceAndApprovalConstraints",
+      "OpsSchemaIT.runtimeCannotDeleteOpsOrAlterAuditAndHistoricalEvidence"
+    ]
+  },
+  "finalStatusSource": "verification.json",
+  "actualTestCases": "test-cases.json",
+  "note": "Method realBankMatching uses the real local BankMatcher domain implementation against simulated bank evidence, not a real bank."
+}

@@ -1,0 +1,13 @@
+{
+  "java": "Amazon Corretto 21.0.12.1",
+  "springBoot": "3.5.16",
+  "flyway": "11.20.3",
+  "postgresqlJdbc": "42.7.13",
+  "testcontainers": "1.21.4",
+  "stripeJava": "33.3.0",
+  "integrationDatabase": "postgres:16 (observed16.14)",
+  "migrationsAdded": [
+    "V16__ops_commands_approval_audit.sql"
+  ],
+  "googleJavaFormat": "1.28.0 external formatting tool only; no runtime dependency"
+}

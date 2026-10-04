@@ -27,6 +27,21 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     public static TenantContext tenant(HttpServletRequest request) {
         return TenantAccessGuard.require((TenantContext)request.getAttribute(TENANT));
     }
+    public static OpsContext ops(HttpServletRequest request) {
+        OpsContext context=(OpsContext)request.getAttribute(OPS);
+        if(context==null)throw new ApiException(ErrorCode.UNAUTHORIZED,"Ops identity required");
+        return context;
+    }
+    private com.paymentsledger.ops.OpsAuditService audit;
+    @org.springframework.beans.factory.annotation.Autowired(required=false)
+    public void audit(com.paymentsledger.ops.OpsAuditService audit){this.audit=audit;}
+    private void auditRejected(HttpServletRequest request,String path,String result){
+        if(audit!=null && request.getRequestURI().startsWith("/ops/")
+           && request.getAttribute("ops.audited")==null){
+            audit.record((OpsContext)request.getAttribute(OPS),"HTTP_"+request.getMethod(),"route-sha256:"+com.paymentsledger.ops.OpsAuditService.digest(path),null,result);
+            request.setAttribute("ops.audited",true);
+        }
+    }
     private final IdentityRepository repository;
     private final CredentialTokens tokens;
     private final ObjectMapper mapper;
@@ -55,7 +70,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 request.setAttribute(TENANT,context); assertions=new ScopeAssertions(context);
             } else {
                 OpsContext context=repository.authenticateOps(token);
-                request.setAttribute(OPS,context); assertions=new ScopeAssertions(context);
+                request.setAttribute(OPS,context); assertions=new ScopeAssertions(context,value->repository.ownsOpsProvider(context,value));
             }
             assertions.checkRequest(request);
             String contentType=request.getContentType();
@@ -70,14 +85,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 checked=new ReplayableJsonRequest(request,body);
             }
         } catch(ApiException ex) {
-            clear(request); render(response,ex.errorCode(),ex.getMessage()); return;
+            auditRejected(request,path,ex.errorCode()==ErrorCode.FORBIDDEN?"DENIED":"REJECTED"); clear(request); render(response,ex.errorCode(),ex.getMessage()); return;
         } catch(JsonProcessingException ex) {
-            clear(request); render(response,ErrorCode.VALIDATION_ERROR,"Invalid JSON request"); return;
+            auditRejected(request,path,"REJECTED"); clear(request); render(response,ErrorCode.VALIDATION_ERROR,"Invalid JSON request"); return;
         } catch(DataAccessException | org.springframework.transaction.TransactionException ex) {
             clear(request); render(response,ErrorCode.SERVICE_UNAVAILABLE,"Authentication store unavailable"); return;
         }
         response.setHeader("Cache-Control","no-store");
-        try { chain.doFilter(checked,response); } finally { clear(request); }
+        try { chain.doFilter(checked,response); } finally { if(ops && response.getStatus()>=400)auditRejected(request,path,response.getStatus()==403?"DENIED":"REJECTED"); clear(request); }
     }
     private static void clear(HttpServletRequest request) { request.removeAttribute(TENANT); request.removeAttribute(OPS); }
     private void render(HttpServletResponse response,ErrorCode code,String message) throws IOException {

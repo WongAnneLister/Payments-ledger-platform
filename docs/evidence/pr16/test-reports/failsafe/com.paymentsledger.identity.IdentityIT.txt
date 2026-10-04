@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.paymentsledger.identity.IdentityIT
+-------------------------------------------------------------------------------
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.27 s -- in com.paymentsledger.identity.IdentityIT
