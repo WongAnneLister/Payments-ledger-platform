@@ -1,0 +1,80 @@
+{
+  "status": "PASS",
+  "browser": "147.0.7727.15",
+  "playwright": "1.62.1",
+  "artifactSha256": "fbb9ee391fb9c2e228d1b1e9c3bd3492b74af53c248d778c9202077108ed6c5d",
+  "provenance": "Actual isolated Chromium -> same-origin API (api,local,test) -> new PostgreSQL16 container; Fake provider only. Browser failed-response routes explicitly simulate transport loss. No real Stripe/bank action. Credentials generated in memory, no .env loaded.",
+  "checks": [
+    {
+      "name": "Return URL cannot assert success before authenticated GET",
+      "status": "PASS"
+    },
+    {
+      "name": "UNKNOWN query retains original payment without replacement payment action or stored credentials",
+      "status": "PASS"
+    },
+    {
+      "name": "Duplicate notifications re-query the original resource once",
+      "status": "PASS"
+    },
+    {
+      "name": "SUCCEEDED with missing financial evidence remains amber",
+      "status": "PASS"
+    },
+    {
+      "name": "Same-payment refresh immediately removes prior confirmation while its new GET is held",
+      "status": "PASS"
+    },
+    {
+      "name": "Failed refresh removes earlier confirmed result",
+      "status": "PASS"
+    },
+    {
+      "name": "Credential changes clear current result",
+      "status": "PASS"
+    },
+    {
+      "name": "Viewer sees 13 read views and no actions; API-sourced hostile text remains inert",
+      "status": "PASS"
+    },
+    {
+      "name": "Partner navigation is own shares only and server denies payment detail",
+      "status": "PASS"
+    },
+    {
+      "name": "Unchanged trusted identity verification preserves the original pending command",
+      "status": "PASS"
+    },
+    {
+      "name": "Lost command response retries exact bytes/key, creates one run and GETs current incomplete report",
+      "status": "PASS"
+    },
+    {
+      "name": "Scoped observability is delivered by real API with 11 metric cards",
+      "status": "PASS"
+    },
+    {
+      "name": "390px mobile layout has no horizontal overflow and supports keyboard focus",
+      "status": "PASS"
+    },
+    {
+      "name": "No uncaught browser JavaScript errors",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual ECS output carries allowlisted known correlations without fixture credentials",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "customer-pending-evidence.png",
+    "customer-unknown.png",
+    "ops-mobile-metrics-viewport.png",
+    "ops-mobile.png",
+    "ops-observability-viewport.png",
+    "ops-observability.png",
+    "ops-payment-trace.png",
+    "ops-reconciliation-replay.png"
+  ],
+  "capturedAt": "2026-10-06T08:15:54.132Z"
+}

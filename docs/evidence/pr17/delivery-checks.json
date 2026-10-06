@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "openApi": {
+    "paths": 29,
+    "schemas": 70,
+    "referencesChecked": 358
+  },
+  "markdown": {
+    "filesChecked": 11,
+    "localLinksChecked": 63
+  },
+  "workingInputHashes": "PASS 309 unchanged",
+  "diffWhitespace": "PASS",
+  "stagedInputHashes": "PASS 309 staged files match tested input bytes",
+  "independentReview": "Ready / Approved; no Important or Critical findings",
+  "errors": [],
+  "stagedDiffWhitespace": "PASS",
+  "secretScan": "PASS; 98 changed/new files, no findings; real .env never read",
+  "stagedFiles": 98
+}

@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "java": "Amazon Corretto21",
+  "command": "JAVA_HOME=<Corretto21> caffeinate -i ./mvnw -B -Dtest=RequestIdFilterTest,AuthenticationFilterTest,CorrelationLogTest,ObservabilityGaugesTest -Dit.test=ObservabilityIT,WorkerRoleHealthIT,OpsApiIT,PageHttpIT,PaymentHttpIT verify",
+  "unit": {
+    "tests": 15,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "integration": {
+    "tests": 62,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "duration": "01:37",
+  "log": "observability-focused-green.txt",
+  "note": "Fresh focused GREEN after expected RED; full clean verify remains delivery gate."
+}

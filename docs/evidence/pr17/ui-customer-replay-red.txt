@@ -1,0 +1,82 @@
+TAP version 13
+# (node:27425) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/main/resources/static/payment-test.js?runtime=1 is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/anne_lister/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual payment-test clears terminal confirmation after failed refresh
+ok 1 - actual payment-test clears terminal confirmation after failed refresh
+  ---
+  duration_ms: 9.796917
+  type: 'test'
+  ...
+# Subtest: actual payment-test credential switch discards scoped draft and aborts stale read while controls remain usable
+ok 2 - actual payment-test credential switch discards scoped draft and aborts stale read while controls remain usable
+  ---
+  duration_ms: 2.310708
+  type: 'test'
+  ...
+# Subtest: actual payment-test reuses original order body and key after lost create response
+ok 3 - actual payment-test reuses original order body and key after lost create response
+  ---
+  duration_ms: 2.393917
+  type: 'test'
+  ...
+# Subtest: actual payment-test historical POST replay requires current GET before terminal success (UNKNOWN)
+not ok 4 - actual payment-test historical POST replay requires current GET before terminal success (UNKNOWN)
+  ---
+  duration_ms: 4.472875
+  type: 'test'
+  location: '/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/scripts/tests/pr17-pages.test.mjs:71:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    historical success cannot enable replacement order
+
+    false !== true
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/scripts/tests/pr17-pages.test.mjs:89:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: actual payment-test historical POST replay requires current GET before terminal success (GET_FAILED)
+not ok 5 - actual payment-test historical POST replay requires current GET before terminal success (GET_FAILED)
+  ---
+  duration_ms: 2.942167
+  type: 'test'
+  location: '/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/scripts/tests/pr17-pages.test.mjs:71:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    historical success cannot enable replacement order
+
+    false !== true
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/scripts/tests/pr17-pages.test.mjs:89:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: observability cards preserve exact available values and explicit NO_DATA status
+ok 6 - observability cards preserve exact available values and explicit NO_DATA status
+  ---
+  duration_ms: 0.315542
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 4
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 90.866709

@@ -43,9 +43,9 @@ public class RequestIdFilter extends OncePerRequestFilter {
     }
 
     static String resolve(String inbound) {
-        if (inbound != null && SAFE_REQUEST_ID.matcher(inbound).matches()) {
+        if (inbound != null && SAFE_REQUEST_ID.matcher(inbound).matches() && SafeCorrelationId.accepts(inbound, 64)) {
             return inbound;
         }
-        return "req_" + UUID.randomUUID().toString().replace("-", "");
+        return "req_" + UUID.randomUUID().toString();
     }
 }

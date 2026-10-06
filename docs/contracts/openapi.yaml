@@ -685,6 +685,41 @@ paths:
         '403': { $ref: '#/components/responses/Forbidden' }
         '404': { $ref: '#/components/responses/NotFound' }
 
+  /ops/observability:
+    get:
+      tags: [ops-read]
+      summary: Scoped persistent operational observations
+      operationId: opsGetObservability
+      description: |
+        Read-only REPEATABLE READ snapshot for the authenticated organization/environment,
+        active test providers, and enabled currencies. OPS_VIEWER, OPS_OPERATOR,
+        OPS_REVIEWER and OPS_ADMIN may read; PARTNER_VIEWER is forbidden.
+        No command, provider call, financial mutation, or notification delivery is performed.
+        UNKNOWN count excludes CONFLICT. Pending-evidence count counts durable payment and BT
+        work rows, rather than distinct transactions. Latest reconciliation run per provider/currency
+        is selected before checks; missing newer checks never reuse an older PASS.
+        Scalar PSP residual requires one dimension, a COMPLETE latest run, and a present
+        non-INCOMPLETE check 5 with no producer missing-input flags. A definite FAIL with
+        unresolved inputs retains its dimensioned partial residual and CRITICAL alert,
+        while the scalar metric remains NO_DATA (internal gauge NaN).
+        Multiple dimensions retain individual signed residuals and an explicit ambiguity alert.
+        Metrics use exact integer/decimal strings; NO_DATA explicitly carries null value.
+        Persistence errors return 503 rather than fabricated zero observations.
+      security: [{ OpsBearer: [ops:read] }]
+      responses:
+        '200':
+          description: Scoped snapshot with observation-only alerts and dimensioned residuals
+          headers:
+            X-Request-Id: { $ref: '#/components/headers/XRequestId' }
+            Cache-Control: { schema: { type: string, enum: [no-store] } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ObservabilitySnapshot' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '503': { $ref: '#/components/responses/ServiceUnavailable' }
+
   /ops/balances:
     get:
       tags: [ops-read]
@@ -1345,6 +1380,55 @@ components:
                 requestId: "req_01HZXB0000000000000018"
 
   schemas:
+    ObservabilitySnapshot:
+      type: object
+      required: [observedAt, metrics, reconciliationResiduals, alerts]
+      properties:
+        observedAt: { type: string, format: date-time }
+        metrics:
+          type: array
+          minItems: 11
+          maxItems: 11
+          items: { $ref: '#/components/schemas/ObservabilityMetric' }
+        reconciliationResiduals:
+          type: array
+          items: { $ref: '#/components/schemas/ObservabilityResidual' }
+        alerts:
+          type: array
+          items: { $ref: '#/components/schemas/ObservabilityAlert' }
+    ObservabilityMetric:
+      type: object
+      required: [name, status, value, unit, sourceAt]
+      properties:
+        name:
+          type: string
+          enum: [unknown_payment_count, unknown_payment_oldest_age, refund_reserved_age, webhook_lag, outbox_oldest_age, ledger_pending_evidence, unclassified_bt_count, trial_balance_failures, reconciliation_residual, payout_unmatched_age, share_cap_violations]
+        status: { type: string, enum: [AVAILABLE, NO_DATA] }
+        value: { type: string, nullable: true, pattern: '^-?[0-9]+(\.[0-9]+)?$', description: Exact count/seconds/minor string; null when absent or ambiguous }
+        unit: { type: string, enum: [count, seconds, minor] }
+        sourceAt: { type: string, format: date-time, nullable: true }
+    ObservabilityResidual:
+      type: object
+      required: [runId, providerAccountId, currency, residualMinor, outcome, dataCompleteness, sourceAt]
+      properties:
+        runId: { type: string, format: uuid }
+        providerAccountId: { type: string, format: uuid }
+        currency: { $ref: '#/components/schemas/Currency' }
+        residualMinor: { type: string, nullable: true, pattern: '^-?[0-9]+(\.[0-9]+)?$', description: Signed exact integer or decimal latest check 5 residual; null when the check is absent }
+        outcome: { type: string, enum: [PASS, FAIL, INCOMPLETE] }
+        dataCompleteness: { type: object, additionalProperties: true, description: Persisted check completeness plus checkPresent and runState }
+        sourceAt: { type: string, format: date-time, nullable: true }
+    ObservabilityAlert:
+      type: object
+      required: [metric, severity, message, sourceAt]
+      properties:
+        metric: { type: string }
+        severity: { type: string, enum: [WARNING, CRITICAL] }
+        message: { type: string }
+        sourceAt: { type: string, format: date-time, nullable: true }
+        runId: { type: string, format: uuid }
+        providerAccountId: { type: string, format: uuid }
+        currency: { $ref: '#/components/schemas/Currency' }
 
     TenantContext:
       type: object
@@ -1864,6 +1948,7 @@ components:
       required: [journalId, status, totalDebitMinor, totalCreditMinor, currency, postedAt]
       properties:
         journalId: { type: string }
+        financialEventId: { type: string, format: uuid, description: Actual accepted event associated with this journal }
         status:
           type: string
           enum: [POSTED]
@@ -1987,6 +2072,7 @@ components:
       type: object
       required: [taskId, taskType, status]
       properties:
+        operationId: { type: string, format: uuid, description: Known durable provider operation; omitted if absent }
         taskId: { type: string }
         taskType: { type: string, example: "PAYMENT_RECOVERY" }
         status: { type: string, enum: [PENDING, LEASED, SUCCEEDED, FAILED, ESCALATED] }
@@ -2180,6 +2266,8 @@ components:
     OpsProviderObservation:
       type: object
       properties:
+        operationId: { type: string, format: uuid, nullable: true }
+        providerRequestId: { type: string, description: Known bounded provider request identifier; secret-like or unsafe values omitted }
         id: { type: string, format: uuid }
         callType: { type: string }
         classification: { type: string }

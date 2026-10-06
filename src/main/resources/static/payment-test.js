@@ -1,107 +1,137 @@
-'use strict';
-(() => {
-  const field = id => document.getElementById(id);
-  let terminalKnown = false;
-  const draftKey = 'pendingTestOrder';
-  const draftFields = ['orderKey','productRef','priceVersion','amountMinor','currency','quantity','successUrl','cancelUrl'];
-  const unlockDraft = () => { draftFields.concat('operationKey').forEach(id => { field(id).readOnly = false; }); field('create').textContent = '创建测试支付'; };
-  const lockDraft = () => { draftFields.concat('operationKey').forEach(id => { field(id).readOnly = true; }); field('create').textContent = '获取原支付（同一请求键）'; };
-  const notice = message => { field('notice').textContent = message; };
-  const paymentId = () => {
-    const id = field('paymentId').value.trim();
-    if (!/^pay_[0-7][0-9A-HJKMNP-TV-Z]{25}$/.test(id)) throw new Error('请先填写有效的支付 ID。');
-    return id;
-  };
-  const number = id => {
-    const value = Number(field(id).value);
-    if (!Number.isSafeInteger(value) || value < 1) throw new Error('金额、数量和版本必须是浏览器可安全表示的正整数。');
-    return value;
-  };
-  async function request(path, method = 'GET', body, key) {
-    const token = field('credential').value.trim();
-    if (!/^app_[0-9a-f-]+\.[A-Za-z0-9_-]+$/i.test(token)) throw new Error('请输入项目应用凭据（app_…），不要使用 Stripe 密钥。');
-    const headers = { Authorization: `Bearer ${token}` };
-    if (body !== undefined) headers['Content-Type'] = 'application/json';
-    if (key) headers['Idempotency-Key'] = key;
-    const response = await fetch(path, { method, headers, cache: 'no-store', body: body === undefined ? undefined : JSON.stringify(body) });
-    const data = await response.json();
-    if (!response.ok) {
-      const detail = (data.details || []).find(item => item.field === 'paymentId');
-      if (detail && /^pay_[0-7][0-9A-HJKMNP-TV-Z]{25}$/.test(detail.issue)) remember(detail.issue);
-      if (data.code === 'PROVIDER_UNKNOWN_RESULT') throw new Error('支付意图已保存，但结果待确认。请查询原支付；不要换键重试。');
-      const failure = new Error(`${data.code || 'REQUEST_FAILED'}：${data.message || '请求失败，请查询现有支付。'}`);
-      failure.definitePreIntent = !detail && method === 'POST' && path === '/v1/payments' && [400,422].includes(response.status) && ['VALIDATION_ERROR','IDEMPOTENCY_KEY_REQUIRED','AMOUNT_MISMATCH','CURRENCY_NOT_ENABLED'].includes(data.code);
-      throw failure;
-    }
-    return data;
+import { ApiSession, paymentPresentation, hostedUrl } from './ui/core.mjs';
+const field = id => document.getElementById(id);
+const draftKey = 'pendingTestOrder';
+const draftFields = ['orderKey','productRef','priceVersion','amountMinor','currency','quantity','successUrl','cancelUrl'];
+let terminalKnown = false, draft = null, boundCredential = '', generation = 0;
+const cancelKeys = new Map();
+const notice = message => { field('notice').textContent = message; };
+const lockDraft = () => { draftFields.concat('operationKey').forEach(id => { field(id).readOnly = true; }); field('create').textContent = '获取原支付（同一请求键）'; };
+const unlockDraft = () => { draftFields.concat('operationKey').forEach(id => { field(id).readOnly = false; }); field('create').textContent = '创建测试支付'; };
+function hideResult() {
+  terminalKnown = false; field('newOrder').disabled = true; field('checkout').hidden = true; field('checkout').removeAttribute('href');
+  field('resultPage').hidden = true; field('resultPage').removeAttribute('href'); field('result').hidden = true; field('result').textContent = '';
+}
+const api = new ApiSession({ scheme: 'Bearer', onClear: () => {
+  generation++; hideResult();
+  for (const id of ['create','query','cancel']) field(id).disabled = false;
+} });
+function clearScopedDraft() {
+  draft = null; boundCredential = ''; cancelKeys.clear(); unlockDraft();
+  for (const id of draftFields.concat('operationKey','paymentId')) field(id).value = '';
+  try { sessionStorage.removeItem(draftKey); sessionStorage.removeItem('testPaymentId'); } catch (_) { /* Optional storage. */ }
+  notice('应用身份已改变。原身份的订单与查询已清空，请查询当前身份原支付，勿盲目创建替代支付。');
+}
+field('credential').addEventListener('input', () => {
+  const next = field('credential').value.trim();
+  if (boundCredential && next !== boundCredential) clearScopedDraft();
+  api.setCredential(next);
+});
+function paymentId() {
+  const id = field('paymentId').value.trim();
+  if (!/^pay_[0-7][0-9A-HJKMNP-TV-Z]{25}$/.test(id)) throw new Error('请先填写有效的原支付 ID。');
+  return id;
+}
+function number(id) {
+  const value = Number(field(id).value);
+  if (!Number.isSafeInteger(value) || value < 1) throw new Error('金额、数量和版本必须是浏览器可安全表示的正整数。');
+  return value;
+}
+function remember(id) {
+  if (!/^pay_[0-7][0-9A-HJKMNP-TV-Z]{25}$/.test(id)) throw new Error('响应未提供有效原支付 ID');
+  field('paymentId').value = id;
+  // Only the original resource ID is stored.
+  try { sessionStorage.setItem('testPaymentId', id); } catch (_) { /* Optional storage. */ }
+  field('resultPage').href = '/payment-result.html?paymentId=' + encodeURIComponent(id); field('resultPage').hidden = false;
+}
+function render(data) {
+  remember(data.id);
+  const model = paymentPresentation(data); terminalKnown = model.canStartNew;
+  field('result').hidden = false; field('result').textContent = JSON.stringify(data, null, 2);
+  field('checkout').hidden = true; field('checkout').removeAttribute('href');
+  // SUCCEEDED + PENDING_EVIDENCE is business confirmation; it is never overall funding success.
+  notice(data.recovery?.status === 'ESCALATED' ? '原支付需要人工调查，请联系运营并继续查询原支付，勿换键重付。' : model.notice);
+  if (data.resolutionStatus === 'KNOWN' && data.financialStatus !== 'CONFLICT' && !['SUCCEEDED','CANCELED'].includes(data.paymentStatus) && data.nextAction?.type === 'REDIRECT_TO_HOSTED_CHECKOUT') {
+    const url = hostedUrl(data.nextAction.hostedUrl);
+    if (url) { field('checkout').href = url; field('checkout').hidden = false; }
   }
-  function remember(id) {
-    field('paymentId').value = id;
-    try { sessionStorage.setItem('testPaymentId', id); } catch (_) { /* Storage is optional; no credential is retained. */ }
+}
+async function request(path, method = 'GET', body, key) {
+  try { return await api.request(path, { method, body: body === undefined ? undefined : JSON.stringify(body), key }); }
+  catch (error) {
+    const detail = error.data?.details?.find(item => item.field === 'paymentId');
+    if (detail && /^pay_[0-7][0-9A-HJKMNP-TV-Z]{25}$/.test(detail.issue)) remember(detail.issue);
+    if (error.data?.code === 'PROVIDER_UNKNOWN_RESULT') error.message = '原支付意图已保存，结果待确认。请查询原支付；不要换键重试。';
+    error.definitePreIntent = !detail && method === 'POST' && path === '/v1/payments' && [400,422].includes(error.status) && ['VALIDATION_ERROR','IDEMPOTENCY_KEY_REQUIRED','AMOUNT_MISMATCH','CURRENCY_NOT_ENABLED'].includes(error.data?.code);
+    throw error;
   }
-  function render(data) {
-    remember(data.id);
-    terminalKnown = data.resolutionStatus === 'KNOWN' && ['SUCCEEDED','CANCELED'].includes(data.paymentStatus);
-    field('result').hidden = false;
-    field('result').textContent = JSON.stringify(data, null, 2);
-    const link = field('checkout'); link.hidden = true; link.removeAttribute('href');
-    if (data.recovery && data.recovery.status === 'ESCALATED') notice('此支付需要人工调查。请保留支付 ID 并联系运营人员，不要换键重付。');
-    else if (data.resolutionStatus !== 'KNOWN') notice('结果待确认，后台将按恢复计划继续处理。请保留此支付，不要重复创建或付款。');
-    else if (data.paymentStatus === 'SUCCEEDED') notice('付款已确认成功。账务状态：' + data.financialStatus);
-    else if (data.paymentStatus === 'CANCELED') notice('此支付已确认取消。');
-    else {
-      notice('当前状态：' + data.paymentStatus);
-      if (data.nextAction && data.nextAction.type === 'REDIRECT_TO_HOSTED_CHECKOUT') {
-        const url = new URL(data.nextAction.hostedUrl);
-        if (url.protocol === 'https:' && !url.username && !url.password) { link.href = url.href; link.hidden = false; }
-      }
-    }
-  }
-  async function run(action) {
-    const buttons = [...document.querySelectorAll('button')]; buttons.forEach(b => { b.disabled = true; });
-    field('checkout').hidden = true; notice('正在处理，请稍候…');
-    try { render(await action()); } catch (error) {
-      if (error.definitePreIntent) { try { sessionStorage.removeItem(draftKey); } catch (_) { } unlockDraft(); }
-      notice(error instanceof TypeError ? '网络结果不确定。保留原订单号和请求键，并查询原支付。' : error.message); }
-    finally { buttons.forEach(b => { b.disabled = b.id === 'newOrder' ? !terminalKnown : false; }); }
-  }
-  field('order').addEventListener('submit', event => {
-    event.preventDefault();
-    run(() => {
-      const body = {
-        orderKey: field('orderKey').value, productRef: field('productRef').value, priceVersion: number('priceVersion'),
-        amountMinor: number('amountMinor'), currency: field('currency').value, quantity: number('quantity'),
-        successUrl: field('successUrl').value, cancelUrl: field('cancelUrl').value
-      };
-      const key = field('operationKey').value;
-      // Persist recovery identity BEFORE sending. Never persist application credentials.
-      try { sessionStorage.setItem(draftKey, JSON.stringify({ body, key })); }
-      catch (_) { throw new Error('浏览器无法保存原订单与请求键，本次尚未发送。请允许当前标签页的会话存储后重试。'); }
-      lockDraft();
-      return request('/v1/payments', 'POST', body, key);
-    });
-  });
-  field('newOrder').addEventListener('click', () => {
-    if (!terminalKnown) return;
-    sessionStorage.removeItem(draftKey); sessionStorage.removeItem('testPaymentId'); location.reload();
-  });
-  field('query').addEventListener('click', () => run(() => request('/v1/payments/' + paymentId())));
-  const cancelKeys = new Map();
-  field('cancel').addEventListener('click', () => run(() => {
-    const id = paymentId(); if (!cancelKeys.has(id)) cancelKeys.set(id, 'cancel-' + crypto.randomUUID());
-    return request('/v1/payments/' + id + '/cancel', 'POST', { reason: 'CUSTOMER_ABANDONED' }, cancelKeys.get(id));
-  }));
-  try {
-    const draft = JSON.parse(sessionStorage.getItem(draftKey) || 'null');
+}
+async function currentPaymentAfterCommand(response) {
+  if (!response.replay) return response.data;
+  // A replay is the historical command response, not the original payment's current state.
+  const id = response.data.id;
+  remember(id);
+  notice('收到原请求的历史重放响应，正在查询原支付的当前状态…');
+  let current;
+  await api.latest('customer-payment', '/v1/payments/' + id, data => { if (data.id === id) current = data; });
+  if (!current) throw new Error('当前原支付查询未确认，请继续查询原支付');
+  return current;
+}
+async function run(action) {
+  api.setCredential(field('credential').value);
+  const current = ++generation, epoch = api.epoch;
+  hideResult(); const buttons = [...document.querySelectorAll('button')]; buttons.forEach(button => { button.disabled = true; });
+  notice('正在查询或处理原支付…');
+  try { const data = await action(); if (current === generation && epoch === api.epoch) { boundCredential = api.credential; render(data); } }
+  catch (error) {
+    if (current !== generation || epoch !== api.epoch) return;
+    terminalKnown = false;
+    if (error.definitePreIntent) { draft = null; try { sessionStorage.removeItem(draftKey); } catch (_) {} unlockDraft(); }
+    notice(error instanceof TypeError ? '网络结果不确定。请保留原订单和请求键，并继续查询原支付；勿另建支付。' : error.message + ' 请查询原支付。');
+  } finally { if (current === generation && epoch === api.epoch) buttons.forEach(button => { button.disabled = button.id === 'newOrder' ? !terminalKnown : false; }); }
+}
+field('order').addEventListener('submit', event => {
+  event.preventDefault();
+  run(async () => {
+    const owner = (await request('/v1/identity')).data;
+    const scope = { organizationId: owner.organizationId, environmentId: owner.environmentId, applicationId: owner.applicationId };
+    boundCredential = api.credential;
     if (draft) {
-      if (!draft.body || typeof draft.key !== 'string' || !draftFields.every(id => ['string','number'].includes(typeof draft.body[id]))) throw new Error('Invalid saved draft');
-      draftFields.forEach(id => { field(id).value = draft.body[id]; }); field('operationKey').value = draft.key; lockDraft();
-      notice('已恢复原订单与请求键。输入应用凭据后可获取原支付；不会创建第二个订单。');
+      if (!draft.owner || Object.keys(scope).some(key => draft.owner[key] !== scope[key])) throw new Error('保存的原订单身份无法确认或不匹配；请先查询原支付，勿自动重放创建');
     } else {
-      const runId = crypto.randomUUID(); field('orderKey').value = 'test-' + runId; field('operationKey').value = 'create-' + runId;
-      if (location.protocol === 'https:') { field('successUrl').value = location.origin + '/payment-test.html'; field('cancelUrl').value = field('successUrl').value; }
+      const body = { orderKey: field('orderKey').value, productRef: field('productRef').value, priceVersion: number('priceVersion'), amountMinor: number('amountMinor'), currency: field('currency').value, quantity: number('quantity'), successUrl: field('successUrl').value, cancelUrl: field('cancelUrl').value };
+      draft = { body, key: field('operationKey').value, owner: scope };
+      try { sessionStorage.setItem(draftKey, JSON.stringify(draft)); }
+      catch (_) { draft = null; throw new Error('无法保存原订单与请求键，本次尚未发送。请允许会话存储后重试。'); }
     }
-    const id = sessionStorage.getItem('testPaymentId');
-    if (id) { field('paymentId').value = id; notice('已保留原订单与支付 ID。输入应用凭据后，查询这笔支付的实际状态。'); }
-  } catch (_) { field('create').disabled = true; notice('无法恢复本标签页的订单记录。请先查询已有支付，避免重复付款。'); }
-})();
+    lockDraft();
+    return currentPaymentAfterCommand(await request('/v1/payments', 'POST', draft.body, draft.key));
+  });
+});
+field('newOrder').addEventListener('click', () => {
+  if (!terminalKnown) return;
+  sessionStorage.removeItem(draftKey); sessionStorage.removeItem('testPaymentId'); location.reload();
+});
+field('query').addEventListener('click', () => run(async () => {
+  const id = paymentId(); let data;
+  await api.latest('customer-payment', '/v1/payments/' + id, result => { if (result.id === id) data = result; });
+  if (!data) throw new Error('旧查询已丢弃，请查询当前原支付'); return data;
+}));
+field('paymentId').addEventListener('input', () => { api.clear(); hideResult(); notice('支付 ID 已改变，请查询当前原支付。'); });
+field('cancel').addEventListener('click', () => run(async () => {
+  const id = paymentId(); if (!cancelKeys.has(id)) cancelKeys.set(id, 'cancel-' + crypto.randomUUID());
+  return currentPaymentAfterCommand(await request('/v1/payments/' + id + '/cancel', 'POST', { reason: 'CUSTOMER_ABANDONED' }, cancelKeys.get(id)));
+}));
+try {
+  draft = JSON.parse(sessionStorage.getItem(draftKey) || 'null');
+  if (draft) {
+    if (!draft.body || typeof draft.key !== 'string' || !draftFields.every(id => ['string','number'].includes(typeof draft.body[id]))) throw new Error('Invalid saved draft');
+    draftFields.forEach(id => { field(id).value = draft.body[id]; }); field('operationKey').value = draft.key; lockDraft();
+    notice('已恢复原订单与请求键。输入原应用凭据后确认身份并获取原支付。');
+  } else {
+    const runId = crypto.randomUUID(); field('orderKey').value = 'test-' + runId; field('operationKey').value = 'create-' + runId;
+    if (location.protocol === 'https:') { field('successUrl').value = location.origin + '/payment-result.html'; field('cancelUrl').value = field('successUrl').value; }
+  }
+  const id = sessionStorage.getItem('testPaymentId');
+  if (/^pay_[0-7][0-9A-HJKMNP-TV-Z]{25}$/.test(id || '')) { remember(id); notice('已保留原支付 ID，请输入原应用凭据并查询实际状态。'); }
+} catch (_) { field('create').disabled = true; notice('无法恢复原订单记录。请先查询原支付，避免重复付款。'); }
+window.addEventListener('pagehide', () => api.clear());

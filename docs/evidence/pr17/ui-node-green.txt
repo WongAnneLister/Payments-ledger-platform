@@ -1,0 +1,41 @@
+(node:25569) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/main/resources/static/payment-test.js?runtime=1 is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/anne_lister/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ actual payment-test clears terminal confirmation after failed refresh (10.666375ms)
+✔ actual payment-test credential switch discards scoped draft and aborts stale read while controls remain usable (2.250708ms)
+✔ actual payment-test reuses original order body and key after lost create response (2.015709ms)
+✔ observability cards preserve exact available values and explicit NO_DATA status (0.234542ms)
+✔ JSON transport preserves exact signed int64 and decimal tokens before Number rounding (2.006208ms)
+✔ money uses exact integer division and keeps currency explicit (0.919ms)
+✔ UNKNOWN ignores apparent successful status and directs original-resource query (0.168291ms)
+✔ CONFLICT in any evidence dimension never presents financial success (0.118916ms)
+✔ business confirmation and pending financial evidence are independent (0.091375ms)
+✔ incomplete capture cannot be represented as fully funded (0.0615ms)
+✔ HTTPS hosted URLs exclude embedded credentials and executable protocols (0.438792ms)
+✔ drilldowns allow only known same-origin resource views (1.125542ms)
+✔ all twelve PR16 GET resource routes plus observability are exposed (0.77025ms)
+✔ all six PR16 commands use delivered endpoints (0.131459ms)
+✔ accepted commands refresh the corresponding authoritative GET even after navigation changes (0.094292ms)
+✔ truncated payment evidence cannot produce a funded success presentation (0.063125ms)
+✔ trusted partner identity exposes only own-share navigation and no command (0.122042ms)
+✔ role matrix separates initiation, review and independent author (0.539125ms)
+✔ transport uses same-origin API paths and memory-only credential headers (0.552541ms)
+✔ latest resource read rejects stale response even if transport ignores abort (0.259333ms)
+✔ credential switch aborts reads, clears trusted identity and ignores old results (0.155458ms)
+✔ uncertain POST retries exact bytes and key, then refreshes current GET after historical replay (0.391ms)
+✔ pending intent blocks edited retry body and cannot cross credential identity (0.175666ms)
+✔ result controller ignores URL success and duplicate notification payloads (0.301916ms)
+✔ failed result refresh hides prior confirmation and directs original payment query (0.158458ms)
+✔ evidence renderer keeps injected markup inert and surfaces truncation and evidence IDs (0.426292ms)
+✔ observation absence never invents zero or PASS (0.142667ms)
+✔ new pages are native labelled modules with live notices and responsive console (6.324541ms)
+✔ existing payment test links to separate result page and masks pending funds (1.277083ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 79.41575

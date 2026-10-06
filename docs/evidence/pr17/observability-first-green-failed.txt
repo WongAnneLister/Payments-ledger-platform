@@ -1,0 +1,881 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 24 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 172 source files with javac [debug parameters release 21] to target/classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ???????????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ??????, ??? -Xlint:deprecation ?????
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 97 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.identity.AuthenticationFilterTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+15:47:53.820 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+15:47:54.229 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+15:47:54.623 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+15:47:54.931 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=WORKER
+15:47:55.265 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+15:47:55.605 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.824 s -- in com.paymentsledger.identity.AuthenticationFilterTest
+[INFO] Running com.paymentsledger.observability.ObservabilityGaugesTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.073 s -- in com.paymentsledger.observability.ObservabilityGaugesTest
+[INFO] Running com.paymentsledger.observability.CorrelationLogTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.021 s -- in com.paymentsledger.observability.CorrelationLogTest
+[INFO] Running com.paymentsledger.common.request.RequestIdFilterTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.paymentsledger.common.request.RequestIdFilterTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- jar:3.4.2:jar (default-jar) @ payments-ledger-platform ---
+[INFO] Building jar: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- spring-boot:3.5.16:repackage (repackage) @ payments-ledger-platform ---
+[INFO] Replacing main artifact /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar.original
+[INFO]
+[INFO] --- failsafe:3.5.6:integration-test (default) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.payment.PaymentHttpIT
+15:47:59.646 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+15:47:59.649 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+15:47:59.752 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+15:48:00.098 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+15:48:00.099 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+15:48:00.113 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+15:48:00.158 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+15:48:00.256 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+15:48:00.373 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 77b696e79b29f8d58a8378d615154c4c44e5407388f38b9f545e5b9e887164df
+15:48:01.213 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT1.054128S
+15:48:01.227 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+15:48:01.227 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+15:48:01.227 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+15:48:01.228 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+15:48:01.294 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 580a7546e5b64825c9c22711319398933a82b43a32214397ae45c33cf6f54490
+15:48:03.047 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.819353S
+15:48:03.049 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:53663/test?loggerLevel=OFF)
+15:48:03.057 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+15:48:03.214 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 157 ms.
+15:48:03.254 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.paymentsledger.payment.PaymentHttpIT]: PaymentHttpIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+15:48:03.359 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.payment.PaymentHttpIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-06T15:48:03.585+08:00 INFO  [-] c.p.payment.PaymentHttpIT - Starting PaymentHttpIT using Java 21.0.12.1 with PID 33568 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui)
+2026-10-06T15:48:03.586+08:00 INFO  [-] c.p.payment.PaymentHttpIT - The following 2 profiles are active: "api", "test"
+2026-10-06T15:48:04.611+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-10-06T15:48:04.621+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-06T15:48:04.621+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-10-06T15:48:04.645+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-06T15:48:04.646+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1052 ms
+2026-10-06T15:48:04.841+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:53663/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-10-06T15:48:04.885+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-10-06T15:48:04.888+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 16 migrations (execution time 00:00.018s)
+2026-10-06T15:48:04.902+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-10-06T15:48:04.960+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-10-06T15:48:04.968+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-10-06T15:48:04.973+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-10-06T15:48:05.024+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-10-06T15:48:05.120+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-10-06T15:48:05.173+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-10-06T15:48:05.242+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-10-06T15:48:05.272+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-10-06T15:48:05.304+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-10-06T15:48:05.355+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-10-06T15:48:05.408+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-10-06T15:48:05.472+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "10 - revenue share"
+2026-10-06T15:48:05.562+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "11 - dispute lifecycle"
+2026-10-06T15:48:05.608+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "12 - payout bank evidence"
+2026-10-06T15:48:05.802+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "13 - payout query evidence"
+2026-10-06T15:48:05.889+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "14 - reconciliation evidence"
+2026-10-06T15:48:05.957+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "15 - reconciliation source recovery"
+2026-10-06T15:48:06.040+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "16 - ops commands approval audit"
+2026-10-06T15:48:06.122+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 16 migrations to schema "platform", now at version v16 (execution time 00:00.710s)
+2026-10-06T15:48:07.520+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-10-06T15:48:09.516+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-10-06T15:48:09.705+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 53722 (http) with context path '/'
+2026-10-06T15:48:09.718+08:00 INFO  [-] c.p.payment.PaymentHttpIT - Started PaymentHttpIT in 6.297 seconds (process running for 10.528)
+2026-10-06T15:48:10.466+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-06T15:48:10.466+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-06T15:48:10.468+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-10-06T15:48:10.880+08:00 WARN  [req_d844426a3d9440aa95042f12a8b762ad] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:11.199+08:00 WARN  [req_1af4b4fbce6f4cbf8fae596ef6e0be26] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:11.295+08:00 WARN  [req_3109cae847194d458b8c292b3094de63] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:11.392+08:00 WARN  [req_66db670975fd448caa2e9e4c1b896ef3] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:11.699+08:00 WARN  [req_a9f6d2eb4d814ea2abab067c0abe985f] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:12.435+08:00 WARN  [req_ec144aa315994104856d36eee9a2faed] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-06T15:48:12.532+08:00 WARN  [req_a96b6b98d08f4e5392bc64680de5d5a3] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-06T15:48:14.200+08:00 WARN  [req_07ac78a76e53447d854269f12191b183] c.p.c.error.GlobalExceptionHandler - api_error code=ORDER_INTENT_CONFLICT status=409 retryable=false
+2026-10-06T15:48:14.286+08:00 WARN  [req_9a085f92b5d8487880a90e15dcc1711e] c.p.c.error.GlobalExceptionHandler - api_error code=IDEMPOTENCY_CONFLICT status=409 retryable=false
+2026-10-06T15:48:14.427+08:00 WARN  [req_f4c2f798d5ae4ecc9d9bba51b67f70c6] c.p.c.error.GlobalExceptionHandler - api_error code=AMOUNT_MISMATCH status=422 retryable=false
+2026-10-06T15:48:15.015+08:00 WARN  [req_cf0e64fb84574ef7b6ba549cfa84fb18] c.p.c.error.GlobalExceptionHandler - api_error code=PROVIDER_UNKNOWN_RESULT status=500 retryable=false
+2026-10-06T15:48:15.085+08:00 WARN  [-] c.p.payment.PaymentRepository - Payment recovery escalated operation=f64bf111-85c9-432a-8420-7a057ac5d540 payment=01a1102f-41cb-32c5-c55e-7a79946bd0fd reason=IDEMPOTENCY_WINDOW_UNVERIFIED
+2026-10-06T15:48:15.087+08:00 WARN  [-] c.p.p.OperationRecoveryCoordinator - Payment recovery escalated operation=f64bf111-85c9-432a-8420-7a057ac5d540 payment=01a1102f-41cb-32c5-c55e-7a79946bd0fd reason=IDEMPOTENCY_WINDOW_UNVERIFIED
+2026-10-06T15:48:15.271+08:00 WARN  [req_ef44201b19a04d71b63d0043992af271] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:16.207+08:00 WARN  [req_7b699cbd2e204e7ea5780aecfbbdcc4d] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 18.17 s -- in com.paymentsledger.payment.PaymentHttpIT
+[INFO] Running com.paymentsledger.ops.ObservabilityIT
+2026-10-06T15:48:17.868+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-10-06T15:48:17.971+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: fcb11473d382c5b4f138a5f9c4648055d300f73de3215f3e7d589083c3a74d10
+2026-10-06T15:48:19.761+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.893373S
+2026-10-06T15:48:19.762+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:54031/test?loggerLevel=OFF)
+2026-10-06T15:48:19.763+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-10-06T15:48:19.824+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 60 ms.
+2026-10-06T15:48:19.862+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ops.ObservabilityIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-06T15:48:19.910+08:00 INFO  [-] c.paymentsledger.ops.ObservabilityIT - Starting ObservabilityIT using Java 21.0.12.1 with PID 33568 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui)
+2026-10-06T15:48:19.910+08:00 INFO  [-] c.paymentsledger.ops.ObservabilityIT - The following 2 profiles are active: "api", "test"
+2026-10-06T15:48:20.238+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-10-06T15:48:20.239+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-06T15:48:20.239+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-10-06T15:48:20.248+08:00 INFO  [-] o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-06T15:48:20.248+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 337 ms
+2026-10-06T15:48:20.298+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:54031/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-10-06T15:48:20.324+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-10-06T15:48:20.325+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 16 migrations (execution time 00:00.009s)
+2026-10-06T15:48:20.334+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-10-06T15:48:20.356+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-10-06T15:48:20.361+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-10-06T15:48:20.363+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-10-06T15:48:20.386+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-10-06T15:48:20.449+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-10-06T15:48:20.494+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-10-06T15:48:20.533+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-10-06T15:48:20.577+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-10-06T15:48:20.605+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-10-06T15:48:20.651+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-10-06T15:48:20.706+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-10-06T15:48:20.780+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "10 - revenue share"
+2026-10-06T15:48:20.822+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "11 - dispute lifecycle"
+2026-10-06T15:48:20.940+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "12 - payout bank evidence"
+2026-10-06T15:48:21.012+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "13 - payout query evidence"
+2026-10-06T15:48:21.045+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "14 - reconciliation evidence"
+2026-10-06T15:48:21.078+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "15 - reconciliation source recovery"
+2026-10-06T15:48:21.116+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "16 - ops commands approval audit"
+2026-10-06T15:48:21.148+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 16 migrations to schema "platform", now at version v16 (execution time 00:00.562s)
+2026-10-06T15:48:21.488+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-10-06T15:48:21.619+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-10-06T15:48:21.631+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 54059 (http) with context path '/'
+2026-10-06T15:48:21.636+08:00 INFO  [-] c.paymentsledger.ops.ObservabilityIT - Started ObservabilityIT in 1.753 seconds (process running for 22.446)
+2026-10-06T15:48:22.326+08:00 INFO  [-] o.a.c.c.C.[Tomcat-1].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-06T15:48:22.327+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-06T15:48:22.327+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-10-06T15:48:22.427+08:00 INFO  [req_0b88eb21bb284af194739fe1fb8231fc] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_0b88eb21bb284af194739fe1fb8231fc"}
+2026-10-06T15:48:23.340+08:00 INFO  [req_3d9016f782eb478fbf22189e7effb210] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_3d9016f782eb478fbf22189e7effb210"}
+2026-10-06T15:48:24.080+08:00 INFO  [req_ab9ddcdcdfbf486f80a1d6d30af17b03] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_ab9ddcdcdfbf486f80a1d6d30af17b03"}
+2026-10-06T15:48:24.187+08:00 INFO  [req_7ce939eac03e4282b8801a8d039e005a] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_7ce939eac03e4282b8801a8d039e005a"}
+2026-10-06T15:48:24.297+08:00 INFO  [req_6c10ca102b74480c936dca735c02c5ff] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_6c10ca102b74480c936dca735c02c5ff"}
+2026-10-06T15:48:24.455+08:00 INFO  [req_d8041ef5ad1f4c2a8b6f6b0eaa2e354c] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_d8041ef5ad1f4c2a8b6f6b0eaa2e354c"}
+2026-10-06T15:48:24.558+08:00 WARN  [req_be2aca59d4f445d99eaaddc04b021f46] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:25.586+08:00 INFO  [req_124c2b983e124ddeb012f62f9918855d] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_124c2b983e124ddeb012f62f9918855d"}
+2026-10-06T15:48:25.587+08:00 INFO  [req_124c2b983e124ddeb012f62f9918855d] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_124c2b983e124ddeb012f62f9918855d","runId":"00000000-0000-0010-0000-0000000007d2"}
+2026-10-06T15:48:25.587+08:00 INFO  [req_124c2b983e124ddeb012f62f9918855d] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_124c2b983e124ddeb012f62f9918855d","runId":"00000000-0000-0010-0000-0000000007d1"}
+2026-10-06T15:48:25.803+08:00 INFO  [req_58e0e3d434b44e7eab1221e2bbae11e4] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_58e0e3d434b44e7eab1221e2bbae11e4"}
+2026-10-06T15:48:25.803+08:00 INFO  [req_58e0e3d434b44e7eab1221e2bbae11e4] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_58e0e3d434b44e7eab1221e2bbae11e4","runId":"00000000-0000-0010-0000-0000000007d2"}
+2026-10-06T15:48:25.803+08:00 INFO  [req_58e0e3d434b44e7eab1221e2bbae11e4] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_58e0e3d434b44e7eab1221e2bbae11e4","runId":"00000000-0000-0010-0000-0000000007d4"}
+2026-10-06T15:48:26.286+08:00 INFO  [req_7e1730eda8254361a0cb6969dacf25ca] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_7e1730eda8254361a0cb6969dacf25ca"}
+2026-10-06T15:48:26.999+08:00 INFO  [req_e07d46402d644674bcf02bdb8ccb448c] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_e07d46402d644674bcf02bdb8ccb448c"}
+2026-10-06T15:48:27.185+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000045 http://localhost:54059 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-10-06T15:48:29.169+08:00 INFO  [req_bb873c7e6ec24b1d9304784b48aca8f8] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_bb873c7e6ec24b1d9304784b48aca8f8"}
+2026-10-06T15:48:29.170+08:00 INFO  [req_bb873c7e6ec24b1d9304784b48aca8f8] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_bb873c7e6ec24b1d9304784b48aca8f8","runId":"00000000-0000-0010-0000-000000000835"}
+2026-10-06T15:48:29.350+08:00 INFO  [req_26f1fc6d10c647c2915f45d36a781aaa] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_26f1fc6d10c647c2915f45d36a781aaa"}
+2026-10-06T15:48:29.350+08:00 INFO  [req_26f1fc6d10c647c2915f45d36a781aaa] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_26f1fc6d10c647c2915f45d36a781aaa","runId":"00000000-0000-0010-0000-000000000836"}
+2026-10-06T15:48:30.120+08:00 INFO  [req_142bd005ec784181823a9d6afb0fd58e] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_142bd005ec784181823a9d6afb0fd58e"}
+2026-10-06T15:48:31.196+08:00 INFO  [req-log-fixture] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req-log-fixture"}
+[ERROR] Tests run: 9, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 14.10 s <<< FAILURE! -- in com.paymentsledger.ops.ObservabilityIT
+[ERROR] com.paymentsledger.ops.ObservabilityIT.successfulOperationalReadEmitsOnlyRealKnownCorrelationAssociations -- Time elapsed: 1.088 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting not blank but was: ""
+	at com.paymentsledger.ops.ObservabilityIT.successfulOperationalReadEmitsOnlyRealKnownCorrelationAssociations(ObservabilityIT.java:288)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] Running com.paymentsledger.ops.OpsApiIT
+2026-10-06T15:48:31.986+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-10-06T15:48:32.080+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 36a415fc7b3f69a9f2147028e45c9fc607a2c8c78a83580f84ed712f7dff26c2
+2026-10-06T15:48:35.837+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT3.850696S
+2026-10-06T15:48:35.841+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:54691/test?loggerLevel=OFF)
+2026-10-06T15:48:35.843+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-10-06T15:48:35.918+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 74 ms.
+2026-10-06T15:48:35.923+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.ops.OpsApiIT]: OpsApiIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-06T15:48:35.928+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ops.OpsApiIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-06T15:48:35.979+08:00 INFO  [-] com.paymentsledger.ops.OpsApiIT - Starting OpsApiIT using Java 21.0.12.1 with PID 33568 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui)
+2026-10-06T15:48:35.980+08:00 INFO  [-] com.paymentsledger.ops.OpsApiIT - The following 2 profiles are active: "api", "test"
+2026-10-06T15:48:36.277+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-10-06T15:48:36.278+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-06T15:48:36.278+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-10-06T15:48:36.287+08:00 INFO  [-] o.a.c.c.C.[Tomcat-2].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-06T15:48:36.287+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 306 ms
+2026-10-06T15:48:36.333+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:54691/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-10-06T15:48:36.361+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-10-06T15:48:36.365+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 16 migrations (execution time 00:00.020s)
+2026-10-06T15:48:36.384+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-10-06T15:48:36.420+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-10-06T15:48:36.423+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-10-06T15:48:36.425+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-10-06T15:48:36.451+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-10-06T15:48:36.518+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-10-06T15:48:36.583+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-10-06T15:48:36.634+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-10-06T15:48:36.688+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-10-06T15:48:36.754+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-10-06T15:48:36.829+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-10-06T15:48:36.879+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-10-06T15:48:36.952+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "10 - revenue share"
+2026-10-06T15:48:37.008+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "11 - dispute lifecycle"
+2026-10-06T15:48:37.089+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "12 - payout bank evidence"
+2026-10-06T15:48:37.156+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "13 - payout query evidence"
+2026-10-06T15:48:37.188+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "14 - reconciliation evidence"
+2026-10-06T15:48:37.245+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "15 - reconciliation source recovery"
+2026-10-06T15:48:37.306+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "16 - ops commands approval audit"
+2026-10-06T15:48:37.355+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 16 migrations to schema "platform", now at version v16 (execution time 00:00.701s)
+2026-10-06T15:48:37.724+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-10-06T15:48:37.833+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-10-06T15:48:37.842+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 54729 (http) with context path '/'
+2026-10-06T15:48:37.846+08:00 INFO  [-] com.paymentsledger.ops.OpsApiIT - Started OpsApiIT in 1.913 seconds (process running for 38.655)
+2026-10-06T15:48:38.491+08:00 INFO  [-] o.a.c.c.C.[Tomcat-2].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-06T15:48:38.491+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-06T15:48:38.492+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2026-10-06T15:48:38.616+08:00 INFO  [req_b74dd4591ae548ba869ec8f2bb4b9319] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_b74dd4591ae548ba869ec8f2bb4b9319","runId":"64fdf892-0fe2-44df-9ea2-03daba919377"}
+2026-10-06T15:48:39.027+08:00 INFO  [req_8a5ba5ce5c1e432299686212cc9da43e] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_8a5ba5ce5c1e432299686212cc9da43e"}
+2026-10-06T15:48:39.027+08:00 INFO  [req_8a5ba5ce5c1e432299686212cc9da43e] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_8a5ba5ce5c1e432299686212cc9da43e"}
+2026-10-06T15:48:39.145+08:00 INFO  [req_35cd9c45f5f545b9bc8766dc6bbabedc] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_35cd9c45f5f545b9bc8766dc6bbabedc"}
+2026-10-06T15:48:39.267+08:00 INFO  [req_5de04f9f8cbb44a6abe611c0b48727ac] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_5de04f9f8cbb44a6abe611c0b48727ac"}
+2026-10-06T15:48:39.368+08:00 INFO  [req_3d27b922f8e04c79b676d02e4db30866] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_3d27b922f8e04c79b676d02e4db30866"}
+2026-10-06T15:48:39.476+08:00 INFO  [req_2ec94ae3859645b7802a547223c5d7ae] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_2ec94ae3859645b7802a547223c5d7ae","paymentId":"00000000-0000-0010-0000-00000000025a"}
+2026-10-06T15:48:39.578+08:00 INFO  [req_f87c7c79e136447f8e180982e3f84a17] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_f87c7c79e136447f8e180982e3f84a17"}
+2026-10-06T15:48:39.578+08:00 INFO  [req_f87c7c79e136447f8e180982e3f84a17] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_f87c7c79e136447f8e180982e3f84a17","journalId":"b2e0552d-aaf2-48d5-a088-156d38e96fc3"}
+2026-10-06T15:48:39.691+08:00 INFO  [req_3517eac342de4478a8dbf0e357bd0ae3] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_3517eac342de4478a8dbf0e357bd0ae3","journalId":"b2e0552d-aaf2-48d5-a088-156d38e96fc3"}
+2026-10-06T15:48:39.782+08:00 INFO  [req_3b5a9758f02c40019148a72c8c31abf8] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_3b5a9758f02c40019148a72c8c31abf8"}
+2026-10-06T15:48:39.879+08:00 INFO  [req_d085e49b433441caa864aaca5dbd9790] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d085e49b433441caa864aaca5dbd9790","runId":"64fdf892-0fe2-44df-9ea2-03daba919377"}
+2026-10-06T15:48:39.967+08:00 INFO  [req_0771ec87a411426eb6b3d5e862cefc95] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_0771ec87a411426eb6b3d5e862cefc95"}
+2026-10-06T15:48:39.967+08:00 INFO  [req_0771ec87a411426eb6b3d5e862cefc95] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_0771ec87a411426eb6b3d5e862cefc95","runId":"64fdf892-0fe2-44df-9ea2-03daba919377"}
+2026-10-06T15:48:40.060+08:00 INFO  [req_493267eca3da46cb9340d233c52abfa3] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_493267eca3da46cb9340d233c52abfa3"}
+2026-10-06T15:48:40.171+08:00 INFO  [req_338756cd1f714d2ba147d9b08675b1a3] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_338756cd1f714d2ba147d9b08675b1a3"}
+2026-10-06T15:48:40.171+08:00 INFO  [req_338756cd1f714d2ba147d9b08675b1a3] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_338756cd1f714d2ba147d9b08675b1a3"}
+2026-10-06T15:48:40.264+08:00 INFO  [req_e0a17f3d7c37480c9c3cef35f75e27c5] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_e0a17f3d7c37480c9c3cef35f75e27c5","paymentId":"00000000-0000-0010-0000-00000000025a"}
+2026-10-06T15:48:40.351+08:00 WARN  [req_7c4bb765e8d245c2b9befb92077a0c07] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:40.446+08:00 WARN  [req_d013b54d80e14f8db536b66a534c428e] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:40.543+08:00 WARN  [req_0aef5347e43544d498a8580d9cdfb20c] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:40.635+08:00 WARN  [req_839aef4b4599416cb66db994fd6ddfc5] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:40.722+08:00 WARN  [req_fcd1c589546345bc8461f495cdbd97e0] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:40.811+08:00 WARN  [req_ff3df78a5bd5433da25b9f351b7dca8e] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:40.901+08:00 WARN  [req_bd77fe9db91042d0833695e9e0ba33c3] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:40.990+08:00 WARN  [req_bd89e811c7e241c881b415f318d501de] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:41.074+08:00 WARN  [req_14dfb40b5b054b3ea88fc39086c81e96] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:41.167+08:00 WARN  [req_99f841ef025a493893b46c2f828e0d3e] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:41.256+08:00 WARN  [req_d09e372bb92449ec8a6646dceeadf885] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:41.346+08:00 WARN  [req_f2591035bef9415fb0362bb03766fe42] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:41.437+08:00 WARN  [req_b2d08997e50844a694935a0b3a43ff1b] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:41.530+08:00 WARN  [req_eb92c28716b1427ca2a4d89e8656b5b3] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:41.616+08:00 WARN  [req_71fd49ceb01a4afe9b05862e1a6b0b55] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-06T15:48:42.537+08:00 WARN  [req_27934b816c1c45b8b8a2169dc672272a] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:42.748+08:00 INFO  [req_5b205e8726614f6abad469fd068d3433] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_5b205e8726614f6abad469fd068d3433"}
+2026-10-06T15:48:43.590+08:00 INFO  [req_50f1971fa9e145e1ac639ed716b387cb] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_50f1971fa9e145e1ac639ed716b387cb"}
+2026-10-06T15:48:43.677+08:00 INFO  [req_146f8c3587cc4009ae1d992067e38e5f] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_146f8c3587cc4009ae1d992067e38e5f"}
+2026-10-06T15:48:43.776+08:00 INFO  [req_7c640c5e5a064977ae141997c6c12fed] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_7c640c5e5a064977ae141997c6c12fed"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.472+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.473+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.474+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:45.475+08:00 INFO  [req_d56b1b9914744c2f93382d110a344bca] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d56b1b9914744c2f93382d110a344bca"}
+2026-10-06T15:48:46.867+08:00 INFO  [req_7185bd45b52d4bab8a8e001c06695f65] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_7185bd45b52d4bab8a8e001c06695f65"}
+2026-10-06T15:48:46.957+08:00 WARN  [req_1ba41af839cd4c2bb38115bcc257729e] c.p.c.error.GlobalExceptionHandler - api_error code=IDEMPOTENCY_CONFLICT status=409 retryable=false
+2026-10-06T15:48:47.631+08:00 INFO  [req_60a5f520de114be4a7d9e508ccd970e7] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_60a5f520de114be4a7d9e508ccd970e7","runId":"892f067b-280b-4511-95bb-be3044306a7b"}
+2026-10-06T15:48:47.756+08:00 INFO  [req_d14c14066ebc49e594306dc6345019fb] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d14c14066ebc49e594306dc6345019fb","runId":"892f067b-280b-4511-95bb-be3044306a7b"}
+2026-10-06T15:48:47.857+08:00 INFO  [req_805ec5ede10b4cbf8031a1f28744913b] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_805ec5ede10b4cbf8031a1f28744913b"}
+2026-10-06T15:48:48.530+08:00 INFO  [req_d39da9dc33f74f4eb50f267f330bc9f7] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_d39da9dc33f74f4eb50f267f330bc9f7"}
+2026-10-06T15:48:48.630+08:00 INFO  [req_1c482dc07caf4f5f80716388bef125c7] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_1c482dc07caf4f5f80716388bef125c7"}
+2026-10-06T15:48:48.631+08:00 INFO  [req_1c482dc07caf4f5f80716388bef125c7] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_1c482dc07caf4f5f80716388bef125c7","journalId":"d970e1c3-6274-4f77-804d-50b2bc8075d3"}
+2026-10-06T15:48:48.631+08:00 INFO  [req_1c482dc07caf4f5f80716388bef125c7] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_1c482dc07caf4f5f80716388bef125c7","journalId":"af0537b2-7c2e-460a-8f6a-7a154df399b0"}
+2026-10-06T15:48:48.631+08:00 INFO  [req_1c482dc07caf4f5f80716388bef125c7] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_1c482dc07caf4f5f80716388bef125c7","balanceTransactionId":"bt_bank_out","journalId":"d970e1c3-6274-4f77-804d-50b2bc8075d3"}
+2026-10-06T15:48:48.724+08:00 INFO  [req_44f1324c115c4569b602dfa18f0dffeb] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_44f1324c115c4569b602dfa18f0dffeb"}
+2026-10-06T15:48:49.327+08:00 INFO  [req_c384cf8fad63443f864ee42e28d0bcf7] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_c384cf8fad63443f864ee42e28d0bcf7","runId":"c3d4918d-5182-4125-b725-6f7a9351a8f5"}
+2026-10-06T15:48:49.432+08:00 INFO  [req_dbe7e5bcc9774e02848065f9b89e430b] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_dbe7e5bcc9774e02848065f9b89e430b","runId":"be6284eb-4c2b-4b4c-93f2-eb5a4ad6bb5d"}
+2026-10-06T15:48:49.539+08:00 WARN  [req_c29316ab46bd4cd3bb2fa0d045466cd2] c.p.c.error.GlobalExceptionHandler - api_error code=ADJUSTMENT_EVIDENCE_REQUIRED status=422 retryable=false
+2026-10-06T15:48:49.629+08:00 INFO  [req_4f73ee5c3d614745b4fb79fa2941ea60] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_4f73ee5c3d614745b4fb79fa2941ea60"}
+2026-10-06T15:48:50.393+08:00 INFO  [req_e4ee738ca563405381fc73ec6f243cb9] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_e4ee738ca563405381fc73ec6f243cb9","runId":"e8702e82-1963-462b-a689-b795c3f00454"}
+2026-10-06T15:48:50.505+08:00 INFO  [req_f1d6f702d8ad4649a31bdf957968c233] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_f1d6f702d8ad4649a31bdf957968c233"}
+2026-10-06T15:48:50.597+08:00 INFO  [req_82189d26a38c4298a5b3ad856287cd2b] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_82189d26a38c4298a5b3ad856287cd2b"}
+2026-10-06T15:48:50.597+08:00 INFO  [req_82189d26a38c4298a5b3ad856287cd2b] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_82189d26a38c4298a5b3ad856287cd2b","runId":"e8702e82-1963-462b-a689-b795c3f00454"}
+2026-10-06T15:48:50.690+08:00 INFO  [req_6ebee69263354c14bc434077adc5086b] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_6ebee69263354c14bc434077adc5086b"}
+2026-10-06T15:48:51.458+08:00 WARN  [req_e61b12afb9794e2da7db555431f725e9] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:51.540+08:00 WARN  [req_d9150b8252a342ee98b89c996cf4d327] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:51.622+08:00 WARN  [req_725274e8fbf34408aff50babc6873ea3] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:51.704+08:00 WARN  [req_6e8a46b4c19249f0af83796de4686bc2] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:51.792+08:00 WARN  [req_67aea725c5de41068f81444bf9b6769c] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:51.886+08:00 WARN  [req_58e715eec1da4812b5f2d3ff16b260e3] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:52.724+08:00 INFO  [req_00579eeb884342eabfb6cfbc601d8e2a] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_00579eeb884342eabfb6cfbc601d8e2a","runId":"defb21ff-4822-4f35-ab23-8221bb1bba27"}
+2026-10-06T15:48:52.842+08:00 INFO  [req_c9500679a6f8453caf3b55f31ca867d7] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_c9500679a6f8453caf3b55f31ca867d7","runId":"defb21ff-4822-4f35-ab23-8221bb1bba27"}
+2026-10-06T15:48:52.950+08:00 INFO  [req_12e4000a00164f40b17df07970b78237] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_12e4000a00164f40b17df07970b78237","runId":"defb21ff-4822-4f35-ab23-8221bb1bba27"}
+2026-10-06T15:48:53.102+08:00 INFO  [req_9bdf290aa9774bffbf6ce2a05c38d4e2] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_9bdf290aa9774bffbf6ce2a05c38d4e2","runId":"defb21ff-4822-4f35-ab23-8221bb1bba27"}
+2026-10-06T15:48:53.193+08:00 INFO  [req_a9c1b874e8f0464785330c29a820af2f] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_a9c1b874e8f0464785330c29a820af2f","runId":"dcf34397-4f69-49e1-810c-e68d0137cd97"}
+2026-10-06T15:48:53.292+08:00 INFO  [req_4436f109aeb34a9892a3915c3eb61963] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_4436f109aeb34a9892a3915c3eb61963","runId":"dcf34397-4f69-49e1-810c-e68d0137cd97"}
+2026-10-06T15:48:53.386+08:00 INFO  [req_c161a437a2964c6faba0a2a164fa8fc9] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_c161a437a2964c6faba0a2a164fa8fc9","runId":"dcf34397-4f69-49e1-810c-e68d0137cd97"}
+2026-10-06T15:48:53.932+08:00 INFO  [req_35073de4b7fc410899247589b1ea1e55] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_35073de4b7fc410899247589b1ea1e55"}
+2026-10-06T15:48:54.027+08:00 INFO  [req_02a071e7d14d4143ac8e084ac1c4d2d8] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_02a071e7d14d4143ac8e084ac1c4d2d8"}
+2026-10-06T15:48:54.136+08:00 WARN  [req_d90a98e4bea94259b6568c9db0549768] c.p.c.error.GlobalExceptionHandler - api_error code=IMPORT_DUPLICATE_CONFLICT status=409 retryable=false
+2026-10-06T15:48:54.220+08:00 WARN  [req_b543f372773e4a60b5726760ffe7fc41] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-06T15:48:54.945+08:00 INFO  [req_241c0f5af0314234a749465c6cd10a4c] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_241c0f5af0314234a749465c6cd10a4c"}
+2026-10-06T15:48:54.946+08:00 INFO  [req_241c0f5af0314234a749465c6cd10a4c] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_241c0f5af0314234a749465c6cd10a4c","journalId":"6c40b675-5455-497b-9a69-8ec3022481d0"}
+2026-10-06T15:48:54.946+08:00 INFO  [req_241c0f5af0314234a749465c6cd10a4c] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_241c0f5af0314234a749465c6cd10a4c","balanceTransactionId":"bt_refund_out","journalId":"6c40b675-5455-497b-9a69-8ec3022481d0"}
+2026-10-06T15:48:55.073+08:00 INFO  [req_97c2c7d628e547feb2f3c142556049ed] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_97c2c7d628e547feb2f3c142556049ed"}
+2026-10-06T15:48:55.074+08:00 INFO  [req_97c2c7d628e547feb2f3c142556049ed] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_97c2c7d628e547feb2f3c142556049ed","journalId":"6c40b675-5455-497b-9a69-8ec3022481d0"}
+2026-10-06T15:48:55.074+08:00 INFO  [req_97c2c7d628e547feb2f3c142556049ed] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_97c2c7d628e547feb2f3c142556049ed","balanceTransactionId":"bt_refund_out","journalId":"6c40b675-5455-497b-9a69-8ec3022481d0"}
+2026-10-06T15:48:55.074+08:00 INFO  [req_97c2c7d628e547feb2f3c142556049ed] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_97c2c7d628e547feb2f3c142556049ed"}
+2026-10-06T15:48:55.074+08:00 INFO  [req_97c2c7d628e547feb2f3c142556049ed] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_97c2c7d628e547feb2f3c142556049ed"}
+2026-10-06T15:48:55.615+08:00 WARN  [req_1bf51a1f7fb24ccea958b77f2802bfc7] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:55.700+08:00 WARN  [req_0a4dd8831d80425faa066e77b0ceafbf] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:55.786+08:00 WARN  [req_9111e9f4ee494319ab241e847aae3912] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:55.891+08:00 WARN  [req_5339aab730bc47fea4be4f778d498e92] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:55.991+08:00 WARN  [req_e326c486604341218f05cf0ddaa66e9c] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:56.081+08:00 WARN  [req_ec50f155adc24045934a6a8f6e1587a0] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:56.171+08:00 WARN  [req_11980922323446c8827de9eefb7281dc] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:56.258+08:00 WARN  [req_5b765ae1847d4a19834ff293af9a4efa] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:56.346+08:00 WARN  [req_16b313a79c62402db6b80d2c12a0f54b] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:56.432+08:00 WARN  [req_03e35df603804c07ac2ce973d73e4130] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:56.527+08:00 INFO  [req_0456ea15cb5b4b32b25ce034ffb5e408] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_0456ea15cb5b4b32b25ce034ffb5e408"}
+2026-10-06T15:48:56.621+08:00 WARN  [req_1b0ee6991a5c42e786559fb3e6d4cd83] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:56.709+08:00 WARN  [req_4ec75432b2c6435b82eedfb3ac61e4d4] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:56.799+08:00 WARN  [req_0d7b0d00c92340af83a4208300fd5ddf] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:56.889+08:00 INFO  [req_9b95b71000a043158b39a4f5a40e12e7] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_9b95b71000a043158b39a4f5a40e12e7"}
+2026-10-06T15:48:56.975+08:00 WARN  [req_d0ff918eac6f4694ad33b801fda1d7ed] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:57.060+08:00 WARN  [req_78d6863e52ec404e865fbcb0a8af591c] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:57.170+08:00 WARN  [req_1d328fbfc8b04e4aaaf227e7e3abb3b3] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:57.258+08:00 INFO  [req_762a5b7e6a97467ba9084158fb30fcd0] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_762a5b7e6a97467ba9084158fb30fcd0"}
+2026-10-06T15:48:57.342+08:00 WARN  [req_7852fc2c133b410ebcee39904bf23f1b] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:48:57.428+08:00 INFO  [req_8c498118a9564659ac5d5ec6c87c50cd] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_8c498118a9564659ac5d5ec6c87c50cd"}
+2026-10-06T15:48:58.015+08:00 INFO  [req_abd5adc7ada94570ab3c1ebae8e66e10] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_abd5adc7ada94570ab3c1ebae8e66e10","runId":"ac5d0a36-e689-4091-bc29-cca777a7a514"}
+2026-10-06T15:48:58.120+08:00 INFO  [req_0f308de7db514da784fe21f8cf99a1a6] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_0f308de7db514da784fe21f8cf99a1a6"}
+2026-10-06T15:48:58.215+08:00 INFO  [req_302f52f418dd44929e2e4ae0cdb31239] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_302f52f418dd44929e2e4ae0cdb31239"}
+2026-10-06T15:48:58.304+08:00 WARN  [req_fa780eb5983d4d29bb0c4783f0648301] c.p.c.error.GlobalExceptionHandler - api_error code=ADJUSTMENT_EVIDENCE_REQUIRED status=422 retryable=false
+2026-10-06T15:48:58.971+08:00 INFO  [req_1bda8e6219d1444cb5586ee220209177] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_1bda8e6219d1444cb5586ee220209177"}
+2026-10-06T15:48:58.971+08:00 INFO  [req_1bda8e6219d1444cb5586ee220209177] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_1bda8e6219d1444cb5586ee220209177"}
+2026-10-06T15:48:59.066+08:00 INFO  [req_38a5c9b9fc2f4490a1af662e8a4220f1] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_38a5c9b9fc2f4490a1af662e8a4220f1"}
+2026-10-06T15:48:59.637+08:00 INFO  [req_83eb09a0a58c451797afdad43d63c6e9] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_83eb09a0a58c451797afdad43d63c6e9"}
+2026-10-06T15:48:59.725+08:00 INFO  [req_a5fe31ba554f482db01a7dd788c69ba2] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_a5fe31ba554f482db01a7dd788c69ba2"}
+2026-10-06T15:48:59.814+08:00 WARN  [req_27eee34d47634d818b769cde749785f1] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:48:59.898+08:00 WARN  [req_5273889393194c08903f2c88fd0a3551] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:00.617+08:00 INFO  [req_5dda99d097c540efab76f5dd1fbfb617] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_5dda99d097c540efab76f5dd1fbfb617","runId":"f61437b7-506d-4235-9815-9ea98b712154"}
+2026-10-06T15:49:00.718+08:00 INFO  [req_5b1efabaa48e4981a2a997168dd03d59] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_5b1efabaa48e4981a2a997168dd03d59"}
+2026-10-06T15:49:00.807+08:00 INFO  [req_92d0fa6598764b40845d25ff7a9274f5] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_92d0fa6598764b40845d25ff7a9274f5"}
+2026-10-06T15:49:00.898+08:00 INFO  [req_e161423337ad4e648e96a7672ca3a11d] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_e161423337ad4e648e96a7672ca3a11d"}
+2026-10-06T15:49:01.017+08:00 INFO  [req_1387076f378f41ed92d60bc4c5fb0ac0] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_1387076f378f41ed92d60bc4c5fb0ac0"}
+2026-10-06T15:49:01.111+08:00 INFO  [req_c77dc0a166654a219af6c6bb288d24a7] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_c77dc0a166654a219af6c6bb288d24a7"}
+2026-10-06T15:49:01.196+08:00 INFO  [req_7f2a359f1fbd4dd4b23f0d1f744f9bc6] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_7f2a359f1fbd4dd4b23f0d1f744f9bc6"}
+2026-10-06T15:49:01.953+08:00 INFO  [req_57bccbda4f1148ffa39358baf37f2ff1] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_57bccbda4f1148ffa39358baf37f2ff1","runId":"9242f81c-08b0-4218-9918-3cf51dcd88f5"}
+2026-10-06T15:49:02.037+08:00 INFO  [req_76b936efa24740ffb015487133a09ee4] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_76b936efa24740ffb015487133a09ee4","runId":"9242f81c-08b0-4218-9918-3cf51dcd88f5"}
+2026-10-06T15:49:02.121+08:00 WARN  [req_41ea1b72b0b84c1abab5813a3d5b69a4] c.p.c.error.GlobalExceptionHandler - api_error code=IDEMPOTENCY_CONFLICT status=409 retryable=false
+2026-10-06T15:49:02.204+08:00 WARN  [req_76b660e737ad4dd3a124e079fe4831a6] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:49:02.290+08:00 WARN  [req_9be57c62000c42459c98165eeea6e7bb] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:49:02.402+08:00 WARN  [req_1c348ad103794cb2a979973bb2e4d575] c.p.c.error.GlobalExceptionHandler - api_error code=CURRENCY_NOT_ENABLED status=422 retryable=false
+2026-10-06T15:49:02.628+08:00 INFO  [req_4993f857ed684033929f03345b85a633] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_4993f857ed684033929f03345b85a633","runId":"9242f81c-08b0-4218-9918-3cf51dcd88f5"}
+2026-10-06T15:49:03.227+08:00 INFO  [req_e335df82ed864f8a8da34b201706ef58] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_e335df82ed864f8a8da34b201706ef58","runId":"41c4ee54-61b5-4f46-905d-6216a55337fe"}
+2026-10-06T15:49:03.326+08:00 INFO  [req_a575d7070160421d9a5ed5cc65277608] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_a575d7070160421d9a5ed5cc65277608"}
+2026-10-06T15:49:03.426+08:00 INFO  [req_18c0403ab71643dd9104ed1c720f87d0] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_18c0403ab71643dd9104ed1c720f87d0"}
+2026-10-06T15:49:03.941+08:00 WARN  [req_14d8f816a81145c18eac42acf9f4f659] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-06T15:49:04.023+08:00 WARN  [req_011f16aff94e449180f16b1948d95b0e] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-06T15:49:04.107+08:00 WARN  [req_d093b10d348a473585675e388ad71a04] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-06T15:49:04.196+08:00 WARN  [req_33fcfba9059b446681f7bad271e91e21] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-06T15:49:04.278+08:00 WARN  [req_1d983c23bcbb443e856725c9b43560bc] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-06T15:49:04.364+08:00 WARN  [req_8c900a126aa347d585c45c17eac7bc5e] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-06T15:49:04.530+08:00 WARN  [req_d295b9063ab3452790e382176dcac947] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:04.614+08:00 WARN  [req_ae674d8c166e4d1aa6271f4b17658837] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:04.700+08:00 WARN  [req_df69d27c0e8f4fca939dff0550dea063] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:04.782+08:00 WARN  [req_d94af2901a3a4686b1f7db27bd623f02] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:04.867+08:00 WARN  [req_1cf36e3aaf8e481cbb1b37f48fb5b398] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:04.953+08:00 WARN  [req_6832a923b0224c7b870fd0529d93412d] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:05.040+08:00 WARN  [req_28c5c35a7e154a438ee32ed4193cf19e] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:05.124+08:00 WARN  [req_7b17dede11ed4493b702d60fbfd5a3f1] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:05.208+08:00 WARN  [req_ec6916427bcd4f6d9d97c8a707018c1f] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:05.318+08:00 WARN  [req_e16ba49ee8e641acb22f13bd354d4ca9] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:05.412+08:00 WARN  [req_a8e47ac32c124d08a0ca91bc0c12c2b1] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:05.496+08:00 WARN  [req_2f78ec20b80243acbb0391c3dc4b1bc1] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:05.589+08:00 WARN  [req_c13e31a3fc58445db3fa25e9f07a5a9b] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:05.747+08:00 WARN  [req_aaa3f9126231436e89a7941f7c579086] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:05.928+08:00 WARN  [req_7e7a01d0a2684be49154eb4bbcdbe150] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:06.070+08:00 WARN  [req_7845e784e7604d52bc15f44727f5c67a] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:06.169+08:00 WARN  [req_b6e213498e7942a58172505c98100fad] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:06.264+08:00 WARN  [req_fbe114b8a51d4805ac11277c2412828f] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:06.356+08:00 WARN  [req_95e521be86ef45f89461428a04ca926f] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:06.458+08:00 INFO  [req_b90d25723ac942af8eef2a51186a8cd7] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_b90d25723ac942af8eef2a51186a8cd7"}
+2026-10-06T15:49:06.556+08:00 WARN  [req_f4e3efabc519437fa7687eb847d69aea] c.p.c.error.GlobalExceptionHandler - api_error code=IDEMPOTENCY_KEY_REQUIRED status=400 retryable=false
+2026-10-06T15:49:07.506+08:00 INFO  [req_3ea220fa312e49a899a104fc849148be] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_3ea220fa312e49a899a104fc849148be","runId":"42831c65-80c9-4a0f-a088-213a243271db"}
+2026-10-06T15:49:07.610+08:00 INFO  [req_0f2c31db339449edbd5d03dd386d79a4] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_0f2c31db339449edbd5d03dd386d79a4"}
+2026-10-06T15:49:07.709+08:00 INFO  [req_55beebf1cfa94c4491937118a724b07f] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_55beebf1cfa94c4491937118a724b07f"}
+2026-10-06T15:49:07.801+08:00 WARN  [req_4969796c918b420aa7130ac909cf3179] c.p.c.error.GlobalExceptionHandler - api_error code=ADJUSTMENT_EVIDENCE_REQUIRED status=422 retryable=false
+2026-10-06T15:49:07.904+08:00 INFO  [req_e5daf44be15c46bc9a338e28c3969391] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_e5daf44be15c46bc9a338e28c3969391"}
+2026-10-06T15:49:07.999+08:00 INFO  [req_9d9ea18791c941b58ae96f69a419db55] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_9d9ea18791c941b58ae96f69a419db55"}
+2026-10-06T15:49:08.088+08:00 INFO  [req_77bbe03e731240e69f5b6fc42e72a136] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_77bbe03e731240e69f5b6fc42e72a136"}
+2026-10-06T15:49:08.612+08:00 INFO  [req_3e441a5faba9449b9504fd7d6bee1d74] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_3e441a5faba9449b9504fd7d6bee1d74"}
+2026-10-06T15:49:08.727+08:00 WARN  [req_5a23b0eb70af4501bdea6dec88cdd71f] c.p.c.error.GlobalExceptionHandler - api_error code=APPROVAL_SELF_NOT_ALLOWED status=403 retryable=false
+2026-10-06T15:49:08.825+08:00 INFO  [req_c7e8fec99deb46d2ab7d9eb3c7e3a6dd] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_c7e8fec99deb46d2ab7d9eb3c7e3a6dd"}
+2026-10-06T15:49:08.829+08:00 INFO  [req_4cfa8ca0990f4624afeb250d1fe27217] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_4cfa8ca0990f4624afeb250d1fe27217"}
+2026-10-06T15:49:08.936+08:00 INFO  [req_a566f3ecd42940a4985396c242270d43] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_a566f3ecd42940a4985396c242270d43"}
+2026-10-06T15:49:09.052+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000222 http://localhost:54729 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-10-06T15:49:10.787+08:00 INFO  [req_85c0289ffbc04db883eb98c265c3490b] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_85c0289ffbc04db883eb98c265c3490b"}
+2026-10-06T15:49:10.899+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000224 http://localhost:54729 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-10-06T15:49:12.169+08:00 INFO  [req_66005515c85146d0adce975555ed2ddc] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_66005515c85146d0adce975555ed2ddc"}
+2026-10-06T15:49:12.772+08:00 INFO  [req_f71484974a724dc5986ad2b1dafceb4a] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_f71484974a724dc5986ad2b1dafceb4a","runId":"5a7cc540-4775-4632-99e8-51a1d3aaf5a7"}
+2026-10-06T15:49:12.868+08:00 WARN  [req_9642b0da669848ae90bbfdc6d3bcffb2] c.p.c.error.GlobalExceptionHandler - api_error code=ADJUSTMENT_EVIDENCE_REQUIRED status=422 retryable=false
+2026-10-06T15:49:12.962+08:00 WARN  [req_6042758ddd6347ab9e3be7a394df3306] c.p.c.error.GlobalExceptionHandler - api_error code=ADJUSTMENT_EVIDENCE_REQUIRED status=422 retryable=false
+2026-10-06T15:49:13.052+08:00 INFO  [req_2fe0ad38d1874e49a2d969bed1b624d0] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_2fe0ad38d1874e49a2d969bed1b624d0"}
+2026-10-06T15:49:13.152+08:00 INFO  [req_f06ea65cd85c47cf91a96a51fe3a4eb0] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_f06ea65cd85c47cf91a96a51fe3a4eb0"}
+2026-10-06T15:49:13.235+08:00 INFO  [req_a93cc15841ce478cbe92aad75a1dfc4f] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_a93cc15841ce478cbe92aad75a1dfc4f"}
+2026-10-06T15:49:13.340+08:00 WARN  [req_80f20e4682e44d9a99367ec7bb5b0bcd] c.p.c.error.GlobalExceptionHandler - api_error code=EVIDENCE_CONFLICT status=409 retryable=false
+2026-10-06T15:49:13.457+08:00 WARN  [req_65d33da66324444b9965e058deb65ffb] c.p.c.error.GlobalExceptionHandler - api_error code=EVIDENCE_CONFLICT status=409 retryable=false
+2026-10-06T15:49:13.562+08:00 WARN  [req_d85a06f8d4414a86a9fa5c97ddf6972c] c.p.c.error.GlobalExceptionHandler - api_error code=EVIDENCE_CONFLICT status=409 retryable=false
+2026-10-06T15:49:14.124+08:00 WARN  [req_8aa4078d69974046bc57a1c781b3956a] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-06T15:49:14.745+08:00 INFO  [req_0dc4ebd7b12740ceb15fa8723be445d4] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_0dc4ebd7b12740ceb15fa8723be445d4","runId":"d9da6236-b59a-430f-a2ec-3eb49e7ca537"}
+2026-10-06T15:49:14.899+08:00 INFO  [req_20f21812ccbe4e3fbe803988fbeade6d] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_20f21812ccbe4e3fbe803988fbeade6d"}
+2026-10-06T15:49:15.349+08:00 WARN  [req_d0492883ae794cb59e2c59110e4ce440] c.p.c.error.GlobalExceptionHandler - api_error code=ADJUSTMENT_EVIDENCE_REQUIRED status=422 retryable=false
+2026-10-06T15:49:15.438+08:00 INFO  [req_ee6b600d7c704618ab26a68be79946bd] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_ee6b600d7c704618ab26a68be79946bd"}
+2026-10-06T15:49:15.536+08:00 WARN  [req_f94eda4ed87d4d018b31336045888c35] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T15:49:15.632+08:00 INFO  [req_4b91d1ab5587405fa70466f52867d817] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_4b91d1ab5587405fa70466f52867d817"}
+2026-10-06T15:49:15.717+08:00 INFO  [req_ef748804f6354e078db217f0db5acb2d] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_ef748804f6354e078db217f0db5acb2d"}
+2026-10-06T15:49:15.814+08:00 INFO  [req_9abdb0172f694216a4e806cf3d7f7249] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_9abdb0172f694216a4e806cf3d7f7249","journalId":"7a40a31e-4241-4ccd-a393-b77f43ad1f2c"}
+2026-10-06T15:49:15.912+08:00 INFO  [req_ffb31e37f232424d96ae57de3e36653e] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_ffb31e37f232424d96ae57de3e36653e"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"b74ca991-cd38-4f77-8399-f43fbd32974a"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"adf75dea-10ba-46e4-b625-2e13cba2d91f"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"916ba6cc-5e8b-427c-8da4-f49da9d70611"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"da56870b-720d-4aab-9948-ad4642e77ba8"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"d43ef0ad-d1c8-4b25-ae17-85708d06a548"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"80a47652-6ac0-4862-82a6-e65453a5c9ac"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"9747b238-52b0-429a-80f0-feb1e3b1b381"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"b49b6da3-fe96-4654-aa68-3886ee06726c"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"9222d915-7304-4aab-95ad-7e1a097669d3"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"3abf4b77-5ce2-4763-a792-fecac67b7a92"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"fefb434f-7bcc-4cc0-b5ab-01be742ac811"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"0ad0cb9d-acce-4f28-ba06-22851cef8e92"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"42668fcf-7648-4445-9764-0f3565dd1bd5"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"85814384-99f3-490a-b83a-99bb02a0ec1f"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"c8b5a181-b0c4-45a6-b9a5-057b65895876"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"6a77508b-9717-4dce-a6ff-b03d73a47c4c"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"29e35d87-1f16-4d56-85ac-68a50b0a91e6"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"c4e4a47a-fc52-45a0-be1c-ff5e55b0dddc"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"d83d09be-08bc-4e7f-9c52-d783e0b4e6ad"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"d47bbbdd-d44f-4009-99c1-5adf87d3fef8"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"40b7cf4d-59c6-4045-9d18-3ad8831a43b5"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"4c0fda1e-4e06-4049-b4d8-2979c8b5da09"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"547c2f08-626c-447e-8e88-b22f07ebca86"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"30573588-90ff-4fb7-b131-9de5bbde6102"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"e5b07415-69d4-4b68-8cc9-c48bd38ba22a"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"d6d6929c-95ae-4c9a-a4ab-1bfc7c0b29a6"}
+2026-10-06T15:49:18.158+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"8a4bf04f-92d6-40c4-ba93-40db4cb632e5"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"116f6b34-f9f5-4d11-8ece-9ae20d671e63"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"b9865474-162a-4929-b777-bfdf4ec9bf26"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"5802f39f-2271-441d-afe1-d31c8d81381a"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"730f584c-f255-4789-a094-c524f496c4cb"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"a6caeb8c-7c4b-4a05-bad1-dfadb046e0ea"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"b54d3a94-2e8b-4aaa-8bea-a0f6bad3cbd1"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"38ce783f-7629-4e40-8bc6-b001e02d1781"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"ce4fb0ca-9813-4327-9d00-f1cd1bf1d936"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"04d0b4a4-3723-4595-b450-5ef065747aab"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"efadc8f0-88c1-4ea1-988c-27d13e1f9bc2"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"910f6594-7131-46bf-8cdb-9a1e9e0c1a56"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"08115bdc-d675-47bf-b714-eaa6b3925533"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"a6b55ed6-53ee-431e-90a1-d11c9225b7b3"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"3cb9be1e-a4bc-4586-a221-488729d0288f"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"25447f64-412f-4cda-84d4-c3cc143d1d54"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"cff69563-3701-4a55-b725-9978670fbe33"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"1bb3d89f-c053-450e-9fbc-2ca3a43963f2"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"b003cdc9-d2b5-4fa6-b2de-c7320b877ddf"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"a8eef0f3-b1dd-475d-89aa-748bb520d25a"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"a3047999-15f7-4d17-a066-5f84e9f6fba0"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"2b1001e8-07b9-421e-bf09-045ca76ad8fd"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"00c19b87-b78a-44b8-b930-d822cc6afcd2"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"149cdc56-20d8-48f1-8889-8ce77f1cef2b"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"0852d60c-880d-4c2a-94e3-129165167885"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"f2e2879a-6f33-4326-b41d-ef2355703ad2"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"8cb262e9-4bca-4194-88f4-74aafad88045"}
+2026-10-06T15:49:18.159+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"8ede7661-7330-4c84-b9b5-34018980d092"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"fdf8d69c-d71a-42bf-bf99-0892e015b6d6"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"a1f49827-cf34-443d-a4c9-1923038882f4"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"aa9c9f32-5a1b-4b5e-a48b-c0d90972e076"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"ea66921a-557d-4bcc-8d76-e1abb9023365"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"013d836c-df88-459d-b203-efed62684411"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"861fd794-e9f2-4738-9477-63dd5f7179b8"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"4e749a5d-7daf-409c-92f4-78c4d22858c1"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"d98d45e9-a7f5-462a-b371-74badb45eb84"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"033077c2-2c03-4940-bd35-599549567938"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"05b36d6d-8bf3-45c3-8f37-f765003db1bc"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"8cf15f56-290d-4fc5-b5f3-e4138b38d433"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"a6be8a5b-cc29-4676-bffa-ad30fd4f4fb1"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"5246e030-fe27-4942-b8a9-da593423d6da"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"e08092f8-3b6d-4cbc-8f4a-9a437a13802f"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"55cd1301-b119-4c62-aba5-9f92d2169d03"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"c8f63bae-a0f5-4308-9abd-8fd6a681a0d7"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"a948b314-cd65-42a2-9900-58628fc7e444"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"bca3f5bf-e9c7-492a-a1d4-5f98deca752f"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"56edafaa-f289-4e06-9335-6df28db1da15"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"19508a4a-2856-4136-a698-9c21fdc1fa88"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"8509e528-f53b-4399-80f1-b86f2af32691"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"e9480d82-66fb-49bc-84f6-25b84e23f1bd"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"78553e16-ee6a-43a8-995b-4f6a931e2b40"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"735e47df-dd15-4239-90ac-6403e6819d5c"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"8b86c208-7096-432d-b506-fab0099484d0"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"1ff72687-5e36-47d1-9c7a-17d60799efec"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"e02bf5ff-9e73-4254-b6b2-a32cd7807b11"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"74dd1316-6767-4960-b5ff-5f2c8f530184"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"37010440-c98e-4ea1-a26f-b05baccb9eb5"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"0d627b25-b87c-4c6e-be85-a123eab7af60"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"065b8d08-6385-46a7-be9f-847db535c7f7"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"d5645150-23d2-4f37-98ec-0fe05ba3bc68"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"ddb5a1c1-77fd-4670-aaa9-3d2bf9abb30c"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"47b68c31-91fd-4748-9a48-ae4305b7cea5"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"94514afe-f5e4-4b13-8ef6-ae57cb5a5bdb"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"ac0f4230-ce2c-4cc3-a5a4-de638a3c85a2"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"bea4050e-1df0-4023-a161-afe70b5bf29e"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"0f5c14fa-da5e-4214-b866-97d329020317"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"9dc9306f-74ad-40ce-805a-a310c108594b"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"a7bf3972-efef-49f5-ab6f-1113306a2591"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"47c2fb97-3724-4bbc-9e0f-af1b93768b0d"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"b53ceabb-f232-41f6-90e0-fd1422737ae0"}
+2026-10-06T15:49:18.160+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"cacc91da-7589-49d9-b666-7584b54249eb"}
+2026-10-06T15:49:18.161+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"848f5b11-3d3d-4b0c-875d-b1f198be358e"}
+2026-10-06T15:49:18.161+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"735efb30-6e24-40cb-bea8-e13e51a96693"}
+2026-10-06T15:49:18.161+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961","journalId":"7c4d2120-f342-4e0a-92f8-5987303bf1ee"}
+2026-10-06T15:49:18.161+08:00 INFO  [req_6856e6e495b64431b08cd01d1b188961] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_6856e6e495b64431b08cd01d1b188961"}
+2026-10-06T15:49:18.810+08:00 INFO  [req_ccb6e1e5018d498b8d9caf9dbd5107eb] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_ccb6e1e5018d498b8d9caf9dbd5107eb"}
+2026-10-06T15:49:18.906+08:00 INFO  [req_c8f5ef043ce34a87b674c4d2b630f1bd] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_c8f5ef043ce34a87b674c4d2b630f1bd"}
+2026-10-06T15:49:19.010+08:00 INFO  [req_fba19b7f3fd048e1a321d5482584bfcc] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_fba19b7f3fd048e1a321d5482584bfcc"}
+2026-10-06T15:49:19.010+08:00 INFO  [req_fba19b7f3fd048e1a321d5482584bfcc] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_fba19b7f3fd048e1a321d5482584bfcc","journalId":"25de0f2a-22a4-4a9e-8791-9c0582b91421"}
+2026-10-06T15:49:19.010+08:00 INFO  [req_fba19b7f3fd048e1a321d5482584bfcc] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_fba19b7f3fd048e1a321d5482584bfcc"}
+2026-10-06T15:49:19.099+08:00 INFO  [req_07d4304bfda144448a23cdbd9c28a853] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_07d4304bfda144448a23cdbd9c28a853"}
+2026-10-06T15:49:19.201+08:00 INFO  [req_b9bfcd64f4f548ee8ba34591cd43eba5] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_b9bfcd64f4f548ee8ba34591cd43eba5"}
+2026-10-06T15:49:19.296+08:00 INFO  [req_bcc1e9ef32114e149cea6b6d8be42fbd] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_bcc1e9ef32114e149cea6b6d8be42fbd"}
+2026-10-06T15:49:19.296+08:00 INFO  [req_bcc1e9ef32114e149cea6b6d8be42fbd] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_bcc1e9ef32114e149cea6b6d8be42fbd","journalId":"ea3d547b-cbb6-4337-9ea5-aeffc4cd9bfb"}
+2026-10-06T15:49:19.391+08:00 INFO  [req_94295dabde5343e39cc380109173dadc] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_94295dabde5343e39cc380109173dadc"}
+2026-10-06T15:49:19.487+08:00 INFO  [req_96455283a7854cf18469de3e6dbebe96] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_96455283a7854cf18469de3e6dbebe96"}
+2026-10-06T15:49:19.585+08:00 INFO  [req_e55573667937493688d8e968b705da63] c.p.observability.CorrelationLog - {"event":"ops.read"}
+2026-10-06T15:49:19.585+08:00 INFO  [req_e55573667937493688d8e968b705da63] c.p.observability.CorrelationLog - {"event":"ops.read","journalId":"3635c5cb-7392-428c-93ea-e811a5952266"}
+2026-10-06T15:49:19.685+08:00 INFO  [req_d99c1c16acc34fe1be78f38849d55b76] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_d99c1c16acc34fe1be78f38849d55b76"}
+2026-10-06T15:49:19.799+08:00 INFO  [req_4b5049e441454f239b072fc00d8aad46] c.p.observability.CorrelationLog - {"event":"ops.command","requestId":"req_4b5049e441454f239b072fc00d8aad46"}
+2026-10-06T15:49:19.892+08:00 INFO  [req_2f6f1e0f069c49bab76294f69a8e804f] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_2f6f1e0f069c49bab76294f69a8e804f"}
+2026-10-06T15:49:19.892+08:00 INFO  [req_2f6f1e0f069c49bab76294f69a8e804f] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_2f6f1e0f069c49bab76294f69a8e804f","journalId":"aed52c1f-9d21-47d5-982b-a27282305658"}
+2026-10-06T15:49:20.488+08:00 INFO  [req_d33ba3f4211d43a7a464a2b286ce0162] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_d33ba3f4211d43a7a464a2b286ce0162","runId":"972e2706-8ee9-4183-99c8-a71bbfcb903a"}
+[INFO] Tests run: 31, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 49.09 s -- in com.paymentsledger.ops.OpsApiIT
+[INFO] Running com.paymentsledger.WorkerRoleHealthIT
+2026-10-06T15:49:20.949+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-10-06T15:49:21.068+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 4fc661cefe231b7416bd306ae6508329e1e1eae09997aa8580d16d777692d497
+2026-10-06T15:49:22.296+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.347793S
+2026-10-06T15:49:22.297+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:56948/pr01_isolated_worker_role_check?loggerLevel=OFF)
+2026-10-06T15:49:22.299+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.WorkerRoleHealthIT]: WorkerRoleHealthIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-06T15:49:22.313+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.WorkerRoleHealthIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-06T15:49:22.335+08:00 INFO  [-] c.paymentsledger.WorkerRoleHealthIT - Starting WorkerRoleHealthIT using Java 21.0.12.1 with PID 33568 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui)
+2026-10-06T15:49:22.335+08:00 INFO  [-] c.paymentsledger.WorkerRoleHealthIT - The following 1 profile is active: "worker"
+2026-10-06T15:49:22.540+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-10-06T15:49:22.540+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-06T15:49:22.540+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-10-06T15:49:22.547+08:00 INFO  [-] o.a.c.c.C.[Tomcat-3].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-06T15:49:22.547+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 211 ms
+2026-10-06T15:49:22.581+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56948/pr01_isolated_worker_role_check?loggerLevel=OFF (PostgreSQL 16.14)
+2026-10-06T15:49:22.596+08:00 INFO  [-] o.f.c.internal.database.base.Schema - Creating schema "platform" ...
+2026-10-06T15:49:22.599+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-10-06T15:49:22.624+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": null
+2026-10-06T15:49:22.626+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-10-06T15:49:22.628+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-10-06T15:49:22.643+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-10-06T15:49:22.685+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-10-06T15:49:22.730+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-10-06T15:49:22.784+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-10-06T15:49:22.829+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-10-06T15:49:22.853+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-10-06T15:49:22.887+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-10-06T15:49:22.926+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-10-06T15:49:22.971+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "10 - revenue share"
+2026-10-06T15:49:23.025+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "11 - dispute lifecycle"
+2026-10-06T15:49:23.066+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "12 - payout bank evidence"
+2026-10-06T15:49:23.108+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "13 - payout query evidence"
+2026-10-06T15:49:23.134+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "14 - reconciliation evidence"
+2026-10-06T15:49:23.170+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "15 - reconciliation source recovery"
+2026-10-06T15:49:23.212+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "16 - ops commands approval audit"
+2026-10-06T15:49:23.243+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 16 migrations to schema "platform", now at version v16 (execution time 00:00.456s)
+2026-10-06T15:49:23.588+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=WORKER
+2026-10-06T15:49:23.747+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-10-06T15:49:23.754+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 56972 (http) with context path '/'
+2026-10-06T15:49:23.759+08:00 INFO  [-] c.paymentsledger.WorkerRoleHealthIT - Started WorkerRoleHealthIT in 1.442 seconds (process running for 84.567)
+2026-10-06T15:49:23.767+08:00 INFO  [-] o.a.c.c.C.[Tomcat-3].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-06T15:49:23.767+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-06T15:49:23.767+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-10-06T15:49:23.768+08:00 WARN  [req_5c9800b9d0394793b83bae84e2ae4a68] o.s.web.servlet.PageNotFound - No mapping for POST /webhooks/stripe
+2026-10-06T15:49:23.774+08:00 WARN  [req_d85e468b5fdf462fab5bfd08b0961b0b] o.s.web.servlet.PageNotFound - No mapping for GET /payment-result.html
+2026-10-06T15:49:23.775+08:00 WARN  [req_48b5fbfa1c704276afbce94cb99e51c4] o.s.web.servlet.PageNotFound - No mapping for GET /ops-console.html
+2026-10-06T15:49:23.776+08:00 WARN  [req_3bb059016f874b7581bd22961e61bfad] o.s.web.servlet.PageNotFound - No mapping for GET /ui/core.mjs
+2026-10-06T15:49:23.792+08:00 WARN  [req_57167d5021574ab08d6dbc08d4073e44] o.s.web.servlet.PageNotFound - No mapping for GET /payment-test.html
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.208 s -- in com.paymentsledger.WorkerRoleHealthIT
+[INFO] Running com.paymentsledger.pages.PageHttpIT
+2026-10-06T15:49:24.288+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-10-06T15:49:24.386+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: 7c0982dac5099a93d352edccc623da08c94cd1327794cf15a4458a7da18cac99
+2026-10-06T15:49:25.785+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.496783S
+2026-10-06T15:49:25.786+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:56981/test?loggerLevel=OFF)
+2026-10-06T15:49:25.787+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-10-06T15:49:25.812+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 25 ms.
+2026-10-06T15:49:25.817+08:00 INFO  [-] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.paymentsledger.pages.PageHttpIT]: PageHttpIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-06T15:49:25.827+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.pages.PageHttpIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-06T15:49:25.845+08:00 INFO  [-] com.paymentsledger.pages.PageHttpIT - Starting PageHttpIT using Java 21.0.12.1 with PID 33568 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui)
+2026-10-06T15:49:25.845+08:00 INFO  [-] com.paymentsledger.pages.PageHttpIT - The following 2 profiles are active: "api", "test"
+2026-10-06T15:49:26.022+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-10-06T15:49:26.023+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-06T15:49:26.023+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-10-06T15:49:26.030+08:00 INFO  [-] o.a.c.c.C.[Tomcat-4].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-06T15:49:26.030+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 183 ms
+2026-10-06T15:49:26.062+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56981/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-10-06T15:49:26.076+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-10-06T15:49:26.077+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 16 migrations (execution time 00:00.004s)
+2026-10-06T15:49:26.085+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-10-06T15:49:26.101+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-10-06T15:49:26.104+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-10-06T15:49:26.105+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-10-06T15:49:26.122+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-10-06T15:49:26.182+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-10-06T15:49:26.219+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-10-06T15:49:26.257+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-10-06T15:49:26.280+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-10-06T15:49:26.304+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-10-06T15:49:26.334+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-10-06T15:49:26.375+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-10-06T15:49:26.434+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "10 - revenue share"
+2026-10-06T15:49:26.474+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "11 - dispute lifecycle"
+2026-10-06T15:49:26.517+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "12 - payout bank evidence"
+2026-10-06T15:49:26.620+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "13 - payout query evidence"
+2026-10-06T15:49:26.662+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "14 - reconciliation evidence"
+2026-10-06T15:49:26.699+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "15 - reconciliation source recovery"
+2026-10-06T15:49:26.787+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "16 - ops commands approval audit"
+2026-10-06T15:49:26.822+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 16 migrations to schema "platform", now at version v16 (execution time 00:00.473s)
+2026-10-06T15:49:27.141+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-10-06T15:49:27.247+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-10-06T15:49:27.265+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 57012 (http) with context path '/'
+2026-10-06T15:49:27.276+08:00 INFO  [-] com.paymentsledger.pages.PageHttpIT - Started PageHttpIT in 1.446 seconds (process running for 88.084)
+2026-10-06T15:49:27.543+08:00 INFO  [-] o.a.c.c.C.[Tomcat-4].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-06T15:49:27.543+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-06T15:49:27.543+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-10-06T15:49:28.104+08:00 INFO  [req_9352d0d5ae2c45619fb31a7d0d70db70] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_9352d0d5ae2c45619fb31a7d0d70db70","businessOrderId":"bor_01M4830QQD98HTW093S8830XRG","paymentId":"pay_01M4830QQDHB4CKKRD9BZX399K"}
+2026-10-06T15:49:28.104+08:00 INFO  [req_9352d0d5ae2c45619fb31a7d0d70db70] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_9352d0d5ae2c45619fb31a7d0d70db70","businessOrderId":"bor_01M4830QQD98HTW093S8830XRG","paymentId":"pay_01M4830QQDHB4CKKRD9BZX399K"}
+2026-10-06T15:49:28.104+08:00 INFO  [req_9352d0d5ae2c45619fb31a7d0d70db70] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_9352d0d5ae2c45619fb31a7d0d70db70","businessOrderId":"bor_01M4830QQD98HTW093S8830XRG","paymentId":"pay_01M4830QQDHB4CKKRD9BZX399K"}
+2026-10-06T15:49:28.626+08:00 WARN  [req_7e20192011954604a84802ccbea52f3d] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:49:28.712+08:00 WARN  [req_c776809ac8ee482db3d73610d315fbf4] c.p.c.error.GlobalExceptionHandler - api_error code=NOT_FOUND status=404 retryable=false
+2026-10-06T15:49:28.766+08:00 WARN  [-] com.zaxxer.hikari.pool.PoolBase - payments-ledger-pool - Failed to validate connection org.postgresql.jdbc.PgConnection@14b28fb1 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+2026-10-06T15:49:28.767+08:00 WARN  [-] com.zaxxer.hikari.pool.PoolBase - payments-ledger-pool - Failed to validate connection org.postgresql.jdbc.PgConnection@2e100bee (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.594 s -- in com.paymentsledger.pages.PageHttpIT
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   ObservabilityIT.successfulOperationalReadEmitsOnlyRealKnownCorrelationAssociations:288
+Expecting not blank but was: ""
+[INFO]
+[ERROR] Tests run: 59, Failures: 1, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- failsafe:3.5.6:verify (default) @ payments-ledger-platform ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:55 min
+[INFO] Finished at: 2026-10-06T15:49:39+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.6:verify (default) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/target/failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

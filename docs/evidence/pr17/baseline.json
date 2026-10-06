@@ -1,0 +1,36 @@
+{
+  "baseCommit": "fc09cb234b48f145686d5b24ef796fca931c1379",
+  "command": "JAVA_HOME=<Corretto21> caffeinate -i ./mvnw -B -Dtest=AuthenticationFilterTest -Dit.test=OpsApiIT,OpsSchemaIT,PaymentHttpIT verify",
+  "exitCode": 0,
+  "suiteResults": [
+    {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suite": "com.paymentsledger.identity.AuthenticationFilterTest"
+    },
+    {
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suite": "com.paymentsledger.payment.PaymentHttpIT"
+    },
+    {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suite": "com.paymentsledger.ops.OpsSchemaIT"
+    },
+    {
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suite": "com.paymentsledger.ops.OpsApiIT"
+    }
+  ],
+  "scope": "Local PostgreSQL/HTTP fixtures only; no .env copied or real provider writes"
+}

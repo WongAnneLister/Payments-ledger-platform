@@ -11,10 +11,10 @@
 <label>商品引用<input id="productRef" required value="demo-product"></label><label>价格版本<input id="priceVersion" type="number" required min="1" step="1" value="1"></label>
 <label>订单总金额（最小单位）<input id="amountMinor" type="number" required min="1" step="1" value="10000"></label><label>币种<input id="currency" required value="USD" pattern="[A-Z]{3}"></label>
 <label>数量<input id="quantity" type="number" required min="1" max="10000" step="1" value="1"></label><p class="muted">USD 的 10000 表示 100 美元；JPY 的 10000 表示 10000 日元。金额必须与服务端价格相符。</p>
-<label class="wide">付款返回地址（HTTPS）<input id="successUrl" type="url" required placeholder="https://你的测试域名/payment-test.html"></label>
-<label class="wide">取消返回地址（HTTPS）<input id="cancelUrl" type="url" required placeholder="https://你的测试域名/payment-test.html"></label>
+<label class="wide">付款返回地址（HTTPS）<input id="successUrl" type="url" required placeholder="https://你的测试域名/payment-result.html"></label>
+<label class="wide">取消返回地址（HTTPS）<input id="cancelUrl" type="url" required placeholder="https://你的测试域名/payment-result.html"></label>
 </div><button id="create" type="submit">创建测试支付</button><button id="newOrder" class="secondary" type="button" disabled>开始新测试订单</button></form>
 <section class="panel"><h2>支付结果</h2><label>支付 ID<input id="paymentId" autocomplete="off" placeholder="创建后自动填入，也可输入已有支付 ID"></label>
-<button id="query" class="secondary">查询最新状态</button><button id="cancel" class="secondary">申请取消</button><a id="checkout" class="link" rel="noreferrer" hidden>前往测试收银台</a>
+<button id="query" class="secondary">查询最新状态</button><button id="cancel" class="secondary">申请取消</button><a id="resultPage" class="link" href="/payment-result.html" hidden>查看原支付结果页</a><a id="checkout" class="link" rel="noreferrer" hidden>前往测试收银台</a>
 <p id="notice" role="status" aria-live="polite">等待创建或查询。</p><pre id="result" hidden></pre><p class="muted">结果待确认时，请继续查询原支付，勿更换订单号重新付款。申请取消不会退款，也不会抹掉已经成功的付款。</p></section>
-</main><script src="/payment-test.js" defer></script></body></html>
+</main><script type="module" src="/payment-test.js"></script></body></html>

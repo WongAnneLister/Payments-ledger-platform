@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "java": "Amazon Corretto21",
+  "command": "JAVA_HOME=<Corretto21> caffeinate -i ./mvnw -B -Dtest=RequestIdFilterTest,AuthenticationFilterTest,CorrelationLogTest,ObservabilityGaugesTest -Dit.test=ObservabilityIT verify",
+  "unit": {
+    "tests": 17,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "integration": {
+    "tests": 14,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "duration": "25.766s",
+  "log": "observability-embedded-key-green.txt",
+  "coverage": "Includes independent incomplete-FAIL scalar/gauge guard and embedded key JSON/MDC/DTO redaction regressions; broader focused 62IT run preserved separately. Full clean verify remains delivery gate."
+}

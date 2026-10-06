@@ -69,6 +69,12 @@ class WorkerRoleHealthIT {
     }
 
     @Test
+    void workerDoesNotExposeNewPagesOrObservability() {
+        for (String path : java.util.List.of("/payment-result.html", "/ops-console.html", "/ui/core.mjs", "/ops/observability"))
+            assertThat(restTemplate.getForEntity(path, String.class).getStatusCode()).as(path).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
     @DisplayName("health 不泄露依赖拓扑细节")
     void healthHidesComponentDetails() {
         ResponseEntity<String> response = restTemplate.getForEntity("/actuator/health", String.class);

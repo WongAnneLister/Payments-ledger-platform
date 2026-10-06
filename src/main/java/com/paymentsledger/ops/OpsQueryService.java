@@ -429,6 +429,7 @@ public class OpsQueryService {
     var out =
         json.createObjectNode()
             .put("journalId", r.get("id").toString())
+            .put("financialEventId", r.get("financial_event_id").toString())
             .put("status", "POSTED")
             .put("currency", r.get("currency").toString());
     set(out, "postedAt", r.get("sealed_at"));
@@ -612,6 +613,7 @@ public class OpsQueryService {
         "nextScheduledAt",
         Set.of("DONE", "ESCALATED").contains(r.get("status")) ? null : r.get("available_at"));
     if (r.get("operation_id") != null) {
+      set(out, "operationId", r.get("operation_id"));
       var owner =
           one(
               "SELECT lease_owner FROM platform.provider_operation WHERE id=?",
@@ -831,7 +833,7 @@ public class OpsQueryService {
               "providerObservations",
               jdbc.queryForList(
                   "SELECT"
-                      + " id,call_type,classification,external_object_id,created_at,fetched_at,evidence->>'apiVersion'"
+                      + " id,operation_id,call_type,classification,external_object_id,created_at,fetched_at,evidence->>'providerRequestId' AS provider_request_id,evidence->>'apiVersion'"
                       + " AS api_version,evidence->>'rawDigest' AS"
                       + " raw_digest,evidence->>'httpStatus' AS http_status FROM"
                       + " platform.provider_observation WHERE "
@@ -847,6 +849,7 @@ public class OpsQueryService {
             project(
                 observation,
                 "id",
+                "operation_id",
                 "call_type",
                 "classification",
                 "external_object_id",
@@ -855,6 +858,10 @@ public class OpsQueryService {
                 "api_version",
                 "raw_digest",
                 "http_status");
+        // Provider evidence contributes only this known identifier; secret-like values are omitted.
+        String providerRequest = Objects.toString(observation.get("provider_request_id"), null);
+        if (com.paymentsledger.common.request.SafeCorrelationId.accepts(providerRequest, 128))
+          view.put("providerRequestId", providerRequest);
         observations.add(view);
         var event =
             timeline

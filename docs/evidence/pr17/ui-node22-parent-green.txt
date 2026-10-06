@@ -1,0 +1,224 @@
+TAP version 13
+# (node:30721) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/main/resources/static/payment-test.js?runtime=1 is not specified and it doesn't parse as CommonJS.
+# Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+# To eliminate this warning, add "type": "module" to /Users/anne_lister/package.json.
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: actual payment-test clears terminal confirmation after failed refresh
+ok 1 - actual payment-test clears terminal confirmation after failed refresh
+  ---
+  duration_ms: 10.111042
+  type: 'test'
+  ...
+# Subtest: actual payment-test credential switch discards scoped draft and aborts stale read while controls remain usable
+ok 2 - actual payment-test credential switch discards scoped draft and aborts stale read while controls remain usable
+  ---
+  duration_ms: 2.189709
+  type: 'test'
+  ...
+# Subtest: actual payment-test reuses original order body and key after lost create response
+ok 3 - actual payment-test reuses original order body and key after lost create response
+  ---
+  duration_ms: 7.127792
+  type: 'test'
+  ...
+# Subtest: actual payment-test historical POST replay requires current GET before terminal success (UNKNOWN)
+ok 4 - actual payment-test historical POST replay requires current GET before terminal success (UNKNOWN)
+  ---
+  duration_ms: 3.097125
+  type: 'test'
+  ...
+# Subtest: actual payment-test historical POST replay requires current GET before terminal success (GET_FAILED)
+ok 5 - actual payment-test historical POST replay requires current GET before terminal success (GET_FAILED)
+  ---
+  duration_ms: 2.2365
+  type: 'test'
+  ...
+# Subtest: observability cards preserve exact available values and explicit NO_DATA status
+ok 6 - observability cards preserve exact available values and explicit NO_DATA status
+  ---
+  duration_ms: 0.309917
+  type: 'test'
+  ...
+# Subtest: actual result module clears old funded evidence immediately on same-ID refresh and rejects later stale completion
+ok 7 - actual result module clears old funded evidence immediately on same-ID refresh and rejects later stale completion
+  ---
+  duration_ms: 3.925208
+  type: 'test'
+  ...
+# Subtest: actual ops pending bank intent survives same-credential identity validation (OPS_OPERATOR)
+ok 8 - actual ops pending bank intent survives same-credential identity validation (OPS_OPERATOR)
+  ---
+  duration_ms: 15.991708
+  type: 'test'
+  ...
+# Subtest: actual ops pending bank intent survives same-credential identity validation (OPS_VIEWER)
+ok 9 - actual ops pending bank intent survives same-credential identity validation (OPS_VIEWER)
+  ---
+  duration_ms: 2.931042
+  type: 'test'
+  ...
+# Subtest: JSON transport preserves exact signed int64 and decimal tokens before Number rounding
+ok 10 - JSON transport preserves exact signed int64 and decimal tokens before Number rounding
+  ---
+  duration_ms: 1.561
+  type: 'test'
+  ...
+# Subtest: money uses exact integer division and keeps currency explicit
+ok 11 - money uses exact integer division and keeps currency explicit
+  ---
+  duration_ms: 1.087667
+  type: 'test'
+  ...
+# Subtest: UNKNOWN ignores apparent successful status and directs original-resource query
+ok 12 - UNKNOWN ignores apparent successful status and directs original-resource query
+  ---
+  duration_ms: 0.244958
+  type: 'test'
+  ...
+# Subtest: CONFLICT in any evidence dimension never presents financial success
+ok 13 - CONFLICT in any evidence dimension never presents financial success
+  ---
+  duration_ms: 0.109958
+  type: 'test'
+  ...
+# Subtest: business confirmation and pending financial evidence are independent
+ok 14 - business confirmation and pending financial evidence are independent
+  ---
+  duration_ms: 0.08925
+  type: 'test'
+  ...
+# Subtest: incomplete capture cannot be represented as fully funded
+ok 15 - incomplete capture cannot be represented as fully funded
+  ---
+  duration_ms: 0.056125
+  type: 'test'
+  ...
+# Subtest: HTTPS hosted URLs exclude embedded credentials and executable protocols
+ok 16 - HTTPS hosted URLs exclude embedded credentials and executable protocols
+  ---
+  duration_ms: 0.288375
+  type: 'test'
+  ...
+# Subtest: drilldowns allow only known same-origin resource views
+ok 17 - drilldowns allow only known same-origin resource views
+  ---
+  duration_ms: 0.220458
+  type: 'test'
+  ...
+# Subtest: all twelve PR16 GET resource routes plus observability are exposed
+ok 18 - all twelve PR16 GET resource routes plus observability are exposed
+  ---
+  duration_ms: 1.087375
+  type: 'test'
+  ...
+# Subtest: all six PR16 commands use delivered endpoints
+ok 19 - all six PR16 commands use delivered endpoints
+  ---
+  duration_ms: 0.387041
+  type: 'test'
+  ...
+# Subtest: accepted commands refresh the corresponding authoritative GET even after navigation changes
+ok 20 - accepted commands refresh the corresponding authoritative GET even after navigation changes
+  ---
+  duration_ms: 0.736625
+  type: 'test'
+  ...
+# Subtest: truncated payment evidence cannot produce a funded success presentation
+ok 21 - truncated payment evidence cannot produce a funded success presentation
+  ---
+  duration_ms: 0.053125
+  type: 'test'
+  ...
+# Subtest: explicit waiting next action contradicts terminal success while NONE allows confirmed funding
+ok 22 - explicit waiting next action contradicts terminal success while NONE allows confirmed funding
+  ---
+  duration_ms: 0.052667
+  type: 'test'
+  ...
+# Subtest: trusted partner identity exposes only own-share navigation and no command
+ok 23 - trusted partner identity exposes only own-share navigation and no command
+  ---
+  duration_ms: 0.0995
+  type: 'test'
+  ...
+# Subtest: role matrix separates initiation, review and independent author
+ok 24 - role matrix separates initiation, review and independent author
+  ---
+  duration_ms: 0.083458
+  type: 'test'
+  ...
+# Subtest: transport uses same-origin API paths and memory-only credential headers
+ok 25 - transport uses same-origin API paths and memory-only credential headers
+  ---
+  duration_ms: 0.902916
+  type: 'test'
+  ...
+# Subtest: latest resource read rejects stale response even if transport ignores abort
+ok 26 - latest resource read rejects stale response even if transport ignores abort
+  ---
+  duration_ms: 0.330791
+  type: 'test'
+  ...
+# Subtest: credential switch aborts reads, clears trusted identity and ignores old results
+ok 27 - credential switch aborts reads, clears trusted identity and ignores old results
+  ---
+  duration_ms: 0.416041
+  type: 'test'
+  ...
+# Subtest: uncertain POST retries exact bytes and key, then refreshes current GET after historical replay
+ok 28 - uncertain POST retries exact bytes and key, then refreshes current GET after historical replay
+  ---
+  duration_ms: 0.537917
+  type: 'test'
+  ...
+# Subtest: pending intent blocks edited retry body and cannot cross credential identity
+ok 29 - pending intent blocks edited retry body and cannot cross credential identity
+  ---
+  duration_ms: 0.187792
+  type: 'test'
+  ...
+# Subtest: result controller ignores URL success and duplicate notification payloads
+ok 30 - result controller ignores URL success and duplicate notification payloads
+  ---
+  duration_ms: 0.404375
+  type: 'test'
+  ...
+# Subtest: failed result refresh hides prior confirmation and directs original payment query
+ok 31 - failed result refresh hides prior confirmation and directs original payment query
+  ---
+  duration_ms: 0.21475
+  type: 'test'
+  ...
+# Subtest: evidence renderer keeps injected markup inert and surfaces truncation and evidence IDs
+ok 32 - evidence renderer keeps injected markup inert and surfaces truncation and evidence IDs
+  ---
+  duration_ms: 0.501167
+  type: 'test'
+  ...
+# Subtest: observation absence never invents zero or PASS
+ok 33 - observation absence never invents zero or PASS
+  ---
+  duration_ms: 0.1065
+  type: 'test'
+  ...
+# Subtest: new pages are native labelled modules with live notices and responsive console
+ok 34 - new pages are native labelled modules with live notices and responsive console
+  ---
+  duration_ms: 12.91875
+  type: 'test'
+  ...
+# Subtest: existing payment test links to separate result page and masks pending funds
+ok 35 - existing payment test links to separate result page and masks pending funds
+  ---
+  duration_ms: 0.969875
+  type: 'test'
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 107.4655

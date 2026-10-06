@@ -1,0 +1,213 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 24 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 172 source files with javac [debug parameters release 21] to target/classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ???????????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ??????, ??? -Xlint:deprecation ?????
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 97 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.identity.AuthenticationFilterTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+16:10:08.394 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+16:10:08.770 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+16:10:09.093 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+16:10:09.395 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=WORKER
+16:10:09.697 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+16:10:09.994 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.633 s -- in com.paymentsledger.identity.AuthenticationFilterTest
+[INFO] Running com.paymentsledger.observability.ObservabilityGaugesTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in com.paymentsledger.observability.ObservabilityGaugesTest
+[INFO] Running com.paymentsledger.observability.CorrelationLogTest
+16:10:10.037 [main] INFO com.paymentsledger.observability.CorrelationLog -- {"event":"ops.read"}
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.paymentsledger.observability.CorrelationLogTest
+[INFO] Running com.paymentsledger.common.request.RequestIdFilterTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.paymentsledger.common.request.RequestIdFilterTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- jar:3.4.2:jar (default-jar) @ payments-ledger-platform ---
+[INFO] Building jar: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- spring-boot:3.5.16:repackage (repackage) @ payments-ledger-platform ---
+[INFO] Replacing main artifact /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/target/payments-ledger-platform-0.1.0-SNAPSHOT.jar.original
+[INFO]
+[INFO] --- failsafe:3.5.6:integration-test (default) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.ops.ObservabilityIT
+16:10:11.069 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+16:10:11.071 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+16:10:11.170 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+16:10:11.418 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with Docker accessed via Unix socket (/Users/anne_lister/.docker/run/docker.sock)
+16:10:11.418 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+16:10:11.433 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker:
+  Server Version: 27.4.0
+  API Version: 1.47
+  Operating System: Docker Desktop
+  Total Memory: 7837 MB
+  Labels:
+    com.docker.desktop.address=unix:///Users/anne_lister/Library/Containers/com.docker.docker/Data/docker-cli.sock
+16:10:11.458 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+16:10:11.537 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+16:10:11.635 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 46e6d5409f6b815c9a659a3461d14dae445ab549f6aafc90aeb68f6930454dff
+16:10:12.037 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.578357S
+16:10:12.041 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+16:10:12.041 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+16:10:12.042 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+16:10:12.042 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+16:10:12.087 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 395b05525a1e104744a05fdf03caaf82a11995bd6530b83e679a983ba99e1386
+16:10:13.155 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT1.113003S
+16:10:13.156 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:56556/test?loggerLevel=OFF)
+16:10:13.162 [main] INFO org.testcontainers.ext.ScriptUtils -- Executing database script from db/pr02-runtime-role.sql
+16:10:13.291 [main] INFO org.testcontainers.ext.ScriptUtils -- Executed database script from db/pr02-runtime-role.sql in 128 ms.
+16:10:13.399 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ops.ObservabilityIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-06T16:10:13.633+08:00 INFO  [-] c.paymentsledger.ops.ObservabilityIT - Starting ObservabilityIT using Java 21.0.12.1 with PID 41375 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui)
+2026-10-06T16:10:13.634+08:00 INFO  [-] c.paymentsledger.ops.ObservabilityIT - The following 2 profiles are active: "api", "test"
+2026-10-06T16:10:14.299+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-10-06T16:10:14.307+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-06T16:10:14.307+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-10-06T16:10:14.328+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-06T16:10:14.329+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 689 ms
+2026-10-06T16:10:14.470+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:56556/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-10-06T16:10:14.507+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-10-06T16:10:14.509+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 16 migrations (execution time 00:00.014s)
+2026-10-06T16:10:14.520+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-10-06T16:10:14.572+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-10-06T16:10:14.579+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-10-06T16:10:14.583+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-10-06T16:10:14.611+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-10-06T16:10:14.650+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-10-06T16:10:14.684+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-10-06T16:10:14.719+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-10-06T16:10:14.741+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-10-06T16:10:14.771+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-10-06T16:10:14.817+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-10-06T16:10:14.860+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-10-06T16:10:14.905+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "10 - revenue share"
+2026-10-06T16:10:14.932+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "11 - dispute lifecycle"
+2026-10-06T16:10:14.964+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "12 - payout bank evidence"
+2026-10-06T16:10:15.000+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "13 - payout query evidence"
+2026-10-06T16:10:15.022+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "14 - reconciliation evidence"
+2026-10-06T16:10:15.046+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "15 - reconciliation source recovery"
+2026-10-06T16:10:15.076+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "16 - ops commands approval audit"
+2026-10-06T16:10:15.101+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 16 migrations to schema "platform", now at version v16 (execution time 00:00.345s)
+2026-10-06T16:10:15.442+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-10-06T16:10:15.853+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-10-06T16:10:15.972+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 56596 (http) with context path '/'
+2026-10-06T16:10:15.985+08:00 INFO  [-] c.paymentsledger.ops.ObservabilityIT - Started ObservabilityIT in 2.511 seconds (process running for 5.246)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-10-06T16:10:16.961+08:00 INFO  [-] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-06T16:10:16.961+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-06T16:10:16.962+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-10-06T16:10:17.068+08:00 INFO  [req_5311d950-f9e2-487a-a9a3-d1fccc3f3bb8] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_5311d950-f9e2-487a-a9a3-d1fccc3f3bb8"}
+2026-10-06T16:10:17.771+08:00 INFO  [req_7b1822a7-463c-43de-9fde-c923a9eb1369] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_7b1822a7-463c-43de-9fde-c923a9eb1369"}
+2026-10-06T16:10:18.322+08:00 INFO  [req_a09896c2-89a6-4fb1-bdd6-6ad0a2022b2e] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_a09896c2-89a6-4fb1-bdd6-6ad0a2022b2e"}
+2026-10-06T16:10:18.414+08:00 INFO  [req_e8a9ada7-a05f-479d-804f-d9e7ab7f35ce] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_e8a9ada7-a05f-479d-804f-d9e7ab7f35ce"}
+2026-10-06T16:10:18.509+08:00 INFO  [req_aa84c63f-ffe1-4766-ac4b-32527775b1e8] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_aa84c63f-ffe1-4766-ac4b-32527775b1e8"}
+2026-10-06T16:10:18.600+08:00 INFO  [req_62965f68-5138-46fb-94b6-81dadf812e89] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_62965f68-5138-46fb-94b6-81dadf812e89"}
+2026-10-06T16:10:18.695+08:00 WARN  [req_40195053-2f9d-4fc4-aa05-a4f7cb8e1bcd] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-06T16:10:19.427+08:00 INFO  [req_28f5e774-ee5e-4f96-ab9e-f5b8e588fc29] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_28f5e774-ee5e-4f96-ab9e-f5b8e588fc29"}
+2026-10-06T16:10:19.427+08:00 INFO  [req_28f5e774-ee5e-4f96-ab9e-f5b8e588fc29] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_28f5e774-ee5e-4f96-ab9e-f5b8e588fc29","runId":"00000000-0000-0010-0000-000000000872"}
+2026-10-06T16:10:19.657+08:00 INFO  [req_f423b206-f380-4a40-b079-6252c13ba2f1] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_f423b206-f380-4a40-b079-6252c13ba2f1"}
+2026-10-06T16:10:19.657+08:00 INFO  [req_f423b206-f380-4a40-b079-6252c13ba2f1] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_f423b206-f380-4a40-b079-6252c13ba2f1","runId":"00000000-0000-0010-0000-000000000872"}
+2026-10-06T16:10:19.867+08:00 INFO  [req_12d07e0f-7c2d-478f-86a9-410c26561a38] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_12d07e0f-7c2d-478f-86a9-410c26561a38"}
+2026-10-06T16:10:19.868+08:00 INFO  [req_12d07e0f-7c2d-478f-86a9-410c26561a38] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_12d07e0f-7c2d-478f-86a9-410c26561a38","runId":"00000000-0000-0010-0000-000000000872"}
+2026-10-06T16:10:20.079+08:00 INFO  [req_b6a1fd80-f1a0-46d3-96a4-941479b7f935] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_b6a1fd80-f1a0-46d3-96a4-941479b7f935"}
+2026-10-06T16:10:20.079+08:00 INFO  [req_b6a1fd80-f1a0-46d3-96a4-941479b7f935] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_b6a1fd80-f1a0-46d3-96a4-941479b7f935","runId":"00000000-0000-0010-0000-000000000872"}
+2026-10-06T16:10:20.281+08:00 INFO  [req_32d3838b-2897-4353-b2ea-c8eaf949b7c0] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_32d3838b-2897-4353-b2ea-c8eaf949b7c0"}
+2026-10-06T16:10:20.281+08:00 INFO  [req_32d3838b-2897-4353-b2ea-c8eaf949b7c0] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_32d3838b-2897-4353-b2ea-c8eaf949b7c0","runId":"00000000-0000-0010-0000-000000000872"}
+2026-10-06T16:10:20.481+08:00 INFO  [req_330843e4-b555-4a94-9409-02413cd9e1ce] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_330843e4-b555-4a94-9409-02413cd9e1ce"}
+2026-10-06T16:10:20.481+08:00 INFO  [req_330843e4-b555-4a94-9409-02413cd9e1ce] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_330843e4-b555-4a94-9409-02413cd9e1ce","runId":"00000000-0000-0010-0000-000000000872"}
+2026-10-06T16:10:21.207+08:00 INFO  [req_873d10cc-7647-4d34-b397-ad79291a0bd8] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_873d10cc-7647-4d34-b397-ad79291a0bd8"}
+2026-10-06T16:10:21.207+08:00 INFO  [req_873d10cc-7647-4d34-b397-ad79291a0bd8] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_873d10cc-7647-4d34-b397-ad79291a0bd8","runId":"00000000-0000-0010-0000-0000000007d2"}
+2026-10-06T16:10:21.207+08:00 INFO  [req_873d10cc-7647-4d34-b397-ad79291a0bd8] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_873d10cc-7647-4d34-b397-ad79291a0bd8","runId":"00000000-0000-0010-0000-0000000007d1"}
+2026-10-06T16:10:21.377+08:00 INFO  [req_18261cd8-2d30-4b07-9d4e-6c567d92da33] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_18261cd8-2d30-4b07-9d4e-6c567d92da33"}
+2026-10-06T16:10:21.377+08:00 INFO  [req_18261cd8-2d30-4b07-9d4e-6c567d92da33] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_18261cd8-2d30-4b07-9d4e-6c567d92da33","runId":"00000000-0000-0010-0000-0000000007d2"}
+2026-10-06T16:10:21.377+08:00 INFO  [req_18261cd8-2d30-4b07-9d4e-6c567d92da33] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_18261cd8-2d30-4b07-9d4e-6c567d92da33","runId":"00000000-0000-0010-0000-0000000007d4"}
+2026-10-06T16:10:21.879+08:00 INFO  [req_2e63d615-2c60-46ea-940d-e257f44f7766] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_2e63d615-2c60-46ea-940d-e257f44f7766","businessOrderId":"bor_00000000000080000000000CK5","paymentId":"pay_000000000000800000000002TN"}
+2026-10-06T16:10:21.880+08:00 INFO  [req_2e63d615-2c60-46ea-940d-e257f44f7766] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_2e63d615-2c60-46ea-940d-e257f44f7766","businessOrderId":"bor_00000000000080000000000CK5","operationId":"00000000-0000-0010-0000-000000000b56","paymentId":"pay_000000000000800000000002TN"}
+2026-10-06T16:10:21.880+08:00 INFO  [req_2e63d615-2c60-46ea-940d-e257f44f7766] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_2e63d615-2c60-46ea-940d-e257f44f7766","businessOrderId":"bor_00000000000080000000000CK5","operationId":"00000000-0000-0010-0000-000000000b56","paymentId":"pay_000000000000800000000002TN","providerRequestId":"req-provider-fixture"}
+2026-10-06T16:10:21.880+08:00 INFO  [req_2e63d615-2c60-46ea-940d-e257f44f7766] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_2e63d615-2c60-46ea-940d-e257f44f7766","businessOrderId":"bor_00000000000080000000000CK5","operationId":"00000000-0000-0010-0000-000000000b56","paymentId":"pay_000000000000800000000002TN"}
+2026-10-06T16:10:21.965+08:00 INFO  [req_84eeca52-d529-4107-b194-2be93e16c528] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req_84eeca52-d529-4107-b194-2be93e16c528","financialEventId":"56a69a85-bc85-4c7a-a169-34d0ecf556e1","journalId":"3a2a9fc4-ddef-4483-9369-44b337619a3c"}
+2026-10-06T16:10:22.375+08:00 INFO  [req_c1a9bfa0-b002-4a18-81ff-96ebf3c9d8fe] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_c1a9bfa0-b002-4a18-81ff-96ebf3c9d8fe"}
+2026-10-06T16:10:22.834+08:00 INFO  [req_4fea16b6-01f4-4095-86bc-22c5a99d2ec0] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_4fea16b6-01f4-4095-86bc-22c5a99d2ec0"}
+2026-10-06T16:10:22.834+08:00 INFO  [req_4fea16b6-01f4-4095-86bc-22c5a99d2ec0] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_4fea16b6-01f4-4095-86bc-22c5a99d2ec0","runId":"00000000-0000-0010-0000-000000000871"}
+2026-10-06T16:10:23.334+08:00 INFO  [req_2f902abb-79e6-4bdd-a789-1aef0db24830] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_2f902abb-79e6-4bdd-a789-1aef0db24830"}
+2026-10-06T16:10:23.432+08:00 INFO  [req_0aa164c1-06aa-4333-8ef1-83a3e2a323ce] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_0aa164c1-06aa-4333-8ef1-83a3e2a323ce"}
+2026-10-06T16:10:23.898+08:00 INFO  [req_336d5aef-1e48-4e0a-b1c0-2015147819a3] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_336d5aef-1e48-4e0a-b1c0-2015147819a3"}
+2026-10-06T16:10:23.997+08:00 INFO  [-] o.a.h.c.h.i.c.HttpRequestRetryExec - ex-0000000028 http://localhost:56596 responded with status 503; request will be automatically re-executed in 1 SECONDS (exec count 2)
+2026-10-06T16:10:25.629+08:00 INFO  [req_29528f08-3191-444b-a5f4-fc37fe655d18] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_29528f08-3191-444b-a5f4-fc37fe655d18"}
+2026-10-06T16:10:25.629+08:00 INFO  [req_29528f08-3191-444b-a5f4-fc37fe655d18] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_29528f08-3191-444b-a5f4-fc37fe655d18","runId":"00000000-0000-0010-0000-000000000835"}
+2026-10-06T16:10:25.781+08:00 INFO  [req_2eed7b56-e623-440f-bce3-3823f251c6fe] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_2eed7b56-e623-440f-bce3-3823f251c6fe"}
+2026-10-06T16:10:25.781+08:00 INFO  [req_2eed7b56-e623-440f-bce3-3823f251c6fe] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_2eed7b56-e623-440f-bce3-3823f251c6fe","runId":"00000000-0000-0010-0000-000000000836"}
+2026-10-06T16:10:26.252+08:00 INFO  [req_4ce7e4c8-f12a-4f4d-b27d-4eb25056fc52] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_4ce7e4c8-f12a-4f4d-b27d-4eb25056fc52"}
+2026-10-06T16:10:26.738+08:00 INFO  [req_71d905ee-3261-4c0c-8350-f5dda94cf6d6] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_71d905ee-3261-4c0c-8350-f5dda94cf6d6"}
+2026-10-06T16:10:26.738+08:00 INFO  [req_71d905ee-3261-4c0c-8350-f5dda94cf6d6] c.p.observability.CorrelationLog - {"event":"ops.observability","requestId":"req_71d905ee-3261-4c0c-8350-f5dda94cf6d6","runId":"00000000-0000-0010-0000-000000000867"}
+2026-10-06T16:10:27.150+08:00 INFO  [req-log-fixture] c.p.observability.CorrelationLog - {"event":"ops.read","requestId":"req-log-fixture","businessOrderId":"bor_00000000000080000000000CCX","paymentId":"pay_000000000000800000000002MD"}
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.46 s -- in com.paymentsledger.ops.ObservabilityIT
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- failsafe:3.5.6:verify (default) @ payments-ledger-platform ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  25.766 s
+[INFO] Finished at: 2026-10-06T16:10:27+08:00
+[INFO] ------------------------------------------------------------------------

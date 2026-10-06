@@ -1,0 +1,5 @@
+{
+  "status": "FAIL",
+  "completedChecks": [],
+  "failure": "AssertionError: Expected values to be strictly equal:\n+ actual - expected\n\n+ '结果待确认 · UNKNOWN'\n- '尚未查询'\n"
+}

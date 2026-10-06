@@ -1,0 +1,7 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>查询原支付 · Payments Ledger</title><link rel="stylesheet" href="/ops-console.css"></head>
+<body><a class="skip" href="#main">跳到支付结果</a><header class="topbar"><div><div class="eyebrow">Payments Ledger / Test environment</div><span class="brand">原支付结果</span></div><a href="/payment-test.html">返回测试订单</a></header>
+<main id="main" class="customer"><h1>查询原支付的实际结果</h1><p class="lead">收银台返回地址与通知不代表付款结果。请使用原支付 ID 查询；结果待确认时保留原订单，勿重复付款。</p>
+<form id="result-query" class="panel"><h2>查询身份与原支付</h2><div class="row"><label>应用凭据<input id="credential" type="password" autocomplete="off" spellcheck="false" placeholder="app_…" required></label><label>原支付 ID<input id="payment-id" autocomplete="off" spellcheck="false" placeholder="pay_…" required></label></div><p class="muted">凭据仅在本页内存中使用。从收银台返回后需要重新输入原应用凭据。</p><div class="actions"><button type="submit">查询原支付最新状态</button></div></form>
+<section class="panel" aria-labelledby="result-heading"><h2 id="result-heading">当前查询结果</h2><div id="summary" class="callout pending"><p id="status-title" class="status-heading">尚未查询</p><p id="notice" role="status" aria-live="polite">请输入原支付 ID 与应用凭据。</p></div><p class="muted">UNKNOWN / CONFLICT 请继续查询原支付并按需联系运营。PENDING_EVIDENCE 表示资金证据待齐。</p><div id="evidence"></div></section>
+</main><script type="module" src="/payment-result.mjs"></script></body></html>

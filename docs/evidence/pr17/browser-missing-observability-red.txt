@@ -1,0 +1,3 @@
+AssertionError: Scoped observation backend must exist; rendered placeholder cards are not evidence
+
+404 !== 200

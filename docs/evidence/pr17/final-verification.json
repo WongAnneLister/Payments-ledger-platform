@@ -1,0 +1,711 @@
+{
+  "status": "PASS",
+  "command": "JAVA_HOME=<Amazon Corretto21> caffeinate -i ./mvnw -B clean verify",
+  "base": "fc09cb234b48f145686d5b24ef796fca931c1379",
+  "branch": "codex/pr17-ui",
+  "duration": "10:20 min",
+  "java": "Amazon Corretto21",
+  "frontend": {
+    "node": "22.15.0",
+    "tests": 35,
+    "passed": 35,
+    "failed": 0,
+    "skipped": 0,
+    "log": "node22-final-green.txt"
+  },
+  "actualBrowser": {
+    "checks": 15,
+    "passed": 15,
+    "result": "browser/result.json"
+  },
+  "suites": {
+    "unit": {
+      "tests": 207,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 207,
+      "classes": [
+        {
+          "class": "com.paymentsledger.ApplicationContextTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.common.error.ErrorContractTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.common.request.RequestIdFilterTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.config.RunRoleConfigTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.dispute.DisputeAmountsTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.financialingestion.FinancialIngestionWorkerTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.financialingestion.FinancialRulesTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.identity.AuthenticationFilterTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.identity.IdentityRulesTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.identity.TestModeGuardTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.ledger.LedgerRulesTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.notification.HttpMerchantTransportTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.notification.NotificationConfigurationTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.notification.NotificationSignatureTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.notification.NotificationTargetPolicyTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.observability.CorrelationLogTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.observability.ObservabilityGaugesTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.PaymentControllerTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.PaymentIdsTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.PaymentRequestsTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.RecoveryPolicyTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.RefundRequestsTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.ProviderModelsTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.adapter.stripe.StripeAdapterConfigurationTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.adapter.stripe.StripeGatewayTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.adapter.stripe.StripeLifecycleProbeTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.adapter.stripe.StripePaymentsAdapterTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+          "tests": 17,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.fake.FakeEvidenceTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.fake.FakeProviderConfigurationTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.fake.FakeStateStoreTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.fake.FakeStripeProviderTest",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.fake.ProviderSimulatorReplayTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.reconciliation.FeeArithmeticTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.reconciliation.ReconciliationWindowsTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.revenueshare.RevenueShareConfigurationTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.revenueshare.SharePolicyTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.webhook.WebhookNormalizerTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ]
+    },
+    "integration": {
+      "tests": 459,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3,
+      "passed": 456,
+      "classes": [
+        {
+          "class": "com.paymentsledger.ApiRoleHealthIT",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.FlywayBaselineIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.WorkerRoleHealthIT",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.bank.PayoutLifecycleIT",
+          "tests": 23,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.dispute.DisputeCoreIT",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.dispute.DisputeSchemaIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.financialingestion.FinancialIngestionIT",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.financialingestion.FinancialSchemaIT",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.identity.IdentityIT",
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.ledger.LedgerDatabaseIT",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.ledger.LedgerServiceIT",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.notification.MerchantDeliveryIT",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.notification.NotificationKafkaIT",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.notification.NotificationMigrationIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.notification.NotificationPipelineIT",
+          "tests": 16,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.notification.NotificationWorkerWiringIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.notification.RefundMerchantDeliveryIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.ops.ObservabilityIT",
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.ops.OpsApiIT",
+          "tests": 31,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.ops.OpsSchemaIT",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.pages.PageHttpIT",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.DisputeLifecycleIT",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.OperationRecoveryIT",
+          "tests": 23,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.PaymentCoreIT",
+          "tests": 27,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.PaymentFinancialIngestionIT",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.PaymentHttpIT",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.PaymentOutboxIT",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.PaymentRealContractIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1
+        },
+        {
+          "class": "com.paymentsledger.payment.PaymentSchemaIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.ReconciliationRecoveryIT",
+          "tests": 27,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.ReconciliationRecoverySchemaIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.RecoverySchemaIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.RefundCoreIT",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.RefundFinancialIT",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.RefundHttpIT",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.RefundRecoveryIT",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.RefundSchemaIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.RefundWebhookIT",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.RevenueShareLifecycleIT",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.WebhookAssociationIT",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payment.WebhookProcessingIT",
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payout.PayoutCoreIT",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.payout.PayoutSchemaIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.provider.adapter.stripe.PayoutRealReadIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1
+        },
+        {
+          "class": "com.paymentsledger.provider.adapter.stripe.StripeRealContractIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1
+        },
+        {
+          "class": "com.paymentsledger.provider.fake.FakeTransactionBoundaryIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.reconciliation.ReconciliationCoreIT",
+          "tests": 34,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.reconciliation.ReconciliationSchemaIT",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.revenueshare.RevenueShareCoreIT",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.revenueshare.RevenueShareSchemaIT",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "class": "com.paymentsledger.webhook.WebhookSchemaIT",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ]
+    }
+  },
+  "skipped": [
+    {
+      "class": "com.paymentsledger.payment.PaymentRealContractIT",
+      "test": "realAuthenticatedApplicationCreatesQueriesAndExpiresHostedSession",
+      "reason": "Environment variable [PR06_STRIPE_CONTRACT] does not exist"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.PayoutRealReadIT",
+      "test": "listAndReadExistingTestPayoutWithoutCreatingFundsOperations",
+      "reason": "Environment variable [PAYOUT_REAL_READ_TESTS] does not exist"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeRealContractIT",
+      "test": "testModeContractEvidence",
+      "reason": "Environment variable [STRIPE_CONTRACT_TESTS] does not exist"
+    }
+  ],
+  "total": {
+    "tests": 666,
+    "passed": 663,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "inputDigest": "6ef1708f84df4efecbfbe15ee507c1304b3a41e11f58050a466fb57f0beef50f",
+  "builtArtifactSha256": "e392dd8c00082d5c5772d12cf780c97bf9b0c7bb26cadfc4ba8b9848f6d2d3a6",
+  "artifactNote": "Browser jar hash is in browser/result.json. Focused and clean builds used the same frozen main source/resource inputs; jar build timestamps may differ.",
+  "exitCode": 0,
+  "shutdownDiagnostic": {
+    "observed": true,
+    "message": "Surefire fork JVM exit elapsed 30 seconds after System.exit(0).",
+    "scope": "After tests completed; Maven BUILD SUCCESS/exit 0 and fresh XML reports have zero failures/errors."
+  }
+}

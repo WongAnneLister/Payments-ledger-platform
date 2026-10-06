@@ -1,0 +1,97 @@
+{
+  "unit": {
+    "tests": 8,
+    "passed": 5,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 1,
+    "expectedFailures": [
+      "Unsafe inbound request ID reused",
+      "Missing JSON correlation event",
+      "No bounded gauges registered"
+    ]
+  },
+  "http": {
+    "unitTests": 4,
+    "unitPassed": 4,
+    "integrationTests": 15,
+    "integrationPassed": 6,
+    "integrationFailures": 9,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 1,
+    "expectedFailures": [
+      "Missing global durable gauges",
+      "Missing scoped observation endpoint (404)",
+      "Missing known operational read correlations"
+    ]
+  },
+  "scope": "Disposable PostgreSQL16 with fixed Clock; Worker pages/API404 verified. No real provider writes.",
+  "repairRegressionRed": {
+    "unit": {
+      "log": "observability-correlation-red.txt",
+      "tests": 10,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "expectedFailures": [
+        "canonical generated request ID",
+        "known local typed ID retained",
+        "unsafe inherited MDC absent"
+      ]
+    },
+    "http": {
+      "log": "observability-associations-red.txt",
+      "authenticationUnitPass": 4,
+      "tests": 12,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "expectedFailures": [
+        "actual operation/event associations projected",
+        "fractional numeric residual preserved",
+        "actual payment/order correlations retained"
+      ]
+    },
+    "priorGreenAttempt": "observability-first-green-failed.txt: 12 units pass, 59 IT with one legitimate-ID association assertion failure; not completion evidence"
+  },
+  "specReviewCompletenessRed": {
+    "log": "observability-completeness-red.txt",
+    "authenticationUnitPass": 4,
+    "integrationTests": 14,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 1,
+    "expectedFailures": [
+      "FAIL with unresolved inputs exposes scalar",
+      "COMPLETE state cannot override explicit missing-input flags"
+    ]
+  },
+  "qualityReviewEmbeddedKeyRed": {
+    "unit": {
+      "tests": 12,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "log": "observability-embedded-key-unit-red.txt"
+    },
+    "actualEmittedMdc": {
+      "tests": 5,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "log": "observability-embedded-key-mdc-red.txt"
+    },
+    "httpProjection": {
+      "authenticationUnitPass": 4,
+      "integrationTests": 14,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "log": "observability-embedded-key-http-red.txt"
+    },
+    "syntheticOnly": "Embedded reqsk_test_synthetic fixture; no real API key loaded or printed."
+  }
+}

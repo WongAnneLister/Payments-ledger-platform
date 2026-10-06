@@ -1,0 +1,22 @@
+{
+  "node": {
+    "tests": 23,
+    "passed": 0,
+    "failed": 23,
+    "skipped": 0,
+    "exitCode": 1,
+    "cause": "Expected behavior assertions against inert implementation scaffold"
+  },
+  "http": {
+    "unitTests": 4,
+    "unitPassed": 4,
+    "integrationTests": 5,
+    "integrationPassed": 2,
+    "integrationFailed": 3,
+    "errors": 0,
+    "skipped": 0,
+    "exitCode": 1,
+    "cause": "Missing result/console assets and missing separate return-page wiring"
+  },
+  "scope": "Disposable PostgreSQL and local browser modules; no real provider writes"
+}

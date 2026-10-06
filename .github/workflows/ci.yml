@@ -27,6 +27,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Node LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Browser logic regressions
+        run: node --test scripts/tests/pr17-*.test.mjs
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:

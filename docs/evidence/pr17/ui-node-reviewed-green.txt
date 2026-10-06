@@ -1,0 +1,46 @@
+(node:28326) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr17-ui/src/main/resources/static/payment-test.js?runtime=1 is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /Users/anne_lister/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ actual payment-test clears terminal confirmation after failed refresh (14.456ms)
+✔ actual payment-test credential switch discards scoped draft and aborts stale read while controls remain usable (2.546708ms)
+✔ actual payment-test reuses original order body and key after lost create response (3.868333ms)
+✔ actual payment-test historical POST replay requires current GET before terminal success (UNKNOWN) (3.307416ms)
+✔ actual payment-test historical POST replay requires current GET before terminal success (GET_FAILED) (2.066583ms)
+✔ observability cards preserve exact available values and explicit NO_DATA status (0.297625ms)
+✔ actual ops pending bank intent survives same-credential identity validation (OPS_OPERATOR) (12.327334ms)
+✔ actual ops pending bank intent survives same-credential identity validation (OPS_VIEWER) (3.671083ms)
+✔ JSON transport preserves exact signed int64 and decimal tokens before Number rounding (4.131042ms)
+✔ money uses exact integer division and keeps currency explicit (1.126042ms)
+✔ UNKNOWN ignores apparent successful status and directs original-resource query (0.219458ms)
+✔ CONFLICT in any evidence dimension never presents financial success (0.281166ms)
+✔ business confirmation and pending financial evidence are independent (0.146041ms)
+✔ incomplete capture cannot be represented as fully funded (0.067375ms)
+✔ HTTPS hosted URLs exclude embedded credentials and executable protocols (0.607ms)
+✔ drilldowns allow only known same-origin resource views (1.075333ms)
+✔ all twelve PR16 GET resource routes plus observability are exposed (1.332125ms)
+✔ all six PR16 commands use delivered endpoints (0.138417ms)
+✔ accepted commands refresh the corresponding authoritative GET even after navigation changes (0.117292ms)
+✔ truncated payment evidence cannot produce a funded success presentation (0.065333ms)
+✔ explicit waiting next action contradicts terminal success while NONE allows confirmed funding (0.225667ms)
+✔ trusted partner identity exposes only own-share navigation and no command (0.13275ms)
+✔ role matrix separates initiation, review and independent author (0.925417ms)
+✔ transport uses same-origin API paths and memory-only credential headers (0.674542ms)
+✔ latest resource read rejects stale response even if transport ignores abort (0.382541ms)
+✔ credential switch aborts reads, clears trusted identity and ignores old results (0.183459ms)
+✔ uncertain POST retries exact bytes and key, then refreshes current GET after historical replay (0.399083ms)
+✔ pending intent blocks edited retry body and cannot cross credential identity (0.184709ms)
+✔ result controller ignores URL success and duplicate notification payloads (0.338792ms)
+✔ failed result refresh hides prior confirmation and directs original payment query (0.219667ms)
+✔ evidence renderer keeps injected markup inert and surfaces truncation and evidence IDs (0.504875ms)
+✔ observation absence never invents zero or PASS (0.114583ms)
+✔ new pages are native labelled modules with live notices and responsive console (9.978709ms)
+✔ existing payment test links to separate result page and masks pending funds (1.383333ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 119.395042

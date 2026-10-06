@@ -1,0 +1,143 @@
+{
+  "observedAt": "2026-10-06T08:15:52.756245Z",
+  "metrics": [
+    {
+      "name": "unknown_payment_count",
+      "status": "AVAILABLE",
+      "unit": "count",
+      "value": "1",
+      "sourceAt": "2026-10-06T07:15:42.779857Z"
+    },
+    {
+      "name": "unknown_payment_oldest_age",
+      "status": "AVAILABLE",
+      "unit": "seconds",
+      "value": "3609.976388",
+      "sourceAt": "2026-10-06T07:15:42.779857Z"
+    },
+    {
+      "name": "refund_reserved_age",
+      "status": "NO_DATA",
+      "unit": "seconds",
+      "value": null,
+      "sourceAt": null
+    },
+    {
+      "name": "webhook_lag",
+      "status": "NO_DATA",
+      "unit": "seconds",
+      "value": null,
+      "sourceAt": null
+    },
+    {
+      "name": "outbox_oldest_age",
+      "status": "AVAILABLE",
+      "unit": "seconds",
+      "value": "10.504114",
+      "sourceAt": "2026-10-06T08:15:42.252131Z"
+    },
+    {
+      "name": "ledger_pending_evidence",
+      "status": "AVAILABLE",
+      "unit": "count",
+      "value": "2",
+      "sourceAt": "2026-10-06T08:15:42.223023Z"
+    },
+    {
+      "name": "unclassified_bt_count",
+      "status": "AVAILABLE",
+      "unit": "count",
+      "value": "0",
+      "sourceAt": null
+    },
+    {
+      "name": "trial_balance_failures",
+      "status": "NO_DATA",
+      "unit": "count",
+      "value": null,
+      "sourceAt": null
+    },
+    {
+      "name": "reconciliation_residual",
+      "status": "NO_DATA",
+      "unit": "minor",
+      "value": null,
+      "sourceAt": null
+    },
+    {
+      "name": "payout_unmatched_age",
+      "status": "NO_DATA",
+      "unit": "seconds",
+      "value": null,
+      "sourceAt": null
+    },
+    {
+      "name": "share_cap_violations",
+      "status": "NO_DATA",
+      "unit": "count",
+      "value": null,
+      "sourceAt": null
+    }
+  ],
+  "alerts": [
+    {
+      "metric": "reconciliation_residual",
+      "severity": "WARNING",
+      "message": "Latest PSP reconciliation check is INCOMPLETE.",
+      "sourceAt": "2026-10-06T08:15:50.575144Z",
+      "runId": "daa94dcf-3cae-43e1-998b-e7468622e103",
+      "providerAccountId": "10000000-0000-0000-0000-000000000021",
+      "currency": "USD"
+    },
+    {
+      "metric": "reconciliation_residual",
+      "severity": "WARNING",
+      "message": "Latest PSP reconciliation report/check is absent or lacks complete inputs; residual unavailable.",
+      "sourceAt": null
+    },
+    {
+      "metric": "unknown_payment_count",
+      "severity": "WARNING",
+      "message": "Observation threshold exceeded for unknown_payment_count.",
+      "sourceAt": "2026-10-06T07:15:42.779857Z"
+    },
+    {
+      "metric": "unknown_payment_oldest_age",
+      "severity": "WARNING",
+      "message": "Observation threshold exceeded for unknown_payment_oldest_age.",
+      "sourceAt": "2026-10-06T07:15:42.779857Z"
+    },
+    {
+      "metric": "ledger_pending_evidence",
+      "severity": "WARNING",
+      "message": "Observation threshold exceeded for ledger_pending_evidence.",
+      "sourceAt": "2026-10-06T08:15:42.223023Z"
+    },
+    {
+      "metric": "trial_balance_failures",
+      "severity": "WARNING",
+      "message": "Latest reconciliation checks are absent or incomplete.",
+      "sourceAt": null
+    },
+    {
+      "metric": "share_cap_violations",
+      "severity": "WARNING",
+      "message": "Latest reconciliation checks are absent or incomplete.",
+      "sourceAt": null
+    }
+  ],
+  "reconciliationResiduals": [
+    {
+      "runId": "daa94dcf-3cae-43e1-998b-e7468622e103",
+      "providerAccountId": "10000000-0000-0000-0000-000000000021",
+      "currency": "USD",
+      "residualMinor": null,
+      "outcome": "INCOMPLETE",
+      "dataCompleteness": {
+        "checkPresent": false,
+        "runState": "INCOMPLETE"
+      },
+      "sourceAt": "2026-10-06T08:15:50.575144Z"
+    }
+  ]
+}

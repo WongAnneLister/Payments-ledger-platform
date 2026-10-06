@@ -1,0 +1,3 @@
+{"phase":"temporarySocketServer","socketReady":true,"tcpReady":false,"databaseReady":false}
+{"phase":"permanentTcpServer","socketReady":true,"tcpReady":true,"databaseReady":true,"temporaryGapObserved":true}
+{"entrypointEvidence":["docker_setup_db() {","docker_temp_server_start() {","\tset -- \"$@\" -c listen_addresses='' -p \"${PGPORT:-5432}\"","\t\t\tdocker_temp_server_start \"$@\"","\t\t\tdocker_setup_db","\t\t\t\tPostgreSQL init process complete; ready for start up."]}

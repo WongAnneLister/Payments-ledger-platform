@@ -35,7 +35,7 @@ public class OpsController {
   })
   public JsonNode detail(@PathVariable String id, HttpServletRequest request) {
     String[] parts = request.getRequestURI().split("/");
-    return queries.detail(
+    return correlated(queries.detail(
         AuthenticationFilter.ops(request),
         parts[parts.length - 2],
         OpsAuthorization.resourceId(
@@ -47,19 +47,19 @@ public class OpsController {
               case "payouts" -> "po";
               case "adjustments" -> "adj";
               default -> "run";
-            }));
+            })));
   }
 
   @GetMapping("/ledger/journals/{id}")
   public JsonNode journal(@PathVariable String id, HttpServletRequest request) {
-    return queries.detail(
-        AuthenticationFilter.ops(request), "journals", OpsAuthorization.resourceId(id, "jrnl"));
+    return correlated(queries.detail(
+        AuthenticationFilter.ops(request), "journals", OpsAuthorization.resourceId(id, "jrnl")));
   }
 
   @GetMapping({"/ledger/journals", "/balances", "/exceptions", "/tasks"})
   public JsonNode list(@RequestParam Map<String, String> params, HttpServletRequest request) {
     String[] parts = request.getRequestURI().split("/");
-    return queries.list(AuthenticationFilter.ops(request), parts[parts.length - 1], params);
+    return correlated(queries.list(AuthenticationFilter.ops(request), parts[parts.length - 1], params));
   }
 
   @PostMapping("/reconciliation-runs")
@@ -113,6 +113,11 @@ public class OpsController {
     return command(r, "APPROVE_ADJUSTMENT", OpsAuthorization.resourceId(id, "adj"), key, b, 200);
   }
 
+  private JsonNode correlated(JsonNode result) {
+    com.paymentsledger.observability.CorrelationLog.read("ops.read", result);
+    return result;
+  }
+
   private ResponseEntity<JsonNode> command(
       HttpServletRequest request, String action, UUID target, String key, JsonNode b, int status) {
     var c = AuthenticationFilter.ops(request);
@@ -121,6 +126,7 @@ public class OpsController {
       var result = commands.execute(c, action, target, key, b);
       request.setAttribute("ops.audited", true);
       var body = (ObjectNode) result.body().deepCopy();
+      com.paymentsledger.observability.CorrelationLog.read("ops.command", body);
       var headers = new HttpHeaders();
       if (result.replay()) headers.set("Idempotent-Replay", "true");
       return ResponseEntity.status(

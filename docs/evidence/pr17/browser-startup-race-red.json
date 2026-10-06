@@ -1,0 +1,5 @@
+{
+  "status": "FAIL",
+  "completedChecks": [],
+  "failure": "Error: Command failed: docker exec -i pr17-browser-70fd2875-1be7-4ed4-8cb8-b4327caa44fc psql -v ON_ERROR_STOP=1 -U postgres -d pr17 -At\npsql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"pr17\" does not exist\n"
+}
