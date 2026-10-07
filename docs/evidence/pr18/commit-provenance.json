@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "testedBaselineHead": "8e1dc2ed52c27aab7d6c5c048aaa24e553cc3f26",
+  "implementationCommit": "cac30bc39a123dca765632421f53bfcb1f40cd83",
+  "verificationRun": "run-summary.json",
+  "verifiedSourceFiles": 329,
+  "allRunInputsTrackedInImplementationCommit": true,
+  "allRunInputHashesMatchCommitAndWorkingTree": true,
+  "hashMismatches": [],
+  "untrackedInputs": [],
+  "method": "Full clean verify ran before commit; the immutable input SHA256 manifest matches every corresponding Git blob in implementationCommit and the working tree. The original report baseline HEAD is preserved, not rewritten."
+}

@@ -69,3 +69,7 @@ JAVA_HOME=/Users/anne_lister/.jdks/amazon-corretto-21.jdk/Contents/Home python3 
 收缩器保留依赖、删除操作，结果只在该删除规则下最小，不保证数值或全局最小。并发使用一个 JVM 中独立 API/Worker 服务对象和真实 PostgreSQL 连接，不声称部署了多个 JVM。租约放弃/重领是受控崩溃窗口模拟。
 
 **NOT RUN**：1000 seeds / max300 扩展运行、远程 GitHub Actions 执行、真实账户探针；CI 的默认和手工扩展入口已配置，没有新增定时任务。PR19 故障矩阵与 PR20 性能/备份恢复仍待后续实施。上一轮真实账户闭环及其尾项以原证据为准，不由本期 Fake 验证替代。
+
+## 提交对应关系
+
+实现与修复提交：`cac30bc39a123dca765632421f53bfcb1f40cd83`。完整验证时尚未提交，因此原始报告中的 HEAD 保留基线 `8e1dc2e`；[提交溯源](commit-provenance.json)逐个核对 329 个运行输入的 SHA256，确认实测文件与该提交的 Git 内容及当前工作区完全一致。

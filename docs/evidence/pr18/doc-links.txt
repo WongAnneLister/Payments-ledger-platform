@@ -1,3 +1,3 @@
-markdown files=111 relative links checked=400 broken=0
+markdown files=111 relative links checked=403 broken=0
 
 PASS: all relative documentation links resolve
