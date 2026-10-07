@@ -1,0 +1,131 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 24 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 103 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.pr18.PropertyModelsTest
+[ERROR] Tests run: 6, Failures: 6, Errors: 0, Skipped: 0, Time elapsed: 0.087 s <<< FAILURE! -- in com.paymentsledger.pr18.PropertyModelsTest
+[ERROR] com.paymentsledger.pr18.PropertyModelsTest.competingReservationsCannotSpendTheSameCapture -- Time elapsed: 0.053 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+Expecting value to be true but was false
+	at com.paymentsledger.pr18.PropertyModelsTest.competingReservationsCannotSpendTheSameCapture(PropertyModelsTest.java:11)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.pr18.PropertyModelsTest.shareCeilingUsesCaptureMinusRefundMinusHoldWithIntegerFloor -- Time elapsed: 0.005 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 1200L
+ but was: -1L
+	at com.paymentsledger.pr18.PropertyModelsTest.shareCeilingUsesCaptureMinusRefundMinusHoldWithIntegerFloor(PropertyModelsTest.java:22)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.pr18.PropertyModelsTest.failureAndStalePendingNeverRestoreOrConsumeTwice -- Time elapsed: 0.002 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 0L
+ but was: -1L
+	at com.paymentsledger.pr18.PropertyModelsTest.failureAndStalePendingNeverRestoreOrConsumeTwice(PropertyModelsTest.java:18)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.pr18.PropertyModelsTest.duplicateJournalHasNoEffectAndConflictingEventFails -- Time elapsed: 0.002 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+Expecting value to be false but was true
+	at com.paymentsledger.pr18.PropertyModelsTest.duplicateJournalHasNoEffectAndConflictingEventFails(PropertyModelsTest.java:28)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.pr18.PropertyModelsTest.missingEvidenceAndWrongCutoffCannotBecomePass -- Time elapsed: 0.005 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "INCOMPLETE"
+ but was: "PASS"
+	at com.paymentsledger.pr18.PropertyModelsTest.missingEvidenceAndWrongCutoffCannotBecomePass(PropertyModelsTest.java:40)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.pr18.PropertyModelsTest.payoutPrincipalAndBankFeesRemainIndependent -- Time elapsed: 0.001 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 4500L
+ but was: -1L
+	at com.paymentsledger.pr18.PropertyModelsTest.payoutPrincipalAndBankFeesRemainIndependent(PropertyModelsTest.java:34)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   PropertyModelsTest.competingReservationsCannotSpendTheSameCapture:11
+Expecting value to be true but was false
+[ERROR]   PropertyModelsTest.duplicateJournalHasNoEffectAndConflictingEventFails:28
+Expecting value to be false but was true
+[ERROR]   PropertyModelsTest.failureAndStalePendingNeverRestoreOrConsumeTwice:18
+expected: 0L
+ but was: -1L
+[ERROR]   PropertyModelsTest.missingEvidenceAndWrongCutoffCannotBecomePass:40
+expected: "INCOMPLETE"
+ but was: "PASS"
+[ERROR]   PropertyModelsTest.payoutPrincipalAndBankFeesRemainIndependent:34
+expected: 4500L
+ but was: -1L
+[ERROR]   PropertyModelsTest.shareCeilingUsesCaptureMinusRefundMinusHoldWithIntegerFloor:22
+expected: 1200L
+ but was: -1L
+[INFO]
+[ERROR] Tests run: 6, Failures: 6, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.350 s
+[INFO] Finished at: 2026-10-07T21:35:20+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

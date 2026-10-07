@@ -1,0 +1,699 @@
+{
+  "executedSteps" : 100,
+  "reconciliationOutcomes" : [ {
+    "closingMinor" : 3700,
+    "cutoff" : "2026-10-06T12:00:00Z",
+    "runId" : "3a612aad-a59b-42e2-a042-423cbae80af7",
+    "kind" : "missing",
+    "I06" : "PASS",
+    "I05" : "INCOMPLETE"
+  }, {
+    "closingMinor" : 3700,
+    "cutoff" : "2026-10-06T12:00:00Z",
+    "runId" : "8f5690d9-ac47-4450-87ac-7f17e57c0e87",
+    "kind" : "wrong-cutoff",
+    "I06" : "PASS",
+    "I05" : "INCOMPLETE"
+  }, {
+    "closingMinor" : 3398,
+    "cutoff" : "2026-10-06T12:00:00Z",
+    "runId" : "1875bc51-78e6-438f-ad8b-7974ddc021a0",
+    "kind" : "full",
+    "I06" : "PASS",
+    "I05" : "PASS"
+  } ],
+  "expected" : {
+    "SALES_REVENUE" : -10000,
+    "PSP_FUNDS" : 3398,
+    "PARTNER_SHARE_EXPENSE" : 1939,
+    "DISPUTE_RECEIVABLE" : 0,
+    "DISPUTE_LOSS" : 0,
+    "BANK_CASH" : 4489,
+    "PSP_FEE_EXPENSE" : 300,
+    "DISPUTE_FEE_EXPENSE" : 1500,
+    "BANK_PAYOUT_IN_TRANSIT" : 0,
+    "PARTNER_PAYABLE" : -1939,
+    "SALES_RETURNS" : 302,
+    "BANK_FEE_EXPENSE" : 11
+  },
+  "commands" : [ {
+    "id" : "create",
+    "kind" : "CREATE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ ]
+  }, {
+    "id" : "payout",
+    "kind" : "PAYOUT_ACCEPT",
+    "key" : "payout",
+    "amount" : 5700,
+    "requires" : [ "create" ]
+  }, {
+    "id" : "unknown",
+    "kind" : "PAYMENT_UNKNOWN",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "create" ]
+  }, {
+    "id" : "scope",
+    "kind" : "WRONG_SCOPE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "create" ]
+  }, {
+    "id" : "recover",
+    "kind" : "PAYMENT_RECOVER",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "unknown" ]
+  }, {
+    "id" : "auth",
+    "kind" : "PAYMENT_AUTH_REQUIRED",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "recover" ]
+  }, {
+    "id" : "decline",
+    "kind" : "PAYMENT_DECLINED",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "auth" ]
+  }, {
+    "id" : "payout-out",
+    "kind" : "PAYOUT_OUT",
+    "key" : "payout",
+    "amount" : 5700,
+    "requires" : [ "payout" ]
+  }, {
+    "id" : "payout-return",
+    "kind" : "PAYOUT_RETURN",
+    "key" : "payout",
+    "amount" : 1200,
+    "requires" : [ "payout-out" ]
+  }, {
+    "id" : "bank",
+    "kind" : "BANK_RECEIPT",
+    "key" : "bank",
+    "amount" : 4500,
+    "requires" : [ "payout-return" ]
+  }, {
+    "id" : "capture",
+    "kind" : "CAPTURE",
+    "key" : "",
+    "amount" : 10000,
+    "requires" : [ "recover", "create", "decline" ]
+  }, {
+    "id" : "post-capture",
+    "kind" : "POST_CAPTURE",
+    "key" : "capture",
+    "amount" : 0,
+    "requires" : [ "capture" ]
+  }, {
+    "id" : "bank-duplicate",
+    "kind" : "DUPLICATE_BANK",
+    "key" : "bank",
+    "amount" : 4500,
+    "requires" : [ "bank" ]
+  }, {
+    "id" : "reserve-a",
+    "kind" : "RESERVE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "post-capture" ]
+  }, {
+    "id" : "changed-key",
+    "kind" : "CHANGED_KEY",
+    "key" : "a",
+    "amount" : 892,
+    "requires" : [ "reserve-a" ]
+  }, {
+    "id" : "same",
+    "kind" : "SAME_KEY",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "reserve-a" ]
+  }, {
+    "id" : "refund-unknown",
+    "kind" : "REFUND_UNKNOWN",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "reserve-a" ]
+  }, {
+    "id" : "expired",
+    "kind" : "KEY_EXPIRED",
+    "key" : "a",
+    "amount" : 0,
+    "requires" : [ "refund-unknown" ]
+  }, {
+    "id" : "failed",
+    "kind" : "REFUND_FAILED",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "expired" ]
+  }, {
+    "id" : "stale",
+    "kind" : "REFUND_STALE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "warning",
+    "kind" : "DISPUTE_WARNING",
+    "key" : "warning",
+    "amount" : 0,
+    "requires" : [ "post-capture", "failed" ]
+  }, {
+    "id" : "blocked-refund",
+    "kind" : "ILLEGAL_REFUND",
+    "key" : "blocked",
+    "amount" : 100,
+    "requires" : [ "warning" ]
+  }, {
+    "id" : "closed",
+    "kind" : "DISPUTE_CLOSED",
+    "key" : "warning",
+    "amount" : 0,
+    "requires" : [ "warning", "blocked-refund" ]
+  }, {
+    "id" : "lost",
+    "kind" : "DISPUTE_LOST",
+    "key" : "loss",
+    "amount" : 0,
+    "requires" : [ "closed" ]
+  }, {
+    "id" : "debit",
+    "kind" : "DISPUTE_DEBIT",
+    "key" : "loss",
+    "amount" : 3000,
+    "requires" : [ "lost" ]
+  }, {
+    "id" : "won",
+    "kind" : "DISPUTE_WON",
+    "key" : "loss",
+    "amount" : 0,
+    "requires" : [ "debit" ]
+  }, {
+    "id" : "return",
+    "kind" : "DISPUTE_RETURN",
+    "key" : "loss",
+    "amount" : 3000,
+    "requires" : [ "won" ]
+  }, {
+    "id" : "missing",
+    "kind" : "MISSING_EVIDENCE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "bank", "return" ]
+  }, {
+    "id" : "wrong-cutoff",
+    "kind" : "WRONG_CUTOFF",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "bank", "return" ]
+  }, {
+    "id" : "reserve-b",
+    "kind" : "RESERVE",
+    "key" : "b",
+    "amount" : 302,
+    "requires" : [ "return", "post-capture", "failed" ]
+  }, {
+    "id" : "succeeded",
+    "kind" : "REFUND_SUCCEEDED",
+    "key" : "b",
+    "amount" : 302,
+    "requires" : [ "reserve-b" ]
+  }, {
+    "id" : "post-refund",
+    "kind" : "POST_REFUND",
+    "key" : "b",
+    "amount" : 302,
+    "requires" : [ "succeeded" ]
+  }, {
+    "id" : "share",
+    "kind" : "SHARE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "return", "post-refund" ]
+  }, {
+    "id" : "duplicate",
+    "kind" : "DUPLICATE_POST",
+    "key" : "refund",
+    "amount" : 0,
+    "requires" : [ "post-refund" ]
+  }, {
+    "id" : "random-34",
+    "kind" : "WRONG_SCOPE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-35",
+    "kind" : "WRONG_SCOPE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-36",
+    "kind" : "REFUND_FAILED",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-37",
+    "kind" : "SHARE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-38",
+    "kind" : "SHARE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-39",
+    "kind" : "DUPLICATE_POST",
+    "key" : "refund",
+    "amount" : 0,
+    "requires" : [ "post-refund" ]
+  }, {
+    "id" : "random-40",
+    "kind" : "DUPLICATE_POST",
+    "key" : "payout-return",
+    "amount" : 0,
+    "requires" : [ "payout-return" ]
+  }, {
+    "id" : "random-41",
+    "kind" : "WRONG_SCOPE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-42",
+    "kind" : "DUPLICATE_POST",
+    "key" : "payout-return",
+    "amount" : 0,
+    "requires" : [ "payout-return" ]
+  }, {
+    "id" : "random-43",
+    "kind" : "SAME_KEY",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-44",
+    "kind" : "REFUND_FAILED",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-45",
+    "kind" : "REFUND_STALE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-46",
+    "kind" : "WRONG_SCOPE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-47",
+    "kind" : "DUPLICATE_BANK",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "bank" ]
+  }, {
+    "id" : "random-48",
+    "kind" : "DUPLICATE_POST",
+    "key" : "payout-out",
+    "amount" : 0,
+    "requires" : [ "payout-out" ]
+  }, {
+    "id" : "random-49",
+    "kind" : "REFUND_STALE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-50",
+    "kind" : "REFUND_FAILED",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-51",
+    "kind" : "WRONG_SCOPE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-52",
+    "kind" : "REFUND_STALE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-53",
+    "kind" : "REFUND_FAILED",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-54",
+    "kind" : "SHARE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-55",
+    "kind" : "SAME_KEY",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-56",
+    "kind" : "REFUND_STALE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-57",
+    "kind" : "ILLEGAL_REFUND",
+    "key" : "",
+    "amount" : 10001,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-58",
+    "kind" : "REFUND_FAILED",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-59",
+    "kind" : "DUPLICATE_BANK",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "bank" ]
+  }, {
+    "id" : "random-60",
+    "kind" : "REFUND_FAILED",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-61",
+    "kind" : "REFUND_FAILED",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-62",
+    "kind" : "SHARE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-63",
+    "kind" : "PAYMENT_RECOVER",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-64",
+    "kind" : "DUPLICATE_BANK",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "bank" ]
+  }, {
+    "id" : "random-65",
+    "kind" : "REFUND_STALE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-66",
+    "kind" : "SHARE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-67",
+    "kind" : "ILLEGAL_REFUND",
+    "key" : "",
+    "amount" : 10001,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-68",
+    "kind" : "REFUND_STALE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-69",
+    "kind" : "PAYMENT_RECOVER",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-70",
+    "kind" : "PAYMENT_RECOVER",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-71",
+    "kind" : "REFUND_STALE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-72",
+    "kind" : "REFUND_STALE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-73",
+    "kind" : "DUPLICATE_BANK",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "bank" ]
+  }, {
+    "id" : "random-74",
+    "kind" : "DUPLICATE_BANK",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "bank" ]
+  }, {
+    "id" : "random-75",
+    "kind" : "ILLEGAL_REFUND",
+    "key" : "",
+    "amount" : 10001,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-76",
+    "kind" : "REFUND_FAILED",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-77",
+    "kind" : "SAME_KEY",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-78",
+    "kind" : "REFUND_FAILED",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-79",
+    "kind" : "SHARE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-80",
+    "kind" : "DUPLICATE_BANK",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "bank" ]
+  }, {
+    "id" : "random-81",
+    "kind" : "PAYMENT_RECOVER",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-82",
+    "kind" : "REFUND_STALE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-83",
+    "kind" : "SAME_KEY",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-84",
+    "kind" : "REFUND_STALE",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-85",
+    "kind" : "WRONG_SCOPE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-86",
+    "kind" : "PAYMENT_RECOVER",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-87",
+    "kind" : "WRONG_SCOPE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-88",
+    "kind" : "REFUND_FAILED",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-89",
+    "kind" : "PAYMENT_RECOVER",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-90",
+    "kind" : "WRONG_SCOPE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-91",
+    "kind" : "SAME_KEY",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "random-92",
+    "kind" : "WRONG_SCOPE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-93",
+    "kind" : "DUPLICATE_BANK",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "bank" ]
+  }, {
+    "id" : "random-94",
+    "kind" : "SHARE",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "share" ]
+  }, {
+    "id" : "random-95",
+    "kind" : "DUPLICATE_BANK",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "bank" ]
+  }, {
+    "id" : "random-96",
+    "kind" : "DUPLICATE_POST",
+    "key" : "capture",
+    "amount" : 0,
+    "requires" : [ "post-capture" ]
+  }, {
+    "id" : "random-97",
+    "kind" : "DUPLICATE_POST",
+    "key" : "payout-out",
+    "amount" : 0,
+    "requires" : [ "payout-out" ]
+  }, {
+    "id" : "random-98",
+    "kind" : "SAME_KEY",
+    "key" : "a",
+    "amount" : 891,
+    "requires" : [ "failed" ]
+  }, {
+    "id" : "full",
+    "kind" : "FULL_RECONCILIATION",
+    "key" : "",
+    "amount" : 0,
+    "requires" : [ "post-capture", "return", "post-refund", "bank" ]
+  } ],
+  "seed" : 815872335101841148,
+  "actual" : {
+    "refundControl" : [ {
+      "captured_minor" : 10000,
+      "refunded_minor" : 302,
+      "reserved_minor" : 0,
+      "control_state" : "NORMAL"
+    } ],
+    "journals" : 16,
+    "outboxEvents" : 7,
+    "providerEffects" : [ {
+      "type" : "PAYMENT",
+      "objectId" : "ch_fake_51b3ccfc20c434d7ae9107bf3cdc1663",
+      "amountMinor" : 10000,
+      "currency" : "USD",
+      "occurredAt" : "2026-10-07T12:00:00Z"
+    } ],
+    "balances" : [ {
+      "account_purpose" : "BANK_CASH",
+      "balance_minor" : 4489
+    }, {
+      "account_purpose" : "BANK_FEE_EXPENSE",
+      "balance_minor" : 11
+    }, {
+      "account_purpose" : "BANK_PAYOUT_IN_TRANSIT",
+      "balance_minor" : 0
+    }, {
+      "account_purpose" : "DISPUTE_FEE_EXPENSE",
+      "balance_minor" : 1500
+    }, {
+      "account_purpose" : "DISPUTE_LOSS",
+      "balance_minor" : 0
+    }, {
+      "account_purpose" : "DISPUTE_RECEIVABLE",
+      "balance_minor" : 0
+    }, {
+      "account_purpose" : "PARTNER_PAYABLE",
+      "balance_minor" : -1939
+    }, {
+      "account_purpose" : "PARTNER_SHARE_EXPENSE",
+      "balance_minor" : 1939
+    }, {
+      "account_purpose" : "PSP_FEE_EXPENSE",
+      "balance_minor" : 300
+    }, {
+      "account_purpose" : "PSP_FUNDS",
+      "balance_minor" : 3398
+    }, {
+      "account_purpose" : "SALES_RETURNS",
+      "balance_minor" : 302
+    }, {
+      "account_purpose" : "SALES_REVENUE",
+      "balance_minor" : -10000
+    }, {
+      "account_purpose" : "SUSPENSE",
+      "balance_minor" : 0
+    } ],
+    "providerRequests" : 34
+  }
+}

@@ -51,7 +51,7 @@
 | Apache HttpClient / HttpCore | **5.5.2 / 5.3.6** | Boot BOM | LOCAL_LOCKED | PR09 真实 loopback HTTP 测试 | 固定验证后的 DNS 地址，禁用重定向 |
 | Redis | **7-alpine** | `LOCKED`（基础设施） | ✅ 容器 healthy | `docker compose ps` | **客户端未接入**，PR07 引入 |
 | Testcontainers | **1.21.4** | `LOCKED` | ✅ 已验证 | 3 个 IT 均用一次性容器跑通 | 仅 `test` scope |
-| 属性测试库 | jqwik | `CANDIDATE_LINE` | ⏳ 待验证 | — | PR18 才实际引入，届时锁定版本 |
+| 属性生成与收缩 | **PR18-1**（仓库测试工具） | `LOCAL_LOCKED` | 本机验证 | [PR18 证据](../evidence/pr18/README.md) | JUnit + 确定性语法生成器、依赖保持删除收缩；未引入 jqwik，默认与扩展预算分别报告 |
 
 ### 1.1 PR01 时的依赖接入安排（历史）
 

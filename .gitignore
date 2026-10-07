@@ -15,3 +15,7 @@ target/
 .env
 .env.*
 *.local
+
+# Python test runners
+__pycache__/
+*.pyc

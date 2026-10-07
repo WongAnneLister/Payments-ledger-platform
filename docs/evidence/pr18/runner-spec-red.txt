@@ -1,0 +1,38 @@
+.deliberate-runner-fixture
+..FF.FF.
+======================================================================
+FAIL: test_every_required_concurrency_scenario_is_present_exactly_once (test_pr18_runner.Pr18RunnerTest.test_every_required_concurrency_scenario_is_present_exactly_once) (scenarios=[{'name': 'competing-refunds', 'status': 'PASS', 'backendPids': [10, 11]}])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 72, in test_every_required_concurrency_scenario_is_present_exactly_once
+    with self.subTest(scenarios=scenarios), self.assertRaises(ValueError):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_every_required_concurrency_scenario_is_present_exactly_once (test_pr18_runner.Pr18RunnerTest.test_every_required_concurrency_scenario_is_present_exactly_once) (scenarios=[{'name': 'competing-refunds', 'status': 'PASS', 'backendPids': [10, 11]}, {'name': 'same-key-refund', 'status': 'PASS', 'backendPids': [10, 11]}, {'name': 'refund-dispute-share', 'status': 'PASS', 'backendPids': [10, 11]}, {'name': 'competing-refunds', 'status': 'PASS', 'backendPids': [10, 11]}])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 72, in test_every_required_concurrency_scenario_is_present_exactly_once
+    with self.subTest(scenarios=scenarios), self.assertRaises(ValueError):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_missing_or_short_evidence_never_becomes_pass (test_pr18_runner.Pr18RunnerTest.test_missing_or_short_evidence_never_becomes_pass) (changes={'generatorVersion': None})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 52, in test_missing_or_short_evidence_never_becomes_pass
+    with self.subTest(changes=changes), self.assertRaises(ValueError):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_missing_or_short_evidence_never_becomes_pass (test_pr18_runner.Pr18RunnerTest.test_missing_or_short_evidence_never_becomes_pass) (changes={'generatorVersion': ''})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 52, in test_missing_or_short_evidence_never_becomes_pass
+    with self.subTest(changes=changes), self.assertRaises(ValueError):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.037s
+
+FAILED (failures=4)

@@ -1,6 +1,6 @@
 # 从零构建支付网关与复式账本：实施路线图
 
-版本：1.4 · 日期：2026-10-06 · 状态：已推进至 PR17 客户结果页、运营页面和观测；PR18–PR20 待实施。真实 Stripe 历史报告、争议等未验证能力以各期 evidence 为准，不将本地 fixture 视为真实契约通过。
+版本：1.5 · 日期：2026-10-07 · 状态：已推进至 PR18 独立资金模型、组合序列与 PostgreSQL 并发验证；PR19–PR20 待实施。真实 Stripe 历史报告、争议等未验证能力以各期 evidence 为准，不将本地 fixture 视为真实契约通过。
 
 相关文档：[阅读入口](README.md) · [产品需求](payment-platform-prd.md) · [验收矩阵](payment-platform-acceptance.md) · [逐 PR 执行提示词](stripe-payment-ledger-codex-pr-prompts.md) · [面试问题与证据](payment-platform-interview-questions.md)
 
@@ -55,6 +55,8 @@
 | PR20 | 性能、备份恢复、英文成果 | PR15、PR17–PR19 | 模拟压测、隔离库恢复、恢复后重扫、英文演示与简历证据 | AC-V1-36–38 |
 
 PR17 的页面、原请求重试、作用域指标、日志与浏览器验证见[页面与观测运行手册](../runbook/pages-observability.md)和[本期证据](../evidence/pr17/README.md)。页面只读原有资金事实；告警不改变资金状态或对账结论。
+
+PR18 的默认 100 seeds / 10000 步及四个数据库竞态已本机验证，详见[属性运行手册](../runbook/pr18-property-verification.md)和[PR18 证据](../evidence/pr18/README.md)。扩展 1000/300 与远程 CI 尚未运行。
 
 ## 4. 容易遗漏的集成边界
 

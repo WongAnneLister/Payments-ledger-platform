@@ -1,0 +1,129 @@
+EEEEEEEEEEEE
+======================================================================
+ERROR: test_accepts_actual_evidence_and_rejects_thread_only_claims (test_pr18_runner.Pr18RunnerTest.test_accepts_actual_evidence_and_rejects_thread_only_claims)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 57, in test_accepts_actual_evidence_and_rejects_thread_only_claims
+    result = runner.validate_evidence(folder, 100, 100, 180018)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 8, in validate_evidence
+    raise NotImplementedError("PR18 evidence validation")
+NotImplementedError: PR18 evidence validation
+
+======================================================================
+ERROR: test_child_failure_is_preserved_and_output_is_retained (test_pr18_runner.Pr18RunnerTest.test_child_failure_is_preserved_and_output_is_retained)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 66, in test_child_failure_is_preserved_and_output_is_retained
+    code = runner.run_process(["/bin/sh", "-c", "echo deliberate-runner-fixture; exit 17"], folder, runner.test_environment({"PATH": "/usr/bin:/bin"}), folder / "run.txt")
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 6, in test_environment
+    raise NotImplementedError("PR18 test-only environment")
+NotImplementedError: PR18 test-only environment
+
+======================================================================
+ERROR: test_default_and_nightly_commands_keep_explicit_budgets (test_pr18_runner.Pr18RunnerTest.test_default_and_nightly_commands_keep_explicit_budgets)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 14, in test_default_and_nightly_commands_keep_explicit_budgets
+    self.assertEqual(runner.build_command("pr", None, None, 180018),
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 4, in build_command
+    raise NotImplementedError("PR18 runner budgets")
+NotImplementedError: PR18 runner budgets
+
+======================================================================
+ERROR: test_invalid_numeric_ranges_fail_before_starting_maven (test_pr18_runner.Pr18RunnerTest.test_invalid_numeric_ranges_fail_before_starting_maven) (seeds=0, steps=100)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 22, in test_invalid_numeric_ranges_fail_before_starting_maven
+    runner.build_command("pr", seeds, steps, 1)
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 4, in build_command
+    raise NotImplementedError("PR18 runner budgets")
+NotImplementedError: PR18 runner budgets
+
+======================================================================
+ERROR: test_invalid_numeric_ranges_fail_before_starting_maven (test_pr18_runner.Pr18RunnerTest.test_invalid_numeric_ranges_fail_before_starting_maven) (seeds=-1, steps=100)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 22, in test_invalid_numeric_ranges_fail_before_starting_maven
+    runner.build_command("pr", seeds, steps, 1)
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 4, in build_command
+    raise NotImplementedError("PR18 runner budgets")
+NotImplementedError: PR18 runner budgets
+
+======================================================================
+ERROR: test_invalid_numeric_ranges_fail_before_starting_maven (test_pr18_runner.Pr18RunnerTest.test_invalid_numeric_ranges_fail_before_starting_maven) (seeds=10001, steps=100)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 22, in test_invalid_numeric_ranges_fail_before_starting_maven
+    runner.build_command("pr", seeds, steps, 1)
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 4, in build_command
+    raise NotImplementedError("PR18 runner budgets")
+NotImplementedError: PR18 runner budgets
+
+======================================================================
+ERROR: test_invalid_numeric_ranges_fail_before_starting_maven (test_pr18_runner.Pr18RunnerTest.test_invalid_numeric_ranges_fail_before_starting_maven) (seeds=100, steps=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 22, in test_invalid_numeric_ranges_fail_before_starting_maven
+    runner.build_command("pr", seeds, steps, 1)
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 4, in build_command
+    raise NotImplementedError("PR18 runner budgets")
+NotImplementedError: PR18 runner budgets
+
+======================================================================
+ERROR: test_invalid_numeric_ranges_fail_before_starting_maven (test_pr18_runner.Pr18RunnerTest.test_invalid_numeric_ranges_fail_before_starting_maven) (seeds=100, steps=301)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 22, in test_invalid_numeric_ranges_fail_before_starting_maven
+    runner.build_command("pr", seeds, steps, 1)
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 4, in build_command
+    raise NotImplementedError("PR18 runner budgets")
+NotImplementedError: PR18 runner budgets
+
+======================================================================
+ERROR: test_invalid_numeric_ranges_fail_before_starting_maven (test_pr18_runner.Pr18RunnerTest.test_invalid_numeric_ranges_fail_before_starting_maven) (seeds=True, steps=100)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 22, in test_invalid_numeric_ranges_fail_before_starting_maven
+    runner.build_command("pr", seeds, steps, 1)
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 4, in build_command
+    raise NotImplementedError("PR18 runner budgets")
+NotImplementedError: PR18 runner budgets
+
+======================================================================
+ERROR: test_invalid_numeric_ranges_fail_before_starting_maven (test_pr18_runner.Pr18RunnerTest.test_invalid_numeric_ranges_fail_before_starting_maven)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 24, in test_invalid_numeric_ranges_fail_before_starting_maven
+    runner.build_command("unknown", None, None, 1)
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 4, in build_command
+    raise NotImplementedError("PR18 runner budgets")
+NotImplementedError: PR18 runner budgets
+
+======================================================================
+ERROR: test_missing_or_short_evidence_never_becomes_pass (test_pr18_runner.Pr18RunnerTest.test_missing_or_short_evidence_never_becomes_pass)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 47, in test_missing_or_short_evidence_never_becomes_pass
+    runner.validate_evidence(folder, 100, 100, 180018)
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 8, in validate_evidence
+    raise NotImplementedError("PR18 evidence validation")
+NotImplementedError: PR18 evidence validation
+
+======================================================================
+ERROR: test_real_account_probes_are_disabled_even_if_inherited (test_pr18_runner.Pr18RunnerTest.test_real_account_probes_are_disabled_even_if_inherited)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/tests/test_pr18_runner.py", line 28, in test_real_account_probes_are_disabled_even_if_inherited
+    actual = runner.test_environment(original)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/scripts/ci/run_pr18.py", line 6, in test_environment
+    raise NotImplementedError("PR18 test-only environment")
+NotImplementedError: PR18 test-only environment
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.004s
+
+FAILED (errors=12)

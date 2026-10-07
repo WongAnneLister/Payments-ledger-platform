@@ -1,0 +1,14 @@
+{
+  "classification": "POST_TEST_FORK_SHUTDOWN_NOTICE",
+  "count": 1,
+  "messages": [
+    "[ERROR] Surefire is going to kill self fork JVM. The exit has elapsed 30 seconds after System.exit(0)."
+  ],
+  "mavenExitCode": 0,
+  "buildResult": "BUILD SUCCESS",
+  "javaTests": 689,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "note": "Notice occurred after test completion while closing the fork JVM. Retained from the original log; it is not counted as a failed test, nor claimed to be resolved by PR18."
+}

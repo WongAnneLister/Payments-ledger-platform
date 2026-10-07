@@ -2,11 +2,13 @@
 
 Stripe 支付网关与复式账本。模块化单体，API / Worker 分角色运行，共享同一个 PostgreSQL 事务域。
 
-**当前状态：PR17 客户结果页、运营页面与观测已接入。** 已实现可信身份、不可变账本、Fake/Stripe 适配器、支付与退款 API、共享操作恢复、Webhook 和 Outbox / Kafka 商户通知。BT 导入支持实际金额/手续费入账、去重、隔离与依赖等待；内部分润按下单快照和累计退款额度计提，退款预占、释放和冲突处理会原子调整分润凭证，并支持历史补计提。[分润运行说明](docs/runbook/revenue-share.md)介绍规则和启用方式。争议支持 Webhook/查询/BT 恢复、应收与损失分账、退款阻断和分润原子撤回/恢复，详见[争议运行说明](docs/runbook/disputes.md)。Payout 支持查询/Webhook/BT 摄入、在途记账、模拟银行导入与本金分配，并保留失败返还交叠冲突，详见[出款与银行运行说明](docs/runbook/payout-bank.md)。PR15 复用现有任务租约，按可信订单归属回补缺失支付；对账固定分页、账本和独立期末证据，缺证据保持 INCOMPLETE，详见[对账运行说明](docs/runbook/reconciliation.md)。PR16 提供受权限保护的运营查询、对账/银行导入、差错动作和既有任务重驱；人工调整只有独立复核通过才会追加凭证，成功动作审计与业务写入同事务，详见[运营手册](docs/runbook/ops.md)。PR17 提供同源客户结果页和运营控制台，按原支付查询 UNKNOWN、展示业务与资金证据的独立状态，接入受权限保护的查询和人工动作，并提供 11 项持久指标、完整性告警及脱敏关联日志，详见[页面与观测手册](docs/runbook/pages-observability.md)和[PR17 验证证据](docs/evidence/pr17/README.md)。PR05 已实测付款、退款及真实回调验签；各期实际验证来源以 evidence 记录为准。
+**当前状态：PR18 跨域属性、组合序列与并发验证已完成。** 已实现可信身份、不可变账本、Fake/Stripe 适配器、支付与退款 API、共享操作恢复、Webhook 和 Outbox / Kafka 商户通知。BT 导入支持实际金额/手续费入账、去重、隔离与依赖等待；内部分润按下单快照和累计退款额度计提，退款预占、释放和冲突处理会原子调整分润凭证，并支持历史补计提。[分润运行说明](docs/runbook/revenue-share.md)介绍规则和启用方式。争议支持 Webhook/查询/BT 恢复、应收与损失分账、退款阻断和分润原子撤回/恢复，详见[争议运行说明](docs/runbook/disputes.md)。Payout 支持查询/Webhook/BT 摄入、在途记账、模拟银行导入与本金分配，并保留失败返还交叠冲突，详见[出款与银行运行说明](docs/runbook/payout-bank.md)。PR15 复用现有任务租约，按可信订单归属回补缺失支付；对账固定分页、账本和独立期末证据，缺证据保持 INCOMPLETE，详见[对账运行说明](docs/runbook/reconciliation.md)。PR16 提供受权限保护的运营查询、对账/银行导入、差错动作和既有任务重驱；人工调整只有独立复核通过才会追加凭证，成功动作审计与业务写入同事务，详见[运营手册](docs/runbook/ops.md)。PR17 提供同源客户结果页和运营控制台，按原支付查询 UNKNOWN、展示业务与资金证据的独立状态，接入受权限保护的查询和人工动作，并提供 11 项持久指标、完整性告警及脱敏关联日志，详见[页面与观测手册](docs/runbook/pages-observability.md)和[PR17 验证证据](docs/evidence/pr17/README.md)。PR05 已实测付款、退款及真实回调验签；各期实际验证来源以 evidence 记录为准。
 运行说明见 [身份配置](docs/runbook/identity-and-fixtures.md)、[账本核心](docs/runbook/ledger-core.md)、[Provider 模拟器](docs/runbook/provider-simulator.md)和[Stripe 契约验证](docs/runbook/stripe-contract-check.md)。本地 fixture 通过不代表真实 Stripe 契约通过。
 设计基线见 [`docs/`](docs/)；本 README 只讲怎么跑起来。
 
 > 本项目完全从零实现，只使用 Stripe 测试环境。`livemode=true` 的配置会在**启动时**被拒绝。
+
+PR18 增加独立资金模型、可复现生成/收缩及真实 PostgreSQL 竞态验证，默认 100 seeds / 10000 步已通过；完整命令、缺陷修复、跳过原因和未运行边界见[PR18 证据](docs/evidence/pr18/README.md)与[运行手册](docs/runbook/pr18-property-verification.md)。
 
 ## 快速开始
 

@@ -1,0 +1,941 @@
+{
+  "status": "PASS",
+  "mavenLogSha256": "614b87649633aa4c17867d613781639daae6ab7e59ea1dff025f54518bd6ac5c",
+  "suites": {
+    "surefire-reports": {
+      "totals": {
+        "tests": 220,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "classes": [
+        {
+          "name": "com.paymentsledger.ApplicationContextTest",
+          "timeSeconds": 1.863,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "05399be4129d916f05684e665a0a02d09871e03db542da8a6689c676d069b2e7"
+        },
+        {
+          "name": "com.paymentsledger.common.error.ErrorContractTest",
+          "timeSeconds": 0.001,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "82338b02ace529e7f7dcbb6f45a66b0e1c7f3e37393ffb2d037f6c8d2db20b22"
+        },
+        {
+          "name": "com.paymentsledger.common.request.RequestIdFilterTest",
+          "timeSeconds": 0.003,
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "fcb3f156070c7592e73b68fa6fa308da66da253f3a94330870277d47956a76e6"
+        },
+        {
+          "name": "com.paymentsledger.config.RunRoleConfigTest",
+          "timeSeconds": 0.002,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "528027e0712f1f4ee46fa574daa7d45b01de873c053ee77039bc021d045734a6"
+        },
+        {
+          "name": "com.paymentsledger.dispute.DisputeAmountsTest",
+          "timeSeconds": 0.002,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "1f0daf723229a66c14af037a6229720e77802b1c5855d1aeef207c8a8bbadb48"
+        },
+        {
+          "name": "com.paymentsledger.financialingestion.FinancialIngestionWorkerTest",
+          "timeSeconds": 0.126,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "4d470ca167a53a8239a88ce6d9046bdcafca25c92f7f96ebd016de53537cc1af"
+        },
+        {
+          "name": "com.paymentsledger.financialingestion.FinancialRulesTest",
+          "timeSeconds": 0.055,
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "54b31a2c29f68face05d731d7f62bacd4e779c75f85f8b79d6861a37d9ca2481"
+        },
+        {
+          "name": "com.paymentsledger.identity.AuthenticationFilterTest",
+          "timeSeconds": 2.524,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "10ca20140271551f7b7802441c2c41820092c47ca297b4938f3c0a5ec6e723ce"
+        },
+        {
+          "name": "com.paymentsledger.identity.IdentityRulesTest",
+          "timeSeconds": 0.007,
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "11c73b30efa0265188c08add667398347457c1e67dfb400a5dd89b97b911d905"
+        },
+        {
+          "name": "com.paymentsledger.identity.TestModeGuardTest",
+          "timeSeconds": 0.183,
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "867f1abf26b787ada6e0e222521e6b880bdc61a6040c7ddcddc945aece480b8a"
+        },
+        {
+          "name": "com.paymentsledger.ledger.LedgerRulesTest",
+          "timeSeconds": 0.009,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "96441d1cf2eb98265780338afdb6adf9f8093726e11b5505ee6e3782b687a6d2"
+        },
+        {
+          "name": "com.paymentsledger.notification.HttpMerchantTransportTest",
+          "timeSeconds": 10.248,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "c7f40851cb8db58ff09deb7e3ddf49c183a19abde5af1e944bd70bcbc37e041a"
+        },
+        {
+          "name": "com.paymentsledger.notification.NotificationConfigurationTest",
+          "timeSeconds": 0.028,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "ec54b3004fa7d11d0300c60b6b060088c2228d96194729357549259993c68b29"
+        },
+        {
+          "name": "com.paymentsledger.notification.NotificationSignatureTest",
+          "timeSeconds": 0.004,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "443c424e6b030bbe3f1309b26b9dc6a36bcafdc70c45bd7fe9f1b910710b9f63"
+        },
+        {
+          "name": "com.paymentsledger.notification.NotificationTargetPolicyTest",
+          "timeSeconds": 0.007,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "7869ef4248955371226ba578d5bc924d7dc91cd758f0d0f762733d329ead6265"
+        },
+        {
+          "name": "com.paymentsledger.observability.CorrelationLogTest",
+          "timeSeconds": 0.005,
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "4e7192c6af89cbd28ff03dd1a380d31264bc7db3517cef1b77aa2828f502adb8"
+        },
+        {
+          "name": "com.paymentsledger.observability.ObservabilityGaugesTest",
+          "timeSeconds": 0.005,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "571416b171de911f3c226dfae0137581deac6744c40178ab606fd9427c8f3159"
+        },
+        {
+          "name": "com.paymentsledger.payment.PaymentControllerTest",
+          "timeSeconds": 0.264,
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "08655ce2ced8f0679018ca9162e3b3521e7d6c633be28a0249ba048ecc969a3d"
+        },
+        {
+          "name": "com.paymentsledger.payment.PaymentIdsTest",
+          "timeSeconds": 0.006,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "1367182dc29914271242f921928d20074df111c98f6970fa5db7386b358ecdf8"
+        },
+        {
+          "name": "com.paymentsledger.payment.PaymentRequestsTest",
+          "timeSeconds": 0.013,
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "a2e691c9726730719367359523fe76ba7a26c481eb89012a6f09a8aca24377eb"
+        },
+        {
+          "name": "com.paymentsledger.payment.RecoveryPolicyTest",
+          "timeSeconds": 0.003,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "334bb05df63b5936b98017df646cfab92a3f37ad4a31efb68b03073567bcdbdc"
+        },
+        {
+          "name": "com.paymentsledger.payment.RefundRequestsTest",
+          "timeSeconds": 0.005,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "fe589d625c7ad6ad1dc867195a708737ae719e9f295b1172cb607df4dd57a77b"
+        },
+        {
+          "name": "com.paymentsledger.pr18.Pr18FailureIdentityTest",
+          "timeSeconds": 0.015,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "69535509ade7568eda5df58bfea810d953179a22d466ad6ccbc00323e86e1fd9"
+        },
+        {
+          "name": "com.paymentsledger.pr18.PropertyModelsTest",
+          "timeSeconds": 0.009,
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "0f72aa1d06a697a36c0be6be3a8b903da6bbd1b7d4512549579d192035acd0fb"
+        },
+        {
+          "name": "com.paymentsledger.pr18.SequenceGeneratorTest",
+          "timeSeconds": 0.057,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "afc47de4fb0eed8d89bf6d19a6b6d2511a677d1696f84b5cb235125f6d71ffc2"
+        },
+        {
+          "name": "com.paymentsledger.provider.ProviderModelsTest",
+          "timeSeconds": 0.013,
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "2cfde5a2da728aef9367dafdbdd816b98914243f9743a0c4017ca7992fe6b12d"
+        },
+        {
+          "name": "com.paymentsledger.provider.adapter.stripe.StripeAdapterConfigurationTest",
+          "timeSeconds": 0.03,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "249ff93b5e5346081bb3773d4d6a95697810688549709a5696530b215b05e4fd"
+        },
+        {
+          "name": "com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest",
+          "timeSeconds": 0.212,
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "6a48579b5fc1e5a6c090ac4d6737d1e37278e8f8e49e30beb0f5e08b25005365"
+        },
+        {
+          "name": "com.paymentsledger.provider.adapter.stripe.StripeGatewayTest",
+          "timeSeconds": 0.13,
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "da11954408c68b0f9d43c640cb42d5a73c28adb72f867ba8444363b6f347d60c"
+        },
+        {
+          "name": "com.paymentsledger.provider.adapter.stripe.StripeLifecycleProbeTest",
+          "timeSeconds": 0.074,
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "664c3cf48646d5ec3b2ed6a9bb789f5a1c9d4fa8b5059cd03bff0b55f7e7f634"
+        },
+        {
+          "name": "com.paymentsledger.provider.adapter.stripe.StripePaymentsAdapterTest",
+          "timeSeconds": 0.069,
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "1c5c5e43e807e1e8416363ed438d087c90aac1cdf1bc08b318f9283da5c6d88d"
+        },
+        {
+          "name": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+          "timeSeconds": 0.037,
+          "tests": 17,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "41e5d84a60c372df8c2a64842384983d956bcd4f3d5c19ee3d1f6e5e61ba637a"
+        },
+        {
+          "name": "com.paymentsledger.provider.fake.FakeEvidenceTest",
+          "timeSeconds": 0.521,
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "7230d1f8c9fe86720e0eedaac2a87c1a367e3c22701f5cc6bfa5f483b69a8dcd"
+        },
+        {
+          "name": "com.paymentsledger.provider.fake.FakeProviderConfigurationTest",
+          "timeSeconds": 0.023,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "ccbbc5d9af5995de3f6ebc9e02c801c18b80b302da00e310cb68b68f36f72928"
+        },
+        {
+          "name": "com.paymentsledger.provider.fake.FakeStateStoreTest",
+          "timeSeconds": 1.862,
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "f6b1f70fe90e20f56aa343fa46ceb3adcaf751e645d04ad540c0f77913143b01"
+        },
+        {
+          "name": "com.paymentsledger.provider.fake.FakeStripeProviderTest",
+          "timeSeconds": 0.88,
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "9a74b40321fc76ccc7aeed33c20cc81b10738fb650752b53c6aab15a2669a88f"
+        },
+        {
+          "name": "com.paymentsledger.provider.fake.ProviderSimulatorReplayTest",
+          "timeSeconds": 0.128,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "75b6eb44cc1bd0ddbae0b728d84c7f9f2384062d55892b98505c95f3e91b5708"
+        },
+        {
+          "name": "com.paymentsledger.reconciliation.FeeArithmeticTest",
+          "timeSeconds": 0.004,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "fd4f22de2ab04dbad693a69836131eef6841d3a64ae90882b72bbc26257ab6c7"
+        },
+        {
+          "name": "com.paymentsledger.reconciliation.ReconciliationWindowsTest",
+          "timeSeconds": 0.008,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "e6688358d50e6d64f01d58d21632707f56a0574f1b0d28e41dd86367a4955bf7"
+        },
+        {
+          "name": "com.paymentsledger.revenueshare.RevenueShareConfigurationTest",
+          "timeSeconds": 0.076,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "5b3a623c2baa08ab5fcc6a0b363879c326cbcb8fb0b341c35ee5c313c10e13f1"
+        },
+        {
+          "name": "com.paymentsledger.revenueshare.SharePolicyTest",
+          "timeSeconds": 0.012,
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "19aca216be977da62f4929bbb535cb644965fc1437a4c79be0d18964e87f320d"
+        },
+        {
+          "name": "com.paymentsledger.webhook.WebhookNormalizerTest",
+          "timeSeconds": 0.172,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "3a64f30504826983e8b0f2d068bc21dc7de623b503c53eb2beda4ff0b99e2546"
+        }
+      ]
+    },
+    "failsafe-reports": {
+      "totals": {
+        "tests": 469,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "classes": [
+        {
+          "name": "com.paymentsledger.ApiRoleHealthIT",
+          "timeSeconds": 5.277,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "a5bb8b3e0a0d921bad522c2282ab10bdf62970c5584b54451921a21b749c2351"
+        },
+        {
+          "name": "com.paymentsledger.FlywayBaselineIT",
+          "timeSeconds": 3.706,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "7880363ff813c78005c32c9c5871244b9787989d42ced2add56f052b97c28069"
+        },
+        {
+          "name": "com.paymentsledger.WorkerRoleHealthIT",
+          "timeSeconds": 4.225,
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "cbe6db932072ebf29d0246ea795f19c2bc4d386f9948dc7cafa79357c9addf39"
+        },
+        {
+          "name": "com.paymentsledger.bank.PayoutLifecycleIT",
+          "timeSeconds": 13.952,
+          "tests": 23,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "94635011399a561aa916d07d2a367630937f001bfbbf8fc4f319f0dfe1a4a772"
+        },
+        {
+          "name": "com.paymentsledger.dispute.DisputeCoreIT",
+          "timeSeconds": 6.228,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "4033c4038788681d6125e170a83244a0b920f39ed4853af504a5c85cbe2a94e2"
+        },
+        {
+          "name": "com.paymentsledger.dispute.DisputeSchemaIT",
+          "timeSeconds": 3.579,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "e030cfa06450e77ee179d3d10200e34f75197067e617b1c37cdf2f42a2758d79"
+        },
+        {
+          "name": "com.paymentsledger.financialingestion.FinancialIngestionIT",
+          "timeSeconds": 15.291,
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "e0cf9a61def694ced1d4864df1e7714032c1afa9517f9997ded2a1aece761ec0"
+        },
+        {
+          "name": "com.paymentsledger.financialingestion.FinancialSchemaIT",
+          "timeSeconds": 4.92,
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "85541e6332c97579e7912003c6b3a801fd88edb613ad2740e8cb6037e5e0af39"
+        },
+        {
+          "name": "com.paymentsledger.identity.IdentityIT",
+          "timeSeconds": 14.62,
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "f8c5c65bfa5d9d0bc29b373817116075e40f226b783163e988890c2a6d1f7b4b"
+        },
+        {
+          "name": "com.paymentsledger.ledger.LedgerDatabaseIT",
+          "timeSeconds": 5.994,
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "05b081442dc8f92cfe4e1e235731be3dc7baac6364b42551ef4a5dde260b6a96"
+        },
+        {
+          "name": "com.paymentsledger.ledger.LedgerServiceIT",
+          "timeSeconds": 6.609,
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "d65749b1d8088b5dc7d9cc9996a024a8cfc881a121ad7f8d31724d9b6e844b21"
+        },
+        {
+          "name": "com.paymentsledger.notification.MerchantDeliveryIT",
+          "timeSeconds": 5.601,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "f253e6d382bbb9a1d9b11ce904d5fbda14ccc0d7c7010abf11f166f3e2ea50f9"
+        },
+        {
+          "name": "com.paymentsledger.notification.NotificationKafkaIT",
+          "timeSeconds": 15.442,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "70e6b444c0f4ac8483ac0abbaf3b1c9a255b7947dadd3244edd10a08251e4e41"
+        },
+        {
+          "name": "com.paymentsledger.notification.NotificationMigrationIT",
+          "timeSeconds": 3.028,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "3d5d511672c5e9b34291e44cf45502726dbd69f65466b54b45f916400e06c4f8"
+        },
+        {
+          "name": "com.paymentsledger.notification.NotificationPipelineIT",
+          "timeSeconds": 13.104,
+          "tests": 16,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "7391cae537034a73b49a8c84360e174acfb3c36b3271cf76e8847e33973c71f3"
+        },
+        {
+          "name": "com.paymentsledger.notification.NotificationWorkerWiringIT",
+          "timeSeconds": 7.775,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "c62b58b7818d934c9bc3b5e9ad519062c1733e27ee2c5a301792451f03ef0e65"
+        },
+        {
+          "name": "com.paymentsledger.notification.RefundMerchantDeliveryIT",
+          "timeSeconds": 4.413,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "506006ccd95d5be31de89d534fa906b51835c7a8e8beb0350bd3edbef8433607"
+        },
+        {
+          "name": "com.paymentsledger.ops.ObservabilityIT",
+          "timeSeconds": 20.103,
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "899c66d79837589aadc948af29f6da6971b8d5942ed76a12d7be4039f23583f1"
+        },
+        {
+          "name": "com.paymentsledger.ops.OpsApiIT",
+          "timeSeconds": 52.486,
+          "tests": 31,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "eb74fee96186fd9fabeb968a818f5ec12eb61d2e99a4f4a0effeb883195cd140"
+        },
+        {
+          "name": "com.paymentsledger.ops.OpsSchemaIT",
+          "timeSeconds": 3.691,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "1ad7197071c56a2129129c317bbed0e8261a081e60f918b5af4a08f20d71dfba"
+        },
+        {
+          "name": "com.paymentsledger.pages.PageHttpIT",
+          "timeSeconds": 7.648,
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "7c99704673b58d59765998ade6aa1fca59e2ae7f8f45fee556cd44781fce62df"
+        },
+        {
+          "name": "com.paymentsledger.payment.DisputeLifecycleIT",
+          "timeSeconds": 23.706,
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "cf12f6d805fefc154b02fa835683f7dadd1e54a39c6d9af1358e25554cdc8d20"
+        },
+        {
+          "name": "com.paymentsledger.payment.OperationRecoveryIT",
+          "timeSeconds": 23.647,
+          "tests": 23,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "d8b6564d76f62883af62fde192b40796bc1b442ea57534dc4e15741029a8eb5d"
+        },
+        {
+          "name": "com.paymentsledger.payment.PaymentCoreIT",
+          "timeSeconds": 19.674,
+          "tests": 27,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "cf27b8e977d1fcfc04320927791410a4d97d5e7d5e92e5dede5b64941667ba7f"
+        },
+        {
+          "name": "com.paymentsledger.payment.PaymentFinancialIngestionIT",
+          "timeSeconds": 8.769,
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "dc57a6d1e6b2a9adf364f5e4257f26fb8cb06d9f87c12eaf2ad15e9362476955"
+        },
+        {
+          "name": "com.paymentsledger.payment.PaymentHttpIT",
+          "timeSeconds": 10.933,
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "fafebc5b729ea2e09bb6dff4bc6ee7aeda0f75262c045e36798d73d06dc4c1aa"
+        },
+        {
+          "name": "com.paymentsledger.payment.PaymentOutboxIT",
+          "timeSeconds": 9.932,
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "6f79233cee5a8ffdc792856da985c8703edad2a2fcec9680012fe2b771e3fcd7"
+        },
+        {
+          "name": "com.paymentsledger.payment.PaymentRealContractIT",
+          "timeSeconds": 0.001,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "reportSha256": "662e313c91fc9ba32fecaf5b30bf3b1a08efd1996baafea7e3e76f6311e78e7b"
+        },
+        {
+          "name": "com.paymentsledger.payment.PaymentSchemaIT",
+          "timeSeconds": 3.223,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "f7c68ffeac23ed0e805c925ff54445baf8d86a175c0ee4c5f1ce38a2ec3f783b"
+        },
+        {
+          "name": "com.paymentsledger.payment.Pr18ConcurrencyIT",
+          "timeSeconds": 6.578,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "3621988b4d6ea9e5bf8f563d770dcbb65788855f66f08c99f78c0a6d05d6c4b7"
+        },
+        {
+          "name": "com.paymentsledger.payment.Pr18PayoutEvidenceIT",
+          "timeSeconds": 7.571,
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "10f6e6188af01f626ae753564f42885242e36f741b2cf033a936ef619d10aa86"
+        },
+        {
+          "name": "com.paymentsledger.payment.Pr18ScopeIsolationIT",
+          "timeSeconds": 6.874,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "ffaef11515e681f95a609e48d6704b257b08c4b7111507ff2d45636038b5f268"
+        },
+        {
+          "name": "com.paymentsledger.payment.Pr18SequenceIT",
+          "timeSeconds": 1350.239,
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "1099ce03996706bc6c04c88e0dac465fc69ae3ba0d363d1862cbcd0a54c25056"
+        },
+        {
+          "name": "com.paymentsledger.payment.ReconciliationRecoveryIT",
+          "timeSeconds": 16.467,
+          "tests": 27,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "09c924bbd140ab746f5bae9d0fd9859b4f4dd815c517cf75da6470c782bca3b0"
+        },
+        {
+          "name": "com.paymentsledger.payment.ReconciliationRecoverySchemaIT",
+          "timeSeconds": 2.514,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "a032176cdaedb4621836dcb54eb5fd5d51bb587d1594bcfcbc8941a7b3c1b4a5"
+        },
+        {
+          "name": "com.paymentsledger.payment.RecoverySchemaIT",
+          "timeSeconds": 3.055,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "5e45aabb0c576e3b472d6fdca56b0e99cac590673971dbf3fae0f5e00fd44563"
+        },
+        {
+          "name": "com.paymentsledger.payment.RefundCoreIT",
+          "timeSeconds": 15.05,
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "d47015b13b7700d89c97cc9c740ada3c8e570c9a6736f5c6ea9afe00bd1c823b"
+        },
+        {
+          "name": "com.paymentsledger.payment.RefundFinancialIT",
+          "timeSeconds": 9.598,
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "7c45823713eda5d75e76cff744f6cfed882a657d7099aa1ef64354099b3c8fc9"
+        },
+        {
+          "name": "com.paymentsledger.payment.RefundHttpIT",
+          "timeSeconds": 6.484,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "b7cdbae5829f65992aa477b0fbb39cf6f355715db3ba85ec41e14739a2f2fd8a"
+        },
+        {
+          "name": "com.paymentsledger.payment.RefundRecoveryIT",
+          "timeSeconds": 9.791,
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "bb279e1aab090baecf4aa821904cadf30738bfaf429f504ea9d7ee260d007a57"
+        },
+        {
+          "name": "com.paymentsledger.payment.RefundSchemaIT",
+          "timeSeconds": 3.277,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "0da6a2cf29c23d782acfe033c383be53f99c282e352852eb0f1017277b4c30be"
+        },
+        {
+          "name": "com.paymentsledger.payment.RefundWebhookIT",
+          "timeSeconds": 8.281,
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "ab80b6915306328b04a5c1f98d9ea7ceff587857c165a011e60714e8c4e976b1"
+        },
+        {
+          "name": "com.paymentsledger.payment.RevenueShareLifecycleIT",
+          "timeSeconds": 15.954,
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "d41a2d3bb8269474a6776e49ca6898839472eb049c0cf5bdf86ad9787a73fc88"
+        },
+        {
+          "name": "com.paymentsledger.payment.WebhookAssociationIT",
+          "timeSeconds": 17.138,
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "a28b9c2d70255e7f92ad1c0d6336fcb412576644120e0a3cb4f549b6956b68ce"
+        },
+        {
+          "name": "com.paymentsledger.payment.WebhookProcessingIT",
+          "timeSeconds": 11.609,
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "7ae1270ba1c26b91c2040830c955b7d71f36cf389440588729f6fd2beb295a22"
+        },
+        {
+          "name": "com.paymentsledger.payout.PayoutCoreIT",
+          "timeSeconds": 6.279,
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "fac1846663de902ed42dfeae1b800590cd701d27653263a3c58e2341c18b1909"
+        },
+        {
+          "name": "com.paymentsledger.payout.PayoutSchemaIT",
+          "timeSeconds": 3.123,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "74ffbb5bfef7e7d9708b43d183efd052586bff099b4724f98d30f8bd362748ca"
+        },
+        {
+          "name": "com.paymentsledger.provider.adapter.stripe.PayoutRealReadIT",
+          "timeSeconds": 0.0,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "reportSha256": "95c15e3fba96e5155b7a1f70931f37f3b4cffa1f76b11f55c45a8f4798a7e8d1"
+        },
+        {
+          "name": "com.paymentsledger.provider.adapter.stripe.StripeRealContractIT",
+          "timeSeconds": 0.0,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "reportSha256": "f98ffa96cb1710ac6126489c9360aad16104b33dfae2e9562f2b7d1889442c3d"
+        },
+        {
+          "name": "com.paymentsledger.provider.fake.FakeTransactionBoundaryIT",
+          "timeSeconds": 2.877,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "aaf3bd999afbdcad724d33353be75a07ec33d7c68c753c2087accce0fb9747a0"
+        },
+        {
+          "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT",
+          "timeSeconds": 18.683,
+          "tests": 34,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "49c32631e540f543c5369659ed7296f7edee104f2caeb5520f5e2755bbb6cacb"
+        },
+        {
+          "name": "com.paymentsledger.reconciliation.ReconciliationSchemaIT",
+          "timeSeconds": 2.376,
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "2927656912f3d6a442215592670230cece304f6b3a047535581438076707689f"
+        },
+        {
+          "name": "com.paymentsledger.revenueshare.RevenueShareCoreIT",
+          "timeSeconds": 11.671,
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "bdf19fcb1103f6340c040c706070d9444c0958dcdd47c9a576e7123ab6dc803b"
+        },
+        {
+          "name": "com.paymentsledger.revenueshare.RevenueShareSchemaIT",
+          "timeSeconds": 3.845,
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "4973da0fe7d5575d03207a73bc481ba84539553ff4e0430029b7ddfbdf863662"
+        },
+        {
+          "name": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+          "timeSeconds": 10.502,
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "b962f2381490f935ee1b18a04b68425f16985923b1af19ebbad47a8a1fa9125e"
+        },
+        {
+          "name": "com.paymentsledger.webhook.WebhookSchemaIT",
+          "timeSeconds": 3.807,
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "reportSha256": "72ce7787aae19ad6e4675f74d819050393bb1d3cda0951ebc1fcdc188a9ad8cf"
+        }
+      ]
+    }
+  },
+  "skippedTests": [
+    {
+      "class": "com.paymentsledger.payment.PaymentRealContractIT",
+      "name": "realAuthenticatedApplicationCreatesQueriesAndExpiresHostedSession",
+      "reason": "Environment variable [PR06_STRIPE_CONTRACT] with value [false] does not match regular expression [true]"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.PayoutRealReadIT",
+      "name": "listAndReadExistingTestPayoutWithoutCreatingFundsOperations",
+      "reason": "Environment variable [PAYOUT_REAL_READ_TESTS] with value [false] does not match regular expression [true]"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeRealContractIT",
+      "name": "testModeContractEvidence",
+      "reason": "Environment variable [STRIPE_CONTRACT_TESTS] with value [false] does not match regular expression [true]"
+    }
+  ],
+  "runtime": {
+    "node": "v22.15.0"
+  },
+  "checks": {
+    "pythonRunner": "9 PASS",
+    "nodeBrowser": "35 PASS",
+    "extended1000x300": "NOT RUN",
+    "remoteCI": "NOT RUN"
+  },
+  "combined": {
+    "tests": 689,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "passed": 686
+  }
+}

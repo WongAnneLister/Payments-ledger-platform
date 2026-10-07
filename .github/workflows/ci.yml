@@ -5,6 +5,13 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      pr18_nightly:
+        description: 'Run PR18 with 1000 seeds and at most 300 steps per sequence'
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -55,8 +62,11 @@ jobs:
       # verify 会依次执行单元/上下文测试（surefire）与集成测试（failsafe）。
       # 集成测试由 Testcontainers 启动一次性 PostgreSQL 容器，
       # 使用唯一命名的新库，从不触碰已有数据库。
-      - name: Build, test and integration test
-        run: ./mvnw -B verify
+      - name: PR18 runner regressions
+        run: python3 -m unittest discover -s scripts/tests -p 'test_pr18_runner.py'
+
+      - name: Build, property and integration tests (100 seeds, max 100 steps)
+        run: python3 scripts/ci/run_pr18.py --profile pr
 
       - name: Whitespace and diff check
         run: git diff --check
@@ -69,6 +79,7 @@ jobs:
           path: |
             target/surefire-reports/**
             target/failsafe-reports/**
+            target/pr18/**
           if-no-files-found: warn
           retention-days: 14
 
@@ -91,3 +102,28 @@ jobs:
 
       - name: Validate relative documentation links
         run: python scripts/ci/check_doc_links.py
+
+  pr18-nightly:
+    name: PR18 extended budget (1000 seeds, max 300 steps)
+    if: github.event_name == 'workflow_dispatch' && inputs.pr18_nightly
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+          cache: maven
+      - name: Extended property, concurrency and regression verification
+        run: python3 scripts/ci/run_pr18.py --profile nightly
+      - name: Upload PR18 extended evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr18-nightly-evidence
+          path: |
+            target/pr18/**
+            target/surefire-reports/**
+            target/failsafe-reports/**
+          if-no-files-found: warn
+          retention-days: 14

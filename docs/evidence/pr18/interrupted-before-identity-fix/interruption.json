@@ -1,0 +1,23 @@
+{
+  "classification": "INTERRUPTED_FOR_REVIEW_FIX",
+  "completedCaseArtifacts": 13,
+  "reason": "Stop initial default run to fix shrink failure identity, then rerun full default budget; not a completed PASS and not a money defect.",
+  "archive": "generated-cases.tar.gz",
+  "caseSha256": {
+    "case--3293343693510310258.json": "d426a6f1fa8e7f47fe6be43b10760500c7b9cb523cc48ab23dcd054d74b038c6",
+    "case--5327961927043047580.json": "0d23b81855fb9b01c784cc8a9660dfc7f66d1636e03ec54d3e94f17145e3fa1e",
+    "case--709826253289089988.json": "3b97ed319465ac26e718d8780031219a357041344c19a0452c97cc8a11eff2c5",
+    "case--8744285949222814860.json": "9ff3f57e76ae63fd874c2b9692baf193225dbebf9dbcfb69982232603f04585d",
+    "case-1351285938144580505.json": "90c8aef43372fe19cff77b05ed505598ed362ea0a9e2c255314d657cfa3ce9b0",
+    "case-1565774811259216620.json": "216ac4260518729d05bf92269bf810a9aaa4ba887d9f73af20dca028fce7f6dd",
+    "case-2917298811519316068.json": "fbc3abe339ba88720c412ce005b1756fe98050359c5b07811f7016d55da79a78",
+    "case-5792451923963910193.json": "b50f7d7f29ef5e21f357a8097641893c21ca9a3f310c0dd48c8c140defb7dc6c",
+    "case-583194460625996491.json": "66c8e6728f7ccdcd9351baf7dae1feed4189eaec70174b84f3d942a783de3211",
+    "case-6159171265248935158.json": "abb651e7dc584b96df281d35af2258b0fd857ac10187fe4450ae418067b5be63",
+    "case-6216111709590917164.json": "4aba06377981d27ff367e0b0f3dcfd2ca16ed6032ea6f8786abbb3a91584a0c4",
+    "case-6925789764620190379.json": "5e2b5203c681aa14ff7387e40de4d0737f152064617259674036797f1c154fdb",
+    "case-815872335101841148.json": "14eb87c4eb37d9f67d45fef238b81a326f87ce377d7c85e1c7daadbfd917a7cc"
+  },
+  "mavenLog": "maven.txt.gz",
+  "mavenLogSha256": "1637057e8cef255f985c45e415eec1c78e80bb19a7411f8404ba8a834e595780"
+}

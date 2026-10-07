@@ -1,0 +1,4 @@
+parsed: paths=29 schemas=70
+$ref: total=99 unresolved=0
+
+PASS: OpenAPI contract checks

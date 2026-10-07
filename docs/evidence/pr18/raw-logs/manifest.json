@@ -1,0 +1,86 @@
+{
+  "bank-completeness-red.txt": {
+    "rawGzip": "raw-logs/bank-completeness-red.txt.gz",
+    "originalSha256": "8e06b1a172a77838dcf197dadc8cc5ec5a5a36434782ddef28937c6ebdc315d6",
+    "readableTextSha256": "b7e9a4a080867679d688448aecd21566452d7365e647dd240fbaca8e618aa272",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "baseline.txt": {
+    "rawGzip": "raw-logs/baseline.txt.gz",
+    "originalSha256": "17a1682c46cc63fce607dcbac11d281ec71bc6cd472a6d20b357744cc3ab84bf",
+    "readableTextSha256": "22e8288ac43fb4118a550f09b88dd91558163edb9e92d6e3cd3f05e86560e3e0",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "diagnostics/pilot-lock-trace.txt": {
+    "rawGzip": "raw-logs/diagnostics/pilot-lock-trace.txt.gz",
+    "originalSha256": "6fbb06b936a1405780ed780e0250758155524853165bafadb6fc48ca08799aac",
+    "readableTextSha256": "5b0ddcfcb1083d23b5eb3d1289b9a43b78e9fce16be23f446ea4226f369aa5f3",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "diagnostics/pilot-reference-format.txt": {
+    "rawGzip": "raw-logs/diagnostics/pilot-reference-format.txt.gz",
+    "originalSha256": "ddb0f92e483fc06aadeb786f9184dfa7e7530c3a47b51b9dc98a0aef6445379a",
+    "readableTextSha256": "6b3115a912b7b74998299d19869111b4b6309157c91450f63d817e77ff4acf05",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "failure-identity-green.txt": {
+    "rawGzip": "raw-logs/failure-identity-green.txt.gz",
+    "originalSha256": "7eb08cf76353728571a638a0903d131bff56fe512d855a32298e02957a75e6a9",
+    "readableTextSha256": "b58b61b246e5bce04eab9a4b87086f84be80075e4fe1707141e43e38027e69a3",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "failure-identity-red.txt": {
+    "rawGzip": "raw-logs/failure-identity-red.txt.gz",
+    "originalSha256": "f8ca12dbd75a0a6fb6cd85e04667787cc9e33e8926ca024f6d9b6d0116ac8999",
+    "readableTextSha256": "23530ced01cda29ce4771ceab481750bf3a1d850f2a3f0df052ca60d73ff9c08",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "failure-identity-sequence-green.txt": {
+    "rawGzip": "raw-logs/failure-identity-sequence-green.txt.gz",
+    "originalSha256": "bbc94d62b4f5cab19a39f23b137aa52c8149c803690de576a552acae5c0cb9bc",
+    "readableTextSha256": "9b0fba4e948400abbbd0a34e7b4e7c416e8d5cc776bfa79a720a8c423b147170",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "model-green.txt": {
+    "rawGzip": "raw-logs/model-green.txt.gz",
+    "originalSha256": "9c3af93e5feafc06e5ecac58f282b8cff846b7d748496d90061af1897ba07691",
+    "readableTextSha256": "531c777d87a4e07625581bd98946d7ef45f859e7d75b42ab4b4f4c1336ce2f8e",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "model-red.txt": {
+    "rawGzip": "raw-logs/model-red.txt.gz",
+    "originalSha256": "21ea00ef5a06751238598a3a3dd5fa5af730fa31b70c0a79b2a39e071cb96118",
+    "readableTextSha256": "40b89d215e0978159d73c978f03d2404655cd399704b95b0b2ebdf97249df009",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "observability-clock-failure/ObservabilityIT-red.xml": {
+    "rawGzip": "raw-logs/observability-clock-failure/ObservabilityIT-red.xml.gz",
+    "originalSha256": "6539a5f7555ca89969b113d2431f22541344b50eeaf3e64b57b4ce9fd4efa86e",
+    "readableTextSha256": "8fc5424f6bdbdaded06391f91c90ce3be665e9538f9c13094cf8861e70f4a91f",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "observability-clock-green.txt": {
+    "rawGzip": "raw-logs/observability-clock-green.txt.gz",
+    "originalSha256": "f1b6a28789e261f2328077c07f7610d66d67eb85f9f0d15a400c1fdd932cdf76",
+    "readableTextSha256": "4372119dcf4555132f4469c158a74cea5a869345829021cf03d553b65b0f5db5",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "observability-clock-red.txt": {
+    "rawGzip": "raw-logs/observability-clock-red.txt.gz",
+    "originalSha256": "053fb372f00115600d234884661552b4a611a170f612301cc7ace620a0aeab1a",
+    "readableTextSha256": "15cbc5272da0e210e7d222b062c539ef914ac9625350ca18097e887cf1498668",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "payout-concurrency-green.txt": {
+    "rawGzip": "raw-logs/payout-concurrency-green.txt.gz",
+    "originalSha256": "2f2b5ebd9ac4cbf2fd004566f32ab1844f39debf06122d3aed0076847225b1a1",
+    "readableTextSha256": "e63ac95d93d0069fea39de40237cd2f9965d01e404ab3aaf91eb540c352599f7",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  },
+  "payout-evidence-red.txt": {
+    "rawGzip": "raw-logs/payout-evidence-red.txt.gz",
+    "originalSha256": "b42267441f60084f8b4516248b71858c67d83302eead166f479029de74c32294",
+    "readableTextSha256": "27704ae8eedb863ec76626f94443584bf327e238d518745ea056e4c1b051f091",
+    "normalization": "rstrip each line and remove empty final lines; preserve original bytes in rawGzip"
+  }
+}

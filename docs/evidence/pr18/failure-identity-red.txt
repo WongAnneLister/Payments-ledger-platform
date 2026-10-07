@@ -1,0 +1,89 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 24 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 117 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.pr18.Pr18FailureIdentityTest
+[ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.078 s <<< FAILURE! -- in com.paymentsledger.pr18.Pr18FailureIdentityTest
+[ERROR] com.paymentsledger.pr18.Pr18FailureIdentityTest.sameAssertionReplaysWithOnlySeedAndUuidNoiseRemainTheSameFailure -- Time elapsed: 0.054 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "org.opentest4j.AssertionFailedError:[I04 seed=<case> id=22222222-2222-2222-2222-222222222222] "
+ but was: "org.opentest4j.AssertionFailedError:[I04 seed=<case> id=11111111-1111-1111-1111-111111111111] "
+	at com.paymentsledger.pr18.Pr18FailureIdentityTest.sameAssertionReplaysWithOnlySeedAndUuidNoiseRemainTheSameFailure(Pr18FailureIdentityTest.java:22)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[ERROR] com.paymentsledger.pr18.Pr18FailureIdentityTest.differentFailuresAtTheSameAssertionSiteDoNotCollapseToBlankOrFirstLine -- Time elapsed: 0.003 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting actual:
+  "java.lang.AssertionError:"
+not to be equal to:
+  "java.lang.AssertionError:"
+
+	at com.paymentsledger.pr18.Pr18FailureIdentityTest.differentFailuresAtTheSameAssertionSiteDoNotCollapseToBlankOrFirstLine(Pr18FailureIdentityTest.java:17)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   Pr18FailureIdentityTest.differentFailuresAtTheSameAssertionSiteDoNotCollapseToBlankOrFirstLine:17
+Expecting actual:
+  "java.lang.AssertionError:"
+not to be equal to:
+  "java.lang.AssertionError:"
+
+[ERROR]   Pr18FailureIdentityTest.sameAssertionReplaysWithOnlySeedAndUuidNoiseRemainTheSameFailure:22
+expected: "org.opentest4j.AssertionFailedError:[I04 seed=<case> id=22222222-2222-2222-2222-222222222222] "
+ but was: "org.opentest4j.AssertionFailedError:[I04 seed=<case> id=11111111-1111-1111-1111-111111111111] "
+[INFO]
+[ERROR] Tests run: 3, Failures: 2, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.385 s
+[INFO] Finished at: 2026-10-07T22:05:51+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project payments-ledger-platform: There are test failures.
+[ERROR]
+[ERROR] See /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

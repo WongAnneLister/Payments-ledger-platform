@@ -1,0 +1,7 @@
+.deliberate-runner-fixture
+........
+----------------------------------------------------------------------
+Ran 9 tests in 0.040s
+
+OK
+PR18 FAIL: command exit=0; elapsed=0.001s; evidence=/private/var/folders/62/6p9ptkp54d70cwlbz_dn3v_h0000gn/T/tmp139er_r1/target/pr18/run-summary.json

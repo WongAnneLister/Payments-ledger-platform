@@ -147,12 +147,14 @@ class ObservabilityIT {
       admin.update(
           "INSERT INTO"
               + " platform.ops_credential(id,ops_identity_id,organization_id,environment_id,key_id,secret_hash,not_before,expires_at)"
-              + " VALUES (?,?,?,?,'ops',?,now()-interval '1 day',now()+interval '1 day')",
+              + " VALUES (?,?,?,?,'ops',?,?,?)",
           id(500 + a),
           id(400 + a),
           id(org),
           id(env),
-          HASH);
+          HASH,
+          Timestamp.from(NOW.minus(Duration.ofDays(1))),
+          Timestamp.from(NOW.plus(Duration.ofDays(1))));
     }
   }
 

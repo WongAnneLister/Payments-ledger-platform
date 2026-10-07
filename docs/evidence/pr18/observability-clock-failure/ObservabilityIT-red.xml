@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-failsafe-plugin/xsd/failsafe-test-report.xsd" version="3.0.2" name="com.paymentsledger.ops.ObservabilityIT" time="15.728" tests="14" errors="0" skipped="0" failures="14" flakes="0">
+  <properties>
+    <property name="pr18.seed" value="180018"/>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="pr18.seeds" value="100"/>
+    <property name="java.class.path" value="/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/target/test-classes:/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/target/classes:/Users/anne_lister/.m2/repository/com/stripe/stripe-java/33.3.0/stripe-java-33.3.0.jar:/Users/anne_lister/.m2/repository/com/google/code/gson/gson/2.13.2/gson-2.13.2.jar:/Users/anne_lister/.m2/repository/com/google/errorprone/error_prone_annotations/2.41.0/error_prone_annotations-2.41.0.jar:/Users/anne_lister/.m2/repository/org/springframework/security/spring-security-crypto/6.5.11/spring-security-crypto-6.5.11.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.5.16/spring-boot-starter-web-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter/3.5.16/spring-boot-starter-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot/3.5.16/spring-boot-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.5.16/spring-boot-autoconfigure-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.5.16/spring-boot-starter-logging-3.5.16.jar:/Users/anne_lister/.m2/repository/ch/qos/logback/logback-classic/1.5.34/logback-classic-1.5.34.jar:/Users/anne_lister/.m2/repository/ch/qos/logback/logback-core/1.5.34/logback-core-1.5.34.jar:/Users/anne_lister/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.24.3/log4j-to-slf4j-2.24.3.jar:/Users/anne_lister/.m2/repository/org/apache/logging/log4j/log4j-api/2.24.3/log4j-api-2.24.3.jar:/Users/anne_lister/.m2/repository/org/slf4j/jul-to-slf4j/2.0.18/jul-to-slf4j-2.0.18.jar:/Users/anne_lister/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/Users/anne_lister/.m2/repository/org/yaml/snakeyaml/2.4/snakeyaml-2.4.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.5.16/spring-boot-starter-json-3.5.16.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.21.4/jackson-datatype-jdk8-2.21.4.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.21.4/jackson-datatype-jsr310-2.21.4.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.21.4/jackson-module-parameter-names-2.21.4.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.5.16/spring-boot-starter-tomcat-3.5.16.jar:/Users/anne_lister/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.55/tomcat-embed-core-10.1.55.jar:/Users/anne_lister/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.55/tomcat-embed-websocket-10.1.55.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-web/6.2.19/spring-web-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-beans/6.2.19/spring-beans-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-webmvc/6.2.19/spring-webmvc-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-aop/6.2.19/spring-aop-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-expression/6.2.19/spring-expression-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-actuator/3.5.16/spring-boot-starter-actuator-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-actuator-autoconfigure/3.5.16/spring-boot-actuator-autoconfigure-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-actuator/3.5.16/spring-boot-actuator-3.5.16.jar:/Users/anne_lister/.m2/repository/io/micrometer/micrometer-observation/1.15.12/micrometer-observation-1.15.12.jar:/Users/anne_lister/.m2/repository/io/micrometer/micrometer-commons/1.15.12/micrometer-commons-1.15.12.jar:/Users/anne_lister/.m2/repository/io/micrometer/micrometer-jakarta9/1.15.12/micrometer-jakarta9-1.15.12.jar:/Users/anne_lister/.m2/repository/io/micrometer/micrometer-core/1.15.12/micrometer-core-1.15.12.jar:/Users/anne_lister/.m2/repository/org/hdrhistogram/HdrHistogram/2.2.2/HdrHistogram-2.2.2.jar:/Users/anne_lister/.m2/repository/org/latencyutils/LatencyUtils/2.0.3/LatencyUtils-2.0.3.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-validation/3.5.16/spring-boot-starter-validation-3.5.16.jar:/Users/anne_lister/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.55/tomcat-embed-el-10.1.55.jar:/Users/anne_lister/.m2/repository/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final.jar:/Users/anne_lister/.m2/repository/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2.jar:/Users/anne_lister/.m2/repository/org/jboss/logging/jboss-logging/3.6.3.Final/jboss-logging-3.6.3.Final.jar:/Users/anne_lister/.m2/repository/com/fasterxml/classmate/1.7.3/classmate-1.7.3.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-jdbc/3.5.16/spring-boot-starter-jdbc-3.5.16.jar:/Users/anne_lister/.m2/repository/com/zaxxer/HikariCP/6.3.3/HikariCP-6.3.3.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-jdbc/6.2.19/spring-jdbc-6.2.19.jar:/Users/anne_lister/.m2/repository/org/postgresql/postgresql/42.7.13/postgresql-42.7.13.jar:/Users/anne_lister/.m2/repository/org/checkerframework/checker-qual/3.55.1/checker-qual-3.55.1.jar:/Users/anne_lister/.m2/repository/org/flywaydb/flyway-core/11.20.3/flyway-core-11.20.3.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.21.4/jackson-databind-2.21.4.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.21/jackson-annotations-2.21.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.21.4/jackson-core-2.21.4.jar:/Users/anne_lister/.m2/repository/org/flywaydb/flyway-database-postgresql/11.20.3/flyway-database-postgresql-11.20.3.jar:/Users/anne_lister/.m2/repository/org/springframework/kafka/spring-kafka/3.3.16/spring-kafka-3.3.16.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-context/6.2.19/spring-context-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-messaging/6.2.19/spring-messaging-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-tx/6.2.19/spring-tx-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/retry/spring-retry/2.0.13/spring-retry-2.0.13.jar:/Users/anne_lister/.m2/repository/org/apache/kafka/kafka-clients/3.9.2/kafka-clients-3.9.2.jar:/Users/anne_lister/.m2/repository/com/github/luben/zstd-jni/1.5.6-4/zstd-jni-1.5.6-4.jar:/Users/anne_lister/.m2/repository/at/yawk/lz4/lz4-java/1.10.1/lz4-java-1.10.1.jar:/Users/anne_lister/.m2/repository/org/xerial/snappy/snappy-java/1.1.10.5/snappy-java-1.1.10.5.jar:/Users/anne_lister/.m2/repository/org/apache/httpcomponents/client5/httpclient5/5.5.2/httpclient5-5.5.2.jar:/Users/anne_lister/.m2/repository/org/apache/httpcomponents/core5/httpcore5/5.3.6/httpcore5-5.3.6.jar:/Users/anne_lister/.m2/repository/org/apache/httpcomponents/core5/httpcore5-h2/5.3.6/httpcore5-h2-5.3.6.jar:/Users/anne_lister/.m2/repository/org/slf4j/slf4j-api/2.0.18/slf4j-api-2.0.18.jar:/Users/anne_lister/.m2/repository/org/testcontainers/kafka/1.21.4/kafka-1.21.4.jar:/Users/anne_lister/.m2/repository/org/testcontainers/testcontainers/1.21.4/testcontainers-1.21.4.jar:/Users/anne_lister/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/anne_lister/.m2/repository/org/hamcrest/hamcrest-core/3.0/hamcrest-core-3.0.jar:/Users/anne_lister/.m2/repository/org/apache/commons/commons-compress/1.24.0/commons-compress-1.24.0.jar:/Users/anne_lister/.m2/repository/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar:/Users/anne_lister/.m2/repository/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar:/Users/anne_lister/.m2/repository/com/github/docker-java/docker-java-api/3.4.2/docker-java-api-3.4.2.jar:/Users/anne_lister/.m2/repository/com/github/docker-java/docker-java-transport-zerodep/3.4.2/docker-java-transport-zerodep-3.4.2.jar:/Users/anne_lister/.m2/repository/com/github/docker-java/docker-java-transport/3.4.2/docker-java-transport-3.4.2.jar:/Users/anne_lister/.m2/repository/net/java/dev/jna/jna/5.13.0/jna-5.13.0.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-test/3.5.16/spring-boot-starter-test-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-test/3.5.16/spring-boot-test-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-test-autoconfigure/3.5.16/spring-boot-test-autoconfigure-3.5.16.jar:/Users/anne_lister/.m2/repository/com/jayway/jsonpath/json-path/2.9.0/json-path-2.9.0.jar:/Users/anne_lister/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.5/jakarta.xml.bind-api-4.0.5.jar:/Users/anne_lister/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.4/jakarta.activation-api-2.1.4.jar:/Users/anne_lister/.m2/repository/net/minidev/json-smart/2.5.2/json-smart-2.5.2.jar:/Users/anne_lister/.m2/repository/net/minidev/accessors-smart/2.5.2/accessors-smart-2.5.2.jar:/Users/anne_lister/.m2/repository/org/ow2/asm/asm/9.7.1/asm-9.7.1.jar:/Users/anne_lister/.m2/repository/org/assertj/assertj-core/3.27.7/assertj-core-3.27.7.jar:/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy/1.17.8/byte-buddy-1.17.8.jar:/Users/anne_lister/.m2/repository/org/awaitility/awaitility/4.2.2/awaitility-4.2.2.jar:/Users/anne_lister/.m2/repository/org/hamcrest/hamcrest/3.0/hamcrest-3.0.jar:/Users/anne_lister/.m2/repository/org/junit/jupiter/junit-jupiter/5.12.2/junit-jupiter-5.12.2.jar:/Users/anne_lister/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.12.2/junit-jupiter-api-5.12.2.jar:/Users/anne_lister/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/anne_lister/.m2/repository/org/junit/platform/junit-platform-commons/1.12.2/junit-platform-commons-1.12.2.jar:/Users/anne_lister/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/anne_lister/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.12.2/junit-jupiter-params-5.12.2.jar:/Users/anne_lister/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.12.2/junit-jupiter-engine-5.12.2.jar:/Users/anne_lister/.m2/repository/org/junit/platform/junit-platform-engine/1.12.2/junit-platform-engine-1.12.2.jar:/Users/anne_lister/.m2/repository/org/mockito/mockito-core/5.17.0/mockito-core-5.17.0.jar:/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar:/Users/anne_lister/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/anne_lister/.m2/repository/org/mockito/mockito-junit-jupiter/5.17.0/mockito-junit-jupiter-5.17.0.jar:/Users/anne_lister/.m2/repository/org/skyscreamer/jsonassert/1.5.3/jsonassert-1.5.3.jar:/Users/anne_lister/.m2/repository/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-core/6.2.19/spring-core-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-jcl/6.2.19/spring-jcl-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-test/6.2.19/spring-test-6.2.19.jar:/Users/anne_lister/.m2/repository/org/xmlunit/xmlunit-core/2.10.4/xmlunit-core-2.10.4.jar:/Users/anne_lister/.m2/repository/org/testcontainers/postgresql/1.21.4/postgresql-1.21.4.jar:/Users/anne_lister/.m2/repository/org/testcontainers/jdbc/1.21.4/jdbc-1.21.4.jar:/Users/anne_lister/.m2/repository/org/testcontainers/database-commons/1.21.4/database-commons-1.21.4.jar:/Users/anne_lister/.m2/repository/org/testcontainers/junit-jupiter/1.21.4/junit-jupiter-1.21.4.jar:"/>
+    <property name="java.vm.vendor" value="Amazon.com Inc."/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="catalina.useNaming" value="false"/>
+    <property name="java.vendor.url" value="https://aws.amazon.com/corretto/"/>
+    <property name="user.timezone" value="Asia/Shanghai"/>
+    <property name="org.jboss.logging.provider" value="slf4j"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="APPLICATION_NAME" value="payments-ledger-platform"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="CN"/>
+    <property name="sun.boot.library.path" value="/Users/anne_lister/.jdks/amazon-corretto-21.jdk/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/target/surefire/surefirebooter-20261007220921353_3.jar /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/target/surefire 2026-10-07T22-09-21_323-jvmRun1 surefire-20261007220921353_1tmp surefire_0-20261007220921353_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/target/test-classes:/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/target/classes:/Users/anne_lister/.m2/repository/com/stripe/stripe-java/33.3.0/stripe-java-33.3.0.jar:/Users/anne_lister/.m2/repository/com/google/code/gson/gson/2.13.2/gson-2.13.2.jar:/Users/anne_lister/.m2/repository/com/google/errorprone/error_prone_annotations/2.41.0/error_prone_annotations-2.41.0.jar:/Users/anne_lister/.m2/repository/org/springframework/security/spring-security-crypto/6.5.11/spring-security-crypto-6.5.11.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-web/3.5.16/spring-boot-starter-web-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter/3.5.16/spring-boot-starter-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot/3.5.16/spring-boot-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-autoconfigure/3.5.16/spring-boot-autoconfigure-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-logging/3.5.16/spring-boot-starter-logging-3.5.16.jar:/Users/anne_lister/.m2/repository/ch/qos/logback/logback-classic/1.5.34/logback-classic-1.5.34.jar:/Users/anne_lister/.m2/repository/ch/qos/logback/logback-core/1.5.34/logback-core-1.5.34.jar:/Users/anne_lister/.m2/repository/org/apache/logging/log4j/log4j-to-slf4j/2.24.3/log4j-to-slf4j-2.24.3.jar:/Users/anne_lister/.m2/repository/org/apache/logging/log4j/log4j-api/2.24.3/log4j-api-2.24.3.jar:/Users/anne_lister/.m2/repository/org/slf4j/jul-to-slf4j/2.0.18/jul-to-slf4j-2.0.18.jar:/Users/anne_lister/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar:/Users/anne_lister/.m2/repository/org/yaml/snakeyaml/2.4/snakeyaml-2.4.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-json/3.5.16/spring-boot-starter-json-3.5.16.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jdk8/2.21.4/jackson-datatype-jdk8-2.21.4.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.21.4/jackson-datatype-jsr310-2.21.4.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/module/jackson-module-parameter-names/2.21.4/jackson-module-parameter-names-2.21.4.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-tomcat/3.5.16/spring-boot-starter-tomcat-3.5.16.jar:/Users/anne_lister/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.55/tomcat-embed-core-10.1.55.jar:/Users/anne_lister/.m2/repository/org/apache/tomcat/embed/tomcat-embed-websocket/10.1.55/tomcat-embed-websocket-10.1.55.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-web/6.2.19/spring-web-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-beans/6.2.19/spring-beans-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-webmvc/6.2.19/spring-webmvc-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-aop/6.2.19/spring-aop-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-expression/6.2.19/spring-expression-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-actuator/3.5.16/spring-boot-starter-actuator-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-actuator-autoconfigure/3.5.16/spring-boot-actuator-autoconfigure-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-actuator/3.5.16/spring-boot-actuator-3.5.16.jar:/Users/anne_lister/.m2/repository/io/micrometer/micrometer-observation/1.15.12/micrometer-observation-1.15.12.jar:/Users/anne_lister/.m2/repository/io/micrometer/micrometer-commons/1.15.12/micrometer-commons-1.15.12.jar:/Users/anne_lister/.m2/repository/io/micrometer/micrometer-jakarta9/1.15.12/micrometer-jakarta9-1.15.12.jar:/Users/anne_lister/.m2/repository/io/micrometer/micrometer-core/1.15.12/micrometer-core-1.15.12.jar:/Users/anne_lister/.m2/repository/org/hdrhistogram/HdrHistogram/2.2.2/HdrHistogram-2.2.2.jar:/Users/anne_lister/.m2/repository/org/latencyutils/LatencyUtils/2.0.3/LatencyUtils-2.0.3.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-validation/3.5.16/spring-boot-starter-validation-3.5.16.jar:/Users/anne_lister/.m2/repository/org/apache/tomcat/embed/tomcat-embed-el/10.1.55/tomcat-embed-el-10.1.55.jar:/Users/anne_lister/.m2/repository/org/hibernate/validator/hibernate-validator/8.0.3.Final/hibernate-validator-8.0.3.Final.jar:/Users/anne_lister/.m2/repository/jakarta/validation/jakarta.validation-api/3.0.2/jakarta.validation-api-3.0.2.jar:/Users/anne_lister/.m2/repository/org/jboss/logging/jboss-logging/3.6.3.Final/jboss-logging-3.6.3.Final.jar:/Users/anne_lister/.m2/repository/com/fasterxml/classmate/1.7.3/classmate-1.7.3.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-jdbc/3.5.16/spring-boot-starter-jdbc-3.5.16.jar:/Users/anne_lister/.m2/repository/com/zaxxer/HikariCP/6.3.3/HikariCP-6.3.3.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-jdbc/6.2.19/spring-jdbc-6.2.19.jar:/Users/anne_lister/.m2/repository/org/postgresql/postgresql/42.7.13/postgresql-42.7.13.jar:/Users/anne_lister/.m2/repository/org/checkerframework/checker-qual/3.55.1/checker-qual-3.55.1.jar:/Users/anne_lister/.m2/repository/org/flywaydb/flyway-core/11.20.3/flyway-core-11.20.3.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.21.4/jackson-databind-2.21.4.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.21/jackson-annotations-2.21.jar:/Users/anne_lister/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.21.4/jackson-core-2.21.4.jar:/Users/anne_lister/.m2/repository/org/flywaydb/flyway-database-postgresql/11.20.3/flyway-database-postgresql-11.20.3.jar:/Users/anne_lister/.m2/repository/org/springframework/kafka/spring-kafka/3.3.16/spring-kafka-3.3.16.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-context/6.2.19/spring-context-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-messaging/6.2.19/spring-messaging-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-tx/6.2.19/spring-tx-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/retry/spring-retry/2.0.13/spring-retry-2.0.13.jar:/Users/anne_lister/.m2/repository/org/apache/kafka/kafka-clients/3.9.2/kafka-clients-3.9.2.jar:/Users/anne_lister/.m2/repository/com/github/luben/zstd-jni/1.5.6-4/zstd-jni-1.5.6-4.jar:/Users/anne_lister/.m2/repository/at/yawk/lz4/lz4-java/1.10.1/lz4-java-1.10.1.jar:/Users/anne_lister/.m2/repository/org/xerial/snappy/snappy-java/1.1.10.5/snappy-java-1.1.10.5.jar:/Users/anne_lister/.m2/repository/org/apache/httpcomponents/client5/httpclient5/5.5.2/httpclient5-5.5.2.jar:/Users/anne_lister/.m2/repository/org/apache/httpcomponents/core5/httpcore5/5.3.6/httpcore5-5.3.6.jar:/Users/anne_lister/.m2/repository/org/apache/httpcomponents/core5/httpcore5-h2/5.3.6/httpcore5-h2-5.3.6.jar:/Users/anne_lister/.m2/repository/org/slf4j/slf4j-api/2.0.18/slf4j-api-2.0.18.jar:/Users/anne_lister/.m2/repository/org/testcontainers/kafka/1.21.4/kafka-1.21.4.jar:/Users/anne_lister/.m2/repository/org/testcontainers/testcontainers/1.21.4/testcontainers-1.21.4.jar:/Users/anne_lister/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/anne_lister/.m2/repository/org/hamcrest/hamcrest-core/3.0/hamcrest-core-3.0.jar:/Users/anne_lister/.m2/repository/org/apache/commons/commons-compress/1.24.0/commons-compress-1.24.0.jar:/Users/anne_lister/.m2/repository/org/rnorth/duct-tape/duct-tape/1.0.8/duct-tape-1.0.8.jar:/Users/anne_lister/.m2/repository/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar:/Users/anne_lister/.m2/repository/com/github/docker-java/docker-java-api/3.4.2/docker-java-api-3.4.2.jar:/Users/anne_lister/.m2/repository/com/github/docker-java/docker-java-transport-zerodep/3.4.2/docker-java-transport-zerodep-3.4.2.jar:/Users/anne_lister/.m2/repository/com/github/docker-java/docker-java-transport/3.4.2/docker-java-transport-3.4.2.jar:/Users/anne_lister/.m2/repository/net/java/dev/jna/jna/5.13.0/jna-5.13.0.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-starter-test/3.5.16/spring-boot-starter-test-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-test/3.5.16/spring-boot-test-3.5.16.jar:/Users/anne_lister/.m2/repository/org/springframework/boot/spring-boot-test-autoconfigure/3.5.16/spring-boot-test-autoconfigure-3.5.16.jar:/Users/anne_lister/.m2/repository/com/jayway/jsonpath/json-path/2.9.0/json-path-2.9.0.jar:/Users/anne_lister/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.5/jakarta.xml.bind-api-4.0.5.jar:/Users/anne_lister/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.4/jakarta.activation-api-2.1.4.jar:/Users/anne_lister/.m2/repository/net/minidev/json-smart/2.5.2/json-smart-2.5.2.jar:/Users/anne_lister/.m2/repository/net/minidev/accessors-smart/2.5.2/accessors-smart-2.5.2.jar:/Users/anne_lister/.m2/repository/org/ow2/asm/asm/9.7.1/asm-9.7.1.jar:/Users/anne_lister/.m2/repository/org/assertj/assertj-core/3.27.7/assertj-core-3.27.7.jar:/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy/1.17.8/byte-buddy-1.17.8.jar:/Users/anne_lister/.m2/repository/org/awaitility/awaitility/4.2.2/awaitility-4.2.2.jar:/Users/anne_lister/.m2/repository/org/hamcrest/hamcrest/3.0/hamcrest-3.0.jar:/Users/anne_lister/.m2/repository/org/junit/jupiter/junit-jupiter/5.12.2/junit-jupiter-5.12.2.jar:/Users/anne_lister/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.12.2/junit-jupiter-api-5.12.2.jar:/Users/anne_lister/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/anne_lister/.m2/repository/org/junit/platform/junit-platform-commons/1.12.2/junit-platform-commons-1.12.2.jar:/Users/anne_lister/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/anne_lister/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.12.2/junit-jupiter-params-5.12.2.jar:/Users/anne_lister/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.12.2/junit-jupiter-engine-5.12.2.jar:/Users/anne_lister/.m2/repository/org/junit/platform/junit-platform-engine/1.12.2/junit-platform-engine-1.12.2.jar:/Users/anne_lister/.m2/repository/org/mockito/mockito-core/5.17.0/mockito-core-5.17.0.jar:/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar:/Users/anne_lister/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/anne_lister/.m2/repository/org/mockito/mockito-junit-jupiter/5.17.0/mockito-junit-jupiter-5.17.0.jar:/Users/anne_lister/.m2/repository/org/skyscreamer/jsonassert/1.5.3/jsonassert-1.5.3.jar:/Users/anne_lister/.m2/repository/com/vaadin/external/google/android-json/0.0.20131108.vaadin1/android-json-0.0.20131108.vaadin1.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-core/6.2.19/spring-core-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-jcl/6.2.19/spring-jcl-6.2.19.jar:/Users/anne_lister/.m2/repository/org/springframework/spring-test/6.2.19/spring-test-6.2.19.jar:/Users/anne_lister/.m2/repository/org/xmlunit/xmlunit-core/2.10.4/xmlunit-core-2.10.4.jar:/Users/anne_lister/.m2/repository/org/testcontainers/postgresql/1.21.4/postgresql-1.21.4.jar:/Users/anne_lister/.m2/repository/org/testcontainers/jdbc/1.21.4/jdbc-1.21.4.jar:/Users/anne_lister/.m2/repository/org/testcontainers/database-commons/1.21.4/database-commons-1.21.4.jar:/Users/anne_lister/.m2/repository/org/testcontainers/junit-jupiter/1.21.4/junit-jupiter-1.21.4.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/anne_lister"/>
+    <property name="user.language" value="zh"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-08-18"/>
+    <property name="java.home" value="/Users/anne_lister/.jdks/amazon-corretto-21.jdk/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="FILE_LOG_CHARSET" value="UTF-8"/>
+    <property name="java.awt.headless" value="true"/>
+    <property name="apple.awt.application.name" value="ForkedBooter"/>
+    <property name="surefire.real.class.path" value="/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties/target/surefire/surefirebooter-20261007220921353_3.jar"/>
+    <property name="user.script" value="Hans"/>
+    <property name="polyglot.engine.WarnInterpreterOnly" value="false"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="21.0.12.1+9-LTS"/>
+    <property name="user.name" value="anne_lister"/>
+    <property name="stdout.encoding" value="US-ASCII"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="13.5"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Corretto-21.0.12.9.1"/>
+    <property name="localRepository" value="/Users/anne_lister/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/corretto/corretto-21/issues/"/>
+    <property name="java.io.tmpdir" value="/var/folders/62/6p9ptkp54d70cwlbz_dn3v_h0000gn/T/"/>
+    <property name="catalina.home" value="/private/var/folders/62/6p9ptkp54d70cwlbz_dn3v_h0000gn/T/tomcat.0.6481454677547273626"/>
+    <property name="com.zaxxer.hikari.pool_number" value="376"/>
+    <property name="java.version" value="21.0.12.1"/>
+    <property name="user.dir" value="/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties"/>
+    <property name="os.arch" value="aarch64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="PID" value="6141"/>
+    <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
+    <property name="catalina.base" value="/private/var/folders/62/6p9ptkp54d70cwlbz_dn3v_h0000gn/T/tomcat.0.9042887328794784026"/>
+    <property name="native.encoding" value="US-ASCII"/>
+    <property name="java.library.path" value="/Users/anne_lister/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="pr18.maxSteps" value="100"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="US-ASCII"/>
+    <property name="java.vendor" value="Amazon.com Inc."/>
+    <property name="java.vm.version" value="21.0.12.1+9-LTS"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="java.class.version" value="65.0"/>
+    <property name="CONSOLE_LOG_PATTERN" value="%d{yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX} %-5level [%X{requestId:--}] %logger{36} - %msg%n"/>
+    <property name="LOGGED_APPLICATION_NAME" value="[payments-ledger-platform] "/>
+  </properties>
+  <testcase name="gaugesSampleDurableActiveGlobalScopeWithoutAnyOpsRequestAndConflictsAreNotUnknown" classname="com.paymentsledger.ops.ObservabilityIT" time="1.083">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.gaugesSampleDurableActiveGlobalScopeWithoutAnyOpsRequestAndConflictsAreNotUnknown(ObservabilityIT.java:309)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+    <system-out><![CDATA[2026-10-07T22:37:43.664+08:00 INFO  [-] tc.postgres:16 - Creating container for image: postgres:16
+2026-10-07T22:37:43.760+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 is starting: b661b3d02d44c0f58b0559447704cee3141b9a2163e051dfd65c3d160d541fd0
+2026-10-07T22:37:45.168+08:00 INFO  [-] tc.postgres:16 - Container postgres:16 started in PT1.504026S
+2026-10-07T22:37:45.169+08:00 INFO  [-] tc.postgres:16 - Container is started (JDBC URL: jdbc:postgresql://localhost:59735/test?loggerLevel=OFF)
+2026-10-07T22:37:45.170+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executing database script from db/pr02-runtime-role.sql
+2026-10-07T22:37:45.213+08:00 INFO  [-] org.testcontainers.ext.ScriptUtils - Executed database script from db/pr02-runtime-role.sql in 43 ms.
+2026-10-07T22:37:45.232+08:00 INFO  [-] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ops.ObservabilityIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-07T22:37:45.258+08:00 INFO  [-] c.paymentsledger.ops.ObservabilityIT - Starting ObservabilityIT using Java 21.0.12.1 with PID 6141 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr18-properties)
+2026-10-07T22:37:45.258+08:00 INFO  [-] c.paymentsledger.ops.ObservabilityIT - The following 2 profiles are active: "api", "test"
+2026-10-07T22:37:45.572+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 0 (http)
+2026-10-07T22:37:45.572+08:00 INFO  [-] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-10-07T22:37:45.572+08:00 INFO  [-] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.55]
+2026-10-07T22:37:45.595+08:00 INFO  [-] o.a.c.c.C.[Tomcat-5].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-10-07T22:37:45.595+08:00 INFO  [-] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 336 ms
+2026-10-07T22:37:45.647+08:00 INFO  [-] org.flywaydb.core.FlywayExecutor - Database: jdbc:postgresql://localhost:59735/test?loggerLevel=OFF (PostgreSQL 16.14)
+2026-10-07T22:37:45.663+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "platform"."flyway_schema_history" does not exist yet
+2026-10-07T22:37:45.664+08:00 INFO  [-] o.f.core.internal.command.DbValidate - Successfully validated 16 migrations (execution time 00:00.005s)
+2026-10-07T22:37:45.674+08:00 INFO  [-] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "platform"."flyway_schema_history" ...
+2026-10-07T22:37:45.695+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Current version of schema "platform": << Empty Schema >>
+2026-10-07T22:37:45.698+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "1 - baseline"
+2026-10-07T22:37:45.700+08:00 WARN  [-] o.f.c.i.s.DefaultSqlScriptExecutor - DB: schema "platform" already exists, skipping (SQL State: 42P06 - Error Code: 0)
+2026-10-07T22:37:45.714+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "2 - identity and scoped configuration"
+2026-10-07T22:37:45.775+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "3 - immutable ledger"
+2026-10-07T22:37:45.810+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "4 - business payments"
+2026-10-07T22:37:45.856+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "5 - operation recovery"
+2026-10-07T22:37:45.884+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "6 - webhook inbox"
+2026-10-07T22:37:45.908+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "7 - payment notifications"
+2026-10-07T22:37:45.953+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "8 - financial ingestion"
+2026-10-07T22:37:46.078+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "9 - refund lifecycle"
+2026-10-07T22:37:46.129+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "10 - revenue share"
+2026-10-07T22:37:46.181+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "11 - dispute lifecycle"
+2026-10-07T22:37:46.222+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "12 - payout bank evidence"
+2026-10-07T22:37:46.279+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "13 - payout query evidence"
+2026-10-07T22:37:46.305+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "14 - reconciliation evidence"
+2026-10-07T22:37:46.334+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "15 - reconciliation source recovery"
+2026-10-07T22:37:46.368+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Migrating schema "platform" to version "16 - ops commands approval audit"
+2026-10-07T22:37:46.409+08:00 INFO  [-] o.f.core.internal.command.DbMigrate - Successfully applied 16 migrations to schema "platform", now at version v16 (execution time 00:00.515s)
+2026-10-07T22:37:46.750+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-10-07T22:37:46.834+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-10-07T22:37:46.844+08:00 INFO  [-] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 59768 (http) with context path '/'
+2026-10-07T22:37:46.847+08:00 INFO  [-] c.paymentsledger.ops.ObservabilityIT - Started ObservabilityIT in 1.61 seconds (process running for 1653.916)
+2026-10-07T22:37:47.597+08:00 INFO  [-] o.a.c.c.C.[Tomcat-5].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-07T22:37:47.597+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-10-07T22:37:47.597+08:00 INFO  [-] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+]]></system-out>
+  </testcase>
+  <testcase name="fixedClockPersistentPredicatesAndScopeDoNotMutateMoney" classname="com.paymentsledger.ops.ObservabilityIT" time="0.991">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.fixedClockPersistentPredicatesAndScopeDoNotMutateMoney(ObservabilityIT.java:220)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="generalOpsRolesReadPartnerDeniedForeignAssertionsAndPublicActuatorHidden" classname="com.paymentsledger.ops.ObservabilityIT" time="0.7">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.generalOpsRolesReadPartnerDeniedForeignAssertionsAndPublicActuatorHidden(ObservabilityIT.java:293)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="defensiveMissingInputFlagsPreventScalarEvenWithCompleteRunAndFailCheck" classname="com.paymentsledger.ops.ObservabilityIT" time="0.775">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.defensiveMissingInputFlagsPreventScalarEvenWithCompleteRunAndFailCheck(ObservabilityIT.java:269)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="latestPerCurrencyResidualsNeverCancelAndMissingNewChecksNeverFallBack" classname="com.paymentsledger.ops.ObservabilityIT" time="0.903">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.latestPerCurrencyResidualsNeverCancelAndMissingNewChecksNeverFallBack(ObservabilityIT.java:240)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="realTraceProjectsAndEmitsOnlySafeKnownOperationProviderAndEventIds" classname="com.paymentsledger.ops.ObservabilityIT" time="0.91">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.realTraceProjectsAndEmitsOnlySafeKnownOperationProviderAndEventIds(ObservabilityIT.java:347)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="emptySnapshotRetainsNoDataInsteadOfInventingPassingReports" classname="com.paymentsledger.ops.ObservabilityIT" time="0.76">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.emptySnapshotRetainsNoDataInsteadOfInventingPassingReports(ObservabilityIT.java:202)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="incompleteFailedResidualIsVisibleByDimensionButNeverAScalarOrGauge" classname="com.paymentsledger.ops.ObservabilityIT" time="0.951">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.incompleteFailedResidualIsVisibleByDimensionButNeverAScalarOrGauge(ObservabilityIT.java:257)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="globalAndScopedObservationsExcludeLiveRowsInsertedAfterStartup" classname="com.paymentsledger.ops.ObservabilityIT" time="0.92">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.globalAndScopedObservationsExcludeLiveRowsInsertedAfterStartup(ObservabilityIT.java:288)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="disabledProvidersDisappearAndDatabaseFailureIs503NotFakeZero" classname="com.paymentsledger.ops.ObservabilityIT" time="0.782">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.disabledProvidersDisappearAndDatabaseFailureIs503NotFakeZero(ObservabilityIT.java:360)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="singleCurrencyExactResidualAndLatestPassReplaceHistoricalFailure" classname="com.paymentsledger.ops.ObservabilityIT" time="0.848">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.singleCurrencyExactResidualAndLatestPassReplaceHistoricalFailure(ObservabilityIT.java:251)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="postedUnknownSuspenseAndPendingEvidenceRemainObservableAndOutboxAgeUsesOccurrence" classname="com.paymentsledger.ops.ObservabilityIT" time="0.86">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.postedUnknownSuspenseAndPendingEvidenceRemainObservableAndOutboxAgeUsesOccurrence(ObservabilityIT.java:234)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="fractionalNumericResidualIsAnExactDecimalStringWithoutRounding" classname="com.paymentsledger.ops.ObservabilityIT" time="0.779">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.observe(ObservabilityIT.java:171)
+	at com.paymentsledger.ops.ObservabilityIT.fractionalNumericResidualIsAnExactDecimalStringWithoutRounding(ObservabilityIT.java:277)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+  <testcase name="successfulOperationalReadEmitsOnlyRealKnownCorrelationAssociations" classname="com.paymentsledger.ops.ObservabilityIT" time="0.756">
+    <failure message="&#10;expected: 200 OK&#10; but was: 401 UNAUTHORIZED" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError:
+
+expected: 200 OK
+ but was: 401 UNAUTHORIZED
+	at com.paymentsledger.ops.ObservabilityIT.successfulOperationalReadEmitsOnlyRealKnownCorrelationAssociations(ObservabilityIT.java:324)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+  </testcase>
+</testsuite>

@@ -57,11 +57,26 @@ import org.springframework.transaction.support.*;
  public String evidenceState(ProviderScope scope,UUID payoutId){
   var p=scopedPayout(scope,payoutId,false);if(Boolean.TRUE.equals(p.get("conflict")))return "CONFLICT";
   if(number(p,"outgoing_minor")==0||p.get("arrival_date")==null)return "WAITING_EVIDENCE";
-  if(number(p,"bank_confirmed_minor")==number(p,"outgoing_minor"))return "MATCHED";
+  if(number(p,"bank_confirmed_minor")==number(p,"outgoing_minor"))return bankEvidenceComplete(p)?"MATCHED":"WAITING_EVIDENCE";
   if(number(p,"returned_minor")==number(p,"outgoing_minor"))return "RETURNED";
+  // A partial PSP return plus the remaining bank receipt also exhausts the principal.
+  if(number(p,"bank_confirmed_minor")>0 && number(p,"returned_minor")>0
+    && number(p,"transit_minor")==0 && number(p,"suspense_minor")==0
+    && number(p,"bank_confirmed_minor")==number(p,"outgoing_minor")-number(p,"returned_minor"))return bankEvidenceComplete(p)?"MATCHED":"WAITING_EVIDENCE";
   Long complete=jdbc.queryForObject("SELECT count(*) FROM platform.bank_statement_line l JOIN platform.bank_statement s ON s.id=l.statement_id JOIN platform.payout_bank_match m ON m.line_id=l.id AND m.payout_id=? AND m.kind='MATCH' WHERE l.organization_id=? AND l.environment_id=? AND l.provider_account_id=? AND NOT l.livemode AND l.currency=? AND ?=ANY(l.payout_references) AND l.kind='CREDIT' AND s.complete AND s.coverage_from<=? AND s.coverage_until>? AND s.coverage_until<=clock_timestamp() AND l.allocated_minor=l.principal_minor AND (l.booked_at AT TIME ZONE 'UTC')::date BETWEEN ((CAST(? AS timestamptz) AT TIME ZONE 'UTC')::date-7) AND ((CAST(? AS timestamptz) AT TIME ZONE 'UTC')::date+7)",Long.class,payoutId,scope.organizationId(),scope.environmentId(),scope.providerAccountId(),p.get("currency"),p.get("provider_payout_id"),p.get("arrival_date"),p.get("arrival_date"),p.get("arrival_date"),p.get("arrival_date"));
   Long waiting=jdbc.queryForObject("SELECT count(*) FROM platform.bank_statement_line l WHERE l.organization_id=? AND l.environment_id=? AND l.provider_account_id=? AND NOT l.livemode AND l.currency=? AND ?=ANY(l.payout_references) AND l.kind='CREDIT' AND l.allocated_minor<l.principal_minor",Long.class,scope.organizationId(),scope.environmentId(),scope.providerAccountId(),p.get("currency"),p.get("provider_payout_id"));
   return complete>0&&waiting==0&&number(p,"transit_minor")>0?"SHORT_RECEIPT":"WAITING_EVIDENCE";
+ }
+ /** Every receipt used for settlement needs a complete statement covering the expected arrival. */
+ private boolean bankEvidenceComplete(Map<String,Object> payout){
+  return Boolean.TRUE.equals(jdbc.queryForObject("""
+   SELECT count(*)>0 AND coalesce(bool_and(s.complete
+     AND s.coverage_from<=? AND s.coverage_until>? AND s.coverage_until<=clock_timestamp()),false)
+   FROM platform.payout_bank_match m
+   JOIN platform.bank_statement_line l ON l.id=m.line_id
+   JOIN platform.bank_statement s ON s.id=l.statement_id
+   WHERE m.payout_id=? AND m.kind='MATCH'
+   """,Boolean.class,payout.get("arrival_date"),payout.get("arrival_date"),payout.get("id")));
  }
  private Map<String,Object> scopedPayout(ProviderScope scope,UUID id,boolean lock){if(scope==null||scope.livemode())throw new IllegalArgumentException("Test provider scope required");var p=one("SELECT * FROM platform.payout WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=?"+(lock?" FOR UPDATE":""),id,scope.organizationId(),scope.environmentId(),scope.providerAccountId(),scope.livemode());if(p==null)throw new IllegalArgumentException("Payout outside scope");return p;}
  private static LocalDate date(Map<String,Object> row,String field){return ((Timestamp)row.get(field)).toInstant().atZone(ZoneOffset.UTC).toLocalDate();}
