@@ -1,0 +1,195 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------< com.paymentsledger:payments-ledger-platform >-------------
+[INFO] Building payments-ledger-platform 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 24 resources from src/main/resources to target/classes
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 172 source files with javac [debug parameters release 21] to target/classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr19-faults/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ???????????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr19-faults/src/main/java/com/paymentsledger/identity/ScopeAssertions.java: ??????, ??? -Xlint:deprecation ?????
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ payments-ledger-platform ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ payments-ledger-platform ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 117 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr19-faults/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr19-faults/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java?????????? API?
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr19-faults/src/test/java/com/paymentsledger/financialingestion/FinancialIngestionIT.java: ??????, ??? -Xlint:deprecation ?????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr19-faults/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ?????????????????????
+[INFO] /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr19-faults/src/test/java/com/paymentsledger/payment/PaymentHttpIT.java: ??????, ??? -Xlint:unchecked ?????
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ payments-ledger-platform ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.paymentsledger.webhook.WebhookNormalizerTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.231 s -- in com.paymentsledger.webhook.WebhookNormalizerTest
+[INFO] Running com.paymentsledger.reconciliation.FeeArithmeticTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.paymentsledger.reconciliation.FeeArithmeticTest
+[INFO] Running com.paymentsledger.reconciliation.ReconciliationWindowsTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.paymentsledger.reconciliation.ReconciliationWindowsTest
+[INFO] Running com.paymentsledger.ledger.LedgerRulesTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.paymentsledger.ledger.LedgerRulesTest
+[INFO] Running com.paymentsledger.identity.AuthenticationFilterTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/Users/anne_lister/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+11:51:31.978 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+11:51:32.352 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+11:51:32.874 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+11:51:33.200 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=WORKER
+11:51:33.513 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+11:51:33.825 [main] INFO com.paymentsledger.config.RunRoleConfig -- run_role_resolved role=API
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.759 s -- in com.paymentsledger.identity.AuthenticationFilterTest
+[INFO] Running com.paymentsledger.identity.TestModeGuardTest
+11:51:33.959 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live mode is forbidden
+11:51:33.986 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live provider credentials are forbidden
+11:51:33.992 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live provider credentials are forbidden
+11:51:34.000 [main] WARN org.springframework.context.annotation.AnnotationConfigApplicationContext -- Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'testModeGuard': Live configuration is forbidden
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.171 s -- in com.paymentsledger.identity.TestModeGuardTest
+[INFO] Running com.paymentsledger.identity.IdentityRulesTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.paymentsledger.identity.IdentityRulesTest
+[INFO] Running com.paymentsledger.pr18.Pr18FailureIdentityTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in com.paymentsledger.pr18.Pr18FailureIdentityTest
+[INFO] Running com.paymentsledger.pr18.SequenceGeneratorTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s -- in com.paymentsledger.pr18.SequenceGeneratorTest
+[INFO] Running com.paymentsledger.pr18.PropertyModelsTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.paymentsledger.pr18.PropertyModelsTest
+[INFO] Running com.paymentsledger.ApplicationContextTest
+11:51:34.114 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.paymentsledger.ApplicationContextTest]: ApplicationContextTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+11:51:34.184 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.paymentsledger.PaymentsLedgerApplication for test class com.paymentsledger.ApplicationContextTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-10-09T11:51:34.427+08:00 INFO  [-] c.p.ApplicationContextTest - Starting ApplicationContextTest using Java 21.0.12.1 with PID 88299 (started by anne_lister in /Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr19-faults)
+2026-10-09T11:51:34.428+08:00 INFO  [-] c.p.ApplicationContextTest - The following 1 profile is active: "api"
+2026-10-09T11:51:35.331+08:00 INFO  [-] c.p.config.RunRoleConfig - run_role_resolved role=API
+2026-10-09T11:51:36.119+08:00 INFO  [-] o.s.b.a.e.web.EndpointLinksResolver - Exposing 1 endpoint beneath base path '/actuator'
+2026-10-09T11:51:36.158+08:00 INFO  [-] c.p.ApplicationContextTest - Started ApplicationContextTest in 1.907 seconds (process running for 5.803)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.148 s -- in com.paymentsledger.ApplicationContextTest
+[INFO] Running com.paymentsledger.config.RunRoleConfigTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.paymentsledger.config.RunRoleConfigTest
+[INFO] Running com.paymentsledger.notification.HttpMerchantTransportTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.26 s -- in com.paymentsledger.notification.HttpMerchantTransportTest
+[INFO] Running com.paymentsledger.notification.NotificationTargetPolicyTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.paymentsledger.notification.NotificationTargetPolicyTest
+[INFO] Running com.paymentsledger.notification.NotificationConfigurationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.023 s -- in com.paymentsledger.notification.NotificationConfigurationTest
+[INFO] Running com.paymentsledger.notification.NotificationSignatureTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.paymentsledger.notification.NotificationSignatureTest
+[INFO] Running com.paymentsledger.payment.PaymentControllerTest
+2026-10-09T11:51:46.619+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-10-09T11:51:46.619+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-10-09T11:51:46.620+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-10-09T11:51:46.694+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-10-09T11:51:46.694+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-10-09T11:51:46.694+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-10-09T11:51:46.707+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-10-09T11:51:46.707+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-10-09T11:51:46.707+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-10-09T11:51:46.713+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=FORBIDDEN status=403 retryable=false
+2026-10-09T11:51:46.718+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-10-09T11:51:46.718+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-10-09T11:51:46.718+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-10-09T11:51:46.719+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=PROVIDER_UNKNOWN_RESULT status=500 retryable=false
+2026-10-09T11:51:46.731+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-10-09T11:51:46.731+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-10-09T11:51:46.731+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-10-09T11:51:46.742+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-10-09T11:51:46.742+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-10-09T11:51:46.742+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 0 ms
+2026-10-09T11:51:46.743+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=IDEMPOTENCY_KEY_REQUIRED status=400 retryable=false
+2026-10-09T11:51:46.746+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=VALIDATION_ERROR status=400 retryable=false
+2026-10-09T11:51:46.750+08:00 INFO  [-] o.s.mock.web.MockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-10-09T11:51:46.750+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-10-09T11:51:46.751+08:00 INFO  [-] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-10-09T11:51:46.751+08:00 WARN  [-] c.p.c.error.GlobalExceptionHandler - api_error code=UNAUTHORIZED status=401 retryable=false
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.202 s -- in com.paymentsledger.payment.PaymentControllerTest
+[INFO] Running com.paymentsledger.payment.PaymentIdsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.paymentsledger.payment.PaymentIdsTest
+[INFO] Running com.paymentsledger.payment.PaymentRequestsTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.paymentsledger.payment.PaymentRequestsTest
+[INFO] Running com.paymentsledger.payment.RecoveryPolicyTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.paymentsledger.payment.RecoveryPolicyTest
+[INFO] Running com.paymentsledger.payment.RefundRequestsTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.paymentsledger.payment.RefundRequestsTest
+[INFO] Running com.paymentsledger.provider.ProviderModelsTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.paymentsledger.provider.ProviderModelsTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.254 s -- in com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeGatewayTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.110 s -- in com.paymentsledger.provider.adapter.stripe.StripeGatewayTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeAdapterConfigurationTest
+2026-10-09T11:51:47.164+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeGateway' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeGateway]: Factory method 'stripeGateway' threw exception with message: A Stripe test credential is required
+2026-10-09T11:51:47.167+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeGateway' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeGateway]: Factory method 'stripeGateway' threw exception with message: A bound Stripe account ID is required
+2026-10-09T11:51:47.169+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeGateway' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeGateway]: Factory method 'stripeGateway' threw exception with message: Select exactly one provider implementation
+2026-10-09T11:51:47.175+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'stripeWebhookVerifier' defined in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfiguration: Failed to instantiate [com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifier]: Factory method 'stripeWebhookVerifier' threw exception with message: The pinned Stripe API version is required
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.030 s -- in com.paymentsledger.provider.adapter.stripe.StripeAdapterConfigurationTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripePaymentsAdapterTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 s -- in com.paymentsledger.provider.adapter.stripe.StripePaymentsAdapterTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeLifecycleProbeTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in com.paymentsledger.provider.adapter.stripe.StripeLifecycleProbeTest
+[INFO] Running com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest
+[INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.040 s -- in com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest
+[INFO] Running com.paymentsledger.provider.fake.FakeProviderConfigurationTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.paymentsledger.provider.fake.FakeProviderConfigurationTest
+[INFO] Running com.paymentsledger.provider.fake.FakeStateStoreTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.886 s -- in com.paymentsledger.provider.fake.FakeStateStoreTest
+[INFO] Running com.paymentsledger.provider.fake.FakeStripeProviderTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.894 s -- in com.paymentsledger.provider.fake.FakeStripeProviderTest
+[INFO] Running com.paymentsledger.provider.fake.FakeEvidenceTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.566 s -- in com.paymentsledger.provider.fake.FakeEvidenceTest
+[INFO] Running com.paymentsledger.provider.fake.ProviderSimulatorReplayTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.085 s -- in com.paymentsledger.provider.fake.ProviderSimulatorReplayTest
+[INFO] Running com.paymentsledger.observability.ObservabilityGaugesTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.paymentsledger.observability.ObservabilityGaugesTest
+[INFO] Running com.paymentsledger.observability.CorrelationLogTest
+2026-10-09T11:51:50.842+08:00 INFO  [-] c.p.observability.CorrelationLog - {"event":"ops.read"}
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.paymentsledger.observability.CorrelationLogTest
+[INFO] Running com.paymentsledger.dispute.DisputeAmountsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.paymentsledger.dispute.DisputeAmountsTest
+[INFO] Running com.paymentsledger.common.request.RequestIdFilterTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.paymentsledger.common.request.RequestIdFilterTest
+[INFO] Running com.paymentsledger.common.error.ErrorContractTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.paymentsledger.common.error.ErrorContractTest
+[INFO] Running com.paymentsledger.financialingestion.FinancialRulesTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.078 s -- in com.paymentsledger.financialingestion.FinancialRulesTest
+[INFO] Running com.paymentsledger.financialingestion.FinancialIngestionWorkerTest
+2026-10-09T11:51:51.080+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'financialIngestionWorker' defined in com.paymentsledger.financialingestion.FinancialIngestionConfiguration: Failed to instantiate [com.paymentsledger.financialingestion.FinancialIngestionWorker]: Factory method 'financialIngestionWorker' threw exception with message: Financial ingestion requires configured scope UUIDs
+2026-10-09T11:51:51.083+08:00 WARN  [-] o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'financialImportService' defined in com.paymentsledger.financialingestion.FinancialIngestionConfiguration: Unsatisfied dependency expressed through method 'financialImportService' parameter 0: No qualifying bean of type 'org.springframework.jdbc.core.JdbcTemplate' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.167 s -- in com.paymentsledger.financialingestion.FinancialIngestionWorkerTest
+[INFO] Running com.paymentsledger.revenueshare.SharePolicyTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.paymentsledger.revenueshare.SharePolicyTest
+[INFO] Running com.paymentsledger.revenueshare.RevenueShareConfigurationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.080 s -- in com.paymentsledger.revenueshare.RevenueShareConfigurationTest
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 220, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  29.736 s
+[INFO] Finished at: 2026-10-09T11:51:51+08:00
+[INFO] ------------------------------------------------------------------------

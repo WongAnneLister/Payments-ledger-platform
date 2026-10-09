@@ -1,0 +1,17 @@
+{
+  "classification": "DRIVER_FAILURE",
+  "reason": "Selected oldest state notification while asserting payment.succeeded; three canonical setup notifications existed. Fix routes earlier notifications through actual Kafka before injecting target fault. No production code change.",
+  "filesSha256": {
+    "F-06-consumer-after-commit-before-ack.json": "acf2cd7a460f13b20d2f5e0fa9b9d3965f76c58c5a3fec364bfba3f5d0bd1a9f",
+    "F-06-outbox-after-send.json": "7b16b4443bd22a92c077e3ee48fc41760deb3b047296b780544ac013f3debb96",
+    "F-07-broker-outage.json": "38f9a89d751b43442fcac3026fd72761550711b2eb782d3d3b6e28c5a353abeb",
+    "F-07-consumer-commit-before-ack.json": "9ace19e2e822b051e96e699cd7e7c850f4b00915f47cd7cbcec924f49fb22c80",
+    "F-07-outbox-after-send.json": "548a777bb90bf123fb0fb1e3925a38d06e453355778e31e6106b7df42b39ec2e",
+    "process-logs/consumer-91668.log": "044ac4769c9e0c958618ea1b41925130f45942ff3c8cbbe641d7709d44792626",
+    "process-logs/consumer-91741.log": "56b225956e0db613a97fc4138f416d9ddd6417193af7b177d8376a3feabe8e4b",
+    "process-logs/killed-91554.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "process-logs/producer-91732.log": "2979330d83ade23c336e50fa9686285b1ef49340542bfccaae56e67791d94a4b",
+    "process-logs/producer-91804.log": "e3dab48aa37d81f2667c8d6dda9560f19d063bed4e25433c83218537ed6322c7",
+    "process-logs/released-91556.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

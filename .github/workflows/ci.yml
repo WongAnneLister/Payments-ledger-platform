@@ -127,3 +127,56 @@ jobs:
             target/failsafe-reports/**
           if-no-files-found: warn
           retention-days: 14
+
+  pr19-faults:
+    name: PR19 ${{ matrix.fault }} isolated replay
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        fault: ['F-01', 'F-02', 'F-03', 'F-04', 'F-05', 'F-06', 'F-07', 'F-08']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+          cache: maven
+      - name: Strict PR19 runner regressions
+        run: python3 -m unittest discover -s scripts/tests -p 'test_pr19_runner.py'
+      - name: Replay selected fault and validate every required variant
+        run: python3 scripts/ci/run_pr19.py --fault '${{ matrix.fault }}'
+      - name: Upload actual failure or success evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr19-fault-${{ matrix.fault }}
+          path: |
+            target/pr19/**
+            target/failsafe-reports/**
+            target/surefire-reports/**
+          if-no-files-found: warn
+          retention-days: 14
+
+  pr19-matrix-report:
+    name: Validate complete PR19 fault matrix
+    needs: pr19-faults
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: pr19-fault-*
+          path: target/pr19-ci
+      - name: Reject missing variants, failed runs or mixed source snapshots
+        run: python3 scripts/ci/run_pr19.py --aggregate target/pr19-ci
+      - name: Upload matrix report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr19-matrix-report
+          path: target/pr19/ci-matrix-summary.json
+          if-no-files-found: warn
+          retention-days: 14

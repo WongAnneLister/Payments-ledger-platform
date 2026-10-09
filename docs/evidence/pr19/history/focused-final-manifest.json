@@ -1,0 +1,15 @@
+{
+  "classification": "PASS_FOCUSED_NOT_FULL",
+  "sourceCommit": "c600b15",
+  "sourceUncommitted": true,
+  "faultVariants": 42,
+  "javaUnits": 225,
+  "javaIntegration": 42,
+  "pythonTests": 27,
+  "nodeTests": 35,
+  "files": {
+    "focused-final-before-clean.tar.gz": "bc33d2eb12ffe9d1efe458d97e6a0e4af8cb633db33f337dc804dc561ebb5ec8",
+    "python-final.txt.gz": "b6daec944be2add8c64dce2692a847a5c127ba51e372b676ff57dff71b7faafb",
+    "node-final.txt.gz": "14b39debe00e0ecdd18caa0ce282c918b08a907804857ecef2353e54814f94e2"
+  }
+}
