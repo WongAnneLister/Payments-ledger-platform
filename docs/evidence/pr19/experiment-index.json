@@ -1,0 +1,674 @@
+[
+  {
+    "testId": "F-01/known-l1",
+    "status": "PASS",
+    "recoveryMillis": 361,
+    "elapsedMillis": 1603,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 7,
+      "webhooks": 0,
+      "journals": 2,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-01-known-l1.json"
+  },
+  {
+    "testId": "F-01/known-l2",
+    "status": "PASS",
+    "recoveryMillis": 449,
+    "elapsedMillis": 1694,
+    "counts": {
+      "statusTransitions": 3,
+      "requests": 8,
+      "webhooks": 1,
+      "journals": 2,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-01-known-l2.json"
+  },
+  {
+    "testId": "F-01/no-order-l3",
+    "status": "PASS",
+    "recoveryMillis": 138,
+    "elapsedMillis": 1181,
+    "counts": {
+      "statusTransitions": 0,
+      "requests": 4,
+      "webhooks": 0,
+      "journals": 0,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-01-no-order-l3.json"
+  },
+  {
+    "testId": "F-01/trusted-order-l3",
+    "status": "PASS",
+    "recoveryMillis": 303,
+    "elapsedMillis": 1448,
+    "counts": {
+      "statusTransitions": 1,
+      "requests": 4,
+      "webhooks": 0,
+      "journals": 2,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-01-trusted-order-l3.json"
+  },
+  {
+    "testId": "F-02/concurrent-same-bt",
+    "status": "PASS",
+    "recoveryMillis": 368,
+    "elapsedMillis": 1533,
+    "counts": {
+      "statusTransitions": 3,
+      "requests": 4,
+      "webhooks": 3,
+      "journals": 2,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-02-concurrent-same-bt.json"
+  },
+  {
+    "testId": "F-02/same-charge-bt",
+    "status": "PASS",
+    "recoveryMillis": 403,
+    "elapsedMillis": 1602,
+    "counts": {
+      "statusTransitions": 3,
+      "requests": 4,
+      "webhooks": 3,
+      "journals": 2,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-02-same-charge-bt.json"
+  },
+  {
+    "testId": "F-02/same-event",
+    "status": "PASS",
+    "recoveryMillis": 308,
+    "elapsedMillis": 1588,
+    "counts": {
+      "statusTransitions": 3,
+      "requests": 4,
+      "webhooks": 2,
+      "journals": 2,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-02-same-event.json"
+  },
+  {
+    "testId": "F-03/dispute-bt-first",
+    "status": "PASS",
+    "recoveryMillis": 222,
+    "elapsedMillis": 1718,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 5,
+      "webhooks": 1,
+      "journals": 5,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-03-dispute-bt-first.json"
+  },
+  {
+    "testId": "F-03/old-failure-after-success",
+    "status": "PASS",
+    "recoveryMillis": 114,
+    "elapsedMillis": 1422,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 5,
+      "webhooks": 1,
+      "journals": 2,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-03-old-failure-after-success.json"
+  },
+  {
+    "testId": "F-03/payout-return-first",
+    "status": "PASS",
+    "recoveryMillis": 328,
+    "elapsedMillis": 1733,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 6,
+      "webhooks": 2,
+      "journals": 4,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-03-payout-return-first.json"
+  },
+  {
+    "testId": "F-03/refund-bt-first",
+    "status": "PASS",
+    "recoveryMillis": 239,
+    "elapsedMillis": 1519,
+    "counts": {
+      "statusTransitions": 3,
+      "requests": 6,
+      "webhooks": 1,
+      "journals": 4,
+      "merchantEffects": 0,
+      "accepted": 2,
+      "providerMoneyEffects": 2
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-03-refund-bt-first.json"
+  },
+  {
+    "testId": "F-04/body-byte-tamper",
+    "status": "PASS",
+    "recoveryMillis": 16,
+    "elapsedMillis": 707,
+    "counts": {
+      "statusTransitions": 0,
+      "requests": 2,
+      "webhooks": 1,
+      "journals": 0,
+      "merchantEffects": 0,
+      "accepted": 0,
+      "providerMoneyEffects": 0
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-04-body-byte-tamper.json"
+  },
+  {
+    "testId": "F-04/inbox-persistence-failure",
+    "status": "PASS",
+    "recoveryMillis": 37,
+    "elapsedMillis": 998,
+    "counts": {
+      "statusTransitions": 0,
+      "requests": 2,
+      "webhooks": 1,
+      "journals": 0,
+      "merchantEffects": 0,
+      "accepted": 0,
+      "providerMoneyEffects": 0
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-04-inbox-persistence-failure.json"
+  },
+  {
+    "testId": "F-04/legal-raw-bytes",
+    "status": "PASS",
+    "recoveryMillis": 33,
+    "elapsedMillis": 947,
+    "counts": {
+      "statusTransitions": 0,
+      "requests": 2,
+      "webhooks": 1,
+      "journals": 0,
+      "merchantEffects": 0,
+      "accepted": 0,
+      "providerMoneyEffects": 0
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-04-legal-raw-bytes.json"
+  },
+  {
+    "testId": "F-04/outside-tolerance",
+    "status": "PASS",
+    "recoveryMillis": 21,
+    "elapsedMillis": 884,
+    "counts": {
+      "statusTransitions": 0,
+      "requests": 2,
+      "webhooks": 1,
+      "journals": 0,
+      "merchantEffects": 0,
+      "accepted": 0,
+      "providerMoneyEffects": 0
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-04-outside-tolerance.json"
+  },
+  {
+    "testId": "F-04/wrong-endpoint-secret",
+    "status": "PASS",
+    "recoveryMillis": 23,
+    "elapsedMillis": 762,
+    "counts": {
+      "statusTransitions": 0,
+      "requests": 2,
+      "webhooks": 1,
+      "journals": 0,
+      "merchantEffects": 0,
+      "accepted": 0,
+      "providerMoneyEffects": 0
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-04-wrong-endpoint-secret.json"
+  },
+  {
+    "testId": "F-04/wrong-signature",
+    "status": "PASS",
+    "recoveryMillis": 18,
+    "elapsedMillis": 728,
+    "counts": {
+      "statusTransitions": 0,
+      "requests": 2,
+      "webhooks": 1,
+      "journals": 0,
+      "merchantEffects": 0,
+      "accepted": 0,
+      "providerMoneyEffects": 0
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-04-wrong-signature.json"
+  },
+  {
+    "testId": "F-05/payment-accepted-timeout",
+    "status": "PASS",
+    "recoveryMillis": 793,
+    "elapsedMillis": 1818,
+    "counts": {
+      "statusTransitions": 3,
+      "requests": 8,
+      "webhooks": 0,
+      "journals": 2,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-05-payment-accepted-timeout.json"
+  },
+  {
+    "testId": "F-05/payment-before-send",
+    "status": "PASS",
+    "recoveryMillis": 991,
+    "elapsedMillis": 1854,
+    "counts": {
+      "statusTransitions": 3,
+      "requests": 8,
+      "webhooks": 0,
+      "journals": 2,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-05-payment-before-send.json"
+  },
+  {
+    "testId": "F-05/payment-expired-key",
+    "status": "PASS",
+    "recoveryMillis": 243,
+    "elapsedMillis": 1227,
+    "counts": {
+      "statusTransitions": 1,
+      "requests": 1,
+      "webhooks": 0,
+      "journals": 0,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-05-payment-expired-key.json"
+  },
+  {
+    "testId": "F-05/refund-accepted-timeout",
+    "status": "PASS",
+    "recoveryMillis": 970,
+    "elapsedMillis": 2778,
+    "counts": {
+      "statusTransitions": 5,
+      "requests": 16,
+      "webhooks": 0,
+      "journals": 4,
+      "merchantEffects": 0,
+      "accepted": 2,
+      "providerMoneyEffects": 2
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-05-refund-accepted-timeout.json"
+  },
+  {
+    "testId": "F-05/refund-before-send",
+    "status": "PASS",
+    "recoveryMillis": 782,
+    "elapsedMillis": 2462,
+    "counts": {
+      "statusTransitions": 5,
+      "requests": 16,
+      "webhooks": 0,
+      "journals": 4,
+      "merchantEffects": 0,
+      "accepted": 2,
+      "providerMoneyEffects": 2
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-05-refund-before-send.json"
+  },
+  {
+    "testId": "F-05/refund-expired-key",
+    "status": "PASS",
+    "recoveryMillis": 396,
+    "elapsedMillis": 2087,
+    "counts": {
+      "statusTransitions": 3,
+      "requests": 11,
+      "webhooks": 0,
+      "journals": 3,
+      "merchantEffects": 0,
+      "accepted": 2,
+      "providerMoneyEffects": 2
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-05-refund-expired-key.json"
+  },
+  {
+    "testId": "F-06/consumer-after-commit-before-ack",
+    "status": "PASS",
+    "recoveryMillis": 6074,
+    "elapsedMillis": 8132,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 4,
+      "webhooks": 0,
+      "journals": 0,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-06-consumer-after-commit-before-ack.json"
+  },
+  {
+    "testId": "F-06/inbox-after-commit",
+    "status": "PASS",
+    "recoveryMillis": 688,
+    "elapsedMillis": 1845,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 1,
+      "webhooks": 1,
+      "journals": 0,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-06-inbox-after-commit.json"
+  },
+  {
+    "testId": "F-06/inbox-before-commit",
+    "status": "PASS",
+    "recoveryMillis": 774,
+    "elapsedMillis": 1912,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 1,
+      "webhooks": 1,
+      "journals": 0,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-06-inbox-before-commit.json"
+  },
+  {
+    "testId": "F-06/lease-fencing-controlled",
+    "status": "PASS",
+    "recoveryMillis": 1237,
+    "elapsedMillis": 2820,
+    "counts": {
+      "statusTransitions": 4,
+      "requests": 12,
+      "webhooks": 0,
+      "journals": 3,
+      "merchantEffects": 0,
+      "accepted": 2,
+      "providerMoneyEffects": 2
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-06-lease-fencing-controlled.json"
+  },
+  {
+    "testId": "F-06/outbox-after-send",
+    "status": "PASS",
+    "recoveryMillis": 594,
+    "elapsedMillis": 2239,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 4,
+      "webhooks": 0,
+      "journals": 0,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-06-outbox-after-send.json"
+  },
+  {
+    "testId": "F-06/remote-after-call",
+    "status": "PASS",
+    "recoveryMillis": 1223,
+    "elapsedMillis": 3029,
+    "counts": {
+      "statusTransitions": 4,
+      "requests": 12,
+      "webhooks": 0,
+      "journals": 3,
+      "merchantEffects": 0,
+      "accepted": 2,
+      "providerMoneyEffects": 2
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-06-remote-after-call.json"
+  },
+  {
+    "testId": "F-06/remote-before-call",
+    "status": "PASS",
+    "recoveryMillis": 1046,
+    "elapsedMillis": 2586,
+    "counts": {
+      "statusTransitions": 4,
+      "requests": 11,
+      "webhooks": 0,
+      "journals": 3,
+      "merchantEffects": 0,
+      "accepted": 2,
+      "providerMoneyEffects": 2
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-06-remote-before-call.json"
+  },
+  {
+    "testId": "F-06/transaction-after-commit",
+    "status": "PASS",
+    "recoveryMillis": 558,
+    "elapsedMillis": 2128,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 7,
+      "webhooks": 0,
+      "journals": 3,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-06-transaction-after-commit.json"
+  },
+  {
+    "testId": "F-06/transaction-before-commit",
+    "status": "PASS",
+    "recoveryMillis": 719,
+    "elapsedMillis": 2218,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 7,
+      "webhooks": 0,
+      "journals": 3,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-06-transaction-before-commit.json"
+  },
+  {
+    "testId": "F-07/broker-outage",
+    "status": "PASS",
+    "recoveryMillis": 352,
+    "elapsedMillis": 4228,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 4,
+      "webhooks": 0,
+      "journals": 0,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-07-broker-outage.json"
+  },
+  {
+    "testId": "F-07/consumer-commit-before-ack",
+    "status": "PASS",
+    "recoveryMillis": 6164,
+    "elapsedMillis": 8086,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 4,
+      "webhooks": 0,
+      "journals": 0,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-07-consumer-commit-before-ack.json"
+  },
+  {
+    "testId": "F-07/outbox-after-send",
+    "status": "PASS",
+    "recoveryMillis": 307,
+    "elapsedMillis": 2042,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 4,
+      "webhooks": 0,
+      "journals": 0,
+      "merchantEffects": 1,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-07-outbox-after-send.json"
+  },
+  {
+    "testId": "F-08/double-refund",
+    "status": "PASS",
+    "recoveryMillis": 217,
+    "elapsedMillis": 1492,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 7,
+      "webhooks": 0,
+      "journals": 3,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-08-double-refund.json"
+  },
+  {
+    "testId": "F-08/duplicate-bank-allocation",
+    "status": "PASS",
+    "recoveryMillis": 138,
+    "elapsedMillis": 1127,
+    "counts": {
+      "statusTransitions": 0,
+      "requests": 0,
+      "webhooks": 0,
+      "journals": 2,
+      "merchantEffects": 0,
+      "accepted": 0,
+      "providerMoneyEffects": 0
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-08-duplicate-bank-allocation.json"
+  },
+  {
+    "testId": "F-08/refund-dispute",
+    "status": "PASS",
+    "recoveryMillis": 261,
+    "elapsedMillis": 1474,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 7,
+      "webhooks": 0,
+      "journals": 4,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-08-refund-dispute.json"
+  },
+  {
+    "testId": "F-08/refund-share",
+    "status": "PASS",
+    "recoveryMillis": 192,
+    "elapsedMillis": 1576,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 7,
+      "webhooks": 0,
+      "journals": 3,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-08-refund-share.json"
+  },
+  {
+    "testId": "F-08/same-bt-multi-entry",
+    "status": "PASS",
+    "recoveryMillis": 403,
+    "elapsedMillis": 1660,
+    "counts": {
+      "statusTransitions": 2,
+      "requests": 9,
+      "webhooks": 0,
+      "journals": 2,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 1
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-08-same-bt-multi-entry.json"
+  },
+  {
+    "testId": "F-08/same-key-payment",
+    "status": "PASS",
+    "recoveryMillis": 357,
+    "elapsedMillis": 1197,
+    "counts": {
+      "statusTransitions": 1,
+      "requests": 1,
+      "webhooks": 0,
+      "journals": 0,
+      "merchantEffects": 0,
+      "accepted": 1,
+      "providerMoneyEffects": 0
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-08-same-key-payment.json"
+  },
+  {
+    "testId": "F-08/shared-bank-line",
+    "status": "PASS",
+    "recoveryMillis": 160,
+    "elapsedMillis": 1165,
+    "counts": {
+      "statusTransitions": 0,
+      "requests": 0,
+      "webhooks": 0,
+      "journals": 3,
+      "merchantEffects": 0,
+      "accepted": 0,
+      "providerMoneyEffects": 0
+    },
+    "artifact": "raw-artifacts.tar.gz::pr19/F-08-shared-bank-line.json"
+  }
+]

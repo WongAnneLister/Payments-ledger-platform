@@ -1,0 +1,879 @@
+{
+  "surefire-reports": {
+    "totals": {
+      "tests": 225,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "suites": [
+      {
+        "name": "com.paymentsledger.ApplicationContextTest",
+        "time": "2.346",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.common.error.ErrorContractTest",
+        "time": "0.002",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.common.request.RequestIdFilterTest",
+        "time": "0.002",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.config.RunRoleConfigTest",
+        "time": "0.003",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.dispute.DisputeAmountsTest",
+        "time": "0.001",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.financialingestion.FinancialIngestionWorkerTest",
+        "time": "0.111",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.financialingestion.FinancialRulesTest",
+        "time": "0.026",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.identity.AuthenticationFilterTest",
+        "time": "2.954",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.identity.IdentityRulesTest",
+        "time": "0.009",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.identity.TestModeGuardTest",
+        "time": "0.695",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.ledger.LedgerRulesTest",
+        "time": "0.014",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.notification.HttpMerchantTransportTest",
+        "time": "10.225",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.notification.NotificationConfigurationTest",
+        "time": "0.012",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.notification.NotificationSignatureTest",
+        "time": "0.002",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.notification.NotificationTargetPolicyTest",
+        "time": "0.007",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.observability.CorrelationLogTest",
+        "time": "0.005",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.observability.ObservabilityGaugesTest",
+        "time": "0.004",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.PaymentControllerTest",
+        "time": "0.172",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.PaymentIdsTest",
+        "time": "0.003",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.PaymentRequestsTest",
+        "time": "0.01",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.RecoveryPolicyTest",
+        "time": "0.002",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.RefundRequestsTest",
+        "time": "0.003",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.pr18.Pr18FailureIdentityTest",
+        "time": "0.02",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.pr18.PropertyModelsTest",
+        "time": "0.016",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.pr18.SequenceGeneratorTest",
+        "time": "0.074",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.pr19.FaultEvidenceTest",
+        "time": "0.091",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.pr19.Pr19ProcessHarnessTest",
+        "time": "0.476",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.ProviderModelsTest",
+        "time": "0.011",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.adapter.stripe.StripeAdapterConfigurationTest",
+        "time": "0.036",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.adapter.stripe.StripeFinancialReadAdapterTest",
+        "time": "0.255",
+        "tests": 18,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.adapter.stripe.StripeGatewayTest",
+        "time": "0.107",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.adapter.stripe.StripeLifecycleProbeTest",
+        "time": "0.055",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.adapter.stripe.StripePaymentsAdapterTest",
+        "time": "0.057",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.adapter.stripe.StripeWebhookVerifierTest",
+        "time": "0.035",
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.fake.FakeEvidenceTest",
+        "time": "0.521",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.fake.FakeProviderConfigurationTest",
+        "time": "0.021",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.fake.FakeStateStoreTest",
+        "time": "2.105",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.fake.FakeStripeProviderTest",
+        "time": "0.856",
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.fake.ProviderSimulatorReplayTest",
+        "time": "0.085",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.reconciliation.FeeArithmeticTest",
+        "time": "0.006",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.reconciliation.ReconciliationWindowsTest",
+        "time": "0.008",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.revenueshare.RevenueShareConfigurationTest",
+        "time": "0.067",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.revenueshare.SharePolicyTest",
+        "time": "0.012",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.webhook.WebhookNormalizerTest",
+        "time": "0.175",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "failsafe-reports": {
+    "totals": {
+      "tests": 511,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3
+    },
+    "suites": [
+      {
+        "name": "com.paymentsledger.ApiRoleHealthIT",
+        "time": "4.67",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.FlywayBaselineIT",
+        "time": "4.658",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.WorkerRoleHealthIT",
+        "time": "3.445",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.bank.PayoutLifecycleIT",
+        "time": "12.993",
+        "tests": 23,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.dispute.DisputeCoreIT",
+        "time": "4.61",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.dispute.DisputeSchemaIT",
+        "time": "3.145",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.financialingestion.FinancialIngestionIT",
+        "time": "15.541",
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.financialingestion.FinancialSchemaIT",
+        "time": "3.922",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.identity.IdentityIT",
+        "time": "12.806",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.ledger.LedgerDatabaseIT",
+        "time": "6.269",
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.ledger.LedgerServiceIT",
+        "time": "7.019",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.notification.MerchantDeliveryIT",
+        "time": "5.451",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.notification.NotificationKafkaIT",
+        "time": "16.246",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.notification.NotificationMigrationIT",
+        "time": "2.66",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.notification.NotificationPipelineIT",
+        "time": "12.96",
+        "tests": 16,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.notification.NotificationWorkerWiringIT",
+        "time": "7.219",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.notification.Pr19KafkaFaultIT",
+        "time": "33.058",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.notification.RefundMerchantDeliveryIT",
+        "time": "4.273",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.ops.ObservabilityIT",
+        "time": "19.595",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.ops.OpsApiIT",
+        "time": "49.671",
+        "tests": 31,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.ops.OpsSchemaIT",
+        "time": "4.01",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.pages.PageHttpIT",
+        "time": "6.141",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.DisputeLifecycleIT",
+        "time": "23.869",
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.OperationRecoveryIT",
+        "time": "17.881",
+        "tests": 23,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.PaymentCoreIT",
+        "time": "19.775",
+        "tests": 27,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.PaymentFinancialIngestionIT",
+        "time": "8.433",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.PaymentHttpIT",
+        "time": "10.772",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.PaymentOutboxIT",
+        "time": "6.456",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.PaymentRealContractIT",
+        "time": "0.001",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      {
+        "name": "com.paymentsledger.payment.PaymentSchemaIT",
+        "time": "2.623",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.Pr18ConcurrencyIT",
+        "time": "7.518",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.Pr18PayoutEvidenceIT",
+        "time": "8.489",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.Pr18ScopeIsolationIT",
+        "time": "5.197",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.Pr18SequenceIT",
+        "time": "1397.877",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.Pr19MultiProcessIT",
+        "time": "16.139",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.Pr19ProcessFaultIT",
+        "time": "24.865",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.Pr19ProviderFaultIT",
+        "time": "17.421",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.Pr19WebhookFaultIT",
+        "time": "29.211",
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.ReconciliationRecoveryIT",
+        "time": "14.973",
+        "tests": 27,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.ReconciliationRecoverySchemaIT",
+        "time": "2.631",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.RecoverySchemaIT",
+        "time": "2.859",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.RefundCoreIT",
+        "time": "10.799",
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.RefundFinancialIT",
+        "time": "8.567",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.RefundHttpIT",
+        "time": "8.866",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.RefundRecoveryIT",
+        "time": "10.942",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.RefundSchemaIT",
+        "time": "3.287",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.RefundWebhookIT",
+        "time": "8.574",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.RevenueShareLifecycleIT",
+        "time": "14.308",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.WebhookAssociationIT",
+        "time": "8.391",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payment.WebhookProcessingIT",
+        "time": "11.999",
+        "tests": 18,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payout.PayoutCoreIT",
+        "time": "6.089",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.payout.PayoutSchemaIT",
+        "time": "3.015",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.provider.adapter.stripe.PayoutRealReadIT",
+        "time": "0.0",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      {
+        "name": "com.paymentsledger.provider.adapter.stripe.StripeRealContractIT",
+        "time": "0.0",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      {
+        "name": "com.paymentsledger.provider.fake.FakeTransactionBoundaryIT",
+        "time": "3.52",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.reconciliation.ReconciliationCoreIT",
+        "time": "16.594",
+        "tests": 34,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.reconciliation.ReconciliationSchemaIT",
+        "time": "2.524",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.revenueshare.RevenueShareCoreIT",
+        "time": "8.923",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.revenueshare.RevenueShareSchemaIT",
+        "time": "3.004",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.webhook.StripeWebhookHttpIT",
+        "time": "9.852",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "com.paymentsledger.webhook.WebhookSchemaIT",
+        "time": "3.448",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "skippedTests": [
+    {
+      "class": "com.paymentsledger.payment.PaymentRealContractIT",
+      "name": "realAuthenticatedApplicationCreatesQueriesAndExpiresHostedSession",
+      "reason": "Environment variable [PR06_STRIPE_CONTRACT] with value [false] does not match regular expression [true]"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.PayoutRealReadIT",
+      "name": "listAndReadExistingTestPayoutWithoutCreatingFundsOperations",
+      "reason": "Environment variable [PAYOUT_REAL_READ_TESTS] with value [false] does not match regular expression [true]"
+    },
+    {
+      "class": "com.paymentsledger.provider.adapter.stripe.StripeRealContractIT",
+      "name": "testModeContractEvidence",
+      "reason": "Environment variable [STRIPE_CONTRACT_TESTS] with value [false] does not match regular expression [true]"
+    }
+  ]
+}
