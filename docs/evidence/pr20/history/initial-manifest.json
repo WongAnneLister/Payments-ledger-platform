@@ -1,0 +1,17 @@
+[
+  {
+    "file": "baseline.txt.gz",
+    "classification": "BASELINE_PASS_225",
+    "originalSha256": "ef9d8841eb221e8f60fa66314d6353fdcaba69315b99f8e7a0c8d32517bd39e6"
+  },
+  {
+    "file": "runner-initial-red.txt.gz",
+    "classification": "MISSING_RUNNER_MODULE_RED",
+    "originalSha256": "7008c6eacc407c29e185d2c1767bb3f3b8e198a634bbe188427780865f0ddaa5"
+  },
+  {
+    "file": "runner-core-green.txt.gz",
+    "classification": "INITIAL_CORE_11_PASS_NOT_FULL_VALIDATION",
+    "originalSha256": "34a82a30511a2175a5286cff0751874e9220ce5fb08cab87b09cc04e220f6b31"
+  }
+]

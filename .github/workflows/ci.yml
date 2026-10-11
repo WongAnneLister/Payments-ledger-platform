@@ -65,6 +65,9 @@ jobs:
       - name: PR18 runner regressions
         run: python3 -m unittest discover -s scripts/tests -p 'test_pr18_runner.py'
 
+      - name: PR20 budget and evidence gate regressions
+        run: python3 -m unittest discover -s scripts/tests -p 'test_pr20_runner.py'
+
       - name: Build, property and integration tests (100 seeds, max 100 steps)
         run: python3 scripts/ci/run_pr18.py --profile pr
 
@@ -80,6 +83,7 @@ jobs:
             target/surefire-reports/**
             target/failsafe-reports/**
             target/pr18/**
+            target/pr20/**
           if-no-files-found: warn
           retention-days: 14
 

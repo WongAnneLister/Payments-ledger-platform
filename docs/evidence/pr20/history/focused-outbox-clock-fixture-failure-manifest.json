@@ -1,0 +1,31 @@
+{
+  "status": "FAIL",
+  "reason": "Outbox available_at uses database wall clock while fixture publisher used earlier provider clock; no publication happened",
+  "files": {
+    "target/pr20/recovery/focused-final-20261011-06/summary.json": "3ee5d69c12213c38528d24f9617530ce71fb728eafd10f27441a8165091bfbe2",
+    "target/pr20/recovery/focused-final-20261011-06/pg_restore.log": "16e3edbe92d848d09637b5ec0801d01a735a0deb44c99bc4c374f0865de6acd8",
+    "target/pr20/recovery/focused-final-20261011-06/consistent-backup.dump": "95c43d901fd2d19dd893cb3083f55f54593f241cb1e22b056f529dbfdc341539",
+    "target/pr20/recovery/focused-final-20261011-06/pg_dump.log": "16e3edbe92d848d09637b5ec0801d01a735a0deb44c99bc4c374f0865de6acd8",
+    "target/pr20/recovery/focused-final-20261011-06/archive.sha256": "cccbea84e241293a8f06bc76ef4a16fff5f296a52043886724c2845cecff3266",
+    "target/pr20/recovery/focused-final-20261011-06/external-state-before-restore.json": "595402396cdefbca93bd4a7e0ad44d8141224a86db022b473f1a975aacb26b65",
+    "target/pr20/recovery/focused-final-20261011-06/simulated-bank-evidence-before-backup.json": "609bc711f3b6c5ccd30654c541a3629d20953fd73409bc6a2f42b9c5cba4cd6c",
+    "target/pr20/recovery/focused-final-20261011-06/provider-state.json": "36a3069517bc6d194b3dda6654341c3e11085458ee40131a8c1cf098104add7e",
+    "target/pr20/recovery/focused-final-20261011-06/RECOVERY-ARCHIVE-EXTERNAL-CONTINUITY.json": "b23169c5c06134053ec4233830e19fec660bf8506c63104a5ddee9a891bf54a5",
+    "target/pr20/demo/focused-final-20261011-06/summary.json": "a02022668318aae88d4ea8e2e89d20651825286b96dc1c4f2f973f39a98323f8",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-DIFFERENCE.json": "51902b377f6a95f517c6c10c4daa25f022860a3af0268d9444a58b34b9631f55",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-UNKNOWN.json": "3290035897797c586c945bdff8c587eb09370e28036b8f481a4d6243d811d20a",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-B-REFUND-FAIL-LATE-WIN.json": "f2b1d41ca1ec09e1a26b9f819ffdf215d157ffe8502cad5b81afcea4b2fa75ad",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-A-SUCCESS-BANK.json": "4e7b05c29764c36cf2b866439aa928929003e42793a6593d2120c7412cea869f",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-L3.json": "25c2335176b2cac42b600328be584bf79e9a5e8b23b2dd8610261a552a268266",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-A-PAYOUT-RETURN.json": "c830940a2aee632f6f0c3cd6d552221fa073920cf036f0c53fda5a11e8b33720",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-B-REFUND-FAIL-LATE-WIN/provider-state.json": "173a439d0ff9ef4c8f1b0c0d5afd02a238185143f87a0226b3856086dc9e95bf",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-A-PAYOUT-RETURN/provider-state.json": "bc74f3a446a977b33c4f407e5f8a7d4fbf05edf55bc0c870168c6e90d2751ac3",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-A-SUCCESS-BANK/provider-state.json": "42830f5bcb8288e6ee79229e92643803868bb9fd146ca192b292d5490d7b2e2a",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-L3/provider-state.json": "664e54b66ef56eb9909d4ced39cb781db82831a8a643f8845937cf20d2b93e5c",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-DIFFERENCE/provider-state.json": "b819fdebcf589acdabed75b772c27c5a277db830d2a11bfda264fd37c31131ca",
+    "target/pr20/demo/focused-final-20261011-06/DEMO-UNKNOWN/provider-state.json": "68ba5892e99091535f217dc7a59f4465cc431c5c8bb61f2bc2e65e496d80f3cf",
+    "target/pr20/regressions/focused-final-20261011-06/source-query-same-instant.json": "3a51f5569f3abc70b7050fa90999702c62ccf23402fb99570095431a2011d5b4",
+    "target/pr20/regressions/focused-final-20261011-06/provider-state.json": "96188e4fa639666fe592bab108745ae7e8fb39b8fd3cdd38b5c7e72e7091fdb3",
+    "target/pr20/diagnostics/focused-final-06.txt": "6270e0c0f947626427af5c0eb0d6905769f9b80fefca7252a9e73e6360d51ede"
+  }
+}

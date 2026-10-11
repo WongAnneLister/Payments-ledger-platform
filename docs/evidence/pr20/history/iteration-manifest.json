@@ -1,0 +1,43 @@
+[
+  {
+    "originalName": "pr20-recovery-gate-red.txt",
+    "archive": "pr20-recovery-gate-red.txt.gz",
+    "originalSha256": "76e9ad9c6c7b749cf0007c5ea6c75f3161ae73db145d63408ddff69d8c002084",
+    "originalBytes": 2399
+  },
+  {
+    "originalName": "pr20-runner-contract-red.txt",
+    "archive": "pr20-runner-contract-red.txt.gz",
+    "originalSha256": "9272932f446fb4f1c8365da8db388d057189c7535250f12cb1280afb4f3d2fc8",
+    "originalBytes": 4677
+  },
+  {
+    "originalName": "pr20-runner-contract-green.txt",
+    "archive": "pr20-runner-contract-green.txt.gz",
+    "originalSha256": "c8915683650f2fa4dee526b38a5b0820e4a36b801288e67dfe93e7d4f42ce707",
+    "originalBytes": 131
+  },
+  {
+    "originalName": "pr20-performance-focused-current.txt",
+    "archive": "pr20-performance-focused-current.txt.gz",
+    "originalSha256": "997ea2249e8addd29aa205913ac69697feaa0174fc452087dc1ab4ab31c06221",
+    "originalBytes": 2251
+  },
+  {
+    "originalName": "pr20-initial-smoke.txt",
+    "archive": "pr20-initial-smoke.txt.gz",
+    "originalSha256": "f82f5ee049cf2d48551e05af350972062034084db3dfc0cb53bd044a9d488a72",
+    "originalBytes": 5718
+  },
+  {
+    "originalName": "pr20-initial-smoke-command.json",
+    "archive": "pr20-initial-smoke-command.json.gz",
+    "originalSha256": "8ae8fb8621cc6e90db6aefa5f942e017b4b0175ff30b979f6e6ec7a0342395b6",
+    "originalBytes": 12560
+  },
+  {
+    "archive": "initial-smoke-blocked.tar.gz",
+    "classification": "ACTUAL_BLOCKED_BEFORE_LOAD_KAFKA_LISTENER_CONFIG",
+    "runId": "smoke-20261010T162411Z-9e84c1bf"
+  }
+]

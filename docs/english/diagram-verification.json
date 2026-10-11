@@ -1,0 +1,80 @@
+{
+  "scope": "Offline Mermaid parse and PNG export only; no experiment tests",
+  "mermaidVersion": "11.17.2",
+  "status": "PASS",
+  "results": [
+    {
+      "diagram": "architecture-1",
+      "export": "architecture-overview.png",
+      "exitCode": 0,
+      "output": "Generating single mermaid chart",
+      "sourceMarkdown": "architecture.md",
+      "sourceBlock": 1,
+      "mermaidSha256": "cb6fcfd36a527e29ed7df92ae53b3d06d48f237cf5ff2c1033379c7ee0b24ff7",
+      "pngSha256": "9f0eb632ab95d489a18f3bdd7fe7dbb268cf1a4d7313a8c21a9e53bfc184a1ec"
+    },
+    {
+      "diagram": "architecture-2",
+      "export": "payment-create-trace.png",
+      "exitCode": 0,
+      "output": "Generating single mermaid chart",
+      "sourceMarkdown": "architecture.md",
+      "sourceBlock": 2,
+      "mermaidSha256": "b6b64db3c999b264d19ca7b0bd52f22a099ba2f069acacfd299ea3d5f3a408e4",
+      "pngSha256": "c616e3c43209d7c048c9af8178c8962a64db926b5dd5c4105f3c654907422124"
+    },
+    {
+      "diagram": "architecture-3",
+      "export": "financial-ingestion-flow.png",
+      "exitCode": 0,
+      "output": "Generating single mermaid chart",
+      "sourceMarkdown": "architecture.md",
+      "sourceBlock": 3,
+      "mermaidSha256": "7eb4dd902c354bbe72ace2ed9e20f5ebcfeca7741003d12d4e89fc9bf7bf168e",
+      "pngSha256": "251fa1273f5636e68458bf2b14258b905bdbc40e6b579e277ebff68346e15627"
+    },
+    {
+      "diagram": "payment-state-1",
+      "export": "payment-state.png",
+      "exitCode": 0,
+      "output": "Generating single mermaid chart",
+      "sourceMarkdown": "payment-state.md",
+      "sourceBlock": 1,
+      "mermaidSha256": "e3141a411c22ad9516142032673f70b34aeef86666609b174deb0589c81ea4d5",
+      "pngSha256": "a449e7bbe9eca86a5caf700d9674c38dc16b68b1b6e7feee092b33744f0a29ba"
+    },
+    {
+      "diagram": "payment-state-2",
+      "export": "unknown-recovery-flow.png",
+      "exitCode": 0,
+      "output": "Generating single mermaid chart",
+      "sourceMarkdown": "payment-state.md",
+      "sourceBlock": 2,
+      "mermaidSha256": "cba0cba39e5f6ab253c8aec89890a73246da6aa1c991a892f5c1b87ffe11bf7c",
+      "pngSha256": "9547d7c3c1a3d98ec20f95993542eaba00b3fe6ae5376b6216b422280a6da57d"
+    },
+    {
+      "diagram": "accounting-1",
+      "export": "accounting-money-flow.png",
+      "exitCode": 0,
+      "output": "Generating single mermaid chart",
+      "sourceMarkdown": "accounting.md",
+      "sourceBlock": 1,
+      "mermaidSha256": "8029a8dd5cc0be58112b0933b505d3d0264fb3aa82f6e128cab322bf22e6e5ec",
+      "pngSha256": "e8c582b9440308a53c644ac66b3a99a7637e631039523f98f7b8cc28f9212d59"
+    },
+    {
+      "diagram": "accounting-2",
+      "export": "reconciliation-evidence-flow.png",
+      "exitCode": 0,
+      "output": "Generating single mermaid chart",
+      "sourceMarkdown": "accounting.md",
+      "sourceBlock": 2,
+      "mermaidSha256": "554bae0fa170bf838c699f98cb10542015937ff8e5fc4cfc91bc8b0eab419e36",
+      "pngSha256": "1aa1e70862d331b1eedf20bccc15ae3cf038d44c4459d150afc3ee9fcc084a61"
+    }
+  ],
+  "verifiedAtUtc": "2026-10-10T16:27:35.416254+00:00",
+  "renderer": "Cached local mmdc with isolated /private/tmp browser profile, white background, scale 2; no external rendering service",
+  "visualInspection": "All seven PNGs inspected; labels readable without truncation; architecture labels shortened after first render."
+}

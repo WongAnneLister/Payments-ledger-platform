@@ -1,0 +1,107 @@
+{
+  "classification": "ACTUAL_FIXTURE_FAILURES_5_DEMO_PASS_2_ERRORS_NOT_PRODUCT_DEFECTS",
+  "mavenExitCode": 1,
+  "artifacts": [
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-A-PAYOUT-RETURN/provider-state.json",
+      "bytes": 11617,
+      "sha256": "c7a8b50cc79f22c9c271b75da23b3f0d09ed861fefd85547728fa51102a2f78c"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-A-PAYOUT-RETURN.json",
+      "bytes": 868046,
+      "sha256": "9909a00dd6a31d4a8571cdc0a4844b805aac0880146dd608f6d275b4d10494d3"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-A-SUCCESS-BANK/provider-state.json",
+      "bytes": 11617,
+      "sha256": "6cad2acd1c7389b3ed515414d75722686e07ef9c0786514bad974f896e90bd5e"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-A-SUCCESS-BANK.json",
+      "bytes": 848866,
+      "sha256": "8dc9d3e9a2bf50a4fb50aa4058279df5c30735c551a4502a8cb929eeeb1faa84"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-B-REFUND-FAIL-LATE-WIN/provider-state.json",
+      "bytes": 11617,
+      "sha256": "eda07d3efa4eb1235b19ddbf37a747901427d21ff97183b558ffdd55429c2c5c"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-B-REFUND-FAIL-LATE-WIN.json",
+      "bytes": 991557,
+      "sha256": "690be0f516ffc1d56d08e50270aedb32d0f1b5a712eb6f3d56d1b494f4b7ffd2"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-DIFFERENCE/provider-state.json",
+      "bytes": 11617,
+      "sha256": "e92953d6ae7e06fbaad3287f48674f7bf1028a14a4fd536dc3e964a2d480cd45"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-DIFFERENCE.json",
+      "bytes": 461784,
+      "sha256": "454584de03b7f99a6ec5b4561b2f2e71bdbfab7131e0d536d16f0eaff9a3e435"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-L3/provider-state.json",
+      "bytes": 6558,
+      "sha256": "664e54b66ef56eb9909d4ced39cb781db82831a8a643f8845937cf20d2b93e5c"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-L3.json",
+      "bytes": 44169,
+      "sha256": "5b0c291a96450c947f8c7c99b74a50da560ac5907406761d9007851c98d419ca"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-UNKNOWN/provider-state.json",
+      "bytes": 12764,
+      "sha256": "b2e6c123020af2dceb71890ba86f8e9ad96ca571e9ad1af2e258c35e62ed2f99"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/DEMO-UNKNOWN.json",
+      "bytes": 142959,
+      "sha256": "5220fe24bb07bf6be164243ce963dab51bc23123abe7326dbe5f5cb0d9c81169"
+    },
+    {
+      "path": "demo/focused-recovery-demo-20261011-01/summary.json",
+      "bytes": 32831,
+      "sha256": "228b7bb7e331464cb9c8f0b24a7b348dc132e19385a45555ef11f24f7cda5aa5"
+    },
+    {
+      "path": "recovery/focused-recovery-demo-20261011-01/RECOVERY-ARCHIVE-EXTERNAL-CONTINUITY.json",
+      "bytes": 95615,
+      "sha256": "2b9cb7d91589a21b9ee2f63b208d60d5deb6a5f96e4c7b0e80220e772dc14550"
+    },
+    {
+      "path": "recovery/focused-recovery-demo-20261011-01/provider-state.json",
+      "bytes": 12957,
+      "sha256": "a2ba68e85f93cee63d31bd79126ace37db55412825b221882263a9e4e52666f0"
+    },
+    {
+      "path": "recovery/focused-recovery-demo-20261011-01/summary.json",
+      "bytes": 96299,
+      "sha256": "98a2f3bbd695c781a2ef5f4293d6721e7f22be7ff0da11fbad2c2a79b89a68bf"
+    },
+    {
+      "path": "failsafe-reports/TEST-com.paymentsledger.payment.Pr20DemoIT.xml",
+      "bytes": 62397,
+      "sha256": "20fb93f03347fc9dcfa345d7d2543d5e9c35a8d136e361aabd4c790f4420eead"
+    },
+    {
+      "path": "failsafe-reports/TEST-com.paymentsledger.payment.Pr20RecoveryIT.xml",
+      "bytes": 35158,
+      "sha256": "9ac72227b5b4c4c1be6b6dda85d8ff89663c9d3bff1a325858e4aed647979953"
+    },
+    {
+      "path": "failsafe-reports/com.paymentsledger.payment.Pr20DemoIT.txt",
+      "bytes": 2529,
+      "sha256": "f18c237fd7c64b1bca2f989df14e77fab18ded9d3b983acd6d2f2f564f66653f"
+    },
+    {
+      "path": "failsafe-reports/com.paymentsledger.payment.Pr20RecoveryIT.txt",
+      "bytes": 1362,
+      "sha256": "10459b401ab321d2742a1e475f523497b08b5b6ece0c7cfb434c772fe8b03180"
+    }
+  ],
+  "logSha256": "8e6accba1bb227fe0d6a5e9decfde57062332552e8aa58cc5b8d1bc33fb676ac"
+}

@@ -305,6 +305,11 @@ public class PaymentRepository {
         if(!TransactionSynchronizationManager.isActualTransactionActive())throw new IllegalStateException("Webhook merge requires transaction");
         return merge(payment,facts,false);
     }
+    /** Verified reconciliation reads use query ordering; they are not webhook events. */
+    public boolean mergeReconciliationQuery(UUID payment,Facts facts){
+        if(!TransactionSynchronizationManager.isActualTransactionActive())throw new IllegalStateException("Reconciliation query merge requires transaction");
+        return merge(payment,facts,true);
+    }
     private boolean merge(UUID payment,Facts facts){return merge(payment,facts,true);}
     private boolean merge(UUID payment,Facts facts,boolean query){
         var p=one("SELECT * FROM platform.payment WHERE id=? FOR UPDATE",payment);

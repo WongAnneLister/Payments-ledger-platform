@@ -1,0 +1,31 @@
+{
+  "status": "FAIL",
+  "reason": "I04 correctly reported INCOMPLETE for 4 unmodeled fee facts; no release occurred. Restore fixture must predeclare versioned fee expectations before archive.",
+  "files": {
+    "target/pr20/recovery/focused-final-20261011-07/summary.json": "b1211545b0f25a4ca805e71e7f6724e7560f6352a645c1548e775e18cffda91c",
+    "target/pr20/recovery/focused-final-20261011-07/pg_restore.log": "16e3edbe92d848d09637b5ec0801d01a735a0deb44c99bc4c374f0865de6acd8",
+    "target/pr20/recovery/focused-final-20261011-07/consistent-backup.dump": "c797bbc749b443bf0942a25d45449f551a30107a24841964f75c1614ade9ba55",
+    "target/pr20/recovery/focused-final-20261011-07/pg_dump.log": "16e3edbe92d848d09637b5ec0801d01a735a0deb44c99bc4c374f0865de6acd8",
+    "target/pr20/recovery/focused-final-20261011-07/archive.sha256": "d18e7b92d9364baaf616ede5395c382c8d7deb8879154f56f04922583d9afbc7",
+    "target/pr20/recovery/focused-final-20261011-07/external-state-before-restore.json": "edd43dca998b17ecd528c82ad6dfb29c8e9f6118de0c192d0085a78f04e71586",
+    "target/pr20/recovery/focused-final-20261011-07/simulated-bank-evidence-before-backup.json": "7fd9aaccea07b20e45741bf5f18f6711cf14af25658679c955e85b57194e0a32",
+    "target/pr20/recovery/focused-final-20261011-07/provider-state.json": "4c13047810a70a72862c5808ae1e94f8b0b5bbaab93ab96dfb43e9c88d1fd977",
+    "target/pr20/recovery/focused-final-20261011-07/RECOVERY-ARCHIVE-EXTERNAL-CONTINUITY.json": "14d762e30da57f6ff83249932fdd12c38e5b3b9cb09904586438046077dbd4a8",
+    "target/pr20/demo/focused-final-20261011-07/summary.json": "95470a2db13446dc8d99ad062683fbcc68ce6ade3e6578cfc48648440847d820",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-DIFFERENCE.json": "4eeab54a5428a067d96746067f527fa22142d29a22b590dd2220e3ea7a576441",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-UNKNOWN.json": "8894137b39ee762766c440b7aa603818b29bfb59253e0f8894bc8dfd9a051041",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-B-REFUND-FAIL-LATE-WIN.json": "4adb41251068c7c1481b7a43f95244ce7329157de7358786c979067de50a4161",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-A-SUCCESS-BANK.json": "db19bc546a321f4fe044f97ee91ecafa82f7ab39b0d3dac46f526817fad4aab9",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-L3.json": "a7cb98bb2f94fc6599d84ac7d6519bdd692c9abe7d149289d2d2374489a67a61",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-A-PAYOUT-RETURN.json": "594e96e0cc483a357f95c2ee55d65f84c92b8fee5344e5dca360385da1364227",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-B-REFUND-FAIL-LATE-WIN/provider-state.json": "11bde79053e01969366a69484189685f99801f673225191f591f7186920b290a",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-A-PAYOUT-RETURN/provider-state.json": "f9b747f2bd05be3fcda5a8f00cee643215d8037bd651620574ddcde994bc1656",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-A-SUCCESS-BANK/provider-state.json": "a25320fa3a21fd2338bf6abe977ea11f35c92378ad8397c69548ced05dd1f2ca",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-L3/provider-state.json": "664e54b66ef56eb9909d4ced39cb781db82831a8a643f8845937cf20d2b93e5c",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-DIFFERENCE/provider-state.json": "038aed1d0cc48cf9d332bb16d627cf5c85ee351a8b3da35db6b1cef63db59f10",
+    "target/pr20/demo/focused-final-20261011-07/DEMO-UNKNOWN/provider-state.json": "7c9f25ea28fb1284f077831cba7b231a1a79145313e8373285ea7d1ec411f788",
+    "target/pr20/regressions/focused-final-20261011-07/source-query-same-instant.json": "9aef1dfca3ad2c0fe0cafc16aed92574472f91a99a2ec94b1c9874172c18130e",
+    "target/pr20/regressions/focused-final-20261011-07/provider-state.json": "f33f8dc06269a40106c6d61da6008361d2207cd43c22f2b1afee6108b15b88e2",
+    "target/pr20/diagnostics/focused-final-07.txt": "becce2abf31667f1b226abae7649fa6de7aa0817ce50dc0ea392f1740871b7b9"
+  }
+}

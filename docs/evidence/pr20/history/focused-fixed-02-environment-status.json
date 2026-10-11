@@ -1,0 +1,13 @@
+{
+  "classification": "BLOCKED_BEFORE_FIXTURE_DOCKER_DAEMON_UNAVAILABLE",
+  "mavenExitCode": 1,
+  "unitTests": {
+    "passed": 7,
+    "failed": 0
+  },
+  "integrationTests": {
+    "setupErrors": 2,
+    "businessCasesExecuted": 0
+  },
+  "rawLogSha256": "2317e7ee9ba76bc63319ba8a44a3f7e0f8d000d3ceea31e396c9bc50a4e949df"
+}

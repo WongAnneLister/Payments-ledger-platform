@@ -134,7 +134,7 @@ public final class ReconciliationSourceRecovery {
     """,paymentId,claim.scope().organizationId(),claim.scope().environmentId(),order.get("application_id"),claim.scope().providerAccountId(),claim.scope().livemode(),order.get("currency"),claim.runId(),claim.btId(),binding.get("id"),observation,read.charge().chargeId(),read.intent().paymentIntentId(),digest);
   }
   // Existing repository owns normalized capture/attempt/control/share and canonical notification updates.
-  if(!payments.mergeWebhook(paymentId,new PaymentRepository.Facts(null,read.intent(),List.of(read.charge()),true,false,clock.instant())))throw new IllegalStateException("Verified source merge did not apply");
+  if(!payments.mergeReconciliationQuery(paymentId,new PaymentRepository.Facts(null,read.intent(),List.of(read.charge()),true,false,clock.instant())))throw new IllegalStateException("Verified source merge did not apply");
   complete(claim,"DONE","LINKED");return new Linked("LINKED",paymentId);
  }
  private boolean orderEligible(Map<String,Object> order,Map<String,Object> binding){

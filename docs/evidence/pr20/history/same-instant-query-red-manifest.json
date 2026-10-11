@@ -1,0 +1,63 @@
+{
+  "classification": "ACTUAL_PRODUCTION_QUERY_CLASSIFIED_AS_WEBHOOK_SAME_INSTANT_STALE",
+  "redExitCode": 1,
+  "baselineCommit": "d92bae3837dc4fc13eac734733ce36bf0ac0b3d0",
+  "artifacts": [
+    {
+      "path": "regressions/query-red-20261011/provider-state.json",
+      "sha256": "c68d79c2cbd0bf1401d3f94eb6ed90f2aaa63157815ed011e074381069b49117"
+    },
+    {
+      "path": "regressions/query-red-20261011/source-query-same-instant.json",
+      "sha256": "d6bd1ba7df2ed38bd9aabc112485985c0090dab87e17abd25daf0a7ba8bc155c"
+    },
+    {
+      "path": "recovery/focused-fixed-20261011-03/RECOVERY-ARCHIVE-EXTERNAL-CONTINUITY.json",
+      "sha256": "4570da1375438e21da3efd44c746e06ec40f9af36291403e28d3e07d9a196f27"
+    },
+    {
+      "path": "recovery/focused-fixed-20261011-03/archive.sha256",
+      "sha256": "68ad9de272a1e145b276e29500eee2d1c3f90b91e7c6dba2862d8519466f3708"
+    },
+    {
+      "path": "recovery/focused-fixed-20261011-03/consistent-backup.dump",
+      "sha256": "fdc54641233c07fa6329f5f7677446cdef522958d1a6e856cbf5af4c66280921"
+    },
+    {
+      "path": "recovery/focused-fixed-20261011-03/pg_dump.log",
+      "sha256": "16e3edbe92d848d09637b5ec0801d01a735a0deb44c99bc4c374f0865de6acd8"
+    },
+    {
+      "path": "recovery/focused-fixed-20261011-03/provider-state.json",
+      "sha256": "3817e98ef26dfaf1f34c8ce95d325b0933c63b674d9e441dd65c98d372e3748b"
+    },
+    {
+      "path": "recovery/focused-fixed-20261011-03/simulated-bank-evidence-before-backup.json",
+      "sha256": "bcff3a8dbb57a0cc5eed4f617d8de1d9eb7de9851bfbac6edda5b040cf397f6c"
+    },
+    {
+      "path": "recovery/focused-fixed-20261011-03/summary.json",
+      "sha256": "677f669860e764c5526859044ae6dff28bb5f33e58e26d61aa4ee9c8ccb55494"
+    },
+    {
+      "path": "demo/focused-fixed-20261011-03/DEMO-L3/provider-state.json",
+      "sha256": "664e54b66ef56eb9909d4ced39cb781db82831a8a643f8845937cf20d2b93e5c"
+    },
+    {
+      "path": "demo/focused-fixed-20261011-03/DEMO-L3.json",
+      "sha256": "f31014d08c65369f3b40a0929f32f2b3a92d97d6abd60e98edd54065d6355c86"
+    },
+    {
+      "path": "demo/focused-fixed-20261011-03/summary.json",
+      "sha256": "e19034233439feda81db5061f240fd85826bcad0335e5afb917628ba68b84d30"
+    },
+    {
+      "path": "logs/query-red.txt",
+      "sha256": "8db7b3d935c54e0fb04302a54616e1ed892c6b43b3a7b73d62a9d3c34bcee5a0"
+    },
+    {
+      "path": "logs/focused-fixed-03.txt",
+      "sha256": "bfce2d381e84eb4f0dd9a539c10a27b18e266edc58c62577afdce0ea1fd199b5"
+    }
+  ]
+}

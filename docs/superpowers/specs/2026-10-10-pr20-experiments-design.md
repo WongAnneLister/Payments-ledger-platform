@@ -1,0 +1,23 @@
+# PR20 Performance, Recovery and English Evidence Design
+
+Baseline: d92bae3; branch codex/pr20-experiments. The user requested the frozen PR20 in docs/product/stripe-payment-ledger-codex-pr-prompts.md. Its existing scope and targets are authoritative; this design makes execution concrete without altering business rules.
+
+## Performance
+
+Use an isolated PostgreSQL16 and Kafka3.9.0 environment, two actual API JVMs and two actual Worker JVMs, and a shared durable test-only Provider simulator. Production HTTP authentication, controllers, services, repositories, ledger and notification paths remain in use. No real account credentials or .env are read. Seed exactly one million valid synthetic historical CREATED/UNKNOWN payments with complete scoped orders/operations and escalated recovery obligations ineligible for blind resend. Document their unresolved distribution and baseline separately from new traffic; this is not a million completed payments. Keep triggers and constraints enabled and verify the production scanner cannot re-execute that history. Run an arrival-rate generator at 100 write requests/s and 200 queries/s: 300s warmup, 1800s measurement. Save per-request outcomes/latencies, scheduled versus actual arrivals, P50/P95/P99 by class, acceptance and completed-business throughput separately, errors and dropped arrivals, JVM/DB resource samples, Kafka lag, queue age/size, provider requests/effects, event/Journal counts and independent correctness/reconciliation results. Preserve target breaches as FAIL; smoke is never full-budget PASS. A bounded post-load drain is separately timed and cannot erase queue growth during measurement.
+
+## Backup and recovery
+
+Use fresh test containers/databases exclusively, record names, versions, backup cutoff/checksum and isolation checks before pg_dump. Generate post-backup local and durable external payment/refund facts; restore the consistent archive into a separate new database while retaining external simulator state. Keep write execution gated, verify migration and restricted application permissions, independently rebuild/trial-balance and rescan scoped provider evidence, replay notifications, restore only trusted-order and safe-key eligible work, escalate expired unknown work. Record actual timestamps, RPO/RTO definitions and values, missing local-only records, nonrecoverable/controlled manual steps, task/BT/event/effect counts and release-gate checks. Never reset external facts to make a restore pass.
+
+## Demonstration and English materials
+
+Add replayable selected A/B lifecycle branches, UNKNOWN recovery, trusted-order L3 backfill and independent balance-difference detection from fresh isolated fixtures. Author an English README, architecture/state/accounting diagrams, ten-minute demo, failure retrospective, recovery runbook and resume evidence mapping. Every quantitative claim names its actual source commit/environment/data/command/report. Preserve distinctions between design, local model, Fake, Stripe test contract, simulated bank and NOT RUN/BLOCKED. Audit all38 acceptance rows without retroactively marking historical NOT RUN rows PASS merely because an implementation exists.
+
+## Execution boundaries
+
+Performance, recovery and documentation own separate files; independent implementation can run in parallel under dispatching-parallel-agents. Maven and Docker experiment execution are serialized by the root agent, and no heavy unrelated work runs during measured load. Source inputs are frozen and hashed for final experiments. Missing capabilities produce explicit BLOCKED artifacts; actual failed targets/assertions produce FAIL. No automatic push/merge is included in this request.
+
+## Evidence-driven minimal production correction
+
+The isolated restore reproduced `Verified source merge did not apply` at an equal provider-query timestamp. The source-recovery path had classified its verified charge/intent reads as webhook facts. The narrow correction invokes existing query ordering through `mergeReconciliationQuery`; immutable capture validation, scope/order locks, stale provider watermarks and webhook timestamp protection remain. The independent review found no actionable safety issue; archived RED sources match baseline d92bae3 and the GREEN regression observes unchanged journals and external effects. This correction is necessary for the frozen restore scope, not a change to fund rules or targets.
