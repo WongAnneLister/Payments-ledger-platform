@@ -27,7 +27,9 @@ class Pr19KafkaFaultIT extends NotificationFixture {
  static final long SEED=190007;static final String SECRET="pr19-fixture-merchant-signing-secret-32bytes";
  final ObjectMapper json=new ObjectMapper().findAndRegisterModules();
  @BeforeEach void deterministic(){
-  fake=new FakeStripeProvider(directory.resolve("pr19-provider"),SEED,Instant.parse("2026-10-09T12:00:00Z"),Duration.ofDays(1));
+  // Prices and Outbox availability use database wall time; an old fixed provider date
+  // makes the scenario fail before injection. Record a controlled clock ahead of setup.
+  fake=new FakeStripeProvider(directory.resolve("pr19-provider"),SEED,Instant.now().plusSeconds(120),Duration.ofDays(1));
   repository=new PaymentRepository(jdbc,tx,json,fake.clock());executor=new PaymentExecutor(repository,fake,fake,fake,"FAKE");service=new PaymentService(repository,executor);
   new JdbcTemplate(new DriverManagerDataSource(MERCHANT.getJdbcUrl(),MERCHANT.getUsername(),MERCHANT.getPassword())).execute("DROP SCHEMA IF EXISTS merchant_fixture CASCADE");
   admin.execute("CREATE TABLE IF NOT EXISTS platform.pr19_notification_transition(payment_id uuid,old_status text,new_status text)");admin.execute("TRUNCATE platform.pr19_notification_transition");admin.execute("GRANT INSERT,SELECT ON platform.pr19_notification_transition TO payments_app");

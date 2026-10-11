@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "unitTests": 2,
+  "integrationTests": 5,
+  "clockDomain": "Provider clock is current-relative +120s; dataset and child environment preserve actual initialTime. Seed and all fault assertions unchanged.",
+  "files": {
+    "target/pr19/F-07-consumer-commit-before-ack.json": "f185b61116cddf1cfc95fdae32c11e82075f56af18f099092466310c63451265",
+    "target/pr19/F-07-broker-outage.json": "51f0564d8a901ee0d5979b670d0ccfd02275000cd214520585684d0b3dd8770b",
+    "target/pr19/F-07-outbox-after-send.json": "e320d2007c54d21bd2381db5afc2b83c0bae425c6d226174a11b8438e03f49fd",
+    "target/pr19/F-06-consumer-after-commit-before-ack.json": "8d6abcc2d06d1a2dc6bdc4d1c91eda9cccc43f62e89dd717a5b2939f2a898303",
+    "target/pr19/F-06-outbox-after-send.json": "134a7eb9bba22452625f6209cf1a2f056bd3b30a421f11769b3cfcfb6fc0b568",
+    "target/failsafe-reports/TEST-com.paymentsledger.notification.Pr19KafkaFaultIT.xml": "0869dee613f84cbbad311819377fcb92f6c9b814ae7ca07404673682dd71c25e",
+    "docs/evidence/pr20/pr19-clock-focused-live.txt": "b7c0c79704df4b57010e420eabc200694f9fbe32ae4acfda88837cacbf66f526"
+  }
+}
