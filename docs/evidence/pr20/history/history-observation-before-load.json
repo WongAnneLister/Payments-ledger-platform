@@ -1,0 +1,10 @@
+{
+  "runId": "20261011T164255Z-f056d9b2",
+  "sourceCommit": "e04af4a",
+  "containerId": "d5c0f7360294e2cff8851f132bf4f171572586285f37822fa0a94d314861962b",
+  "scope": "Read-only diagnostic before full history seeding completed, before warmup or measurement; not benchmark resource/timing evidence. No indexes, data, business or benchmark input files changed.",
+  "planSeedApproximate": 360000,
+  "analyzeSeedApproximate": 440000,
+  "analyzeStatementDeadlineSeconds": 8,
+  "capturedAtUtc": "2026-10-11T16:50:13.153211+00:00"
+}

@@ -1,0 +1,25 @@
+{
+  "testedHeadCommit": "e04af4ad98da0ef1b834d258965f075681a8a726",
+  "sourceState": "Four uncommitted test-only source files; their exact bytes in this archive precede the next implementation freeze. Production input files unchanged from clean-verified 1313e36.",
+  "command": "JAVA_HOME=/Users/anne_lister/.jdks/amazon-corretto-21.jdk/Contents/Home ./mvnw -B -Dtest=ObservedJdbcTemplateTest -Dit.test=Pr20HistoryObservationIT verify",
+  "result": {
+    "unitTests": 3,
+    "integrationTests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "status": "PASS"
+  },
+  "performanceScope": "Focused functionality only; not million-row latency or full-budget proof.",
+  "archiveSha256": "69dd2d0a01d03ae31ebc8b405a13cd6c12cefde9ac353af48046e6ceccba2f01",
+  "filesSha256": {
+    "src/test/java/com/paymentsledger/pr20/performance/ObservedJdbcTemplateTest.java": "8d76443639b1dd298842e3f6d4c3f76abe4510a403585302101823eb4b9c7990",
+    "src/test/java/com/paymentsledger/pr20/performance/ObservedJdbcTemplate.java": "d3832df81a595a46f5f94f20014fa5b1d5adecd15ba8b9cb7612471294270420",
+    "src/test/java/com/paymentsledger/pr20/performance/Pr20PerformanceExperiment.java": "bdfed0e8ac217200206a2075dddc3608147d46c9731acafb2d3a5388597597aa",
+    "src/test/java/com/paymentsledger/pr20/performance/Pr20HistoryObservationIT.java": "98752bcec7591fd6d15d65a0afb56890678841172889790adaec2942ed0ea1ee",
+    "target/surefire-reports/com.paymentsledger.pr20.performance.ObservedJdbcTemplateTest.txt": "7a3bfe2ecccdd58c379a3db87efb5a180781e9334ea66ae3abbdb69270bf4494",
+    "target/surefire-reports/TEST-com.paymentsledger.pr20.performance.ObservedJdbcTemplateTest.xml": "dafd1f19eb7928c2704f932a72fdc2b6932858a9682d00c425dfb209b80f66dd",
+    "target/failsafe-reports/TEST-com.paymentsledger.pr20.performance.Pr20HistoryObservationIT.xml": "76a4ff2fcabc72c58b7cc983d1e9744549a7c609cd515762d98cfe5c83bee015",
+    "target/failsafe-reports/com.paymentsledger.pr20.performance.Pr20HistoryObservationIT.txt": "409b6c7a1935d72858dabf7c2c7f679b187c80722493faaecff861c934f97863"
+  }
+}

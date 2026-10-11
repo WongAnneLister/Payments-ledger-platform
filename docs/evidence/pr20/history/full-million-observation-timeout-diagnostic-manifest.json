@@ -1,0 +1,61 @@
+{
+  "runId": "20261011T164255Z-f056d9b2",
+  "sourceCommit": "e04af4ad98da0ef1b834d258965f075681a8a726",
+  "status": "FAIL",
+  "fullBudgetObserved": false,
+  "partialPhase": {
+    "seconds": 300,
+    "actualSeconds": 0.0,
+    "completionWaitSeconds": 0.0,
+    "scheduledWrites": 1059,
+    "scheduledQueries": 2116,
+    "attemptedWrites": 141,
+    "attemptedQueries": 281,
+    "effectiveWriteArrivalRps": 0.47,
+    "effectiveQueryArrivalRps": 0.9366666666666666,
+    "scheduled": 3175,
+    "attempted": 422,
+    "errors": 397,
+    "errorRate": 0.9407582938388626,
+    "dropped": 2753,
+    "writesAccepted": 2,
+    "queriesOk": 23,
+    "latencyMs": {
+      "query": {
+        "p95": 20003.377834,
+        "p50": 10083.702167,
+        "p99": 20016.999959
+      },
+      "write": {
+        "p95": 20002.240917,
+        "p50": 10069.617125,
+        "p99": 20017.61625
+      }
+    }
+  },
+  "note": "Second million-row full-profile attempt aborted during initial warmup. Query diagnostics identify historyUnknown joining payment/business_order: 10396.234458ms, PSQLException SQLSTATE08006 caused by SocketTimeoutException Read timed out. No completed warmup or measurement. Two pre-load read-only plan probes are preserved separately and were not formal benchmark evidence.",
+  "archiveSha256": "7eeae4a64bdd8a9d52de106201128fdf513989a67c72ace4b0302c2c5e18e27f",
+  "filesSha256": {
+    "target/pr20/runner/20261011T164255Z-f056d9b2/performance.txt": "187a0dc934893cf2c346e3665b590d6f579663602657cc8178875a0573112584",
+    "target/pr20/runner/20261011T164255Z-f056d9b2/performance-compile.txt": "345749344e17de33cbf30f197dec26fbdf975ba31f6b1e024d1819a29f45bace",
+    "target/pr20/runner/20261011T164255Z-f056d9b2/run-summary.json": "98a43f7e299079bdb7f9d974989e554eabdbf81a91bc108f5619b2b674e2a908",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/failure.log": "9adadf5a7fdcf06600657ba345b37f40fc1f8ecbb30b7cc8e814388eca6a552e",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/summary.json": "43821a85ee38fb5ad91f3e626c69585035529847959f15a1cf74f92de3b12758",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/samples.ndjson": "a3790683b85cf1836715164d1ccbbed9dfcd44e142f4bbc0506ccba16baa1306",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/query-observations.ndjson": "dd6522669397956b86f15e5ff2b16930405ed2acb792bef560d0895657b06f20",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/disk-guards.ndjson": "6a39e77c8e2c67177cef94f1ed92fea93f1f902f1eb44af7b852c85cd1a97427",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/requests.csv": "f30b06b26024293a72d939adfeb9dfa5481d2d062dee9936179723e718b445fb",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/worker-2/application.log": "49e6403a0bf202dd2ea4d10090fcc08aa48d2aff7815f10d2a6d6ed322f712e1",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/worker-2/jvm.ndjson": "5795b028f4d8059043f56106193287133e470197b8c7bd774af6cf1eec26b3db",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/worker-2/ready.json": "fe7a8758bd369fbefa3ea256e5a87310de66e4441f2ba5530d5b23e9eb637c41",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/api-2/application.log": "0fa996692cfa1d9a334549091a42f5898b7b45031df3b2b4bcf3a9808962ee01",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/api-2/jvm.ndjson": "fe275ff3f6c2e013b0a0c0dcd6e505f31ba258ea3d1dd826a34afd73beee6fc4",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/api-2/ready.json": "65f274de20d76d97ecb759c72c6dcdbe8c2f26f759777b4162b13cb2f71e7a0c",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/worker-1/application.log": "7fb19d2741a84db88f473eda9cbea856b692da64d074b46b072ec24c2e0ec6d7",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/worker-1/jvm.ndjson": "3de3df501076fca71b989b4b4c86f443201fb2cb036725bf67ec6f45cc517a72",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/worker-1/ready.json": "27007604c7f3208b276590c7d77e1d642e3e0d2fdb5575d0731cabb7e0f5c355",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/api-1/application.log": "29a99a81c5b257f64e9bc667fe1ac409d7b645316561017ef3ff8a219711a589",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/api-1/jvm.ndjson": "e06122d49f06b38848a4940c849fece40ef73c217f5497d6e35def5e4efd4d24",
+    "target/pr20/performance/20261011T164255Z-f056d9b2/api-1/ready.json": "bbfb821ffa34112bb7cb863e249fbcf769018e701a275f8f00a10881ba01efa3"
+  }
+}

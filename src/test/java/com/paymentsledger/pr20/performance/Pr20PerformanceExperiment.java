@@ -40,7 +40,7 @@ public final class Pr20PerformanceExperiment {
     final List<Map<String,Object>> samples=Collections.synchronizedList(new ArrayList<>());
     final List<String> instrumentationErrors=Collections.synchronizedList(new ArrayList<>());
     JdbcTemplate admin,external;
-    Instant loadStart;
+    Instant loadStart,historicalCutoff;
     String topic,bootstrap;
     final Map<String,Object> summary=new LinkedHashMap<>();
     Pr20PerformanceExperiment(Options options)throws IOException{
@@ -105,8 +105,12 @@ public final class Pr20PerformanceExperiment {
                     summary.put("roleReadiness",actors.stream().map(a->{try{return JSON.readTree(a.control.resolve("ready.json").toFile());}catch(IOException e){throw new UncheckedIOException(e);}}).toList());
                     summary.put("actors",actors.stream().map(Actor::evidence).toList());
                     summary.put("databaseSettings",admin.queryForList("SELECT name,setting,unit FROM pg_settings WHERE name IN ('max_connections','shared_buffers','work_mem','maintenance_work_mem','wal_buffers','max_wal_size','fsync','synchronous_commit') ORDER BY name"));
+                    historicalCutoff=admin.queryForObject("SELECT clock_timestamp()",Timestamp.class).toInstant();
+                    long historicalUnknown=historyUnknownCount(admin,historicalCutoff);
+                    if(historicalUnknown!=options.history)throw new IllegalStateException("Historical database-time cohort incomplete");
+                    summary.put("historicalObservationCohort",Map.of("databaseExpiresAtBefore",historicalCutoff.toString(),"verifiedUnknownCount",historicalUnknown,"definition","Pre-generator historical deadlines are expired before this measured database cutoff; new request deadlines fall after it. Payment identity guards forbid changing deadlines. Counts are measured live, not cached."));
                     loadStart=Instant.now();summary.put("loadStartedAtUtc",loadStart.toString());
-                    // JDBC single connections stay owned by the sampler/main sequentially; generator only makes production HTTP calls.
+                    // Observations use bounded independent connections; the generator only makes production HTTP calls.
                     Thread sampler=Thread.ofPlatform().daemon(true).name("pr20-resource-sampler").start(()->sampleLoop(kafkaAdmin,db.getContainerId(),kafka.getContainerId()));
                     Phase warmup,measure;
                     try(var raw=Files.newBufferedWriter(output.resolve("requests.csv"));var executor=Executors.newVirtualThreadPerTaskExecutor()){
@@ -262,12 +266,25 @@ public final class Pr20PerformanceExperiment {
     long kafkaLag(AdminClient kafka)throws Exception{
         var committed=kafka.listConsumerGroupOffsets(ConsumerInboxService.CONSUMER_NAME).partitionsToOffsetAndMetadata().get(5,TimeUnit.SECONDS);Map<TopicPartition,OffsetSpec> offsets=new HashMap<>();for(int p=0;p<4;p++)offsets.put(new TopicPartition(topic,p),OffsetSpec.latest());var end=kafka.listOffsets(offsets).all().get(5,TimeUnit.SECONDS);long lag=0;for(var entry:end.entrySet())lag+=Math.max(0,entry.getValue().offset()-(committed.containsKey(entry.getKey())?committed.get(entry.getKey()).offset():0));return lag;
     }
+    static long historyUnknownCount(JdbcTemplate db,Instant cutoff){return number(paymentObservations(db,cutoff),"historyUnknown");}
+    static Map<String,Object> paymentObservations(JdbcTemplate db,Instant cutoff){
+        Objects.requireNonNull(cutoff,"A measured database cohort cutoff is required");
+        String before="expires_at < TIMESTAMPTZ '"+cutoff+"'",after="expires_at >= TIMESTAMPTZ '"+cutoff+"'";
+        // A single live MVCC snapshot; only the owned fixture scope is included.
+        // The seed is fully validated before capturing this cutoff and starting any new request.
+        return db.queryForMap("SELECT count(*) FILTER (WHERE "+before+" AND resolution_status='UNKNOWN') AS \"historyUnknown\","
+                +"count(*) FILTER (WHERE "+after+" AND resolution_status<>'KNOWN') AS \"currentLoadUnknown\","
+                +"count(*) FILTER (WHERE payment_status='SUCCEEDED') AS \"localSucceeded\","
+                +"count(*) FILTER (WHERE payment_status='SUCCEEDED' AND financial_status='POSTED') AS \"ledgerPostedPayments\","
+                +"count(*) FILTER (WHERE "+after+" AND (payment_status<>'SUCCEEDED' OR financial_status<>'POSTED')) AS \"uncompletedLoad\","
+                +"coalesce(extract(epoch FROM now()-min(unresolved_since) FILTER (WHERE "+after+" AND resolution_status<>'KNOWN')),0) AS \"unknownAgeSeconds\""
+                +" FROM platform.payment WHERE organization_id='"+PerformanceFixture.ORG+"'::uuid AND environment_id='"+PerformanceFixture.ENV+"'::uuid"
+                +" AND application_id='"+PerformanceFixture.APP+"'::uuid AND provider_account_id='"+PerformanceFixture.PROVIDER+"'::uuid AND currency='USD'");
+    }
     Map<String,Object> localState(){
         var result=new LinkedHashMap<String,Object>();
-        result.put("historyUnknown",admin.queryForObject("SELECT count(*) FROM platform.payment p JOIN platform.business_order o ON o.id=p.business_order_id WHERE o.order_key LIKE 'pr20-history-%' AND p.resolution_status='UNKNOWN'",Long.class));
-        result.put("currentLoadUnknown",admin.queryForObject("SELECT count(*) FROM platform.payment p JOIN platform.business_order o ON o.id=p.business_order_id WHERE o.order_key LIKE 'pr20-load-%' AND p.resolution_status<>'KNOWN'",Long.class));
-        result.put("localSucceeded",admin.queryForObject("SELECT count(*) FROM platform.payment WHERE payment_status='SUCCEEDED'",Long.class));
-        result.put("ledgerPostedPayments",admin.queryForObject("SELECT count(*) FROM platform.payment WHERE payment_status='SUCCEEDED' AND financial_status='POSTED'",Long.class));
+        var payments=paymentObservations(admin,historicalCutoff);
+        for(String key:List.of("historyUnknown","currentLoadUnknown","localSucceeded","ledgerPostedPayments"))result.put(key,number(payments,key));
         long fulfilled=external.queryForObject("SELECT count(*) FROM merchant_fixture.fulfillment",Long.class);
         result.put("merchantFulfilled",fulfilled);
         var postedIds=new HashSet<>(admin.queryForList("SELECT id FROM platform.payment WHERE payment_status='SUCCEEDED' AND financial_status='POSTED'",UUID.class));
@@ -277,9 +294,9 @@ public final class Pr20PerformanceExperiment {
         for(String definition:List.of("outbox_event|status<>'PUBLISHED'|occurred_at","delivery_task|status IN ('READY','RUNNING','HELD')|created_at","recovery_task|status IN ('READY','WAITING','RUNNING')|created_at","balance_transaction|state<>'POSTED'|created_at")){
             String[] parts=definition.split("\\|");var q=admin.queryForMap("SELECT count(*) count,coalesce(extract(epoch FROM now()-min("+parts[2]+")),0) oldestAgeSeconds FROM platform."+parts[0]+" WHERE "+parts[1]);queues.put(parts[0],q);total+=number(q,"count");
         }
-        long unposted=admin.queryForObject("SELECT count(*) FROM platform.payment p JOIN platform.business_order o ON o.id=p.business_order_id WHERE o.order_key LIKE 'pr20-load-%' AND (p.payment_status<>'SUCCEEDED' OR p.financial_status<>'POSTED')",Long.class);
+        long unposted=number(payments,"uncompletedLoad");
         queues.put("uncompletedLoad",unposted);total+=unposted;result.put("totalQueue",total);result.put("queues",queues);
-        result.put("unknownAgeSeconds",admin.queryForObject("SELECT coalesce(extract(epoch FROM now()-min(unresolved_since)),0) FROM platform.payment p JOIN platform.business_order o ON o.id=p.business_order_id WHERE o.order_key LIKE 'pr20-load-%' AND p.resolution_status<>'KNOWN'",Double.class));
+        result.put("unknownAgeSeconds",((Number)payments.get("unknownAgeSeconds")).doubleValue());
         result.put("recoveryLeaseAgeSeconds",admin.queryForObject("SELECT greatest(0,coalesce(max(extract(epoch FROM now()-updated_at)),0)) FROM platform.recovery_task WHERE status='RUNNING' AND lease_until IS NOT NULL",Double.class));
         result.put("recoveryLeaseExpiredAgeSeconds",admin.queryForObject("SELECT greatest(0,coalesce(max(extract(epoch FROM now()-lease_until)),0)) FROM platform.recovery_task WHERE lease_until IS NOT NULL",Double.class));
         result.put("journals",admin.queryForObject("SELECT count(*) FROM platform.journal",Long.class));result.put("financialEvents",admin.queryForObject("SELECT count(*) FROM platform.financial_event",Long.class));result.put("outboxEvents",admin.queryForObject("SELECT count(*) FROM platform.outbox_event",Long.class));

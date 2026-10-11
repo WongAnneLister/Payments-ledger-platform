@@ -25,4 +25,25 @@ class ObservedJdbcTemplateTest {
         assertThat(evidence.path("elapsedMillis").asDouble()).isGreaterThanOrEqualTo(0);
         verify(connection).close();
     }
+    @Test void singletonResultCardinalityFailureIsRecordedAsFailure() throws Exception {
+        var source=mock(DataSource.class);var connection=mock(Connection.class);var statement=mock(Statement.class);var rows=mock(ResultSet.class);
+        when(source.getConnection()).thenReturn(connection);when(connection.createStatement()).thenReturn(statement);
+        when(statement.executeQuery("SELECT absent_singleton")).thenReturn(rows);when(rows.next()).thenReturn(false);
+        var path=directory.resolve("cardinality.ndjson");var jdbc=new ObservedJdbcTemplate(source,path,"platform");
+        assertThatThrownBy(()->jdbc.queryForObject("SELECT absent_singleton",Long.class)).isInstanceOf(org.springframework.dao.EmptyResultDataAccessException.class);
+        var records=Files.readAllLines(path);assertThat(records).hasSize(1);
+        var evidence=Pr20PerformanceExperiment.JSON.readTree(records.getFirst());
+        assertThat(evidence.path("status").asText()).isEqualTo("FAIL");
+        assertThat(evidence.path("failure").asText()).contains("EmptyResultDataAccessException");
+    }
+    @Test void failedDiagnosticAppendDoesNotReplaceOriginalDatabaseFailure() throws Exception {
+        var source=mock(DataSource.class);var connection=mock(Connection.class);var statement=mock(Statement.class);
+        when(source.getConnection()).thenReturn(connection);when(connection.createStatement()).thenReturn(statement);
+        when(statement.executeQuery("SELECT original_failure")).thenThrow(new SQLException("original timeout", "57014"));
+        var jdbc=new ObservedJdbcTemplate(source,directory.resolve("missing-parent/queries.ndjson"),"platform");
+        var failure=catchThrowable(()->jdbc.queryForObject("SELECT original_failure",Long.class));
+        assertThat(failure).isInstanceOf(DataAccessException.class).hasRootCauseInstanceOf(SQLException.class);
+        assertThat(failure.getSuppressed()).hasSize(1);assertThat(failure.getSuppressed()[0]).isInstanceOf(java.io.IOException.class);
+        assertThat(((SQLException)failure.getCause()).getSQLState()).isEqualTo("57014");
+    }
 }
