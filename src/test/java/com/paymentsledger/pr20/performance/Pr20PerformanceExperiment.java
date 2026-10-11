@@ -69,6 +69,7 @@ public final class Pr20PerformanceExperiment {
         summary.put("configuration",options.map());summary.put("fullBudget",options.full());summary.put("target",Map.of("p95Ms",300,"p99Ms",1000,"nonInjectedErrorRateExclusive",0.001,"writeRps",100,"queryRps",200));
         summary.put("hardware",Map.of("os",System.getProperty("os.name"),"osVersion",System.getProperty("os.version"),"arch",System.getProperty("os.arch"),"logicalProcessors",Runtime.getRuntime().availableProcessors(),"java",System.getProperty("java.version"),"parentJvmMaxHeapBytes",Runtime.getRuntime().maxMemory()));
         summary.put("source",source());
+        summary.put("observationFailurePolicy","Ordinary observation failures retain FAIL and unavailable metrics while the frozen HTTP arrival budget continues. Disk protection and raw-evidence failures still abort. SQL, socket and resource deadlines remain unchanged.");
         String existing=commandOutput(List.of("docker","ps","--quiet"),10);summary.put("coexistingContainerCount",existing.isBlank()?0:existing.lines().count());
         summary.put("dockerResources",commandOutput(List.of("docker","info","--format","CPUs={{.NCPU}} MemoryBytes={{.MemTotal}} Root={{.DockerRootDir}}"),10));
         diskGuard(0);summary.put("provider","Durable SQL simulator; hosted payment completes immediately externally; no Stripe/bank connection");
@@ -116,42 +117,51 @@ public final class Pr20PerformanceExperiment {
                     try(var raw=Files.newBufferedWriter(output.resolve("requests.csv"));var executor=Executors.newVirtualThreadPerTaskExecutor()){
                         raw.write("phase,kind,ordinal,scheduledEpochMillis,scheduledNanos,actualStartNanos,finishedNanos,queueDelayMs,latencyMs,status,outcome,resourceId\n");raw.flush();
                         warmup=phase("warmup",options.warmup,executor,raw,kafkaAdmin);
-                        var before=localState();before.put("atUtc",Instant.now().toString());before.put("kafkaLag",kafkaLag(kafkaAdmin));summary.put("measurementStartedAtUtc",Instant.now().toString());
+                        var before=observeState(kafkaAdmin,"measurement-start");summary.put("measurementStartedAtUtc",Instant.now().toString());
                         measure=phase("measurement",options.measure,executor,raw,kafkaAdmin);
                         var end=new LinkedHashMap<>(measure.windowEnd);
                         summary.put("measurementEndedAtUtc",end.get("atUtc"));
                         summary.put("rawEvidence",Map.of("requestsCsv",output.resolve("requests.csv").toString(),"samplesNdjson",output.resolve("samples.ndjson").toString(),"diskGuardsNdjson",output.resolve("disk-guards.ndjson").toString(),"drainNdjson",output.resolve("drain.ndjson").toString()));
                         summary.put("warmup",warmup.map());summary.put("measurement",measure.map());summary.put("measurementBefore",before);summary.put("measurementEnd",end);
-                        summary.put("completedBusinessThroughputRps",Math.max(0,number(end,"businessCompleted")-number(before,"businessCompleted"))/(double)options.measure);
+                        boolean boundariesComplete=Boolean.TRUE.equals(before.get("observationComplete"))&&Boolean.TRUE.equals(end.get("observationComplete"));
+                        summary.put("measurementBoundariesComplete",boundariesComplete);
+                        summary.put("completedBusinessThroughputRps",boundariesComplete?Math.max(0,number(end,"businessCompleted")-number(before,"businessCompleted"))/(double)options.measure:null);
                         summary.put("acceptedThroughputRps",measure.writesAccepted.get()/(double)options.measure);
                         summary.put("counterDefinitions",Map.of("acceptance","Successful HTTP write responses for measurement arrival cohort divided by1800s (or configured smoke period); completion waiting separately timed","completedBusiness","Intersection of local SUCCEEDED+POSTED payment IDs and external durable merchant fulfillment IDs at measurementwindowboundary; delta divided bymeasurementseconds","queueGrowth","Sum of positive deltas for each individual operational work queue and Kafka lag at measurement boundary; one queue draining cannot cancel another growing, and later drain cannot erase growth","providerAccepted","Distinct durable external simulator scopedoperation-key rows","providerCaptureEffects","Exactlyone immediate captured effect per simulatorrow; explicit duplicateperpayment check","refundEffects","0; workloaddoesnot exercise refunds"));
-                        summary.put("fullBudgetObserved",options.full()&&warmup.actualSeconds>=300&&measure.actualSeconds>=1800&&warmup.scheduled.get()==90000&&measure.scheduled.get()==540000);
-                        var beforeQueues=queueCounts(before);var endQueues=queueCounts(end);
-                        long growth=PerformancePolicy.positiveQueueGrowth(beforeQueues,endQueues);summary.put("measurementQueueGrowth",growth);
-                        var perQueueGrowth=new LinkedHashMap<String,Long>();for(var key:endQueues.keySet())perQueueGrowth.put(key,Math.max(0,endQueues.get(key)-beforeQueues.getOrDefault(key,0L)));summary.put("measurementQueueGrowthByQueue",perQueueGrowth);
+                        summary.put("fullArrivalBudgetObserved",options.full()&&warmup.actualSeconds>=300&&measure.actualSeconds>=1800&&warmup.scheduled.get()==90000&&measure.scheduled.get()==540000);
+                        Long growth=null;
+                        if(boundariesComplete){
+                            var beforeQueues=queueCounts(before);var endQueues=queueCounts(end);
+                            growth=PerformancePolicy.positiveQueueGrowth(beforeQueues,endQueues);
+                            var perQueueGrowth=new LinkedHashMap<String,Long>();for(var key:endQueues.keySet())perQueueGrowth.put(key,Math.max(0,endQueues.get(key)-beforeQueues.getOrDefault(key,0L)));summary.put("measurementQueueGrowthByQueue",perQueueGrowth);
+                        }
+                        summary.put("measurementQueueGrowth",growth);
                         long drainStart=System.nanoTime();Instant drainAt=Instant.now();summary.put("drainStartedAtUtc",drainAt.toString());
                         try(var observations=Files.newBufferedWriter(output.resolve("drain.ndjson"))){
                             while(true){
                                 if(abortReason.get()!=null)throw new IllegalStateException(abortReason.get());
-                                var fresh=localState();fresh.put("kafkaLag",kafkaLag(kafkaAdmin));fresh.put("outstandingRequests",outstanding.get());fresh.put("atUtc",Instant.now().toString());
+                                diskGuard(-1);
+                                var fresh=observeState(kafkaAdmin,"drain");fresh.put("outstandingRequests",outstanding.get());
                                 observations.write(JSON.writeValueAsString(fresh));observations.newLine();observations.flush();summary.put("drainLastObservation",fresh);
-                                boolean drained=PerformancePolicy.drained(number(fresh,"totalQueue"),number(fresh,"kafkaLag"),((Number)fresh.get("outstandingRequests")).intValue());summary.put("drainCompleted",drained);
+                                boolean drained=Boolean.TRUE.equals(fresh.get("observationComplete"))&&PerformancePolicy.drained(number(fresh,"totalQueue"),number(fresh,"kafkaLag"),((Number)fresh.get("outstandingRequests")).intValue());summary.put("drainCompleted",drained);
                                 if(drained||System.nanoTime()-drainStart>=TimeUnit.SECONDS.toNanos(options.drain))break;Thread.sleep(1000);
                             }
                         }
                         summary.put("drainSecondsActual",(System.nanoTime()-drainStart)/1e9);
                         samplerStop.set(true);sampler.join(15000);if(sampler.isAlive())throw new IllegalStateException("Sampler failed to stop");
-                        var correctness=correctness();summary.put("correctness",correctness);summary.put("resourceSampleCount",samples.size());summary.put("finalKafkaLag",kafkaLag(kafkaAdmin));summary.put("fourDistinctLiveJvmsAtMeasurementEnd",actors.stream().allMatch(a->a.process.isAlive()));summary.put("instrumentationErrors",List.copyOf(instrumentationErrors));
-                        boolean incorrect=!Boolean.TRUE.equals(correctness.get("pass"))||!instrumentationErrors.isEmpty()||measure.writesAccepted.get()==0||measure.queriesOk.get()==0||!actors.stream().allMatch(a->a.process.isAlive())||number(summary,"finalKafkaLag")!=0;
+                        var correctness=observed("correctness",this::correctness);summary.put("correctness",correctness);summary.put("resourceSampleCount",samples.size());
+                        var broker=observed("final-broker",()->map("kafkaLag",kafkaLag(kafkaAdmin)));summary.put("finalKafkaLag",broker.get("kafkaLag"));summary.put("fourDistinctLiveJvmsAtMeasurementEnd",measure.liveActorsAtWindowEnd);summary.put("instrumentationErrors",List.copyOf(instrumentationErrors));
+                        boolean incorrect=!measure.liveActorsAtWindowEnd||!Boolean.TRUE.equals(summary.get("drainCompleted"))||!boundariesComplete||!Boolean.TRUE.equals(broker.get("observationComplete"))||!Boolean.TRUE.equals(correctness.get("pass"))||!instrumentationErrors.isEmpty()||measure.writesAccepted.get()==0||measure.queriesOk.get()==0||!actors.stream().allMatch(a->a.process.isAlive())||number(summary,"finalKafkaLag")!=0;
                         double p95=Math.max(measure.percentile("write",95),measure.percentile("query",95));double p99=Math.max(measure.percentile("write",99),measure.percentile("query",99));
-                        summary.put("status",PerformancePolicy.verdict(options.full(),p95,p99,measure.errors.get()/(double)Math.max(1,measure.attempted.get()),measure.drops.get(),growth,incorrect));
+                        summary.put("fullBudgetObserved",Boolean.TRUE.equals(summary.get("fullArrivalBudgetObserved"))&&boundariesComplete&&Boolean.TRUE.equals(correctness.get("observationComplete"))&&instrumentationErrors.isEmpty());
+                        summary.put("status",PerformancePolicy.verdict(options.full(),p95,p99,measure.errors.get()/(double)Math.max(1,measure.attempted.get()),measure.drops.get(),growth==null?0:growth,incorrect));
                     }finally{samplerStop.set(true);sampler.interrupt();sampler.join(15000);if(sampler.isAlive()){instrumentationErrors.add("SAMPLER_SHUTDOWN_TIMEOUT");throw new IllegalStateException("Sampler shutdown timeout");}}
                 }
             }
         }
     }
     JdbcTemplate observations(String url,String user,String password,String database){
-        var source=new DriverManagerDataSource(url,user,password);var properties=new java.util.Properties();properties.setProperty("connectTimeout","5");properties.setProperty("socketTimeout","10");source.setConnectionProperties(properties);var jdbc=new ObservedJdbcTemplate(source,output.resolve("query-observations.ndjson"),database);jdbc.setQueryTimeout(10);return jdbc;
+        var source=new DriverManagerDataSource(url,user,password);var properties=new java.util.Properties();properties.setProperty("connectTimeout","5");properties.setProperty("socketTimeout","10");source.setConnectionProperties(properties);var jdbc=new ObservedJdbcTemplate(source,output.resolve("query-observations.ndjson"),database,failure->abortReason.compareAndSet(null,"QUERY_DIAGNOSTIC_WRITE_FAILED"));jdbc.setQueryTimeout(10);return jdbc;
     }
     static Connection providerConnection(PostgreSQLContainer<?> db,Connection admin)throws SQLException{
         try(var statement=admin.createStatement()){statement.execute("CREATE DATABASE pr20_external_provider");}
@@ -188,7 +198,7 @@ public final class Pr20PerformanceExperiment {
         Thread queries=Thread.ofPlatform().start(()->arrivals(phase,"query",options.queryRps,seconds,start,epoch,executor,raw));
         writes.join();queries.join();if(abortReason.get()!=null)throw new IllegalStateException(abortReason.get());
         long phaseUntil=start+TimeUnit.SECONDS.toNanos(seconds);while(System.nanoTime()<phaseUntil)LockSupport.parkNanos(Math.min(1000000,phaseUntil-System.nanoTime()));
-        phase.actualSeconds=(System.nanoTime()-start)/1e9;phase.windowEnd=localState();phase.windowEnd.put("atUtc",Instant.now().toString());phase.windowEnd.put("kafkaLag",kafkaLag(kafka));
+        phase.actualSeconds=(System.nanoTime()-start)/1e9;phase.liveActorsAtWindowEnd=actors.stream().allMatch(a->a.process.isAlive());phase.windowEnd=observeState(kafka,name+"-boundary");
         long completionWaitStarted=System.nanoTime(),deadline=completionWaitStarted+TimeUnit.SECONDS.toNanos(30);
         while(phase.inFlight.get()>0&&System.nanoTime()<deadline)Thread.sleep(25);
         if(phase.inFlight.get()!=0)throw new IllegalStateException("Phase has unrecorded in-flight outcomes");
@@ -229,10 +239,10 @@ public final class Pr20PerformanceExperiment {
         }
     }
     void writeRaw(BufferedWriter raw,String phase,String kind,long id,long epoch,long scheduled,long actual,long finish,double delay,double latency,int status,String outcome,String resource){
-        try{synchronized(raw){raw.write(phase+","+kind+","+id+","+epoch+","+scheduled+","+actual+","+finish+","+delay+","+latency+","+status+","+outcome+","+resource+"\n");}}catch(IOException e){instrumentationErrors.add("RAW_CSV_WRITE_FAILED");}
+        try{synchronized(raw){raw.write(phase+","+kind+","+id+","+epoch+","+scheduled+","+actual+","+finish+","+delay+","+latency+","+status+","+outcome+","+resource+"\n");}}catch(IOException e){abortReason.compareAndSet(null,"RAW_CSV_WRITE_FAILED");try{observationFailure(new LinkedHashMap<>(),"raw-csv",e);}catch(IOException unavailable){e.addSuppressed(unavailable);instrumentationErrors.add("RAW_CSV_WRITE_FAILED");}}
     }
     static final class Phase{
-        final String name;final int seconds;double actualSeconds,completionWaitSeconds;Map<String,Object> windowEnd=Map.of();final AtomicLong scheduledWrites=new AtomicLong(),scheduledQueries=new AtomicLong(),attemptedWrites=new AtomicLong(),attemptedQueries=new AtomicLong();final AtomicLong scheduled=new AtomicLong(),attempted=new AtomicLong(),errors=new AtomicLong(),drops=new AtomicLong(),writesAccepted=new AtomicLong(),queriesOk=new AtomicLong();final AtomicInteger inFlight=new AtomicInteger();
+        final String name;final int seconds;double actualSeconds,completionWaitSeconds;boolean liveActorsAtWindowEnd;Map<String,Object> windowEnd=Map.of();final AtomicLong scheduledWrites=new AtomicLong(),scheduledQueries=new AtomicLong(),attemptedWrites=new AtomicLong(),attemptedQueries=new AtomicLong();final AtomicLong scheduled=new AtomicLong(),attempted=new AtomicLong(),errors=new AtomicLong(),drops=new AtomicLong(),writesAccepted=new AtomicLong(),queriesOk=new AtomicLong();final AtomicInteger inFlight=new AtomicInteger();
         final List<Long> write=Collections.synchronizedList(new ArrayList<>()),query=Collections.synchronizedList(new ArrayList<>());
         Phase(String name,int seconds){this.name=name;this.seconds=seconds;}
         void record(String kind,long nanos){(kind.equals("write")?write:query).add(nanos);}
@@ -256,12 +266,29 @@ public final class Pr20PerformanceExperiment {
                     sample.put("kafkaLag",lag);sample.put("kafkaOffsets",detail);
                     var stats=new ProcessBuilder("docker","stats","--no-stream","--format","{{json .}}",dbContainer,kafkaContainer).redirectErrorStream(true).start();
                     if(!stats.waitFor(5,TimeUnit.SECONDS)){stats.destroyForcibly();throw new IllegalStateException("Container resource timeout");}
-                    if(stats.exitValue()!=0)throw new IllegalStateException("Container resource unavailable");sample.put("containerResources",new String(stats.getInputStream().readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));
-                }catch(Exception e){sample.put("instrumentationError",e.getClass().getSimpleName());instrumentationErrors.add(e.getClass().getSimpleName());abortReason.compareAndSet(null,"INSTRUMENTATION_ERROR_"+e.getClass().getSimpleName());sample.put("abortReason",abortReason.get());samplerStop.set(true);}
+                    if(stats.exitValue()!=0)throw new IllegalStateException("Container resource unavailable");sample.put("containerResources",new String(stats.getInputStream().readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));sample.put("observationComplete",true);
+                }catch(Exception e){observationFailure(sample,"resource-sample",e);if(abortReason.get()!=null){sample.put("abortReason",abortReason.get());samplerStop.set(true);}}
                 samples.add(sample);raw.write(JSON.writeValueAsString(sample));raw.newLine();raw.flush();
                 for(int n=0;n<50&&!samplerStop.get();n++)Thread.sleep(100);
             }while(!samplerStop.get());
         }catch(Exception e){instrumentationErrors.add("SAMPLER_FAILED_"+e.getClass().getSimpleName());abortReason.compareAndSet(null,"SAMPLER_FAILED");}
+    }
+    @FunctionalInterface interface Observation {Map<String,Object> read()throws Exception;}
+    Map<String,Object> observed(String context,Observation observation)throws IOException{
+        var result=new LinkedHashMap<String,Object>();result.put("atUtc",Instant.now().toString());
+        try{result.putAll(observation.read());result.put("observationComplete",true);}
+        catch(Exception failure){observationFailure(result,context,failure);}
+        result.put("observationCompletedAtUtc",Instant.now().toString());return result;
+    }
+    Map<String,Object> observeState(AdminClient kafka,String context)throws IOException{
+        return observed(context,()->{var state=localState();state.put("kafkaLag",kafkaLag(kafka));return state;});
+    }
+    void observationFailure(Map<String,Object> result,String context,Exception failure)throws IOException{
+        result.put("observationComplete",false);result.put("instrumentationError",failure.getClass().getSimpleName());
+        instrumentationErrors.add(context+"_"+failure.getClass().getSimpleName());
+        var record=new LinkedHashMap<String,Object>();record.put("atUtc",Instant.now().toString());record.put("context",context);
+        var trace=new StringWriter();failure.printStackTrace(new PrintWriter(trace));record.put("failure",trace.toString());
+        synchronized(this){Files.writeString(output.resolve("observation-failures.ndjson"),JSON.writeValueAsString(record)+"\n",StandardOpenOption.CREATE,StandardOpenOption.APPEND);}
     }
     long kafkaLag(AdminClient kafka)throws Exception{
         var committed=kafka.listConsumerGroupOffsets(ConsumerInboxService.CONSUMER_NAME).partitionsToOffsetAndMetadata().get(5,TimeUnit.SECONDS);Map<TopicPartition,OffsetSpec> offsets=new HashMap<>();for(int p=0;p<4;p++)offsets.put(new TopicPartition(topic,p),OffsetSpec.latest());var end=kafka.listOffsets(offsets).all().get(5,TimeUnit.SECONDS);long lag=0;for(var entry:end.entrySet())lag+=Math.max(0,entry.getValue().offset()-(committed.containsKey(entry.getKey())?committed.get(entry.getKey()).offset():0));return lag;
@@ -346,7 +373,7 @@ public final class Pr20PerformanceExperiment {
             if(ownedDatabase!=null){var df=ownedDatabase.execInContainer("df","-Pk","/var/lib/postgresql/data");if(df.getExitCode()!=0)throw new IllegalStateException("Owned Docker filesystem capacity unavailable");String[] lines=df.getStdout().trim().split("\\n");String[] cells=lines[lines.length-1].trim().split("\\s+");dockerUsable=Long.parseLong(cells[3])*1024L;record.put("dockerDataUsableBytes",dockerUsable);record.put("dockerDataTotalBytes",Long.parseLong(cells[1])*1024L);}
             Files.writeString(output.resolve("disk-guards.ndjson"),JSON.writeValueAsString(record)+"\n",StandardOpenOption.CREATE,StandardOpenOption.APPEND);
             if(usable<2147483648L||dockerUsable<2147483648L){abortReason.compareAndSet(null,"DISK_RESERVE_BELOW_2_GIB");throw new IllegalStateException(abortReason.get());}
-        }catch(RuntimeException e){throw e;}catch(Exception e){abortReason.compareAndSet(null,"DISK_GUARD_UNAVAILABLE");throw new IllegalStateException("Disk guard failed",e);}
+        }catch(RuntimeException e){abortReason.compareAndSet(null,"DISK_GUARD_UNAVAILABLE");throw e;}catch(Exception e){abortReason.compareAndSet(null,"DISK_GUARD_UNAVAILABLE");throw new IllegalStateException("Disk guard failed",e);}
     }
     static String commandOutput(List<String> command,int seconds)throws Exception{
         var process=new ProcessBuilder(command).redirectErrorStream(true).start();if(!process.waitFor(seconds,TimeUnit.SECONDS)){process.destroyForcibly();throw new IllegalStateException("Environment observation timeout");}String output=new String(process.getInputStream().readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);if(process.exitValue()!=0)throw new IllegalStateException("Environment observation failed");return output.trim();

@@ -1,0 +1,8 @@
+{
+  "runId": "20261011T172344Z-8c89c6ec",
+  "sourceCommit": "71e422e49cc6e96669028f6eb275ca1a628f4779",
+  "scope": "Read-only pg_stat_activity and pg_stat_database snapshot before history seeding completed; no formal warmup/measurement/resource benchmark claim",
+  "observation": "Latest completed seed batch resumed from 870000 to 880000. Active insert waited on IO DataFileRead; no reported deadlocks. PostgreSQL cap unchanged at 1536 MiB and 2 CPUs. Docker one-off observation CPU 181.06%, memory869.5MiB; not sampled benchmark resource evidence.",
+  "raw": "full-optimized-seed-delay.txt.gz",
+  "mutations": "Only SET statement_timeout=5s for the disposable diagnostic connection; no schema/data/benchmark input or container configuration changes."
+}

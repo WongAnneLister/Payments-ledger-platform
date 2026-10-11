@@ -1,0 +1,32 @@
+{
+  "testedHead": "71e422e49cc6e96669028f6eb275ca1a628f4779",
+  "dirtyTestSourceSha256": {
+    "src/test/java/com/paymentsledger/pr20/performance/Pr20PerformanceExperiment.java": "6993bf7445107cd5650d7dfad0cc5ed3f7dc1de87a99351a8d09d8f14bc655f8",
+    "src/test/java/com/paymentsledger/pr20/performance/Pr20ObservationFailureTest.java": "2529cf6cb28d125d1755bfa500d8e1ff4aa5387a333ab3ec3a1ef2096669c321",
+    "src/test/java/com/paymentsledger/pr20/performance/ObservedJdbcTemplate.java": "c1117b84830aef6672f20884f683a859df45829d6d6787bf378594f2f024ea29",
+    "src/test/java/com/paymentsledger/pr20/performance/ObservedJdbcTemplateTest.java": "c1e2150548837e039041cce42571449d095a39c607fa5b88f6771bb20849bce0"
+  },
+  "scope": "12 focused unit +1 PostgreSQL integration PASS; not a new full clean verify",
+  "counts": {
+    "tests": 13,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "archiveSha256": "42d6cec0dba0a1d0401d944e02cb26d55407c11d1203a8f72e79fd40e2a4a3c9",
+  "filesSha256": {
+    "src/test/java/com/paymentsledger/pr20/performance/Pr20PerformanceExperiment.java": "6993bf7445107cd5650d7dfad0cc5ed3f7dc1de87a99351a8d09d8f14bc655f8",
+    "src/test/java/com/paymentsledger/pr20/performance/Pr20ObservationFailureTest.java": "2529cf6cb28d125d1755bfa500d8e1ff4aa5387a333ab3ec3a1ef2096669c321",
+    "src/test/java/com/paymentsledger/pr20/performance/ObservedJdbcTemplate.java": "c1117b84830aef6672f20884f683a859df45829d6d6787bf378594f2f024ea29",
+    "src/test/java/com/paymentsledger/pr20/performance/ObservedJdbcTemplateTest.java": "c1e2150548837e039041cce42571449d095a39c607fa5b88f6771bb20849bce0",
+    "target/surefire-reports/com.paymentsledger.pr20.performance.Pr20ObservationFailureTest.txt": "cc18c961d05d777dbd5e38f396efdbaa465f1039da18de9eef38d34c39c173c4",
+    "target/surefire-reports/TEST-com.paymentsledger.pr20.performance.Pr20ObservationFailureTest.xml": "6116654b49d9b9988c65eef868018c1fd85ec4c1d8ed65f8cd8f772f556eef6b",
+    "target/surefire-reports/com.paymentsledger.pr20.performance.ObservedJdbcTemplateTest.txt": "c05b8e79d460b9b975efa64d750c43ede4dbe137652ebbf226f7ede9b4bf3868",
+    "target/surefire-reports/TEST-com.paymentsledger.pr20.performance.ObservedJdbcTemplateTest.xml": "e69e8f6a3fd952111ac67aeb81047aa5070a88f1901f31f845e05d9074e4cf67",
+    "target/surefire-reports/TEST-com.paymentsledger.pr20.performance.PerformancePolicyJUnitTest.xml": "e9ed58c49503b882001f31527463145166e6cc7e2c8b76e15ac430e35135fe2d",
+    "target/surefire-reports/com.paymentsledger.pr20.performance.PerformancePolicyJUnitTest.txt": "7aca76b04c8e29d4a14e5281c5e172ff7b33ac60745267047453ac8e645083d7",
+    "target/failsafe-reports/TEST-com.paymentsledger.pr20.performance.Pr20HistoryObservationIT.xml": "8c99d1623cb9d3fe260f2c56b726c6fa94837c492fc0b5c99b3a61310c5ea983",
+    "target/failsafe-reports/com.paymentsledger.pr20.performance.Pr20HistoryObservationIT.txt": "13ceec59999b0602d5e9cda67ebef0fbcffa64e9f1ff8c4b8c0da107576ef7a7",
+    "execution/focused-green.txt": "45d50fa0d8a785c0d09598a6dee3a72d2cdcf9635bc243b6270197a1022e5210"
+  }
+}

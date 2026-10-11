@@ -40,10 +40,12 @@ class ObservedJdbcTemplateTest {
         var source=mock(DataSource.class);var connection=mock(Connection.class);var statement=mock(Statement.class);
         when(source.getConnection()).thenReturn(connection);when(connection.createStatement()).thenReturn(statement);
         when(statement.executeQuery("SELECT original_failure")).thenThrow(new SQLException("original timeout", "57014"));
-        var jdbc=new ObservedJdbcTemplate(source,directory.resolve("missing-parent/queries.ndjson"),"platform");
+        var evidenceFailure=new java.util.concurrent.atomic.AtomicReference<java.io.IOException>();
+        var jdbc=new ObservedJdbcTemplate(source,directory.resolve("missing-parent/queries.ndjson"),"platform",evidenceFailure::set);
         var failure=catchThrowable(()->jdbc.queryForObject("SELECT original_failure",Long.class));
         assertThat(failure).isInstanceOf(DataAccessException.class).hasRootCauseInstanceOf(SQLException.class);
         assertThat(failure.getSuppressed()).hasSize(1);assertThat(failure.getSuppressed()[0]).isInstanceOf(java.io.IOException.class);
         assertThat(((SQLException)failure.getCause()).getSQLState()).isEqualTo("57014");
+        assertThat(evidenceFailure.get()).isSameAs(failure.getSuppressed()[0]);
     }
 }

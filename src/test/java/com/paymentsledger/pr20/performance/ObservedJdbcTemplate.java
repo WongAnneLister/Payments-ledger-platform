@@ -14,8 +14,10 @@ import org.springframework.jdbc.core.*;
 final class ObservedJdbcTemplate extends JdbcTemplate {
     private final Path evidence;
     private final String database;
+    private final java.util.function.Consumer<IOException> evidenceFailure;
     private final ThreadLocal<Boolean> active=new ThreadLocal<>();
-    ObservedJdbcTemplate(DataSource source,Path evidence,String database){super(source);this.evidence=evidence;this.database=database;}
+    ObservedJdbcTemplate(DataSource source,Path evidence,String database){this(source,evidence,database,failure->{});}
+    ObservedJdbcTemplate(DataSource source,Path evidence,String database,java.util.function.Consumer<IOException> evidenceFailure){super(source);this.evidence=evidence;this.database=database;this.evidenceFailure=evidenceFailure;}
     @Override public <T> T query(String sql,ResultSetExtractor<T> extractor){
         return observed(sql,()->super.query(sql,extractor));
     }
@@ -42,7 +44,7 @@ final class ObservedJdbcTemplate extends JdbcTemplate {
         }finally{
             record.put("elapsedMillis",(System.nanoTime()-started)/1e6);
             try{synchronized(ObservedJdbcTemplate.class){Files.writeString(evidence,Pr20PerformanceExperiment.JSON.writeValueAsString(record)+"\n",StandardOpenOption.CREATE,StandardOpenOption.APPEND);}}
-            catch(IOException failure){if(original!=null)original.addSuppressed(failure);else throw new IllegalStateException("Query diagnostic evidence unavailable",failure);}
+            catch(IOException failure){evidenceFailure.accept(failure);if(original!=null)original.addSuppressed(failure);else throw new IllegalStateException("Query diagnostic evidence unavailable",failure);}
             finally{active.remove();}
         }
     }

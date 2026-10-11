@@ -1,0 +1,95 @@
+{
+  "runId": "20261011T172344Z-8c89c6ec",
+  "sourceCommit": "71e422e49cc6e96669028f6eb275ca1a628f4779",
+  "status": "FAIL",
+  "fullBudgetObserved": false,
+  "partialPhase": {
+    "seconds": 300,
+    "actualSeconds": 0.0,
+    "completionWaitSeconds": 0.0,
+    "scheduledWrites": 4800,
+    "scheduledQueries": 9599,
+    "attemptedWrites": 488,
+    "attemptedQueries": 1063,
+    "effectiveWriteArrivalRps": 1.6266666666666667,
+    "effectiveQueryArrivalRps": 3.5433333333333334,
+    "scheduled": 14399,
+    "attempted": 1551,
+    "errors": 1482,
+    "errorRate": 0.9555125725338491,
+    "dropped": 12848,
+    "writesAccepted": 3,
+    "queriesOk": 66,
+    "latencyMs": {
+      "write": {
+        "p50": 10503.272875,
+        "p99": 20030.272667,
+        "p95": 20004.741
+      },
+      "query": {
+        "p50": 10334.240708,
+        "p99": 20013.127584,
+        "p95": 20001.346625
+      }
+    }
+  },
+  "historyVerification": {
+    "paymentCount": 1000000,
+    "outboxCount": 0,
+    "fullyAssociatedEscalatedCount": 1000000,
+    "constraintsAndTriggersEnabled": true
+  },
+  "cohort": {
+    "definition": "Pre-generator historical deadlines are expired before this measured database cutoff; new request deadlines fall after it. Payment identity guards forbid changing deadlines. Counts are measured live, not cached.",
+    "databaseExpiresAtBefore": "2026-10-11T17:59:30.285762Z",
+    "verifiedUnknownCount": 1000000
+  },
+  "observationAggregate": [
+    {
+      "atUtc": "2026-10-11T17:59:30.289792Z",
+      "elapsedMillis": 443.384334,
+      "status": "PASS"
+    },
+    {
+      "atUtc": "2026-10-11T17:59:30.927585Z",
+      "elapsedMillis": 463.625417,
+      "status": "PASS"
+    },
+    {
+      "atUtc": "2026-10-11T17:59:45.003391Z",
+      "elapsedMillis": 4087.274125,
+      "status": "PASS"
+    },
+    {
+      "atUtc": "2026-10-11T18:00:08.533659Z",
+      "elapsedMillis": 10193.043667,
+      "status": "FAIL"
+    }
+  ],
+  "note": "Third full-profile attempt. Two in-load live samples completed; later single payment-table aggregate exceeded unchanged 10-second socket/query limits (SQLSTATE 08006, socket read timeout). Partial warmup only: actualSeconds=0 is an unfinalized field, not zero elapsed time. No completed warmup/measurement or throughput claim. Four owned JVMs shut down without forced kill; no changes to frozen inputs.",
+  "archiveSha256": "84c6cd71f64b231c7691ae18a078a96cfc5d20347a234166e919347de694a5d9",
+  "filesSha256": {
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/api-1/application.log": "9755e78a58ab273399050a848964b47e372412e2eb275c7957ce764652640c0d",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/api-1/jvm.ndjson": "3b4cdc6147a54a22df6d6732ad4278255b2daa03889eca22810f9d34a7261522",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/api-1/ready.json": "13e66911fd159c07a6810ba2e1be81e313bcbaaa027e24ba61092c671cce53fc",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/api-2/application.log": "da15f75d9cddfd6f47b2b7dcc23855b46df4204c7a14812eb3d6b223ffe157e7",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/api-2/jvm.ndjson": "e7cdedb51a549165a22482247ac7fbab94420fa4fd92a1ce4a505b6f7ec2a4f7",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/api-2/ready.json": "46555f7f1f91f3feb77f1cfc9b22e1be469d1e1f796d886612e4132bcac5de2c",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/disk-guards.ndjson": "08ce8698cffcf57998a7a1b557a76065187f1bebcbaaaf00f3671ab10d1991b1",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/failure.log": "e2823b6d3443b641e8061b33643c7cf7143f44914dc293d80af535161bade969",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/query-observations.ndjson": "68bd8a6f77207e746f9a995285b56e04fc9d8b1610fab18665cdf383e9a18112",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/requests.csv": "3824702943d0fe5d56e9b047c5dee01fd78d5e5486935c1ebf8e40deaba679d2",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/samples.ndjson": "5e63ea5d7293d26dabcac2df6da2ad4b2b5f3ad4685fb8b0546b895cd0944bdf",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/summary.json": "98c34ebd893e00665bf0549ebc745d560974f0ec6466cbc92968f88ab74b2a5f",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/worker-1/application.log": "49e6403a0bf202dd2ea4d10090fcc08aa48d2aff7815f10d2a6d6ed322f712e1",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/worker-1/jvm.ndjson": "1e3ae584bc22947983776e738d583b49fa3196833584af1fce94a898d4efbe82",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/worker-1/ready.json": "05f92d9de402ec4370850437cd552c5418cc15abf48b5a7801b912200b746953",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/worker-2/application.log": "2bb888cb99365174daa06aa09c71d4e070a4a991c3ac5a17101a586ebd2145e7",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/worker-2/jvm.ndjson": "274b3fb01fa98a026a3f753c31b3948fdfc5bad6ff7306e5930d9cf636960900",
+    "target/pr20/performance/20261011T172344Z-8c89c6ec/worker-2/ready.json": "904cba064b25d46eb7b49d36412628b908c161ec55a9084e4d88fe9e71b424b0",
+    "target/pr20/runner/20261011T172344Z-8c89c6ec/performance-compile.txt": "6db7ec96d1aa3f96c33bf0870cf727b180137090f2d43b52c1f8a119f6cbfa97",
+    "target/pr20/runner/20261011T172344Z-8c89c6ec/performance.txt": "c1d6c07ba538d53367ba21d3998a9b383a232eacd4b0084ced3a8d2bd5c2b68c",
+    "target/pr20/runner/20261011T172344Z-8c89c6ec/run-summary.json": "c5401e37377c3bdf542043d0449d0140d0ad60bde1678df077ca463bc016bdd9",
+    "execution/full-optimized-live.txt": "97577b8b00ed17e92abfba4c4ee224c7735138f2e7fb1204dbef7a57229a45fa"
+  }
+}
