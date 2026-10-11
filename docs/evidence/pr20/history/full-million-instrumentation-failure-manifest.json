@@ -2,7 +2,7 @@
   "runId": "20261011T154420Z-e7793514",
   "sourceCommit": "1313e36170ff36d52f0fc96cbbc1d12ab6ac000f",
   "status": "FAIL",
-  "note": "Full clean verification passed. One million fully associated historical UNKNOWN rows and four restricted application processes started. Performance instrumentation failed before warmup; no completed full-budget measurement. Recovery and selected demos passed with scoped fixture limitations.",
+  "note": "Full clean verification passed. One million fully associated historical UNKNOWN rows and four restricted application processes started. Database instrumentation failed during initial warmup; 128 writes and 258 queries attempted, 3083 scheduled raw rows including 2697 drops. No completed warmup or full-budget measurement. Recovery and selected demos passed with scoped fixture limitations. Original error type does not establish its underlying cause.",
   "testCounts": {
     "surefire": {
       "tests": 232,

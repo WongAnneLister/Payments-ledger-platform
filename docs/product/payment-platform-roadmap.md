@@ -1,6 +1,6 @@
 # 从零构建支付网关与复式账本：实施路线图
 
-版本：1.6 · 日期：2026-10-09 · 状态：已推进至 PR19 八类故障实验与 CI 矩阵，本机 42 项及完整回归已验证；PR20 待实施。真实 Stripe 历史报告、争议等未验证能力以各期 evidence 为准，不将本地 fixture 视为真实契约通过。
+版本：1.7 · 日期：2026-10-12 · 状态：PR20 实现及英文材料已完成，完整回归、隔离恢复和六个选定演示分支已验证；百万条性能目标尚未通过。真实 Stripe 历史报告、争议等未验证能力以各期 evidence 为准，不将本地 fixture 视为真实契约通过。
 
 相关文档：[阅读入口](README.md) · [产品需求](payment-platform-prd.md) · [验收矩阵](payment-platform-acceptance.md) · [逐 PR 执行提示词](stripe-payment-ledger-codex-pr-prompts.md) · [面试问题与证据](payment-platform-interview-questions.md)
 
@@ -59,6 +59,8 @@ PR17 的页面、原请求重试、作用域指标、日志与浏览器验证见
 PR18 的默认 100 seeds / 10000 步及四个数据库竞态已本机验证，详见[属性运行手册](../runbook/pr18-property-verification.md)和[PR18 证据](../evidence/pr18/README.md)。扩展 1000/300 与远程 CI 尚未运行。
 
 PR19 已本机验证 F-01–08 的全部 42 个窗口，包含实际 JVM 强杀、Kafka 容器中断及双 JVM / PostgreSQL 连接竞争，详见[故障运行手册](../runbook/pr19-fault-matrix.md)和[PR19 证据](../evidence/pr19/README.md)。远程八 job 执行仍为 NOT RUN。
+
+PR20 的 [实际证据](../evidence/pr20/README.md) 区分性能失败、恢复演练通过和选定演示通过。完整回归 748 项通过、3 项真实探针跳过；恢复保留 I02 INCOMPLETE、人工不可恢复订单和全局写入关闭。百万条历史数据与四 JVM 已实际验证；前三轮完整规模尝试在预热中因观测失败中止，最新一轮在四 JVM 就绪后的多表关联复核中超时，正式负载未启动。完整预热、测量及独立观测仍未取得，不能据此宣称性能目标达成。英文 [38 项证据审计](../english/acceptance-evidence-audit.md) 保留真实契约、生产和远程 CI 的未验证边界。
 
 ## 4. 容易遗漏的集成边界
 

@@ -2,7 +2,9 @@
 
 [English index](README.md) · [Frozen recovery requirements](../product/payment-platform-acceptance.md#92-备份恢复演练) · [PR20 experiment design](../superpowers/specs/2026-10-10-pr20-experiments-design.md)
 
-**Execution status at authoring: NOT RUN.** This runbook describes the PR20 `Pr20RecoveryIT` exercise being implemented and its required evidence. The [release-gate tests](../../src/test/java/com/paymentsledger/payment/Pr20RecoveryGateTest.java), [isolated fixture](../../src/test/java/com/paymentsledger/payment/Pr20RecoveryFixture.java) and [per-case report writer](../../src/test/java/com/paymentsledger/payment/Pr20RecoveryReports.java) can be inspected; source existence or compilation does not prove a completed restore. No RPO/RTO value has been measured for this document. The release gate is a test-only orchestration control; production business eligibility still comes from the existing recovery and source-verification rules.
+**Actual local replay: PASS**, run `20261011T154420Z-e7793514`, source `1313e36170ff36d52f0fc96cbbc1d12ab6ac000f`. The [result index](../evidence/pr20/verified-all-result.json) and [raw archive manifest](../evidence/pr20/history/full-million-instrumentation-failure-manifest.json) retain the dump/restore, external state, 41 assertions and all 12 release gates. Measured fixture RPO is **885 ms** and RTO **3012 ms**, using the definitions below. These are observations from a small local fixture, not production recovery objectives.
+
+Only one independently qualified operation is released. **Global writes remain held**; an expired UNKNOWN operation and one post-backup local-only order remain manual outcomes. Nightly I02 remains **INCOMPLETE** because unresolved outcomes still exist. The release gate is test-only orchestration; production eligibility uses existing recovery and source-verification rules. [Gate tests](../../src/test/java/com/paymentsledger/payment/Pr20RecoveryGateTest.java), [isolated fixture](../../src/test/java/com/paymentsledger/payment/Pr20RecoveryFixture.java) and [report writer](../../src/test/java/com/paymentsledger/payment/Pr20RecoveryReports.java) implement this exercise.
 
 ## Scope and prerequisites
 
@@ -14,7 +16,7 @@ Use Java 21, Docker and the fixture's `payments_app` restricted role. The intend
 ./mvnw -B -Dtest=Pr20RecoveryGateTest -Dit.test=Pr20RecoveryIT verify
 ```
 
-Execute it after the recovery class is present and the source revision is fixed. The script must retain command exit codes, raw backup/restore output and per-case JSON under `target/pr20/recovery/<runId>/`. Archive them outside `target` before a clean build. A failed prerequisite is BLOCKED; an actual failed restore/assertion is FAIL. Neither can be turned into PASS by prose.
+Freeze the source revision before replaying it. The script must retain command exit codes, raw backup/restore output and per-case JSON under `target/pr20/recovery/<runId>/`. Archive them outside `target` before a clean build. A failed prerequisite is BLOCKED; an actual failed restore/assertion is FAIL. Neither can be turned into PASS by prose.
 
 ## Procedure and release evidence
 
@@ -48,4 +50,4 @@ For every nonautomatic outcome, save the resource/task ID, reason, known externa
 
 ## What the final report must contain
 
-One report must bind runId, source commit/hash manifest, UTC timeline, environment/client versions, isolation identities, backup archive/checksum/cutoff, raw command outputs, unchanged external-state evidence, reconstructed balances and coverage, external rescan differences, recovered/escalated/unrecoverable records, notification/effect counts, manual steps, actual RPO/RTO definitions and values, and every release gate. Missing fields mean incomplete evidence. This document intentionally contains no predicted statistics or completed-recovery statement.
+One report must bind runId, source commit/hash manifest, UTC timeline, environment/client versions, isolation identities, backup archive/checksum/cutoff, raw command outputs, unchanged external-state evidence, reconstructed balances and coverage, external rescan differences, recovered/escalated/unrecoverable records, notification/effect counts, manual steps, actual RPO/RTO definitions and values, and every release gate. Missing fields mean incomplete evidence. The archived local PASS applies to this scoped exercise, including its unresolved manual outcomes; it does not certify unrestricted recovery or production availability.

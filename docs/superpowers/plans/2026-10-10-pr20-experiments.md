@@ -25,11 +25,14 @@
 - [x] Replay selected A/B, UNKNOWN, L3 and independent drift from empty test state; emit traceable demo reports.
 
 ## 4. English artifacts, acceptance and CI (root)
-- [ ] Author `docs/english/README.md`, diagrams, demo, retrospective, recovery manual and `resume-evidence-map.md` using actual reports only.
-- [ ] Build a 38-row evidence/status audit from current/history reports, preserving unavailable scope rather than blanket PASS.
+- [x] Author `docs/english/README.md`, diagrams, demo, retrospective, recovery manual and `resume-evidence-map.md` using actual reports only.
+- [x] Build a 38-row evidence/status audit from current/history reports, preserving unavailable scope rather than blanket PASS.
 - [x] Add automatic runner regressions and recovery/demo checks through existing verify, plus a manual full/smoke experiment entry (no new scheduled task); always upload actual reports and failures.
 - [x] Independent whole spec then quality review; resolve findings with targeted regressions, no silent target changes.
-- [ ] Freeze implementation commit; perform full performance and recovery/demo plus one complete clean verify retaining PR18 defaults and PR19 matrix; archive experiment evidence before clean.
-- [ ] Run Node/Python/OpenAPI/docs/staged-diff checks; provenance audit; record actual acceptance states; commit locally. Leave main/push for subsequent authorization.
+- [x] Freeze implementation revisions and preserve actual source identity; archive complete clean verification retaining PR18 defaults/PR19 matrix, restore/demo PASS and every actual performance failure. Production code is unchanged after clean-verified `1313e361`; later test-only changes have separate focused evidence.
+- [ ] Obtain the completed 300s warmup / 1800s measurement and complete observations at 1M history / 100 write + 200 query RPS. Fourth frozen run `0dcd509` is BLOCKED by mandatory post-readiness association verification; no full-budget PASS is claimed.
+- [x] Run Node/Python/OpenAPI/docs/diff checks; provenance audit; record actual acceptance states and prepare local evidence commit. Leave main/push for subsequent authorization.
 
-Focused verification: 7 unit + 8 integration tests PASS, 41 restore assertions, raw backup/effects/rebuild validated; 66 PR20 runner cases and 93 total runner cases PASS, 35 browser cases PASS. Full clean verification and frozen full performance remain pending.
+Actual complete clean verification at `1313e361` passed 232 unit + 516 executed integration tests (748 PASS; 3 real-account opt-ins skipped), including the PR18 default 100-seed/10000-step sequence and all 42 PR19 fault windows. Restore passed 41 assertions / 12 release gates, local RPO 885 ms / RTO 3012 ms; six selected fresh-state demo cases passed. Subsequent test-only observation refinements have separate source-bound focused results; the latest `0dcd509` passed 12 unit + 1 PostgreSQL integration tests. The fourth frozen full-profile attempt at `0dcd509` is BLOCKED before load: its first 1M association check and four JVM readiness passed, but the mandatory repeated four-table check exceeded 10 seconds. Earlier attempts remain partial-warmup FAIL records. All original results are archived without changing budgets or gates. English artifacts, diagrams and the 38-row audit distinguish these outcomes; complete full-budget performance evidence remains outstanding.
+
+Final read-only evidence review found no material discrepancy: original XML and source bytes support 748 PASS / 3 skipped at `1313e361`, latest 12 unit + 1 PostgreSQL integration PASS, restore 41 assertions / 12 gates and six selected demo PASS. Final runner/browser/OpenAPI checks passed (93 / 35 / 29 paths, 70 schemas, 99 resolved refs). Full performance acceptance remains outstanding; no additional experiment-architecture change or target relaxation is part of this evidence commit.

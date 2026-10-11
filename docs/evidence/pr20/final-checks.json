@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "verifiedAtUtc": "2026-10-11T19:46:58.891232+00:00",
+  "sourceCommit": "0dcd50902dd7c8e07503a6ced52f404772fc7b99",
+  "sourceIdentityScope": "All input files from the frozen fourth-run manifest still match current bytes; this record does not relabel earlier clean verification as a later source revision.",
+  "frozenInputFilesVerified": 369,
+  "checks": {
+    "pythonRunners": {
+      "status": "PASS",
+      "exitCode": 0,
+      "cases": 93,
+      "command": "python3 -m unittest discover -s scripts/tests -p 'test_*runner.py'",
+      "note": "Printed deliberate PR18 FAIL is expected negative runner fixture; unittest overall OK."
+    },
+    "browserUnit": {
+      "status": "PASS",
+      "exitCode": 0,
+      "cases": 35,
+      "command": "node --test scripts/tests/pr17-pages.test.mjs scripts/tests/pr17-ui.test.mjs"
+    },
+    "openApi": {
+      "status": "PASS",
+      "exitCode": 0,
+      "paths": 29,
+      "schemas": 70,
+      "references": 99,
+      "unresolvedReferences": 0,
+      "command": "python3 scripts/ci/check_openapi.py"
+    },
+    "documentationLinks": {
+      "status": "PASS",
+      "exitCode": 0,
+      "markdownFiles": 128,
+      "relativeLinks": 743,
+      "brokenLinks": 0,
+      "command": "python3 scripts/ci/check_doc_links.py"
+    },
+    "evidenceIntegrity": {
+      "status": "PASS",
+      "scope": "Archive byte hashes, secret-pattern scan, exact source anchors and Mermaid/PNG source hashes; no additional experiment PASS inferred",
+      "verifiedAtUtc": "2026-10-11T19:46:37.675031+00:00",
+      "archivesScanned": 17,
+      "rawMembersScanned": 1153,
+      "manifestFileHashesVerified": 1159,
+      "archiveHashesVerified": 6,
+      "sourceAnchorsVerified": 76,
+      "diagramsVerified": 7
+    },
+    "independentReadOnlyReview": {
+      "status": "PASS",
+      "scope": "Source-bound raw/XML counts, fourth blocked run, docs and no unqualified performance completion claims."
+    },
+    "productionSourceSinceClean": {
+      "status": "PASS",
+      "verifiedCleanSource": "1313e36170ff36d52f0fc96cbbc1d12ab6ac000f",
+      "diffUnderSrcMain": []
+    },
+    "mainUnchanged": {
+      "status": "PASS",
+      "main": "d92bae3837dc4fc13eac734733ce36bf0ac0b3d0",
+      "originMain": "d92bae3837dc4fc13eac734733ce36bf0ac0b3d0"
+    },
+    "ownedFourthRunCleanup": {
+      "status": "PASS",
+      "fourJvmsStopped": true,
+      "forcedKills": false,
+      "twoOwnedContainersAbsent": true
+    },
+    "gitDiffWhitespace": {
+      "status": "PASS",
+      "exitCode": 0
+    }
+  },
+  "logFiles": {
+    "python": {
+      "path": "history/final-python-check.txt.gz",
+      "originalBytes": 366,
+      "originalSha256": "967e7c507ba91cd4f8f4f1c94a778a4ad50fd1bcb3cf111ee5fc752e3820b63a",
+      "compressedSha256": "6208ba80214ddf8cf404f06f10fba1c0c8411b46bf624b5b8bd361edbdb5cb33"
+    },
+    "node": {
+      "path": "history/final-node-check.txt.gz",
+      "originalBytes": 8531,
+      "originalSha256": "9e1fea0dbf1eaeac512858ee5c6a412269903391bf8f531ac2cfbcfe96a00d73",
+      "compressedSha256": "7a8bf60640008233c958b68ca0ae20bd6fe5329f76a7fc7a53b6eed296578512"
+    },
+    "openapi": {
+      "path": "history/final-openapi-check.txt.gz",
+      "originalBytes": 87,
+      "originalSha256": "0b0e7c0d4b30e3e24eaddd8dadbcbb4229b625b4dec670290b04b544b40155d0",
+      "compressedSha256": "9fac7601f1933687d9daf7937a9df0953b6cc1d68137e1710126b33bbcb8aecc"
+    },
+    "final-doclinks-check.txt.gz": {
+      "path": "history/final-doclinks-check.txt.gz",
+      "originalBytes": 103,
+      "originalSha256": "10f80a3790c662b083506445016265902bc31a075a01f6ec2ace0738596f6628",
+      "compressedSha256": "0bb9993be66eb363c4ca59e4148d5ccab416c60fac17c0d4fd0449f9bf35d507"
+    },
+    "final-integrity-check.json.gz": {
+      "path": "history/final-integrity-check.json.gz",
+      "originalBytes": 403,
+      "originalSha256": "846705ad6c09fddeb7537299571fe95e18a4a37c6806c0ea93f1df7e42c6cb11",
+      "compressedSha256": "6eee5713cfbb00553d059b24b04f64cb783f509d119f8723baf1527fca1cad02"
+    },
+    "final-integrity-audit.py.gz": {
+      "path": "history/final-integrity-audit.py.gz",
+      "originalBytes": 2836,
+      "originalSha256": "862b058a29aa36f76d437b7fcf27e843218fd5680169d7e3ca57640ae5db6331",
+      "compressedSha256": "9ddcc915b75a04286fceca93f27780861f11f29d6d7ce3fcbc4095c89b85aca6"
+    }
+  },
+  "completeCleanJava": {
+    "sourceCommit": "1313e36170ff36d52f0fc96cbbc1d12ab6ac000f",
+    "passed": 748,
+    "skipped": 3,
+    "record": "verified-all-result.json"
+  },
+  "latestFocusedJava": {
+    "sourceIdentity": "Four dirty source files tested at71e422e match frozen0dcd509 bytes exactly; Pr20HistoryObservationIT unchanged",
+    "unitPassed": 12,
+    "postgresIntegrationPassed": 1,
+    "skipped": 0,
+    "rawManifest": "history/retained-observation-focused-green-manifest.json"
+  },
+  "performanceAcceptance": {
+    "status": "FAIL",
+    "latestRunExperimentStatus": "BLOCKED",
+    "latestRunnerStatus": "FAIL",
+    "fullArrivalBudgetObserved": false,
+    "fullBudgetObserved": false,
+    "remaining": "Completed 300s/1800s arrivals and complete resource/queue/independent correctness evidence at the fixed million-row budget",
+    "record": "latest-performance-result.json"
+  },
+  "remoteCi": "NOT_RUN"
+}

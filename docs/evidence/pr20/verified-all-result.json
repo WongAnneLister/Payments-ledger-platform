@@ -1,0 +1,763 @@
+{
+  "runId": "20261011T154420Z-e7793514",
+  "sourceCommit": "1313e36170ff36d52f0fc96cbbc1d12ab6ac000f",
+  "sourceDirty": true,
+  "sourceStatus": [
+    "?? docs/evidence/pr20/full-live.txt"
+  ],
+  "sourceInputsDigest": "5cbe9ff05c4bb6038bf85253716652816516a6c4ea50a158b967897f2ee08e99",
+  "command": {
+    "command": [
+      "./mvnw",
+      "-B",
+      "clean",
+      "verify",
+      "-Dpr20.runId=20261011T154420Z-e7793514",
+      "-Dpr20.sourceCommit=1313e36170ff36d52f0fc96cbbc1d12ab6ac000f"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 1558.185,
+    "log": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/runner/20261011T154420Z-e7793514/verification.txt"
+  },
+  "environment": {
+    "java": {
+      "exitCode": 0,
+      "output": "openjdk version \"21.0.12.1\" 2026-08-18 LTS\nOpenJDK Runtime Environment Corretto-21.0.12.9.1 (build 21.0.12.1+9-LTS)\nOpenJDK 64-Bit Server VM Corretto-21.0.12.9.1 (build 21.0.12.1+9-LTS, mixed mode, sharing)"
+    },
+    "docker": {
+      "exitCode": 0,
+      "output": "27.4.0"
+    }
+  },
+  "archive": "history/full-million-instrumentation-failure.tar.gz",
+  "archiveManifest": "history/full-million-instrumentation-failure-manifest.json",
+  "verification": {
+    "status": "PASS",
+    "unitTests": 232,
+    "integrationTestsTotal": 519,
+    "integrationSkipped": 3,
+    "passed": 748,
+    "failures": 0,
+    "errors": 0
+  },
+  "recovery": {
+    "status": "PASS",
+    "rpo": {
+      "definition": "Elapsed wall-clock time from exported consistent backup transaction cutoff to simulated local-loss detection; it bounds lost local commits, not external money loss",
+      "measuredMillis": 885,
+      "dataLossWindow": {
+        "untilInclusive": "2026-10-11T16:07:58.419365Z",
+        "fromInclusive": "2026-10-11T16:07:57.534363Z"
+      }
+    },
+    "rto": {
+      "definition": "Elapsed monotonic time from starting the new isolated target through financial checks, operational disposition, and individually eligible execution release",
+      "measuredMillis": 3012,
+      "startedAt": "2026-10-11T16:07:58.613417Z",
+      "completedAt": "2026-10-11T16:08:01.625874Z"
+    },
+    "releaseGates": {
+      "INDEPENDENT_BALANCE": true,
+      "UNKNOWN_DISPOSITION": true,
+      "REBUILD": true,
+      "EXTERNAL_CONTINUITY": true,
+      "TRIAL_BALANCE": true,
+      "EVENT_COVERAGE": true,
+      "BT_COVERAGE": true,
+      "MANUAL_LOSS_DISPOSITION": true,
+      "OUTBOX_REPLAY": true,
+      "ARCHIVE": true,
+      "ISOLATION": true,
+      "PERMISSIONS": true
+    },
+    "writeGateRelease": {
+      "mode": "ELIGIBLE_OPERATIONS_ONLY",
+      "globalWritesReleased": false,
+      "excludedOperationIds": [
+        "c62c8451-38fa-42ce-9df5-e861580b87f6"
+      ],
+      "excludedManualRecords": [
+        "01a12bb8-9084-3860-9b7b-eba23fd7506c"
+      ],
+      "releasedAt": "2026-10-11T16:08:01.591923Z",
+      "releasedOperationIds": [
+        "2bedd525-39b7-45ef-99cc-5483c59680eb"
+      ]
+    },
+    "missingLocalRecords": [
+      {
+        "id": "8ce4776e-794a-4414-b4fc-f094c9cf2881",
+        "kind": "POST_BACKUP_PAYMENT",
+        "disposition": "RECOVERABLE_FROM_PRE_BACKUP_TRUSTED_ORDER_AND_EXTERNAL_BT"
+      },
+      {
+        "id": "01a12bb8-9084-3860-9b7b-eba23fd7506c",
+        "kind": "LOCAL_ONLY_ORDER_PAYMENT_OPERATION",
+        "disposition": "UNRECOVERABLE_WITHOUT_AUTHENTICATED_MERCHANT_SOURCE"
+      }
+    ],
+    "assertionResults": [
+      {
+        "actual": "pr20_source_9a7d155fda1a48e380a0860a934e7841",
+        "passed": true,
+        "expected": "new pr20_source_ random database",
+        "name": "source isolation"
+      },
+      {
+        "actual": false,
+        "passed": true,
+        "expected": false,
+        "name": "source role restricted"
+      },
+      {
+        "actual": "MATCHED",
+        "passed": true,
+        "expected": "MATCHED",
+        "name": "prebackup bank payout independently matched"
+      },
+      {
+        "actual": 0,
+        "passed": true,
+        "expected": 0,
+        "name": "pg_dump completed"
+      },
+      {
+        "actual": 4,
+        "passed": true,
+        "expected": "more than backup",
+        "name": "postbackup local commits existed"
+      },
+      {
+        "actual": "fd54a6bc062608b17ba95a4e0dad82f97f587d2ae1b27ceb3e4c3e720a1396c4/pr20_restore_9a7d155fda1a48e380a0860a934e7841",
+        "passed": true,
+        "expected": "new container and new pr20_restore database",
+        "name": "new distinct target"
+      },
+      {
+        "actual": "e20f36b97c4d48f523973880b445f8ea3406f803718d7d5e5fc9b2d8c3c5572e",
+        "passed": true,
+        "expected": "e20f36b97c4d48f523973880b445f8ea3406f803718d7d5e5fc9b2d8c3c5572e",
+        "name": "archive checksum unchanged"
+      },
+      {
+        "actual": 0,
+        "passed": true,
+        "expected": 0,
+        "name": "pg_restore completed"
+      },
+      {
+        "actual": {
+          "business_order": 3,
+          "payment": 2,
+          "refund": 1,
+          "provider_operation": 3,
+          "recovery_task": 3,
+          "balance_transaction": 2,
+          "financial_event": 5,
+          "journal": 5,
+          "journal_entry": 11,
+          "balance_projection": 7,
+          "outbox_event": 4,
+          "consumer_inbox": 0,
+          "delivery_task": 0,
+          "fee_model": 3
+        },
+        "passed": true,
+        "expected": {
+          "business_order": 3,
+          "payment": 2,
+          "refund": 1,
+          "provider_operation": 3,
+          "recovery_task": 3,
+          "balance_transaction": 2,
+          "financial_event": 5,
+          "journal": 5,
+          "journal_entry": 11,
+          "balance_projection": 7,
+          "outbox_event": 4,
+          "consumer_inbox": 0,
+          "delivery_task": 0,
+          "fee_model": 3
+        },
+        "name": "restored archive snapshot count"
+      },
+      {
+        "actual": [
+          {
+            "type": "PAYMENT",
+            "objectId": "ch_fake_7467152ff5223c6b8269714ae28aee83",
+            "amountMinor": 10000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          },
+          {
+            "type": "REFUND",
+            "objectId": "re_fake_55f14f39274c3f6da403c99946c50929",
+            "amountMinor": 4000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          },
+          {
+            "type": "PAYMENT",
+            "objectId": "ch_fake_9200c621aa813f77ac6a879baac047b9",
+            "amountMinor": 10000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          }
+        ],
+        "passed": true,
+        "expected": [
+          {
+            "type": "PAYMENT",
+            "objectId": "ch_fake_7467152ff5223c6b8269714ae28aee83",
+            "amountMinor": 10000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          },
+          {
+            "type": "REFUND",
+            "objectId": "re_fake_55f14f39274c3f6da403c99946c50929",
+            "amountMinor": 4000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          },
+          {
+            "type": "PAYMENT",
+            "objectId": "ch_fake_9200c621aa813f77ac6a879baac047b9",
+            "amountMinor": 10000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          }
+        ],
+        "name": "external state continuity"
+      },
+      {
+        "actual": "on",
+        "passed": true,
+        "expected": "on",
+        "name": "app recovery connection read only"
+      },
+      {
+        "actual": false,
+        "passed": true,
+        "expected": false,
+        "name": "app cannot forge server binding"
+      },
+      {
+        "actual": false,
+        "passed": true,
+        "expected": false,
+        "name": "app cannot mutate journal"
+      },
+      {
+        "actual": 16,
+        "passed": true,
+        "expected": 16,
+        "name": "external write blocked at provider port before financial gates"
+      },
+      {
+        "actual": 1,
+        "passed": true,
+        "expected": 1,
+        "name": "postbackup trusted payment backfilled"
+      },
+      {
+        "actual": 0,
+        "passed": true,
+        "expected": 0,
+        "name": "local-only record remains missing"
+      },
+      {
+        "actual": "re_fake_55f14f39274c3f6da403c99946c50929",
+        "passed": true,
+        "expected": "re_fake_55f14f39274c3f6da403c99946c50929",
+        "name": "safe original refund key receipt"
+      },
+      {
+        "actual": 4000,
+        "passed": true,
+        "expected": 4000,
+        "name": "receipt matches original trusted refund command"
+      },
+      {
+        "actual": "POSTED",
+        "passed": true,
+        "expected": "POSTED",
+        "name": "postbackup refund replay"
+      },
+      {
+        "actual": [
+          {
+            "classification": "SUCCESS",
+            "payload": {
+              "sessionId": "cs_fake_e9529050c54e3571a02d08b03e0ad6b2",
+              "status": "COMPLETE",
+              "hostedUrl": null,
+              "paymentIntentId": "pi_fake_4667c0f580d83510bcaee29241e083a8",
+              "paymentStatus": "paid",
+              "expiresAt": "2026-10-07T13:00:00Z",
+              "metadata": {
+                "organization_id": "00000000-0000-0000-0000-000000000001",
+                "business_order_id": "01a12bb8-89d4-cc30-34f8-2f4ffc5d1d7e",
+                "provider_account_id": "00000000-0000-0000-0000-000000000004",
+                "environment_id": "00000000-0000-0000-0000-000000000002",
+                "payment_id": "01a12bb8-89d4-a139-d942-834435b9f624",
+                "application_id": "00000000-0000-0000-0000-000000000003"
+              }
+            },
+            "evidence": {
+              "providerRequestId": "req_fake_e62911c037b53a59b41414ad94f02ec6",
+              "idempotencyKeyUsed": null,
+              "requestedAt": "2026-10-07T14:00:00Z",
+              "respondedAt": "2026-10-07T14:00:00Z",
+              "httpStatus": 200,
+              "providerErrorCode": null,
+              "rawDigest": "d319878e80523fa1ccbaa646d55563fb0aed328272cc0c8ad41ac083c20b04c6",
+              "apiVersion": "FAKE-PR04-v1"
+            },
+            "operation": "QUERY_SESSION",
+            "target": "cs_fake_e9529050c54e3571a02d08b03e0ad6b2",
+            "replayed": false
+          },
+          {
+            "classification": "SUCCESS",
+            "payload": {
+              "paymentIntentId": "pi_fake_4667c0f580d83510bcaee29241e083a8",
+              "status": "succeeded",
+              "amountMinor": 10000,
+              "amountReceivedMinor": 10000,
+              "currency": "USD",
+              "chargeIds": [
+                "ch_fake_7467152ff5223c6b8269714ae28aee83"
+              ],
+              "latestChargeId": "ch_fake_7467152ff5223c6b8269714ae28aee83",
+              "nextActionType": null,
+              "metadata": {
+                "organization_id": "00000000-0000-0000-0000-000000000001",
+                "business_order_id": "01a12bb8-89d4-cc30-34f8-2f4ffc5d1d7e",
+                "provider_account_id": "00000000-0000-0000-0000-000000000004",
+                "environment_id": "00000000-0000-0000-0000-000000000002",
+                "payment_id": "01a12bb8-89d4-a139-d942-834435b9f624",
+                "application_id": "00000000-0000-0000-0000-000000000003"
+              },
+              "createdAt": "2026-10-07T12:00:00Z"
+            },
+            "evidence": {
+              "providerRequestId": "req_fake_811e5b487ae737829845ea1b0bef4fe8",
+              "idempotencyKeyUsed": null,
+              "requestedAt": "2026-10-07T14:00:00Z",
+              "respondedAt": "2026-10-07T14:00:00Z",
+              "httpStatus": 200,
+              "providerErrorCode": null,
+              "rawDigest": "f4594be09492e34c4bc9f3bcfb98317a78b74a525722a76ddac185852c66cdf9",
+              "apiVersion": "FAKE-PR04-v1"
+            },
+            "operation": "QUERY_PAYMENT_INTENT",
+            "target": "pi_fake_4667c0f580d83510bcaee29241e083a8",
+            "replayed": false
+          },
+          {
+            "classification": "SUCCESS",
+            "payload": [
+              {
+                "chargeId": "ch_fake_7467152ff5223c6b8269714ae28aee83",
+                "paymentIntentId": "pi_fake_4667c0f580d83510bcaee29241e083a8",
+                "status": "succeeded",
+                "captured": true,
+                "amountMinor": 10000,
+                "amountCapturedMinor": 10000,
+                "currency": "USD",
+                "balanceTransactionId": "capture",
+                "failureCode": null,
+                "outcomeType": "authorized",
+                "createdAt": "2026-10-07T12:00:00Z"
+              }
+            ],
+            "evidence": {
+              "providerRequestId": "req_fake_4b60fcc55bee39f89e358974aad3c37f",
+              "idempotencyKeyUsed": null,
+              "requestedAt": "2026-10-07T14:00:00Z",
+              "respondedAt": "2026-10-07T14:00:00Z",
+              "httpStatus": 200,
+              "providerErrorCode": null,
+              "rawDigest": "a030d1739f99ce0f3dfad7d159bd5eb1ee5a51988bed7f369ce4841b8b16ddb3",
+              "apiVersion": "FAKE-PR04-v1"
+            },
+            "operation": "LIST_CHARGE_ATTEMPTS",
+            "target": "pi_fake_4667c0f580d83510bcaee29241e083a8",
+            "replayed": false
+          }
+        ],
+        "passed": true,
+        "expected": "no request for expired operation key",
+        "name": "expired unknown escalation used no provider request"
+      },
+      {
+        "actual": [
+          {
+            "classification": "SUCCESS",
+            "payload": {
+              "sessionId": "cs_fake_e9529050c54e3571a02d08b03e0ad6b2",
+              "status": "COMPLETE",
+              "hostedUrl": null,
+              "paymentIntentId": "pi_fake_4667c0f580d83510bcaee29241e083a8",
+              "paymentStatus": "paid",
+              "expiresAt": "2026-10-07T13:00:00Z",
+              "metadata": {
+                "organization_id": "00000000-0000-0000-0000-000000000001",
+                "business_order_id": "01a12bb8-89d4-cc30-34f8-2f4ffc5d1d7e",
+                "provider_account_id": "00000000-0000-0000-0000-000000000004",
+                "environment_id": "00000000-0000-0000-0000-000000000002",
+                "payment_id": "01a12bb8-89d4-a139-d942-834435b9f624",
+                "application_id": "00000000-0000-0000-0000-000000000003"
+              }
+            },
+            "evidence": {
+              "providerRequestId": "req_fake_e62911c037b53a59b41414ad94f02ec6",
+              "idempotencyKeyUsed": null,
+              "requestedAt": "2026-10-07T14:00:00Z",
+              "respondedAt": "2026-10-07T14:00:00Z",
+              "httpStatus": 200,
+              "providerErrorCode": null,
+              "rawDigest": "d319878e80523fa1ccbaa646d55563fb0aed328272cc0c8ad41ac083c20b04c6",
+              "apiVersion": "FAKE-PR04-v1"
+            },
+            "operation": "QUERY_SESSION",
+            "target": "cs_fake_e9529050c54e3571a02d08b03e0ad6b2",
+            "replayed": false
+          },
+          {
+            "classification": "SUCCESS",
+            "payload": {
+              "paymentIntentId": "pi_fake_4667c0f580d83510bcaee29241e083a8",
+              "status": "succeeded",
+              "amountMinor": 10000,
+              "amountReceivedMinor": 10000,
+              "currency": "USD",
+              "chargeIds": [
+                "ch_fake_7467152ff5223c6b8269714ae28aee83"
+              ],
+              "latestChargeId": "ch_fake_7467152ff5223c6b8269714ae28aee83",
+              "nextActionType": null,
+              "metadata": {
+                "organization_id": "00000000-0000-0000-0000-000000000001",
+                "business_order_id": "01a12bb8-89d4-cc30-34f8-2f4ffc5d1d7e",
+                "provider_account_id": "00000000-0000-0000-0000-000000000004",
+                "environment_id": "00000000-0000-0000-0000-000000000002",
+                "payment_id": "01a12bb8-89d4-a139-d942-834435b9f624",
+                "application_id": "00000000-0000-0000-0000-000000000003"
+              },
+              "createdAt": "2026-10-07T12:00:00Z"
+            },
+            "evidence": {
+              "providerRequestId": "req_fake_811e5b487ae737829845ea1b0bef4fe8",
+              "idempotencyKeyUsed": null,
+              "requestedAt": "2026-10-07T14:00:00Z",
+              "respondedAt": "2026-10-07T14:00:00Z",
+              "httpStatus": 200,
+              "providerErrorCode": null,
+              "rawDigest": "f4594be09492e34c4bc9f3bcfb98317a78b74a525722a76ddac185852c66cdf9",
+              "apiVersion": "FAKE-PR04-v1"
+            },
+            "operation": "QUERY_PAYMENT_INTENT",
+            "target": "pi_fake_4667c0f580d83510bcaee29241e083a8",
+            "replayed": false
+          },
+          {
+            "classification": "SUCCESS",
+            "payload": [
+              {
+                "chargeId": "ch_fake_7467152ff5223c6b8269714ae28aee83",
+                "paymentIntentId": "pi_fake_4667c0f580d83510bcaee29241e083a8",
+                "status": "succeeded",
+                "captured": true,
+                "amountMinor": 10000,
+                "amountCapturedMinor": 10000,
+                "currency": "USD",
+                "balanceTransactionId": "capture",
+                "failureCode": null,
+                "outcomeType": "authorized",
+                "createdAt": "2026-10-07T12:00:00Z"
+              }
+            ],
+            "evidence": {
+              "providerRequestId": "req_fake_4b60fcc55bee39f89e358974aad3c37f",
+              "idempotencyKeyUsed": null,
+              "requestedAt": "2026-10-07T14:00:00Z",
+              "respondedAt": "2026-10-07T14:00:00Z",
+              "httpStatus": 200,
+              "providerErrorCode": null,
+              "rawDigest": "a030d1739f99ce0f3dfad7d159bd5eb1ee5a51988bed7f369ce4841b8b16ddb3",
+              "apiVersion": "FAKE-PR04-v1"
+            },
+            "operation": "LIST_CHARGE_ATTEMPTS",
+            "target": "pi_fake_4667c0f580d83510bcaee29241e083a8",
+            "replayed": false
+          }
+        ],
+        "passed": true,
+        "expected": "read-only provider calls",
+        "name": "coordinator other operations only performed reads"
+      },
+      {
+        "actual": "ESCALATED",
+        "passed": true,
+        "expected": "ESCALATED",
+        "name": "expired unknown escalated"
+      },
+      {
+        "actual": 1,
+        "passed": true,
+        "expected": "one before-send request only",
+        "name": "expired unknown no blind resend"
+      },
+      {
+        "actual": 0,
+        "passed": true,
+        "expected": 0,
+        "name": "BT coverage after scoped rescan"
+      },
+      {
+        "actual": 0,
+        "passed": true,
+        "expected": 0,
+        "name": "outbox replay drains publication"
+      },
+      {
+        "actual": 7,
+        "passed": true,
+        "expected": 7,
+        "name": "event replay creates one inbox and delivery per event"
+      },
+      {
+        "actual": "2026-10-04T12:00:00Z/2026-10-06T12:00:00Z",
+        "passed": true,
+        "expected": "2026-10-04T12:00:00Z/2026-10-06T12:00:00Z",
+        "name": "independent external period exact cutoffs"
+      },
+      {
+        "actual": "PASS",
+        "passed": true,
+        "expected": "PASS",
+        "name": "financial reconciliation check 1"
+      },
+      {
+        "actual": "PASS",
+        "passed": true,
+        "expected": "PASS",
+        "name": "financial reconciliation check 3"
+      },
+      {
+        "actual": "PASS",
+        "passed": true,
+        "expected": "PASS",
+        "name": "financial reconciliation check 4"
+      },
+      {
+        "actual": "PASS",
+        "passed": true,
+        "expected": "PASS",
+        "name": "financial reconciliation check 5"
+      },
+      {
+        "actual": "PASS",
+        "passed": true,
+        "expected": "PASS",
+        "name": "financial reconciliation check 6"
+      },
+      {
+        "actual": "PASS",
+        "passed": true,
+        "expected": "PASS",
+        "name": "financial reconciliation check 7"
+      },
+      {
+        "actual": 9700,
+        "passed": true,
+        "expected": 9700,
+        "name": "independent external closing"
+      },
+      {
+        "actual": "5700/MATCHED",
+        "passed": true,
+        "expected": "5700/MATCHED",
+        "name": "restored simulated bank principal and independent match"
+      },
+      {
+        "actual": "INCOMPLETE",
+        "passed": true,
+        "expected": "INCOMPLETE",
+        "name": "operational reconciliation retains expired UNKNOWN disposition"
+      },
+      {
+        "actual": "2bedd525-39b7-45ef-99cc-5483c59680eb",
+        "passed": true,
+        "expected": "trusted active immutable server order and original unsent operation",
+        "name": "released operation has trusted scoped order and original unused key"
+      },
+      {
+        "actual": "pay_create_2bedd525-39b7-45ef-99cc-5483c59680eb",
+        "passed": true,
+        "expected": "pay_create_2bedd525-39b7-45ef-99cc-5483c59680eb",
+        "name": "released eligible operation preserves key"
+      },
+      {
+        "actual": 1,
+        "passed": true,
+        "expected": 1,
+        "name": "eligible checkout accepted once"
+      },
+      {
+        "actual": [
+          {
+            "type": "PAYMENT",
+            "objectId": "ch_fake_7467152ff5223c6b8269714ae28aee83",
+            "amountMinor": 10000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          },
+          {
+            "type": "REFUND",
+            "objectId": "re_fake_55f14f39274c3f6da403c99946c50929",
+            "amountMinor": 4000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          },
+          {
+            "type": "PAYMENT",
+            "objectId": "ch_fake_9200c621aa813f77ac6a879baac047b9",
+            "amountMinor": 10000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          }
+        ],
+        "passed": true,
+        "expected": [
+          {
+            "type": "PAYMENT",
+            "objectId": "ch_fake_7467152ff5223c6b8269714ae28aee83",
+            "amountMinor": 10000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          },
+          {
+            "type": "REFUND",
+            "objectId": "re_fake_55f14f39274c3f6da403c99946c50929",
+            "amountMinor": 4000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          },
+          {
+            "type": "PAYMENT",
+            "objectId": "ch_fake_9200c621aa813f77ac6a879baac047b9",
+            "amountMinor": 10000,
+            "currency": "USD",
+            "occurredAt": "2026-10-07T12:00:00Z"
+          }
+        ],
+        "name": "independent external effects not duplicated"
+      },
+      {
+        "actual": "KNOWN",
+        "passed": true,
+        "expected": "KNOWN",
+        "name": "released eligible checkout is confirmed"
+      }
+    ],
+    "limitations": [
+      "Disposable local PostgreSQL and persistent Fake provider only; no Stripe contract or production recovery claim",
+      "Bank statements are simulated evidence; Kafka delivery is not exercised in these recovery/demo cases"
+    ]
+  },
+  "demo": {
+    "status": "PASS",
+    "expectedCaseIds": [
+      "DEMO-UNKNOWN",
+      "DEMO-DIFFERENCE",
+      "DEMO-L3",
+      "DEMO-A-SUCCESS-BANK",
+      "DEMO-A-PAYOUT-RETURN",
+      "DEMO-B-REFUND-FAIL-LATE-WIN"
+    ],
+    "caseResults": [
+      {
+        "status": "PASS",
+        "id": "DEMO-A-PAYOUT-RETURN",
+        "reportPath": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/demo/20261011T154420Z-e7793514/DEMO-A-PAYOUT-RETURN.json"
+      },
+      {
+        "status": "PASS",
+        "id": "DEMO-A-SUCCESS-BANK",
+        "reportPath": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/demo/20261011T154420Z-e7793514/DEMO-A-SUCCESS-BANK.json"
+      },
+      {
+        "status": "PASS",
+        "id": "DEMO-B-REFUND-FAIL-LATE-WIN",
+        "reportPath": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/demo/20261011T154420Z-e7793514/DEMO-B-REFUND-FAIL-LATE-WIN.json"
+      },
+      {
+        "status": "PASS",
+        "id": "DEMO-DIFFERENCE",
+        "reportPath": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/demo/20261011T154420Z-e7793514/DEMO-DIFFERENCE.json"
+      },
+      {
+        "status": "PASS",
+        "id": "DEMO-L3",
+        "reportPath": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/demo/20261011T154420Z-e7793514/DEMO-L3.json"
+      },
+      {
+        "status": "PASS",
+        "id": "DEMO-UNKNOWN",
+        "reportPath": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/demo/20261011T154420Z-e7793514/DEMO-UNKNOWN.json"
+      }
+    ],
+    "environment": {
+      "javaVersion": "21.0.12.1",
+      "postgresImage": "postgres:16",
+      "databaseMode": "NEW_DISPOSABLE_ISOLATED_DATABASE_PER_CASE"
+    },
+    "limitations": [
+      "Disposable local PostgreSQL and persistent Fake provider only; no Stripe contract or production recovery claim",
+      "Bank statements are simulated evidence; Kafka delivery is not exercised in these recovery/demo cases"
+    ]
+  },
+  "performance": {
+    "status": "FAIL",
+    "historySeeded": 1000000,
+    "fourLiveJvms": true,
+    "fullBudgetCompleted": false,
+    "reason": "Database instrumentation failed during initial warmup; no completed warmup or measurement. Original summary, raw requests and sample retained in archive.",
+    "partialPhase": {
+      "seconds": 300,
+      "actualSeconds": 0.0,
+      "completionWaitSeconds": 0.0,
+      "scheduledWrites": 1028,
+      "scheduledQueries": 2055,
+      "attemptedWrites": 128,
+      "attemptedQueries": 258,
+      "effectiveWriteArrivalRps": 0.4266666666666667,
+      "effectiveQueryArrivalRps": 0.86,
+      "scheduled": 3083,
+      "attempted": 386,
+      "errors": 357,
+      "errorRate": 0.9248704663212435,
+      "dropped": 2697,
+      "writesAccepted": 0,
+      "queriesOk": 29,
+      "latencyMs": {
+        "write": {
+          "p95": 20000.876667,
+          "p50": 14563.547083,
+          "p99": 20007.497667
+        },
+        "query": {
+          "p95": 20001.000875,
+          "p50": 14428.171791,
+          "p99": 20012.981834
+        }
+      }
+    },
+    "partialPhaseNote": "Unfinished phase; its seconds=300 is the requested budget, not observed elapsed duration. Partial effective rates must not be used as formal throughput."
+  },
+  "note": "This is a derived navigation index, not a substitute for original reports. Paths in archived reports retain their original target locations. The source was dirty solely because the live execution log was untracked; runner inputDrift was false."
+}

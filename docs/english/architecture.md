@@ -1,6 +1,6 @@
 # Architecture through five execution paths
 
-[English index](README.md) · Source baseline: `d92bae3` for this PR20 worktree. Java line anchors below were checked against the source; experimental outcomes belong to their separate historical reports.
+[English index](README.md) · Project baseline: `d92bae3`; source anchors checked in this PR20 worktree. Java line anchors below were checked against the source; experimental outcomes belong to their separate historical reports.
 
 ## Runtime shape
 

@@ -1,0 +1,91 @@
+{
+  "runId": "20261011T185418Z-eefa6ce2",
+  "sourceCommit": "0dcd50902dd7c8e07503a6ced52f404772fc7b99",
+  "status": "BLOCKED",
+  "runnerStatus": "FAIL",
+  "inputDrift": false,
+  "rawEvidenceValidated": false,
+  "fullArrivalBudgetObserved": false,
+  "fullBudgetObserved": false,
+  "requestCsvPresent": false,
+  "requestCsvAudit": "NOT_RUN: no requests generated; preflight rejected run",
+  "seedVerification": {
+    "paymentCount": 1000000,
+    "outboxCount": 0,
+    "fullyAssociatedEscalatedCount": 1000000,
+    "constraintsAndTriggersEnabled": true
+  },
+  "fourDistinctLiveJvmsVerified": true,
+  "historicalL2EligibilityVerified": null,
+  "preflightFailure": {
+    "atUtc": "2026-10-11T19:42:01.167505Z",
+    "database": "platform",
+    "sql": "SELECT count(*) FROM platform.payment p JOIN platform.provider_operation o ON o.payment_id=p.id JOIN platform.recovery_task t ON t.operation_id=o.id JOIN platform.api_idempotency_record a ON a.operation_id=o.id WHERE p.resolution_status='UNKNOWN' AND o.status='ESCALATED' AND t.status='ESCALATED'",
+    "status": "FAIL",
+    "failure": "org.springframework.dao.DataAccessResourceFailureException: StatementCallback; SQL [SELECT count(*) FROM platform.payment p JOIN platform.provider_operation o ON o.payment_id=p.id JOIN platform.recovery_task t ON t.operation_id=o.id JOIN platform.api_idempotency_record a ON a.operation_id=o.id WHERE p.resolution_status='UNKNOWN' AND o.status='ESCALATED' AND t.status='ESCALATED']; An I/O error occurred while sending to the backend.\n\tat org.springframework.jdbc.support.SQLStateSQLExceptionTranslator.doTranslate(SQLStateSQLExceptionTranslator.java:152)\n\tat org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:107)\n\tat org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:116)\n\tat org.springframework.jdbc.core.JdbcTemplate.translateException(JdbcTemplate.java:1556)\n\tat org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:408)\n\tat org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:476)\n\tat com.paymentsledger.pr20.performance.ObservedJdbcTemplate.lambda$query$1(ObservedJdbcTemplate.java:22)\n\tat com.paymentsledger.pr20.performance.ObservedJdbcTemplate.observed(ObservedJdbcTemplate.java:34)\n\tat com.paymentsledger.pr20.performance.ObservedJdbcTemplate.query(ObservedJdbcTemplate.java:22)\n\tat org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:486)\n\tat org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:519)\n\tat com.paymentsledger.pr20.performance.ObservedJdbcTemplate.lambda$queryForObject$3(ObservedJdbcTemplate.java:28)\n\tat com.paymentsledger.pr20.performance.ObservedJdbcTemplate.observed(ObservedJdbcTemplate.java:34)\n\tat com.paymentsledger.pr20.performance.ObservedJdbcTemplate.queryForObject(ObservedJdbcTemplate.java:28)\n\tat org.springframework.jdbc.core.JdbcTemplate.queryForObject(JdbcTemplate.java:526)\n\tat com.paymentsledger.pr20.performance.ObservedJdbcTemplate.lambda$queryForObject$2(ObservedJdbcTemplate.java:25)\n\tat com.paymentsledger.pr20.performance.ObservedJdbcTemplate.observed(ObservedJdbcTemplate.java:38)\n\tat com.paymentsledger.pr20.performance.ObservedJdbcTemplate.queryForObject(ObservedJdbcTemplate.java:25)\n\tat com.paymentsledger.pr20.performance.Pr20PerformanceExperiment.checkHistory(Pr20PerformanceExperiment.java:173)\n\tat com.paymentsledger.pr20.performance.Pr20PerformanceExperiment.run(Pr20PerformanceExperiment.java:104)\n\tat com.paymentsledger.pr20.performance.Pr20PerformanceExperiment.main(Pr20PerformanceExperiment.java:52)\nCaused by: org.postgresql.util.PSQLException: An I/O error occurred while sending to the backend.\n\tat org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:474)\n\tat org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:533)\n\tat org.postgresql.jdbc.PgStatement.execute(PgStatement.java:449)\n\tat org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:371)\n\tat org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:356)\n\tat org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:332)\n\tat org.postgresql.jdbc.PgStatement.executeQuery(PgStatement.java:282)\n\tat org.springframework.jdbc.core.JdbcTemplate$1QueryStatementCallback.doInStatement(JdbcTemplate.java:463)\n\tat org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:393)\n\t... 16 more\nCaused by: java.net.SocketTimeoutException: Read timed out\n\tat java.base/sun.nio.ch.NioSocketImpl.timedRead(NioSocketImpl.java:278)\n\tat java.base/sun.nio.ch.NioSocketImpl.implRead(NioSocketImpl.java:304)\n\tat java.base/sun.nio.ch.NioSocketImpl.read(NioSocketImpl.java:346)\n\tat java.base/sun.nio.ch.NioSocketImpl$1.read(NioSocketImpl.java:796)\n\tat java.base/java.net.Socket$SocketInputStream.read(Socket.java:1099)\n\tat org.postgresql.core.VisibleBufferedInputStream.readMore(VisibleBufferedInputStream.java:192)\n\tat org.postgresql.core.VisibleBufferedInputStream.ensureBytes(VisibleBufferedInputStream.java:159)\n\tat org.postgresql.core.VisibleBufferedInputStream.ensureBytes(VisibleBufferedInputStream.java:144)\n\tat org.postgresql.core.VisibleBufferedInputStream.read(VisibleBufferedInputStream.java:76)\n\tat org.postgresql.core.PGStream.receiveChar(PGStream.java:480)\n\tat org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2383)\n\tat org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:446)\n\t... 24 more\n\nSQLSTATE=08006",
+    "elapsedMillis": 10220.514958
+  },
+  "actorsAfterShutdown": [
+    {
+      "name": "api-1",
+      "pid": 38036,
+      "port": 52232,
+      "directory": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/performance/20261011T185418Z-eefa6ce2/api-1",
+      "alive": false,
+      "forceKilled": false,
+      "exitCode": 143
+    },
+    {
+      "name": "api-2",
+      "pid": 38037,
+      "port": 52233,
+      "directory": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/performance/20261011T185418Z-eefa6ce2/api-2",
+      "alive": false,
+      "forceKilled": false,
+      "exitCode": 143
+    },
+    {
+      "name": "worker-1",
+      "pid": 38038,
+      "port": 52234,
+      "directory": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/performance/20261011T185418Z-eefa6ce2/worker-1",
+      "alive": false,
+      "forceKilled": false,
+      "exitCode": 143
+    },
+    {
+      "name": "worker-2",
+      "pid": 38039,
+      "port": 52235,
+      "directory": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/performance/20261011T185418Z-eefa6ce2/worker-2",
+      "alive": false,
+      "forceKilled": false,
+      "exitCode": 143
+    }
+  ],
+  "note": "Fourth frozen full-profile attempt at 0dcd509. First pre-actor association validation passed for all one million rows. All four application JVMs became ready; the post-readiness four-table association count timed out at 10,220.515 ms (SQLSTATE08006/socket read timeout). The mandatory historical/L2 preflight was not completed; no HTTP arrival, warmup, measurement, performance percentile or business throughput is claimed. The retained ordinary-observation policy is not exercised by this run; its focused source-bound tests remain separate. No budgets, resource caps, queries, deadlines or production rules changed. Cleanup stopped all four actors without forced kills.",
+  "archiveSha256": "cb9534be2c8651c4ea1181c7552c95720972524fb42dee9ebb173a5de07e91da",
+  "fileCount": 20,
+  "filesSha256": {
+    "execution/full-retained-live.txt": "5ed792fd6e06cbaa33b7471d8e2bc8b754fca29faf14123c98719c54dd23eeb0",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/api-1/application.log": "49e6403a0bf202dd2ea4d10090fcc08aa48d2aff7815f10d2a6d6ed322f712e1",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/api-1/jvm.ndjson": "17c39022920aa5f0b40d2c13a67feb3d9fcbb96115aea34cf3de0c1111186dcd",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/api-1/ready.json": "568364f589f4b8ecc2893e9bbea424042ba4da80662d295212176bc75f5af158",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/api-2/application.log": "49e6403a0bf202dd2ea4d10090fcc08aa48d2aff7815f10d2a6d6ed322f712e1",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/api-2/jvm.ndjson": "03204a6c4ab188a6e0b727f1100401a43eb50550085fd49ed33800b574b3c7a3",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/api-2/ready.json": "f86c1e07b9386c1c80a6b3001e6e77f43af6ba76819ce80500d88b1b54aa9a36",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/disk-guards.ndjson": "b21e080951f32a5329346a51d15a5f7672ac6f743fee0f2c2cac387eef564061",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/failure.log": "0bbd70357fa19bcb339e4891b40d53d41a976158e4a8e40e0d56fbee2de55a0b",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/query-observations.ndjson": "54abb63a18f8f3dc23f4245c3f9100fc511d080394fb6254affb2ff6d1711646",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/summary.json": "708ade8add74a01f545a561466101625bbb81a43a62dbc8f2023a51c6b02ab60",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/worker-1/application.log": "49e6403a0bf202dd2ea4d10090fcc08aa48d2aff7815f10d2a6d6ed322f712e1",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/worker-1/jvm.ndjson": "0a55fbc1e52dd36279f88830b7c6f591089e3f3a797a46117d7692fcff14146f",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/worker-1/ready.json": "793480f01d8d3972d7578552140e5a58ee21821af06d522769fa78c678678f84",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/worker-2/application.log": "49e6403a0bf202dd2ea4d10090fcc08aa48d2aff7815f10d2a6d6ed322f712e1",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/worker-2/jvm.ndjson": "96010b3013e953cb950c3c647da00b99ef3643fcd202c79012d6d80d6eda5f89",
+    "target/pr20/performance/20261011T185418Z-eefa6ce2/worker-2/ready.json": "c987db158af3095b396b3157542e61c7d088e3721bf63dd961d46e8e7738c736",
+    "target/pr20/runner/20261011T185418Z-eefa6ce2/performance-compile.txt": "b34020f1e5c5c5595c5bb9e63f58463511ca372730bf2e57a348bf2c92929b42",
+    "target/pr20/runner/20261011T185418Z-eefa6ce2/performance.txt": "de8725942d3d3d25488f50a0ed6a51812c41b437bf74dafa12814d4214b96717",
+    "target/pr20/runner/20261011T185418Z-eefa6ce2/run-summary.json": "5934ec3ef00095644cfce3a0eaf156c16ce98bb371de4a26d44ad0f593f02de3"
+  }
+}

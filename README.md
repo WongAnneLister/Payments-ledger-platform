@@ -2,7 +2,7 @@
 
 Stripe 支付网关与复式账本。模块化单体，API / Worker 分角色运行，共享同一个 PostgreSQL 事务域。
 
-**当前状态：PR19 八类故障实验与 CI 矩阵已完成本机验证；PR20 待实施。** 已实现可信身份、不可变账本、Fake/Stripe 适配器、支付与退款 API、共享操作恢复、Webhook 和 Outbox / Kafka 商户通知。BT 导入支持实际金额/手续费入账、去重、隔离与依赖等待；内部分润按下单快照和累计退款额度计提，退款预占、释放和冲突处理会原子调整分润凭证，并支持历史补计提。[分润运行说明](docs/runbook/revenue-share.md)介绍规则和启用方式。争议支持 Webhook/查询/BT 恢复、应收与损失分账、退款阻断和分润原子撤回/恢复，详见[争议运行说明](docs/runbook/disputes.md)。Payout 支持查询/Webhook/BT 摄入、在途记账、模拟银行导入与本金分配，并保留失败返还交叠冲突，详见[出款与银行运行说明](docs/runbook/payout-bank.md)。PR15 复用现有任务租约，按可信订单归属回补缺失支付；对账固定分页、账本和独立期末证据，缺证据保持 INCOMPLETE，详见[对账运行说明](docs/runbook/reconciliation.md)。PR16 提供受权限保护的运营查询、对账/银行导入、差错动作和既有任务重驱；人工调整只有独立复核通过才会追加凭证，成功动作审计与业务写入同事务，详见[运营手册](docs/runbook/ops.md)。PR17 提供同源客户结果页和运营控制台，按原支付查询 UNKNOWN、展示业务与资金证据的独立状态，接入受权限保护的查询和人工动作，并提供 11 项持久指标、完整性告警及脱敏关联日志，详见[页面与观测手册](docs/runbook/pages-observability.md)和[PR17 验证证据](docs/evidence/pr17/README.md)。PR05 已实测付款、退款及真实回调验签；各期实际验证来源以 evidence 记录为准。
+**当前状态：PR20 已实现性能实验、隔离备份恢复和英文成果；完整回归、恢复及六个演示分支已本机验证，百万条性能实验已保留实际失败，完整性能验收仍未完成。** 已实现可信身份、不可变账本、Fake/Stripe 适配器、支付与退款 API、共享操作恢复、Webhook 和 Outbox / Kafka 商户通知。BT 导入支持实际金额/手续费入账、去重、隔离与依赖等待；内部分润按下单快照和累计退款额度计提，退款预占、释放和冲突处理会原子调整分润凭证，并支持历史补计提。[分润运行说明](docs/runbook/revenue-share.md)介绍规则和启用方式。争议支持 Webhook/查询/BT 恢复、应收与损失分账、退款阻断和分润原子撤回/恢复，详见[争议运行说明](docs/runbook/disputes.md)。Payout 支持查询/Webhook/BT 摄入、在途记账、模拟银行导入与本金分配，并保留失败返还交叠冲突，详见[出款与银行运行说明](docs/runbook/payout-bank.md)。PR15 复用现有任务租约，按可信订单归属回补缺失支付；对账固定分页、账本和独立期末证据，缺证据保持 INCOMPLETE，详见[对账运行说明](docs/runbook/reconciliation.md)。PR16 提供受权限保护的运营查询、对账/银行导入、差错动作和既有任务重驱；人工调整只有独立复核通过才会追加凭证，成功动作审计与业务写入同事务，详见[运营手册](docs/runbook/ops.md)。PR17 提供同源客户结果页和运营控制台，按原支付查询 UNKNOWN、展示业务与资金证据的独立状态，接入受权限保护的查询和人工动作，并提供 11 项持久指标、完整性告警及脱敏关联日志，详见[页面与观测手册](docs/runbook/pages-observability.md)和[PR17 验证证据](docs/evidence/pr17/README.md)。PR05 已实测付款、退款及真实回调验签；各期实际验证来源以 evidence 记录为准。
 运行说明见 [身份配置](docs/runbook/identity-and-fixtures.md)、[账本核心](docs/runbook/ledger-core.md)、[Provider 模拟器](docs/runbook/provider-simulator.md)和[Stripe 契约验证](docs/runbook/stripe-contract-check.md)。本地 fixture 通过不代表真实 Stripe 契约通过。
 设计基线见 [`docs/`](docs/)；本 README 只讲怎么跑起来。
 
@@ -11,6 +11,8 @@ Stripe 支付网关与复式账本。模块化单体，API / Worker 分角色运
 PR18 增加独立资金模型、可复现生成/收缩及真实 PostgreSQL 竞态验证，默认 100 seeds / 10000 步已通过；完整命令、缺陷修复、跳过原因和未运行边界见[PR18 证据](docs/evidence/pr18/README.md)与[运行手册](docs/runbook/pr18-property-verification.md)。
 
 PR19 覆盖丢失/重复/乱序/篡改回调、Provider 超时、实际子进程崩溃、Kafka 中断及双 JVM 并发，共 42 个故障实验；完整回归保留 PR18 默认预算，资金规则未改动。逐项副作用计数、恢复耗时、失败历史与本机/远程执行边界见[PR19 证据](docs/evidence/pr19/README.md)和[重放手册](docs/runbook/pr19-fault-matrix.md)。
+
+PR20 的完整回归通过 748 项测试，3 项真实账户测试按配置跳过。隔离 `pg_dump` / `pg_restore` 演练保留外部模拟付款与退款事实，独立重建和 12 项释放门槛通过；全局写入仍关闭，仅放行已确认资格的单笔操作，过期 UNKNOWN 和丢失的本地订单保留人工处置。六个选定演示分支通过。性能实验保留实际失败：最新一轮在四服务就绪后的百万条关联复核中超时，正式负载未启动；完整预热和测量仍待完成，不将 HTTP 接受吞吐当作业务完成；结果与边界见 [PR20 证据](docs/evidence/pr20/README.md)，项目讲解、图解及简历声明见 [英文材料](docs/english/README.md)。
 
 ## 快速开始
 

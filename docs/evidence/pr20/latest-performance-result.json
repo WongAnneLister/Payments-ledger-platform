@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "kind": "Navigation index of an actual blocked full-profile run, not a replacement for original raw evidence",
+  "runId": "20261011T185418Z-eefa6ce2",
+  "sourceCommit": "0dcd50902dd7c8e07503a6ced52f404772fc7b99",
+  "startedAtUtc": "2026-10-11T18:54:21.439621Z",
+  "endedAtUtc": "2026-10-11T19:42:14.193851Z",
+  "experimentStatus": "BLOCKED",
+  "runnerStatus": "FAIL",
+  "inputDrift": false,
+  "rawEvidenceValidated": false,
+  "configuration": {
+    "seed": 200020,
+    "output": "/Users/anne_lister/proj/Payments-ledger-platform/.worktrees/pr20-experiments/target/pr20/performance/20261011T185418Z-eefa6ce2",
+    "history": 1000000,
+    "writeRps": 100,
+    "drainSeconds": 120,
+    "queryRps": 200,
+    "warmupSeconds": 300,
+    "measureSeconds": 1800
+  },
+  "hardware": {
+    "logicalProcessors": 8,
+    "parentJvmMaxHeapBytes": 805306368,
+    "os": "Mac OS X",
+    "arch": "aarch64",
+    "osVersion": "13.5",
+    "java": "21.0.12.1"
+  },
+  "dockerResources": "CPUs=8 MemoryBytes=8218251264 Root=/var/lib/docker",
+  "coexistingContainerCount": 22,
+  "allocation": {
+    "kafkaHeapArguments": "-Xms256m -Xmx512m",
+    "postgresNanoCpus": 2000000000,
+    "kafkaNanoCpus": 1000000000,
+    "kafkaMemoryBytes": 1073741824,
+    "postgresMemoryBytes": 1610612736
+  },
+  "seedVerification": {
+    "paymentCount": 1000000,
+    "outboxCount": 0,
+    "fullyAssociatedEscalatedCount": 1000000,
+    "constraintsAndTriggersEnabled": true
+  },
+  "fourDistinctLiveJvmsVerified": true,
+  "historicalL2EligibilityVerified": null,
+  "fullArrivalBudgetObserved": false,
+  "fullBudgetObserved": false,
+  "warmup": null,
+  "measurement": null,
+  "completedBusinessThroughputRps": null,
+  "requestCsvPresent": false,
+  "preflightFailure": {
+    "query": "SELECT count(*) FROM platform.payment p JOIN platform.provider_operation o ON o.payment_id=p.id JOIN platform.recovery_task t ON t.operation_id=o.id JOIN platform.api_idempotency_record a ON a.operation_id=o.id WHERE p.resolution_status='UNKNOWN' AND o.status='ESCALATED' AND t.status='ESCALATED'",
+    "elapsedMillis": 10220.514958,
+    "sqlState": "08006",
+    "cause": "SocketTimeoutException: Read timed out"
+  },
+  "note": "Fourth frozen full-profile attempt at 0dcd509. First pre-actor association validation passed for all one million rows. All four application JVMs became ready; the post-readiness four-table association count timed out at 10,220.515 ms (SQLSTATE08006/socket read timeout). The mandatory historical/L2 preflight was not completed; no HTTP arrival, warmup, measurement, performance percentile or business throughput is claimed. The retained ordinary-observation policy is not exercised by this run; its focused source-bound tests remain separate. No budgets, resource caps, queries, deadlines or production rules changed. Cleanup stopped all four actors without forced kills.",
+  "rawArchive": "history/full-million-preflight-association-timeout.tar.gz",
+  "byteManifest": "history/full-million-preflight-association-timeout-manifest.json"
+}

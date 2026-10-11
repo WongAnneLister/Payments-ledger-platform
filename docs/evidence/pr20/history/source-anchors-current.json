@@ -444,7 +444,19 @@
       "source": "src/main/java/com/paymentsledger/bank/BankMatcher.java",
       "line": 71,
       "sourceText": " private boolean bankEvidenceComplete(Map<String,Object> payout){"
+    },
+    {
+      "document": "docs/english/failure-retrospective.md",
+      "source": "src/main/java/com/paymentsledger/payment/PaymentRepository.java",
+      "line": 309,
+      "sourceText": "    public boolean mergeReconciliationQuery(UUID payment,Facts facts){"
+    },
+    {
+      "document": "docs/english/failure-retrospective.md",
+      "source": "src/main/java/com/paymentsledger/payment/ReconciliationSourceRecovery.java",
+      "line": 137,
+      "sourceText": "  if(!payments.mergeReconciliationQuery(paymentId,new PaymentRepository.Facts(null,read.intent(),List.of(read.charge()),true,false,clock.instant())))throw new IllegalStateException(\"Verified source merge did not apply\");"
     }
   ],
-  "diagramExportsVerified": 7
+  "note": "Current source lines checked after PR20 query-classification fix; later test-only SQL diagnostics do not shift production source."
 }

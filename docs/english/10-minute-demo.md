@@ -2,7 +2,7 @@
 
 [English index](README.md) · [Accounting diagram](accounting.md) · [Payment state diagram](payment-state.md)
 
-**Execution status at authoring: NOT RUN.** This is the prepared narration and replay procedure, tied to [Pr20DemoIT](../../src/test/java/com/paymentsledger/payment/Pr20DemoIT.java). Values below are expected synthetic fixture checkpoints, not a saved successful PR20 run. Each test starts with a fresh isolated database and persistent Fake provider state. Bank statements are simulated; this suite does not exercise Kafka delivery.
+**Actual selected replay: PASS**, run `20261011T154420Z-e7793514`, source `1313e36170ff36d52f0fc96cbbc1d12ab6ac000f`. The six [case results](../evidence/pr20/verified-all-result.json) and [raw archive](../evidence/pr20/history/full-million-instrumentation-failure.tar.gz) cover both A branches, B's failed-refund/late-success race, UNKNOWN, trusted-order L3 and the deliberately nonzero independent difference. [Pr20DemoIT](../../src/test/java/com/paymentsledger/payment/Pr20DemoIT.java) starts each case with a fresh isolated database and persistent Fake provider state. Values below are synthetic fixture checkpoints. Bank statements are simulated; this suite does not exercise Kafka delivery.
 
 ## Prepare and retain the evidence
 
