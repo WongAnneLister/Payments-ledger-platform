@@ -92,8 +92,8 @@ public final class Pr20PerformanceExperiment {
                     diskGuard(options.history);
                     summary.put("seedDatabaseBytes",admin.queryForObject("SELECT pg_database_size(current_database())",Long.class));
                     checkHistory();
-                    admin=observations(db.getJdbcUrl(),db.getUsername(),db.getPassword());
-                    external=observations(providerUrl(db),db.getUsername(),db.getPassword());
+                    admin=observations(db.getJdbcUrl(),db.getUsername(),db.getPassword(),"platform");
+                    external=observations(providerUrl(db),db.getUsername(),db.getPassword(),"external");
                     queryIds.addAll(admin.queryForList("SELECT id FROM platform.payment ORDER BY created_at DESC LIMIT 1000",UUID.class).stream().map(id->PaymentIds.format("pay",id)).toList());
                     if(queryIds.isEmpty())throw new IllegalArgumentException("History must contain at least1 queryable payment");
                     for(int n=0;n<4;n++)actors.add(startActor(db,merchant.uri().toString(),n));
@@ -146,8 +146,8 @@ public final class Pr20PerformanceExperiment {
             }
         }
     }
-    static JdbcTemplate observations(String url,String user,String password){
-        var source=new DriverManagerDataSource(url,user,password);var properties=new java.util.Properties();properties.setProperty("connectTimeout","5");properties.setProperty("socketTimeout","10");source.setConnectionProperties(properties);var jdbc=new JdbcTemplate(source);jdbc.setQueryTimeout(10);return jdbc;
+    JdbcTemplate observations(String url,String user,String password,String database){
+        var source=new DriverManagerDataSource(url,user,password);var properties=new java.util.Properties();properties.setProperty("connectTimeout","5");properties.setProperty("socketTimeout","10");source.setConnectionProperties(properties);var jdbc=new ObservedJdbcTemplate(source,output.resolve("query-observations.ndjson"),database);jdbc.setQueryTimeout(10);return jdbc;
     }
     static Connection providerConnection(PostgreSQLContainer<?> db,Connection admin)throws SQLException{
         try(var statement=admin.createStatement()){statement.execute("CREATE DATABASE pr20_external_provider");}
