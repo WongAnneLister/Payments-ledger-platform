@@ -1,6 +1,6 @@
 # PR20 experiments and English evidence
 
-Implementation is committed locally on `codex/pr20-experiments`, based on PR19 `d92bae3837dc4fc13eac734733ce36bf0ac0b3d0`. Main has not been changed. Actual records below distinguish complete verification, scoped restore/demo PASS and failed/incomplete performance. Main has not been merged or pushed for PR20.
+PR20 has been merged into `main`, based on PR19 `d92bae3837dc4fc13eac734733ce36bf0ac0b3d0`. Experiments and evidence were prepared on `codex/pr20-experiments`; their original tested source identities remain recorded below. Actual records distinguish complete verification, scoped restore/demo PASS and failed/incomplete performance. Integration does not establish the outstanding full-performance acceptance.
 
 ## Evidence so far
 
