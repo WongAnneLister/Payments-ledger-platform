@@ -50,15 +50,15 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
 
     @Test
     void createIsIdempotentPerKeyAndOrderKeysAreUnique() {
-        var first = repository.prepare(context, "key-1", create("order-1", "demo", 10000), "FAKE");
+        var first = repository.prepare(context, "idem-key-1", create("order-1", "demo", 10000), "FAKE");
         assertThat(first.replay()).isFalse();
-        var again = repository.prepare(context, "key-1", create("order-1", "demo", 10000), "FAKE");
+        var again = repository.prepare(context, "idem-key-1", create("order-1", "demo", 10000), "FAKE");
         assertThat(again).isEqualTo(new PaymentRepository.Intent(first.paymentId(), first.operationId(), true));
         rejects(
-                () -> repository.prepare(context, "key-1", create("order-2", "demo", 10000), "FAKE"),
+                () -> repository.prepare(context, "idem-key-1", create("order-2", "demo", 10000), "FAKE"),
                 ErrorCode.IDEMPOTENCY_CONFLICT);
         rejects(
-                () -> repository.prepare(context, "key-2", create("order-1", "demo", 10000), "FAKE"),
+                () -> repository.prepare(context, "idem-key-2", create("order-1", "demo", 10000), "FAKE"),
                 ErrorCode.ORDER_INTENT_CONFLICT);
         assertThat(admin.queryForObject("SELECT count(*) FROM platform.payment", Long.class))
                 .isEqualTo(1);
@@ -67,10 +67,10 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
     @Test
     void priceAndBindingAreCheckedOnTheServer() {
         rejects(
-                () -> repository.prepare(context, "amount", create("order-a", "demo", 9999), "FAKE"),
+                () -> repository.prepare(context, "idem-amount", create("order-a", "demo", 9999), "FAKE"),
                 ErrorCode.AMOUNT_MISMATCH);
         rejects(
-                () -> repository.prepare(context, "product", create("order-p", "missing", 10000), "FAKE"),
+                () -> repository.prepare(context, "idem-product", create("order-p", "missing", 10000), "FAKE"),
                 ErrorCode.NOT_FOUND);
         rejects(
                 () -> repository.prepare(context, "provider", create("order-s", "demo", 10000), "STRIPE"),
@@ -86,7 +86,7 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
     @Test
     void createPersistsOrderPaymentOperationTaskAndIdempotencyRecord() {
         Instant now = fake.clock().instant();
-        var intent = repository.prepare(context, "persist", create("order-persist", "demo", 10000), "FAKE");
+        var intent = repository.prepare(context, "idem-persist", create("order-persist", "demo", 10000), "FAKE");
         var payment = row("SELECT * FROM platform.payment WHERE id=?", intent.paymentId());
         assertThat(payment)
                 .containsEntry("amount_minor", 10000L)
@@ -121,7 +121,7 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
         assertThat(task).containsEntry("status", "READY").containsEntry("payment_id", intent.paymentId());
         var api = row(
                 "SELECT * FROM platform.api_idempotency_record WHERE idempotency_key=? AND request_type='CREATE_PAYMENT'",
-                "persist");
+                "idem-persist");
         assertThat(api)
                 .containsEntry("payment_id", intent.paymentId())
                 .containsEntry("operation_id", intent.operationId());
@@ -162,7 +162,7 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
 
     @Test
     void resourceFieldOrderIsPartOfTheApi() {
-        var resource = service.create(context, "shape", command("shape")).resource();
+        var resource = service.create(context, "idem-shape", command("shape")).resource();
         assertThat(resource.keySet())
                 .containsExactly(
                         "recovery",
@@ -192,8 +192,8 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
 
     @Test
     void nextActionRedirectsOnlyWhileTheCheckoutCanStillBePaid() {
-        UUID paymentId =
-                payment(service.create(context, "action", command("action")).resource());
+        UUID paymentId = payment(
+                service.create(context, "idem-action", command("action")).resource());
         var redirect = map(repository.read(context, paymentId).get("nextAction"));
         assertThat(redirect.get("type")).isEqualTo("REDIRECT_TO_HOSTED_CHECKOUT");
         assertThat(redirect.get("hostedUrl")).isNotNull();
@@ -222,8 +222,8 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
 
     @Test
     void recoverySummaryReportsTheMostUrgentTaskAndTotals() {
-        UUID paymentId =
-                payment(service.create(context, "summary", command("summary")).resource());
+        UUID paymentId = payment(
+                service.create(context, "idem-summary", command("summary")).resource());
         var cancelOperation = repository
                 .prepareCancel(context, paymentId, "summary-cancel", new PaymentRequests.Cancel(null, null), "FAKE")
                 .operationId();
