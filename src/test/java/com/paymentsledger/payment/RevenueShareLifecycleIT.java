@@ -458,7 +458,7 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
         };
         var raced = new java.util.concurrent.atomic.AtomicBoolean();
         var worker = Executors.newSingleThreadExecutor();
-        var racingJdbc = new org.springframework.jdbc.core.JdbcTemplate(pool) {
+        var racingJdbc = new org.springframework.jdbc.core.JdbcTemplate(dataSource) {
             @Override
             public <T> List<T> queryForList(String sql, Class<T> type, Object... args) {
                 var found = super.queryForList(sql, type, args);
