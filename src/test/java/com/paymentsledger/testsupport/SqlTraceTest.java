@@ -94,11 +94,58 @@ class SqlTraceTest {
         assertThat(Files.readAllLines(out))
                 .containsExactly(
                         "CONNECT",
-                        "INSERT INTO platform.e(doc,seen) VALUES (?::jsonb,?) [String:{\"id\":\"ID1\",\"at\":\"@1\"},"
+                        "INSERT INTO platform.e(doc,seen) VALUES (?::jsonb,?) [String:{\"at\":\"@1\",\"id\":\"ID1\"},"
                                 + " Timestamp:@1]",
                         "CONNECT",
-                        "INSERT INTO platform.e(doc) VALUES (?::jsonb) [String:{\"id\":\"ID2\",\"again\":\"ID1\","
-                                + "\"at\":\"@2\"}]");
+                        "INSERT INTO platform.e(doc) VALUES (?::jsonb) [String:{\"again\":\"ID1\",\"at\":\"@2\","
+                                + "\"id\":\"ID2\"}]");
+    }
+
+    @Test
+    void jsonKeyOrderDoesNotChangeTheTraceOrShiftLaterLabels() throws Exception {
+        UUID first = UUID.randomUUID(), second = UUID.randomUUID(), later = UUID.randomUUID();
+        String a = traceOf(jdbc -> {
+            jdbc.update(
+                    "INSERT INTO platform.op(command) VALUES (?::jsonb)",
+                    "{\"metadata\":{\"payment_id\":\"" + first + "\",\"order_id\":\"" + second + "\"},\"amount\":1.0}");
+            jdbc.update("UPDATE platform.op SET x=? WHERE id=?", 1, later);
+        });
+        String b = traceOf(jdbc -> {
+            jdbc.update(
+                    "INSERT INTO platform.op(command) VALUES (?::jsonb)",
+                    "{\"amount\":1.0,\"metadata\":{\"order_id\":\"" + second + "\",\"payment_id\":\"" + first + "\"}}");
+            jdbc.update("UPDATE platform.op SET x=? WHERE id=?", 1, later);
+        });
+        assertThat(b).isEqualTo(a);
+        assertThat(a)
+                .contains("{\"amount\":1.0,\"metadata\":{\"order_id\":\"U1\",\"payment_id\":\"U2\"}}")
+                .contains("[Integer:1, UUID:U3]");
+    }
+
+    @Test
+    void offsetTimestampsShareTheLabelOfTheSameInstantAndArrayLiteralsStayRaw() throws Exception {
+        Instant at = Instant.parse("2026-10-15T08:34:27.564858Z");
+        String trace = traceOf(jdbc -> {
+            jdbc.update(
+                    "INSERT INTO platform.s(snapshot,at) VALUES (?::jsonb,?)",
+                    "{\"created_at\": \"2026-10-15T08:34:27.564858+00:00\", \"valid_from\": \"2026-10-14T08:34:27+00:00\"}",
+                    Timestamp.from(at));
+            jdbc.update(
+                    "INSERT INTO platform.s(text,refs) VALUES (?,?::text[])",
+                    "booked 2026-10-15 08:34:27.564858+00",
+                    "{\"po_a\",\"po_b\"}");
+        });
+        assertThat(trace)
+                .contains("[String:{\"created_at\":\"@1\",\"valid_from\":\"@2\"}, Timestamp:@1]")
+                .contains("[String:booked @1, String:{\"po_a\",\"po_b\"}]");
+    }
+
+    private String traceOf(java.util.function.Consumer<JdbcTemplate> work) throws Exception {
+        var trace = new SqlTrace();
+        work.accept(new JdbcTemplate(trace.wrap(stubDatabase())));
+        Path out = Files.createTempFile(directory, "trace", ".txt");
+        trace.write(out);
+        return Files.readString(out);
     }
 
     @Test

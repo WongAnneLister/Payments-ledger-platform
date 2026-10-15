@@ -1,5 +1,9 @@
 package com.paymentsledger.testsupport;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.reflect.InvocationHandler;
@@ -40,7 +44,14 @@ public final class SqlTrace {
     private static final Pattern VOLATILE =
             Pattern.compile("(?<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
                     + "|(?<ulid>\\b[a-z]+_[0-9A-HJKMNP-TV-Z]{26}\\b)"
-                    + "|(?<instant>\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(?::\\d{2}(?:\\.\\d{1,9})?)?Z)");
+                    // Java renders Z; PostgreSQL row JSON and text render +00:00 / +00, possibly with a space.
+                    + "|(?<instant>\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}(?::\\d{2}(?:\\.\\d{1,9})?)?"
+                    + "(?:Z|[+-]\\d{2}(?::?\\d{2})?))");
+
+    /** Parses JSON-looking string parameters so they can be recorded with sorted keys. */
+    private static final ObjectMapper JSON = new ObjectMapper()
+            .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+            .setNodeFactory(JsonNodeFactory.withExactBigDecimals(true));
 
     private static final Set<String> EXECUTE =
             Set.of("execute", "executeQuery", "executeUpdate", "executeLargeUpdate", "addBatch");
@@ -152,7 +163,52 @@ public final class SqlTrace {
         if (value == null) return "null";
         if (value instanceof Timestamp t) return "Timestamp:" + t.toInstant();
         if (value instanceof byte[] b) return "bytes[" + b.length + "]";
+        if (value instanceof String s) return "String:" + canonicalJson(s);
         return value.getClass().getSimpleName() + ":" + value;
+    }
+
+    /**
+     * JSON objects are recorded with keys sorted, recursively, before volatile values are labelled. Key order is not
+     * semantic for jsonb, and Map.of iteration order is salted per JVM, so unsorted keys would also reorder the first
+     * appearance of IDs and shift every later label. Array order is kept. Non-JSON strings pass through unchanged.
+     */
+    static String canonicalJson(String value) {
+        String trimmed = value.strip();
+        if (!trimmed.startsWith("{") && !trimmed.startsWith("[")) return value;
+        try {
+            return JSON.writeValueAsString(sorted(JSON.readTree(trimmed)));
+        } catch (IOException notJson) {
+            return value;
+        }
+    }
+
+    private static JsonNode sorted(JsonNode node) {
+        if (node.isObject()) {
+            var out = JSON.createObjectNode();
+            var names = new java.util.TreeSet<String>();
+            node.fieldNames().forEachRemaining(names::add);
+            for (String name : names) out.set(name, sorted(node.get(name)));
+            return out;
+        }
+        if (node.isArray()) {
+            var out = JSON.createArrayNode();
+            node.forEach(element -> out.add(sorted(element)));
+            return out;
+        }
+        return node;
+    }
+
+    /** One label per instant, whichever offset or separator a value uses. */
+    private static String instantKey(String text) {
+        String iso = text.replace(' ', 'T');
+        if (iso.matches(".*[+-]\\d{2}$")) iso += ":00";
+        else if (iso.matches(".*[+-]\\d{4}$"))
+            iso = iso.substring(0, iso.length() - 2) + ":" + iso.substring(iso.length() - 2);
+        try {
+            return java.time.OffsetDateTime.parse(iso).toInstant().toString();
+        } catch (java.time.format.DateTimeParseException unparsed) {
+            return text;
+        }
     }
 
     /** Labels for volatile values, numbered per kind (U, T, ID, @) in order of first appearance. */
@@ -170,7 +226,8 @@ public final class SqlTrace {
         var out = new StringBuilder();
         while (m.find()) {
             String kind = m.group("uuid") != null ? uuidPrefix : m.group("ulid") != null ? "ID" : "@";
-            m.appendReplacement(out, Matcher.quoteReplacement(labels.of(kind, m.group())));
+            String key = kind.equals("@") ? "@" + instantKey(m.group()) : m.group();
+            m.appendReplacement(out, Matcher.quoteReplacement(labels.of(kind, key)));
         }
         m.appendTail(out);
         return out.toString();
