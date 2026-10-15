@@ -29,6 +29,7 @@
     <stripe-java.version>33.3.0</stripe-java.version>
     <spotless.version>3.10.4</spotless.version>
     <palantir-java-format.version>2.102.0</palantir-java-format.version>
+    <archunit.version>1.4.1</archunit.version>
   </properties>
 
   <dependencies>
@@ -113,6 +114,13 @@
       <groupId>org.testcontainers</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- 分层规则（JDBC 只在 repository 层、domain 层不依赖框架）由架构测试强制 -->
+    <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5</artifactId>
+      <version>${archunit.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
