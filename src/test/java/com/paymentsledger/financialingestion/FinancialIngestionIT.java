@@ -389,11 +389,11 @@ class FinancialIngestionIT {
         UUID w = window();
         provider.pages.add(page(List.of(fact("atomic", 100, "USD", "adjustment", "PAYMENTS")), false, null, "v1"));
         admin.execute("""
-                CREATE FUNCTION platform.pr10_test_cursor_failure() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
-                    RAISE EXCEPTION 'injected cursor failure'; END $$""");
+                CREATE FUNCTION platform.pr10_test_cursor_failure() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION
+                    'injected cursor failure'; END $$""");
         admin.execute("""
-                CREATE TRIGGER pr10_test_cursor_failure BEFORE
-                UPDATE ON platform.import_cursor FOR EACH ROW EXECUTE FUNCTION platform.pr10_test_cursor_failure()""");
+                CREATE TRIGGER pr10_test_cursor_failure BEFORE UPDATE ON platform.import_cursor FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr10_test_cursor_failure()""");
         try {
             assertThatThrownBy(() -> importer.importPage(w)).hasMessageContaining("injected cursor failure");
             assertThat(count("balance_transaction")).isZero();
@@ -495,14 +495,12 @@ class FinancialIngestionIT {
         provider.pages.add(page(List.of(fact("retry", 100, "USD", "adjustment", "PAYMENTS")), false, null, "v1"));
         admin.execute("CREATE SEQUENCE platform.pr10_test_retry_sequence");
         admin.execute("""
-                CREATE FUNCTION platform.pr10_test_retry() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER
-                SET
-                    search_path=pg_catalog,
-                    platform AS $$ BEGIN IF nextval('platform.pr10_test_retry_sequence')<3 THEN RAISE EXCEPTION
-                        'injected serialization' USING ERRCODE='40001'; END IF; RETURN NEW; END $$""");
+                CREATE FUNCTION platform.pr10_test_retry() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET
+                    search_path=pg_catalog,platform AS $$ BEGIN IF nextval('platform.pr10_test_retry_sequence')<3
+                    THEN RAISE EXCEPTION 'injected serialization' USING ERRCODE='40001'; END IF; RETURN NEW; END $$""");
         admin.execute("""
-                CREATE TRIGGER pr10_test_retry BEFORE
-                UPDATE ON platform.import_cursor FOR EACH ROW EXECUTE FUNCTION platform.pr10_test_retry()""");
+                CREATE TRIGGER pr10_test_retry BEFORE UPDATE ON platform.import_cursor FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr10_test_retry()""");
         try {
             assertThat(importer.importPage(w)).isEqualTo("COMPLETE");
             assertThat(count("provider_observation")).isEqualTo(1);

@@ -239,8 +239,8 @@ class WebhookProcessingIT extends PaymentCoreFixture {
                 CREATE FUNCTION platform.test_webhook_crash() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF
                     NEW.status='DONE' THEN RAISE EXCEPTION 'injected crash'; END IF; RETURN NEW; END $$""");
         admin.execute("""
-                CREATE TRIGGER test_webhook_crash BEFORE
-                UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.test_webhook_crash()""");
+                CREATE TRIGGER test_webhook_crash BEFORE UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION
+                    platform.test_webhook_crash()""");
         try {
             processor.processDue(100);
             assertThat(count("payment_attempt")).isZero();

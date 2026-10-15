@@ -101,8 +101,7 @@ public class FinancialImportService {
                     FROM platform.import_window w
                     JOIN platform.import_cursor c ON c.window_id=w.id
                     WHERE w.id=?
-                    FOR
-                    UPDATE OF w,c""", windowId);
+                    FOR UPDATE OF w,c""", windowId);
             UUID observation = observe(scope, windowId, "LIST_BALANCE_TRANSACTIONS", null, result);
             if (!Objects.equals(current.get("cursor_version"), snapshot.get("cursor_version"))
                     || !Objects.equals(current.get("next_cursor"), snapshot.get("next_cursor"))

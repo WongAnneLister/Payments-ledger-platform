@@ -423,8 +423,7 @@ class Pr18SequenceIT extends Pr18Fixture {
         for (var account : jdbc.queryForList("""
                 SELECT a.account_purpose,coalesce(b.balance_minor,0) amount
                 FROM platform.ledger_account a
-                LEFT
-                JOIN platform.balance_projection b ON a.id=b.ledger_account_id"""))
+                LEFT JOIN platform.balance_projection b ON a.id=b.ledger_account_id"""))
             assertThat(((Number) account.get("amount")).longValue())
                     .as(label + " account=" + account.get("account_purpose"))
                     .isEqualTo(
@@ -437,8 +436,7 @@ class Pr18SequenceIT extends Pr18Fixture {
         assertThat(jdbc.queryForObject("""
                         SELECT count(*)
                         FROM platform.financial_event e
-                        LEFT
-                        JOIN platform.journal j ON j.financial_event_id=e.id
+                        LEFT JOIN platform.journal j ON j.financial_event_id=e.id
                         WHERE j.id IS NULL""", Long.class))
                 .as("I02 no unjournaled events")
                 .isZero();
@@ -484,8 +482,8 @@ class Pr18SequenceIT extends Pr18Fixture {
                         SELECT count(*)
                         FROM platform.journal_entry e
                         JOIN platform.journal j ON j.id=e.journal_id
-                        WHERE (e.organization_id,e.environment_id,e.currency) IS DISTINCT
-                        FROM (j.organization_id,j.environment_id,j.currency)""", Long.class)).as("I07 scope").isZero();
+                        WHERE (e.organization_id,e.environment_id,e.currency) IS DISTINCT FROM (j.organization_id,
+                            j.environment_id,j.currency)""", Long.class)).as("I07 scope").isZero();
         if (payoutId != null) {
             var p = payouts.lookup(scope, "payout");
             assertThat(((Number) p.get("transit_minor")).longValue())
@@ -502,8 +500,7 @@ class Pr18SequenceIT extends Pr18Fixture {
                 jdbc.queryForList("""
                         SELECT a.account_purpose,coalesce(b.balance_minor,0) balance_minor
                         FROM platform.ledger_account a
-                        LEFT
-                        JOIN platform.balance_projection b ON a.id=b.ledger_account_id
+                        LEFT JOIN platform.balance_projection b ON a.id=b.ledger_account_id
                         ORDER BY a.account_purpose"""),
                 "journals",
                 count("journal"),

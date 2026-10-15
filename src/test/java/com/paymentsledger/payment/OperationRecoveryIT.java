@@ -427,8 +427,7 @@ class OperationRecoveryIT extends PaymentCoreFixture {
                 service.cancel(context, payment(resource), "cancel-now-key", new PaymentRequests.Cancel("OTHER", null));
         assertThat(((Map<?, ?>) canceled.get("recovery")).get("lastQueryAt")).isNotNull();
         assertThat(jdbc.queryForObject("""
-                        SELECT last_query_at IS NOT NULL
-                        FROM platform.provider_operation
+                        SELECT last_query_at IS NOT NULL FROM platform.provider_operation
                         WHERE operation_type='CANCEL_PAYMENT'""", Boolean.class)).isTrue();
     }
 
@@ -459,8 +458,7 @@ class OperationRecoveryIT extends PaymentCoreFixture {
                         "SELECT age_alert_at IS NOT NULL FROM platform.provider_operation", Boolean.class))
                 .isTrue();
         assertThat(jdbc.queryForObject("""
-                        SELECT age_alert_at IS NOT NULL AND escalated_at IS NOT NULL
-                        FROM platform.recovery_task""", Boolean.class)).isTrue();
+                        SELECT age_alert_at IS NOT NULL AND escalated_at IS NOT NULL FROM platform.recovery_task""", Boolean.class)).isTrue();
         assertThat(fake.counters(scope).requestCount()).isGreaterThan(requests);
         assertThat(fake.counters(scope).sessionCreatedCount()).isEqualTo(1);
         assertThat(fake.counters(scope).paymentEffectCount()).isZero();

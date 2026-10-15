@@ -71,8 +71,7 @@ class RefundSchemaIT {
         assertThat(jdbc.queryForObject("SELECT operation_key FROM platform.provider_operation", String.class))
                 .isEqualTo("original");
         assertThat(jdbc.queryForObject("""
-                        SELECT t.payment_id=o.payment_id AND t.refund_id IS NULL
-                        FROM platform.recovery_task t
+                        SELECT t.payment_id=o.payment_id AND t.refund_id IS NULL FROM platform.recovery_task t
                         JOIN platform.provider_operation o ON o.id=t.operation_id""", Boolean.class)).isTrue();
         assertThat(jdbc.queryForObject("""
                         SELECT has_table_privilege(current_user,'platform.refund','SELECT,INSERT,UPDATE')""", Boolean.class)).isTrue();

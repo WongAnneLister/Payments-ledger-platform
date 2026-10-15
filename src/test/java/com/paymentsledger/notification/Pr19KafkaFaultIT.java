@@ -53,14 +53,13 @@ class Pr19KafkaFaultIT extends NotificationFixture {
         admin.execute("GRANT INSERT,SELECT ON platform.pr19_notification_transition TO payments_app");
         admin.execute("""
                 CREATE OR REPLACE FUNCTION platform.pr19_notification_audit() RETURNS trigger LANGUAGE plpgsql AS $$
-                    BEGIN IF OLD.payment_status IS DISTINCT
-                FROM NEW.payment_status THEN
-                INSERT INTO platform.pr19_notification_transition
+                    BEGIN IF OLD.payment_status IS DISTINCT FROM NEW.payment_status THEN INSERT INTO
+                    platform.pr19_notification_transition
                 VALUES(NEW.id,OLD.payment_status,NEW.payment_status); END IF; RETURN NEW; END $$""");
         admin.execute("DROP TRIGGER IF EXISTS pr19_notification_audit ON platform.payment");
         admin.execute("""
-                CREATE TRIGGER pr19_notification_audit AFTER
-                UPDATE ON platform.payment FOR EACH ROW EXECUTE FUNCTION platform.pr19_notification_audit()""");
+                CREATE TRIGGER pr19_notification_audit AFTER UPDATE ON platform.payment FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr19_notification_audit()""");
     }
 
     @Test

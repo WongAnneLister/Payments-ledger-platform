@@ -34,8 +34,8 @@ public final class SqlPerformanceProvider
             """);
         db.execute("CREATE INDEX simulator_created ON simulator_payment(created_at,seq)");
         db.execute("""
-                CREATE TABLE simulator_call(seq bigserial PRIMARY KEY,kind text NOT NULL,at timestamptz NOT NULL
-                    DEFAULT clock_timestamp())""");
+                CREATE TABLE simulator_call(seq bigserial PRIMARY KEY,kind text NOT NULL,at timestamptz NOT NULL DEFAULT
+                    clock_timestamp())""");
     }
 
     private String scoped(ProviderScope s) {

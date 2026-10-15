@@ -66,14 +66,9 @@ final class PerformanceFixture {
             long last = Math.min(history, first + 9999);
             diskGuard.accept(first - 1);
             db.execute("""
-                    CREATE TEMP TABLE pr20_seed ON COMMIT PRESERVE ROWS AS
-                    SELECT
-                        i,
-                        md5('pr20-order-'||i)::uuid oid,
-                        md5('pr20-payment-'||i)::uuid pid,
-                        md5('pr20-operation-'||i)::uuid opid,
-                        100*((i%10)+1)::bigint amount,
-                        date_trunc('second',now())-((i%365)+1)*interval '1 day' born
+                    CREATE TEMP TABLE pr20_seed ON COMMIT PRESERVE ROWS AS SELECT i,md5('pr20-order-'||i)::uuid oid,
+                        md5('pr20-payment-'||i)::uuid pid,md5('pr20-operation-'||i)::uuid opid,100*((i%10)+1)::bigint
+                        amount,date_trunc('second',now())-((i%365)+1)*interval '1 day' born
                     FROM generate_series(""" + first + "," + last + ") i");
             db.execute("""
                     INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,

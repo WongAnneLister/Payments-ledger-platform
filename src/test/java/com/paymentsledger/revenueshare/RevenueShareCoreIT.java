@@ -210,8 +210,7 @@ class RevenueShareCoreIT extends RevenueShareCoreFixture {
         });
         assertThat(effective()).isZero();
         assertThat(jdbc.queryForObject("""
-                        SELECT payment_id IS NULL
-                        FROM platform.balance_transaction
+                        SELECT payment_id IS NULL FROM platform.balance_transaction
                         WHERE bt_id='txn_quarantined'""", Boolean.class)).isTrue();
     }
 

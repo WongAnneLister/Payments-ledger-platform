@@ -257,11 +257,11 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
     void injectedProvenanceFailureRollsBackPaymentAndNotification() throws Exception {
         binding(order("rollback"));
         admin.execute("""
-                CREATE FUNCTION platform.pr15_test_fail() RETURNS trigger LANGUAGE plpgsql AS $$BEGIN RAISE
-                    EXCEPTION 'injected'; END $$""");
+                CREATE FUNCTION platform.pr15_test_fail() RETURNS trigger LANGUAGE plpgsql AS $$BEGIN RAISE EXCEPTION
+                    'injected'; END $$""");
         admin.execute("""
-                CREATE TRIGGER pr15_test_fail BEFORE INSERT ON platform.reconciliation_payment_provenance FOR EACH
-                    ROW EXECUTE FUNCTION platform.pr15_test_fail()""");
+                CREATE TRIGGER pr15_test_fail BEFORE INSERT ON platform.reconciliation_payment_provenance FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr15_test_fail()""");
         try {
             assertThatThrownBy(() -> drain()).isInstanceOf(Exception.class);
             assertThat(count("payment")).isZero();

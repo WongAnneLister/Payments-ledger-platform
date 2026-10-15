@@ -156,8 +156,7 @@ public class RefundRepository {
                     SELECT *
                     FROM platform.payment
                     WHERE id=? AND organization_id=? AND environment_id=? AND application_id=? AND provider_account_id=?
-                    FOR
-                    UPDATE""",
+                    FOR UPDATE""",
                     request.paymentId(),
                     c.organizationId(),
                     c.environmentId(),
@@ -248,8 +247,7 @@ public class RefundRepository {
                     SELECT *
                     FROM platform.payment
                     WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=?
-                    FOR
-                    UPDATE""", paymentId, scope.organizationId(), scope.environmentId(), scope.providerAccountId());
+                    FOR UPDATE""", paymentId, scope.organizationId(), scope.environmentId(), scope.providerAccountId());
             if (payment == null) throw error(ErrorCode.NOT_FOUND);
             var control = control(payment);
             var prior = one("""

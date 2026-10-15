@@ -250,8 +250,7 @@ abstract class Pr19FaultFixture extends Pr18Fixture {
                         SELECT count(*)
                         FROM platform.share_allocation a
                         JOIN platform.payment p ON p.id=a.payment_id
-                        LEFT
-                        JOIN platform.refund_control r ON r.payment_id=p.id
+                        LEFT JOIN platform.refund_control r ON r.payment_id=p.id
                         WHERE a.effective_minor>floor(greatest(p.captured_amount_minor-coalesce(r.refunded_minor,
                             0)-coalesce(r.reserved_minor,0),0)::numeric*a.rate_bps/10000)""", Long.class))
                 .as("share cumulative ceiling")

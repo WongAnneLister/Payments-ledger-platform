@@ -42,8 +42,7 @@ public final class DisputeService {
                 """
                 SELECT DISTINCT p.id
                 FROM platform.payment p
-                LEFT
-                JOIN platform.payment_attempt a ON a.payment_id=p.id
+                LEFT JOIN platform.payment_attempt a ON a.payment_id=p.id
                 WHERE p.organization_id=?
                     AND p.environment_id=?
                     AND p.provider_account_id=?
@@ -138,8 +137,7 @@ public final class DisputeService {
                     AND provider_account_id=?
                     AND livemode=?
                     AND provider_dispute_id=?
-                FOR
-                UPDATE""",
+                FOR UPDATE""",
                 scope.organizationId(),
                 scope.environmentId(),
                 scope.providerAccountId(),
@@ -271,8 +269,9 @@ public final class DisputeService {
         }
         jdbc.update("""
                 UPDATE platform.dispute
-                SET blocking=true,local_handling=CASE WHEN conflict THEN 'NEEDS_REVIEW' ELSE 'WAITING_EVIDENCE' END
-                WHERE id=?""", id);
+                SET
+                    blocking=true,
+                    local_handling=CASE WHEN conflict THEN 'NEEDS_REVIEW' ELSE 'WAITING_EVIDENCE' END WHERE id=?""", id);
         jdbc.queryForObject("SELECT platform.ensure_dispute_accounts(?)", Object.class, payment);
         lockAccounts(payment);
         var accounts = accounts(d);

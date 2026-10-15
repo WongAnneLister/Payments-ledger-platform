@@ -623,8 +623,7 @@ public class PaymentRepository {
                 SELECT next_batch_at
                 FROM platform.recovery_account_limit
                 WHERE organization_id=? AND environment_id=? AND provider_account_id=?
-                FOR
-                UPDATE""", op.get("organization_id"), op.get("environment_id"), op.get("provider_account_id"));
+                FOR UPDATE""", op.get("organization_id"), op.get("environment_id"), op.get("provider_account_id"));
         Instant next = instant(limit, "next_batch_at");
         if (next.isAfter(now)) {
             jdbc.update("""
@@ -662,8 +661,7 @@ public class PaymentRepository {
                     AND t.status='RUNNING'
                     AND t.lease_token=o.lease_token
                     AND t.lease_until=o.lease_until
-                FOR
-                UPDATE OF o""", claim.operationId(), claim.token(), claim.version(), Timestamp.from(now()));
+                FOR UPDATE OF o""", claim.operationId(), claim.token(), claim.version(), Timestamp.from(now()));
         return row != null;
     }
 
@@ -1066,8 +1064,7 @@ public class PaymentRepository {
                         DO UPDATE SET
                             last_confirmed_at=greatest(normalized_observation.last_confirmed_at,excluded.last_confirmed_at),
                             last_source=CASE WHEN normalized_observation.last_source='QUERY' THEN 'QUERY' ELSE
-                                excluded.last_source END
-                        WHERE normalized_observation.fact=excluded.fact""",
+                                excluded.last_source END WHERE normalized_observation.fact=excluded.fact""",
                         p.get("organization_id"),
                         p.get("environment_id"),
                         p.get("provider_account_id"),
@@ -1103,9 +1100,9 @@ public class PaymentRepository {
                                         version=payment_attempt.version+CASE WHEN (NOT payment_attempt.captured AND
                                             (payment_attempt.provider_status,payment_attempt.captured,
                                             payment_attempt.amount_captured_minor) IS DISTINCT FROM (excluded.provider_status,
-                                            excluded.captured,excluded.amount_captured_minor)) OR (excluded.balance_transaction_id IS
-                                            NOT NULL AND payment_attempt.balance_transaction_id IS DISTINCT FROM
-                                            excluded.balance_transaction_id) THEN 1 ELSE 0 END,
+                                            excluded.captured,excluded.amount_captured_minor)) OR (excluded.balance_transaction_id IS NOT NULL AND
+                                            payment_attempt.balance_transaction_id IS DISTINCT FROM excluded.balance_transaction_id)
+                                            THEN 1 ELSE 0 END,
                                         updated_at=now()
                                     WHERE payment_attempt.payment_id=excluded.payment_id
                                         AND payment_attempt.currency=excluded.currency
@@ -1273,8 +1270,7 @@ public class PaymentRepository {
                     SELECT *
                     FROM platform.provider_operation
                     WHERE payment_id=? AND operation_type='CREATE_CHECKOUT'
-                    FOR
-                    UPDATE""", claim.paymentId());
+                    FOR UPDATE""", claim.paymentId());
             if (!"PREPARED".equals(create.get("status"))) return false;
             jdbc.update("""
                     UPDATE platform.provider_operation

@@ -97,8 +97,7 @@ public final class PayoutRecoveryWorker {
                             SELECT id
                             FROM platform.payout_observation
                             WHERE payout_id=?
-                            ORDER BY created_at DESC,id DESC
-                            LIMIT 1""", UUID.class, p.get("id"));
+                            ORDER BY created_at DESC,id DESC LIMIT 1""", UUID.class, p.get("id"));
                     if (jdbc.queryForObject("""
                                     SELECT count(*)
                                     FROM platform.payout_read_run
