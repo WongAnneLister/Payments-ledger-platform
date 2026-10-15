@@ -462,7 +462,8 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
             @Override
             public <T> List<T> queryForList(String sql, Class<T> type, Object... args) {
                 var found = super.queryForList(sql, type, args);
-                if (sql.startsWith("SELECT payment_id FROM platform.refund")
+                // Match on normalized text: production SQL is laid out over several lines.
+                if (sql.replaceAll("\\s+", " ").startsWith("SELECT payment_id FROM platform.refund")
                         && Arrays.asList(args).contains("re_racing")
                         && raced.compareAndSet(false, true)) {
                     assertThat(found).isEmpty();
