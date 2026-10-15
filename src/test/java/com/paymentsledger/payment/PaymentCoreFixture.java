@@ -62,36 +62,28 @@ abstract class PaymentCoreFixture {
         tx = new DataSourceTransactionManager(pool);
         admin.execute("TRUNCATE platform.organization,platform.currency_config CASCADE");
         admin.update("INSERT INTO platform.organization(id,code) VALUES (?,'org')", id(1));
-        admin.update(
-                "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'test',false)",
-                id(2),
-                id(1));
-        admin.update(
-                "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES (?,?,?,'app')",
-                id(3),
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE','fixture',false)",
-                id(4),
-                id(1),
-                id(2));
+        admin.update("""
+                INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                VALUES (?,?,'test',false)""", id(2), id(1));
+        admin.update("""
+                INSERT INTO platform.application(id,organization_id,environment_id,code)
+                VALUES (?,?,?,'app')""", id(3), id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'FAKE','fixture',false)""", id(4), id(1), id(2));
         admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2)");
-        admin.update(
-                "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD')",
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,policy_version,partner_ref,share_basis_points) VALUES (?,?,?,'demo',1,'partner',1500)",
-                id(5),
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,currency,amount_minor,share_policy_id) VALUES (?,?,?,'demo',1,'USD',10000,?)",
-                id(6),
-                id(1),
-                id(2),
-                id(5));
+        admin.update("""
+                INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                VALUES (?,?,'USD')""", id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,
+                    policy_version,partner_ref,share_basis_points)
+                VALUES (?,?,?,'demo',1,'partner',1500)""", id(5), id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,
+                    currency,amount_minor,share_policy_id)
+                VALUES (?,?,?,'demo',1,'USD',10000,?)""", id(6), id(1), id(2), id(5));
         fake = new FakeStripeProvider(directory, 42, Instant.now(), Duration.ofDays(1));
         repository = new PaymentRepository(jdbc, tx, new ObjectMapper().findAndRegisterModules(), fake.clock());
         executor = new PaymentExecutor(repository, fake, fake, fake, "FAKE");

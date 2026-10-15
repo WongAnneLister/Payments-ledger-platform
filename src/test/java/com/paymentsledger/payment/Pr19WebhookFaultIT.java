@@ -32,10 +32,10 @@ class Pr19WebhookFaultIT extends Pr19FaultFixture {
     MockMvc http;
 
     void webhook() {
-        admin.update(
-                "UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref=? WHERE id=?",
-                ACCOUNT,
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='STRIPE',provider_account_ref=?
+                WHERE id=?""", ACCOUNT, id(4));
         inbox = new WebhookInboxRepository(jdbc, tx, json, fake.clock());
         processor = new WebhookProcessor(
                 inbox,
@@ -206,9 +206,10 @@ class Pr19WebhookFaultIT extends Pr19FaultFixture {
                                         pi,
                                         "metadata",
                                         Map.of("payment_id", paymentId.toString())));
-                        admin.update(
-                                "UPDATE platform.provider_account SET provider='FAKE',provider_account_ref='fixture' WHERE id=?",
-                                id(4));
+                        admin.update("""
+                                UPDATE platform.provider_account
+                                SET provider='FAKE',provider_account_ref='fixture'
+                                WHERE id=?""", id(4));
                         assertThat(jdbc.queryForObject(
                                         "SELECT captured_amount_minor FROM platform.payment", Long.class))
                                 .isZero();
@@ -225,10 +226,10 @@ class Pr19WebhookFaultIT extends Pr19FaultFixture {
                     service.get(context, paymentId);
                     assertThat(repository.read(context, paymentId)).containsEntry("resolutionStatus", "UNKNOWN");
                     if (variant.equals("known-l2"))
-                        admin.update(
-                                "UPDATE platform.recovery_task SET status='DONE',available_at=? WHERE payment_id=?",
-                                java.sql.Timestamp.from(fake.clock().instant()),
-                                paymentId);
+                        admin.update("""
+                                UPDATE platform.recovery_task
+                                SET status='DONE',available_at=?
+                                WHERE payment_id=?""", java.sql.Timestamp.from(fake.clock().instant()), paymentId);
                     e.put("intermediateEvidence", snapshotFault());
                     observations.add(Map.of("droppedEventId", event, "delivered", false));
                     recovery(e, ignored -> {
@@ -277,23 +278,17 @@ class Pr19WebhookFaultIT extends Pr19FaultFixture {
                     UUID order = null;
                     if (variant.equals("trusted-order-l3")) {
                         order = UUID.randomUUID();
-                        admin.update(
-                                "INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot) VALUES(?,?,?,?,?,'USD','pr19-trusted-order',?,'demo',1,1,10000,10000,'{}','{\"policy_version\":1,\"partner_ref\":\"partner\",\"share_basis_points\":2000}')",
-                                order,
-                                id(1),
-                                id(2),
-                                id(3),
-                                id(4),
-                                "a".repeat(64));
-                        admin.update(
-                                "INSERT INTO platform.order_provider_binding(organization_id,environment_id,application_id,provider_account_id,livemode,currency,order_id,payment_intent_id,amount_minor,proof_kind,proof_ref,proof_digest) VALUES(?,?,?,?,false,'USD',?,?,10000,'SERVER_ORDER_FIXTURE','pr19-independent-order',?)",
-                                id(1),
-                                id(2),
-                                id(3),
-                                id(4),
-                                order,
-                                pi,
-                                "c".repeat(64));
+                        admin.update("""
+                                INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,
+                                    provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,
+                                    unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot)
+                                VALUES(?,?,?,?,?,'USD','pr19-trusted-order',?,'demo',1,1,10000,10000,'{}',
+                                    '{\"policy_version\":1,\"partner_ref\":\"partner\",\"share_basis_points\":2000}')""", order, id(1), id(2), id(3), id(4), "a".repeat(64));
+                        admin.update("""
+                                INSERT INTO platform.order_provider_binding(organization_id,environment_id,application_id,
+                                    provider_account_id,livemode,currency,order_id,payment_intent_id,amount_minor,proof_kind,
+                                    proof_ref,proof_digest)
+                                VALUES(?,?,?,?,false,'USD',?,?,10000,'SERVER_ORDER_FIXTURE','pr19-independent-order',?)""", id(1), id(2), id(3), id(4), order, pi, "c".repeat(64));
                     }
                     var coordinator = new OperationRecoveryCoordinator(repository, executor);
                     coordinator.recoverDue(100);
@@ -349,10 +344,10 @@ class Pr19WebhookFaultIT extends Pr19FaultFixture {
                         assertThat(count("journal")).isZero();
                         assertThat(count("outbox_event")).isZero();
                         assertThat(count("reconciliation_source_observation")).isPositive();
-                        assertThat(jdbc.queryForObject(
-                                        "SELECT reason FROM platform.recovery_task WHERE task_type='RECONCILIATION_SOURCE'",
-                                        String.class))
-                                .isEqualTo("NO_TRUSTED_ORDER");
+                        assertThat(jdbc.queryForObject("""
+                                        SELECT reason
+                                        FROM platform.recovery_task
+                                        WHERE task_type='RECONCILIATION_SOURCE'""", String.class)).isEqualTo("NO_TRUSTED_ORDER");
                         assertThat(merchant.effects()).isZero();
                     }
                     assertThat(fake.counters(scope).paymentEffectCount()).isEqualTo(1);
@@ -649,10 +644,12 @@ class Pr19WebhookFaultIT extends Pr19FaultFixture {
                             signed = signature(legal, timestamp, "whsec_DIFFERENT_LOCAL_ENDPOINT");
                         case "outside-tolerance" -> signed = signature(legal, timestamp - 301, SECRET);
                         case "inbox-persistence-failure" -> {
-                            admin.execute(
-                                    "CREATE FUNCTION platform.pr19_fail_inbox() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'PR19_INJECTED_INBOX_UNAVAILABLE'; END $$");
-                            admin.execute(
-                                    "CREATE TRIGGER pr19_fail_inbox BEFORE INSERT ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.pr19_fail_inbox()");
+                            admin.execute("""
+                                    CREATE FUNCTION platform.pr19_fail_inbox() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
+                                        EXCEPTION 'PR19_INJECTED_INBOX_UNAVAILABLE'; END $$""");
+                            admin.execute("""
+                                    CREATE TRIGGER pr19_fail_inbox BEFORE INSERT ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION
+                                        platform.pr19_fail_inbox()""");
                         }
                         case "legal-raw-bytes" -> {}
                         default -> throw new AssertionError(variant);

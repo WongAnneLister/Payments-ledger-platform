@@ -110,7 +110,12 @@ public final class RevenueShareService {
             var policy = validatePolicy(json(order.get("share_policy_snapshot")));
             for (var partner : policy.partners())
                 jdbc.update(
-                        "INSERT INTO platform.share_allocation(organization_id,environment_id,application_id,provider_account_id,currency,payment_id,partner_ref,policy_version,rate_bps) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(payment_id,partner_ref) DO NOTHING",
+                        """
+                        INSERT INTO platform.share_allocation(organization_id,environment_id,application_id,
+                            provider_account_id,currency,payment_id,partner_ref,policy_version,rate_bps)
+                        VALUES (?,?,?,?,?,?,?,?,?)
+                        ON CONFLICT(payment_id,partner_ref)
+                        DO NOTHING""",
                         p.get("organization_id"),
                         p.get("environment_id"),
                         p.get("application_id"),
@@ -173,10 +178,10 @@ public final class RevenueShareService {
                 && !"CONFLICT".equals(p.get("financial_status"))
                 && (control == null || "NORMAL".equals(control.get("control_state")))
                 && eligibility.eligible(locked.paymentId);
-        BigDecimal covered = jdbc.queryForObject(
-                "SELECT coalesce(sum(amount_minor),0) FROM platform.balance_transaction WHERE payment_id=? AND state='POSTED' AND lower(business_type)='charge' AND amount_minor>0",
-                BigDecimal.class,
-                locked.paymentId);
+        BigDecimal covered = jdbc.queryForObject("""
+                SELECT coalesce(sum(amount_minor),0)
+                FROM platform.balance_transaction
+                WHERE payment_id=? AND state='POSTED' AND lower(business_type)='charge' AND amount_minor>0""", BigDecimal.class, locked.paymentId);
         eligible = eligible && covered.compareTo(BigDecimal.valueOf(captured)) == 0;
         boolean conflicts = Boolean.TRUE.equals(jdbc.queryForObject(
                 """
@@ -186,19 +191,28 @@ public final class RevenueShareService {
      OR EXISTS(SELECT 1 FROM platform.refund r WHERE r.payment_id=? AND r.organization_id=b.organization_id AND r.environment_id=b.environment_id AND r.provider_account_id=b.provider_account_id AND r.provider_refund_id=b.source_object_id)))
    """, Boolean.class, locked.paymentId, locked.paymentId, locked.paymentId, locked.paymentId));
         eligible = eligible && !conflicts;
-        var allocations = jdbc.queryForList(
-                "SELECT a.*,coalesce((SELECT sum(delta_minor) FROM platform.share_adjustment WHERE allocation_id=a.id),0) AS historical_minor FROM platform.share_allocation a WHERE payment_id=? ORDER BY id",
-                locked.paymentId);
+        var allocations = jdbc.queryForList("""
+                SELECT
+                    a.*,
+                    coalesce((SELECT sum(delta_minor) FROM platform.share_adjustment WHERE allocation_id=a.id),0) AS
+                        historical_minor
+                FROM platform.share_allocation a
+                WHERE payment_id=?
+                ORDER BY id""", locked.paymentId);
         var scope = new LedgerScope(
                 uuid(p, "organization_id"),
                 uuid(p, "environment_id"),
                 p.get("currency").toString(),
                 null);
-        var accounts = jdbc.queryForList(
-                "SELECT id,account_purpose FROM platform.ledger_account WHERE organization_id=? AND environment_id=? AND currency=? AND source_domain='INTERNAL' AND provider_account_id IS NULL AND account_purpose IN ('PARTNER_SHARE_EXPENSE','PARTNER_PAYABLE')",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.currency());
+        var accounts = jdbc.queryForList("""
+                SELECT id,account_purpose
+                FROM platform.ledger_account
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND currency=?
+                    AND source_domain='INTERNAL'
+                    AND provider_account_id IS NULL
+                    AND account_purpose IN ('PARTNER_SHARE_EXPENSE','PARTNER_PAYABLE')""", scope.organizationId(), scope.environmentId(), scope.currency());
         UUID expense = account(accounts, "PARTNER_SHARE_EXPENSE"), payable = account(accounts, "PARTNER_PAYABLE");
         for (var a : allocations) {
             long current = ((BigDecimal) a.get("historical_minor")).longValueExact(),
@@ -236,7 +250,10 @@ public final class RevenueShareService {
                                         new PostingLine(payable, delta > 0 ? Side.CREDIT : Side.DEBIT, amount)),
                                 null));
                 jdbc.update(
-                        "INSERT INTO platform.share_adjustment(organization_id,environment_id,currency,allocation_id,generation,delta_minor,journal_id,cause) VALUES (?,?,?,?,?,?,?,?)",
+                        """
+                        INSERT INTO platform.share_adjustment(organization_id,environment_id,currency,allocation_id,
+                            generation,delta_minor,journal_id,cause)
+                        VALUES (?,?,?,?,?,?,?,?)""",
                         scope.organizationId(),
                         scope.environmentId(),
                         scope.currency(),
@@ -246,19 +263,25 @@ public final class RevenueShareService {
                         journal,
                         Objects.toString(cause, "reconcile"));
             }
-            jdbc.update(
-                    "UPDATE platform.share_allocation SET effective_minor=?,cap_minor=?,generation=?,updated_at=now() WHERE id=?",
-                    cap,
-                    cap,
-                    generation,
-                    a.get("id"));
+            jdbc.update("""
+                    UPDATE platform.share_allocation
+                    SET effective_minor=?,cap_minor=?,generation=?,updated_at=now()
+                    WHERE id=?""", cap, cap, generation, a.get("id"));
         }
     }
     /** Scoped query seam reserved for the authenticated PR16 endpoint. */
     public List<Map<String, Object>> allocations(TenantContext scope, UUID paymentId) {
         if (!enabled) return List.of();
         var result = jdbc.queryForList(
-                "SELECT * FROM platform.share_allocation WHERE organization_id=? AND environment_id=? AND application_id=? AND provider_account_id=? AND payment_id=? ORDER BY partner_ref",
+                """
+                SELECT *
+                FROM platform.share_allocation
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND application_id=?
+                    AND provider_account_id=?
+                    AND payment_id=?
+                ORDER BY partner_ref""",
                 scope.organizationId(),
                 scope.environmentId(),
                 scope.applicationId(),
@@ -273,7 +296,16 @@ public final class RevenueShareService {
     public List<Map<String, Object>> adjustments(TenantContext scope, UUID paymentId) {
         if (!enabled) return List.of();
         var result = jdbc.queryForList(
-                "SELECT h.*,a.partner_ref,a.payment_id FROM platform.share_adjustment h JOIN platform.share_allocation a ON a.id=h.allocation_id WHERE a.organization_id=? AND a.environment_id=? AND a.application_id=? AND a.provider_account_id=? AND a.payment_id=? ORDER BY a.partner_ref,h.generation",
+                """
+                SELECT h.*,a.partner_ref,a.payment_id
+                FROM platform.share_adjustment h
+                JOIN platform.share_allocation a ON a.id=h.allocation_id
+                WHERE a.organization_id=?
+                    AND a.environment_id=?
+                    AND a.application_id=?
+                    AND a.provider_account_id=?
+                    AND a.payment_id=?
+                ORDER BY a.partner_ref,h.generation""",
                 scope.organizationId(),
                 scope.environmentId(),
                 scope.applicationId(),
@@ -290,17 +322,23 @@ public final class RevenueShareService {
         if (TransactionSynchronizationManager.isActualTransactionActive())
             throw new IllegalStateException("Catch-up owns separate bounded local transactions");
         if (limit < 1 || limit > 100) throw new IllegalArgumentException("Catch-up batch must be 1..100");
-        var ids = jdbc.queryForList(
-                "SELECT p.id FROM platform.payment p LEFT JOIN platform.share_catchup_cursor c ON c.payment_id=p.id WHERE p.organization_id=? AND p.environment_id=? AND p.provider_account_id=? AND p.captured_amount_minor>0 ORDER BY c.attempted_at NULLS FIRST,p.id LIMIT ?",
-                UUID.class,
-                organizationId,
-                environmentId,
-                providerAccountId,
-                limit);
+        var ids = jdbc.queryForList("""
+                SELECT p.id
+                FROM platform.payment p
+                LEFT
+                JOIN platform.share_catchup_cursor c ON c.payment_id=p.id
+                WHERE p.organization_id=?
+                    AND p.environment_id=?
+                    AND p.provider_account_id=?
+                    AND p.captured_amount_minor>0
+                ORDER BY c.attempted_at NULLS FIRST,p.id
+                LIMIT ?""", UUID.class, organizationId, environmentId, providerAccountId, limit);
         for (UUID id : ids) {
-            tx.executeWithoutResult(status -> jdbc.update(
-                    "INSERT INTO platform.share_catchup_cursor(payment_id) VALUES (?) ON CONFLICT(payment_id) DO UPDATE SET attempted_at=clock_timestamp()",
-                    id));
+            tx.executeWithoutResult(status -> jdbc.update("""
+                    INSERT INTO platform.share_catchup_cursor(payment_id)
+                    VALUES (?)
+                    ON CONFLICT(payment_id)
+                    DO UPDATE SET attempted_at=clock_timestamp()""", id));
             try {
                 reconcile(id, "historical-catch-up");
             } catch (RuntimeException failure) {

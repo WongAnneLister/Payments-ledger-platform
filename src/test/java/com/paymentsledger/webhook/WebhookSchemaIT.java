@@ -46,8 +46,11 @@ class WebhookSchemaIT {
                 .load()
                 .migrate();
         admin.update("UPDATE platform.payment SET last_provider_confirmed_at='2026-09-26T10:00:00Z'");
-        var original = admin.queryForMap(
-                "SELECT p.id payment_id,o.id operation_id,t.id recovery_id,o.operation_key,o.command FROM platform.payment p JOIN platform.provider_operation o ON o.payment_id=p.id JOIN platform.recovery_task t ON t.operation_id=o.id");
+        var original = admin.queryForMap("""
+                SELECT p.id payment_id,o.id operation_id,t.id recovery_id,o.operation_key,o.command
+                FROM platform.payment p
+                JOIN platform.provider_operation o ON o.payment_id=p.id
+                JOIN platform.recovery_task t ON t.operation_id=o.id""");
         var migration = Flyway.configure()
                 .dataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword())
                 .schemas("platform")
@@ -55,14 +58,14 @@ class WebhookSchemaIT {
         assertThat(migration.migrate().migrationsExecuted).isEqualTo(11);
         assertThat(migration.migrate().migrationsExecuted).isZero();
         var jdbc = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), "payments_app", "pr02_test_only"));
-        assertThat(
-                        jdbc.queryForMap(
-                                "SELECT p.id payment_id,o.id operation_id,t.id recovery_id,o.operation_key,o.command FROM platform.payment p JOIN platform.provider_operation o ON o.payment_id=p.id JOIN platform.recovery_task t ON t.operation_id=o.id"))
-                .isEqualTo(original);
-        assertThat(jdbc.queryForObject(
-                        "SELECT last_query_confirmed_at=last_provider_confirmed_at AND last_webhook_created_at IS NULL FROM platform.payment",
-                        Boolean.class))
-                .isTrue();
+        assertThat(jdbc.queryForMap("""
+                                SELECT p.id payment_id,o.id operation_id,t.id recovery_id,o.operation_key,o.command
+                                FROM platform.payment p
+                                JOIN platform.provider_operation o ON o.payment_id=p.id
+                                JOIN platform.recovery_task t ON t.operation_id=o.id""")).isEqualTo(original);
+        assertThat(jdbc.queryForObject("""
+                        SELECT last_query_confirmed_at=last_provider_confirmed_at AND last_webhook_created_at IS NULL
+                        FROM platform.payment""", Boolean.class)).isTrue();
         jdbc.update("""
           INSERT INTO platform.webhook_inbox(id,organization_id,environment_id,provider_account_id,livemode,
           provider_account_ref,event_id,event_type,object_id,object_type,event_created_at,received_at,verified_at,
@@ -91,9 +94,9 @@ class WebhookSchemaIT {
         }) assertThatThrownBy(() -> jdbc.update(sql)).isInstanceOf(DataAccessException.class);
         assertThat(jdbc.update("UPDATE platform.webhook_inbox SET status='WAITING',reason='MISSING_PI'"))
                 .isEqualTo(1);
-        assertThat(jdbc.update(
-                        "UPDATE platform.normalized_observation SET last_source='QUERY',last_confirmed_at=now()"))
-                .isEqualTo(1);
+        assertThat(jdbc.update("""
+                        UPDATE platform.normalized_observation
+                        SET last_source='QUERY',last_confirmed_at=now()""")).isEqualTo(1);
         assertThat(jdbc.update("UPDATE platform.dependency_wait SET resolved_at=now()"))
                 .isEqualTo(1);
         for (String table : new String[] {"webhook_inbox", "normalized_observation", "dependency_wait"}) {
@@ -125,8 +128,11 @@ class WebhookSchemaIT {
           SELECT gen_random_uuid(),organization_id,environment_id,application_id,provider_account_id,currency,id,
           amount_minor,now()+interval '1 hour','pi_owned' FROM platform.business_order WHERE order_key='second-order'
           """)).isInstanceOf(org.springframework.dao.DuplicateKeyException.class);
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) SELECT gen_random_uuid(),organization_id,environment_id,'STRIPE','acct_other',false FROM platform.payment");
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                SELECT gen_random_uuid(),organization_id,environment_id,'STRIPE','acct_other',false
+                FROM platform.payment""");
         assertThatThrownBy(() -> jdbc.update("""
           INSERT INTO platform.normalized_observation(organization_id,environment_id,provider_account_id,
           fact_key,fact_kind,object_id,payment_id,fact,first_source,last_source,first_confirmed_at,last_confirmed_at)
@@ -194,10 +200,10 @@ class WebhookSchemaIT {
                 .schemas("platform")
                 .load();
         assertThatThrownBy(upgrade::migrate).isInstanceOf(org.flywaydb.core.api.FlywayException.class);
-        assertThat(admin.queryForObject(
-                        "SELECT count(*) FROM platform.payment WHERE payment_intent_id='pi_legacy_duplicate'",
-                        Integer.class))
-                .isEqualTo(2);
+        assertThat(admin.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.payment
+                        WHERE payment_intent_id='pi_legacy_duplicate'""", Integer.class)).isEqualTo(2);
         assertThat(admin.queryForObject("SELECT count(*) FROM platform.provider_operation", Integer.class))
                 .isEqualTo(1);
         assertThat(admin.queryForObject("SELECT count(*) FROM platform.recovery_task", Integer.class))

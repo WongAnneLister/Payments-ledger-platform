@@ -49,8 +49,9 @@ class PaymentCoreIT extends PaymentCoreFixture {
         var created = service.create(context, "key-key-000", command("order"));
         String snapshot =
                 jdbc.queryForObject("SELECT share_policy_snapshot::text FROM platform.business_order", String.class);
-        admin.update(
-                "UPDATE platform.share_policy_fixture SET share_basis_points=100,policy_version=2,status='DISABLED'");
+        admin.update("""
+                UPDATE platform.share_policy_fixture
+                SET share_basis_points=100,policy_version=2,status='DISABLED'""");
         assertThat(service.create(context, "key-key-000", command("order")).replay())
                 .isTrue();
         assertThat(jdbc.queryForObject("SELECT share_policy_snapshot::text FROM platform.business_order", String.class))
@@ -102,10 +103,12 @@ class PaymentCoreIT extends PaymentCoreFixture {
 
     @Test
     void rollbackDoesNotLeaveIntentOrCallProvider() {
-        admin.execute(
-                "CREATE OR REPLACE FUNCTION platform.fail_payment_task() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected task failure'; END $$");
-        admin.execute(
-                "CREATE TRIGGER fail_payment_task BEFORE INSERT ON platform.recovery_task FOR EACH ROW EXECUTE FUNCTION platform.fail_payment_task()");
+        admin.execute("""
+                CREATE OR REPLACE FUNCTION platform.fail_payment_task() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+                    RAISE EXCEPTION 'injected task failure'; END $$""");
+        admin.execute("""
+                CREATE TRIGGER fail_payment_task BEFORE INSERT ON platform.recovery_task FOR EACH ROW EXECUTE
+                    FUNCTION platform.fail_payment_task()""");
         try {
             assertThatThrownBy(() -> service.create(context, "key-key-000", command("order")))
                     .isInstanceOf(RuntimeException.class);
@@ -210,10 +213,10 @@ class PaymentCoreIT extends PaymentCoreFixture {
         var claim = repository.claim(intent.operationId(), "FAKE");
         var command = repository.decode(claim.operation().get("command"), CreateCheckoutSessionCommand.class);
         var accepted = fake.createSession(command);
-        admin.update(
-                "UPDATE platform.provider_operation SET lease_token=?,version=version+1 WHERE id=?",
-                UUID.randomUUID(),
-                intent.operationId());
+        admin.update("""
+                UPDATE platform.provider_operation
+                SET lease_token=?,version=version+1
+                WHERE id=?""", UUID.randomUUID(), intent.operationId());
         repository.finishCreate(claim, accepted);
         assertThat(jdbc.queryForObject("SELECT status FROM platform.provider_operation", String.class))
                 .isEqualTo("SENDING");
@@ -256,10 +259,10 @@ class PaymentCoreIT extends PaymentCoreFixture {
     void queryFailureSuppressesRedirectPreservesProviderFactsAndSendingOwnership() {
         var resource = service.create(context, "create-key", command("order")).resource();
         var operation = repository.createOperation(payment(resource));
-        admin.update(
-                "UPDATE platform.provider_operation SET status='SENDING',lease_token=?,version=99 WHERE id=?",
-                UUID.randomUUID(),
-                operation);
+        admin.update("""
+                UPDATE platform.provider_operation
+                SET status='SENDING',lease_token=?,version=99
+                WHERE id=?""", UUID.randomUUID(), operation);
         String previous = jdbc.queryForObject("SELECT provider_status FROM platform.payment", String.class);
         fake.controls()
                 .enqueue(
@@ -295,7 +298,9 @@ class PaymentCoreIT extends PaymentCoreFixture {
 
     @Test
     void configuredStripeAccountReferenceMustMatchDatabaseBindingBeforeIntent() {
-        admin.update("UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref='acct_other'");
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='STRIPE',provider_account_ref='acct_other'""");
         var environment = new org.springframework.mock.env.MockEnvironment()
                 .withProperty("platform.stripe.enabled", "true")
                 .withProperty("platform.stripe.account-id", "acct_expected")
@@ -323,14 +328,10 @@ class PaymentCoreIT extends PaymentCoreFixture {
                         () -> jdbc.update("UPDATE platform.payment_attempt SET captured=false,amount_captured_minor=0"))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
         UUID operation = repository.createOperation(payment(first));
-        assertThatThrownBy(() -> jdbc.update(
-                        "INSERT INTO platform.provider_observation(organization_id,environment_id,application_id,provider_account_id,currency,operation_id,payment_id,call_type,classification,evidence) VALUES (?,?,?,?,'USD',?,?,'QUERY','SUCCESS','{}')",
-                        id(1),
-                        id(2),
-                        id(3),
-                        id(4),
-                        operation,
-                        payment(second)))
+        assertThatThrownBy(() -> jdbc.update("""
+                        INSERT INTO platform.provider_observation(organization_id,environment_id,application_id,
+                            provider_account_id,currency,operation_id,payment_id,call_type,classification,evidence)
+                        VALUES (?,?,?,?,'USD',?,?,'QUERY','SUCCESS','{}')""", id(1), id(2), id(3), id(4), operation, payment(second)))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
     }
 
@@ -409,9 +410,10 @@ class PaymentCoreIT extends PaymentCoreFixture {
                 List.of(new PaymentRepository.Observation("QUERY_PAYMENT_INTENT", result, "pi_unknown")),
                 new PaymentRepository.Facts(
                         null, null, List.of(), false, false, fake.clock().instant()));
-        String stored = jdbc.queryForObject(
-                "SELECT fact::text FROM platform.provider_observation WHERE call_type='QUERY_PAYMENT_INTENT'",
-                String.class);
+        String stored = jdbc.queryForObject("""
+                SELECT fact::text
+                FROM platform.provider_observation
+                WHERE call_type='QUERY_PAYMENT_INTENT'""", String.class);
         assertThat(new ObjectMapper().readTree(stored).hasNonNull("amountReceivedMinor"))
                 .isFalse();
     }
@@ -425,13 +427,14 @@ class PaymentCoreIT extends PaymentCoreFixture {
             for (int round = 0; round < 10; round++) {
                 // A known remote PI must never be reclaimed as an unsent create. Model a recovery lease.
                 fake.clock().advance(Duration.ofMinutes(1));
-                admin.update(
-                        "UPDATE platform.provider_operation SET status='UNKNOWN',version=version+1 WHERE id=?",
-                        operation);
-                admin.update(
-                        "UPDATE platform.recovery_task SET status='WAITING',available_at=? WHERE operation_id=?",
-                        java.sql.Timestamp.from(fake.clock().instant()),
-                        operation);
+                admin.update("""
+                        UPDATE platform.provider_operation
+                        SET status='UNKNOWN',version=version+1
+                        WHERE id=?""", operation);
+                admin.update("""
+                        UPDATE platform.recovery_task
+                        SET status='WAITING',available_at=?
+                        WHERE operation_id=?""", java.sql.Timestamp.from(fake.clock().instant()), operation);
                 var claim = repository.claimRecovery(operation, "FAKE", true);
                 var command = repository.decode(claim.operation().get("command"), CreateCheckoutSessionCommand.class);
                 var accepted = fake.createSession(command);
@@ -462,9 +465,10 @@ class PaymentCoreIT extends PaymentCoreFixture {
         var claim = repository.claim(intent.operationId(), "FAKE");
         var command = repository.decode(claim.operation().get("command"), CreateCheckoutSessionCommand.class);
         var accepted = fake.createSession(command);
-        admin.update(
-                "UPDATE platform.provider_operation SET lease_until=now()-interval '1 second' WHERE id=?",
-                intent.operationId());
+        admin.update("""
+                UPDATE platform.provider_operation
+                SET lease_until=now()-interval '1 second'
+                WHERE id=?""", intent.operationId());
         repository.finishCreate(claim, accepted);
         assertThat(jdbc.queryForObject("SELECT status FROM platform.provider_operation", String.class))
                 .isEqualTo("SENDING");
@@ -539,11 +543,10 @@ class PaymentCoreIT extends PaymentCoreFixture {
     void twentyFiveBlockedBindingsCannotStarveANewerEligiblePreparedOperation() {
         for (int n = 0; n < 25; n++) repository.prepare(context, "blocked-key-" + n, command("blocked-" + n), "FAKE");
         admin.update("UPDATE platform.provider_account SET status='DISABLED' WHERE id=?", id(4));
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE','eligible',false)",
-                id(7),
-                id(1),
-                id(2));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'FAKE','eligible',false)""", id(7), id(1), id(2));
         var eligible = new TenantContext(id(1), id(2), id(3), id(7), Set.of("USD"), false, context.grantedScopes());
         var intent = repository.prepare(eligible, "eligible-key", command("eligible"), "FAKE");
         executor.drainPrepared(25);

@@ -75,65 +75,45 @@ class RefundHttpIT {
     void seed() {
         admin = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword()));
         admin.execute("TRUNCATE platform.organization,platform.currency_config CASCADE");
-        admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2),('JPY',0)");
+        admin.update("""
+                INSERT INTO platform.currency_config(code,minor_unit_exponent)
+                VALUES ('USD',2),('JPY',0)""");
         for (int org : List.of(1, 2)) {
             admin.update("INSERT INTO platform.organization(id,code) VALUES (?,?)", id(org), "org-" + org);
-            admin.update(
-                    "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'test',false)",
-                    id(10 + org),
-                    id(org));
-            admin.update(
-                    "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE',?,false)",
-                    id(20 + org),
-                    id(org),
-                    id(10 + org),
-                    "http-fixture-" + org);
-            admin.update(
-                    "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD'),(?,?,'JPY')",
-                    id(org),
-                    id(10 + org),
-                    id(org),
-                    id(10 + org));
-            admin.update(
-                    "INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,policy_version,partner_ref,share_basis_points) VALUES (?,?,?,'demo',1,'partner',1000)",
-                    id(70 + org),
-                    id(org),
-                    id(10 + org));
-            admin.update(
-                    "INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,currency,amount_minor,share_policy_id) VALUES (?,?,?,'demo',1,'USD',100,?)",
-                    id(80 + org),
-                    id(org),
-                    id(10 + org),
-                    id(70 + org));
+            admin.update("""
+                    INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                    VALUES (?,?,'test',false)""", id(10 + org), id(org));
+            admin.update("""
+                    INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                        provider_account_ref,livemode)
+                    VALUES (?,?,?,'FAKE',?,false)""", id(20 + org), id(org), id(10 + org), "http-fixture-" + org);
+            admin.update("""
+                    INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                    VALUES (?,?,'USD'),(?,?,'JPY')""", id(org), id(10 + org), id(org), id(10 + org));
+            admin.update("""
+                    INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,
+                        policy_version,partner_ref,share_basis_points)
+                    VALUES (?,?,?,'demo',1,'partner',1000)""", id(70 + org), id(org), id(10 + org));
+            admin.update("""
+                    INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,
+                        currency,amount_minor,share_policy_id)
+                    VALUES (?,?,?,'demo',1,'USD',100,?)""", id(80 + org), id(org), id(10 + org), id(70 + org));
         }
         for (int app : List.of(1, 2, 3, 4)) {
             int org = app == 2 ? 2 : 1;
-            admin.update(
-                    "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES (?,?,?,?)",
-                    id(30 + app),
-                    id(org),
-                    id(10 + org),
-                    "app-" + app);
+            admin.update("""
+                    INSERT INTO platform.application(id,organization_id,environment_id,code)
+                    VALUES (?,?,?,?)""", id(30 + app), id(org), id(10 + org), "app-" + app);
             String scopes = app == 4
                     ? "ARRAY['payments:write','refunds:write']"
                     : "ARRAY['payments:read','payments:write','refunds:read','refunds:write']";
-            admin.update(
-                    "INSERT INTO platform.application_credential(id,key_id,organization_id,environment_id,application_id,provider_account_id,secret_hash,not_before,expires_at,granted_scopes) VALUES (?,'http',?,?,?,?,?,now()-interval '1 day',now()+interval '1 day',"
-                            + scopes + ")",
-                    id(40 + app),
-                    id(org),
-                    id(10 + org),
-                    id(30 + app),
-                    id(20 + org),
-                    HASH);
-            admin.update(
-                    "INSERT INTO platform.credential_currency(credential_id,organization_id,environment_id,currency) VALUES (?,?,?,'USD'),(?,?,?,'JPY')",
-                    id(40 + app),
-                    id(org),
-                    id(10 + org),
-                    id(40 + app),
-                    id(org),
-                    id(10 + org));
+            admin.update("""
+                    INSERT INTO platform.application_credential(id,key_id,organization_id,environment_id,application_id,
+                        provider_account_id,secret_hash,not_before,expires_at,granted_scopes)
+                    VALUES (?,'http',?,?,?,?,?,now()-interval '1 day',now()+interval '1 day',""" + scopes + ")", id(40 + app), id(org), id(10 + org), id(30 + app), id(20 + org), HASH);
+            admin.update("""
+                    INSERT INTO platform.credential_currency(credential_id,organization_id,environment_id,currency)
+                    VALUES (?,?,?,'USD'),(?,?,?,'JPY')""", id(40 + app), id(org), id(10 + org), id(40 + app), id(org), id(10 + org));
         }
     }
 
@@ -160,9 +140,10 @@ class RefundHttpIT {
         var created = send(app, "/v1/payments", HttpMethod.POST, body("refund-payment"), "payment-key");
         assertThat(created.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         String payment = created.getBody().path("id").asText();
-        admin.update(
-                "UPDATE platform.payment SET captured_amount_minor=100,payment_status='SUCCEEDED',latest_charge_id='ch_http_refund' WHERE id=?",
-                PaymentIds.payment(payment));
+        admin.update("""
+                UPDATE platform.payment
+                SET captured_amount_minor=100,payment_status='SUCCEEDED',latest_charge_id='ch_http_refund'
+                WHERE id=?""", PaymentIds.payment(payment));
         return json.createObjectNode()
                 .put("paymentId", payment)
                 .put("amountMinor", 60)

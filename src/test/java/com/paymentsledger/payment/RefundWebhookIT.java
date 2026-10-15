@@ -32,9 +32,10 @@ class RefundWebhookIT extends PaymentCoreFixture {
                 .latestChargeId();
         paymentId = payment(resource);
         service.get(context, paymentId);
-        admin.update(
-                "UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref='acct_test' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='STRIPE',provider_account_ref='acct_test'
+                WHERE id=?""", id(4));
         inbox = new WebhookInboxRepository(jdbc, tx, json, fake.clock());
         var refunds = new RefundRepository(jdbc, tx, json, fake.clock());
         processor = new WebhookProcessor(
@@ -137,10 +138,13 @@ class RefundWebhookIT extends PaymentCoreFixture {
     @Test
     void inboxCompletionFailureRollsBackRefundControlAndTerminalOutbox() throws Exception {
         receive("evt_refund_rollback", "succeeded", chargeId, 4000);
-        admin.execute(
-                "CREATE FUNCTION platform.pr11_fail_ack() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.status='DONE' THEN RAISE EXCEPTION 'injected refund acknowledgement crash'; END IF; RETURN NEW; END $$");
-        admin.execute(
-                "CREATE TRIGGER pr11_fail_ack BEFORE UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.pr11_fail_ack()");
+        admin.execute("""
+                CREATE FUNCTION platform.pr11_fail_ack() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF
+                    NEW.status='DONE' THEN RAISE EXCEPTION 'injected refund acknowledgement crash'; END IF; RETURN
+                    NEW; END $$""");
+        admin.execute("""
+                CREATE TRIGGER pr11_fail_ack BEFORE
+                UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.pr11_fail_ack()""");
         try {
             assertThatThrownBy(this::process).isInstanceOf(RuntimeException.class);
             assertThat(count("refund")).isZero();
@@ -174,30 +178,34 @@ class RefundWebhookIT extends PaymentCoreFixture {
 
     @Test
     void refundBeforeCaptureAssociationRetainsObservationAndReplaysAfterQuery() throws Exception {
-        admin.update(
-                "UPDATE platform.provider_account SET provider='FAKE',provider_account_ref='fixture' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='FAKE',provider_account_ref='fixture'
+                WHERE id=?""", id(4));
         var p = service.create(context, "refund-late-charge", command("refund-late-charge"))
                 .resource();
         String lateCharge = fake.controls()
                 .attemptPayment(scope, session(p), FakeControls.AttemptOutcome.SUCCEED)
                 .latestChargeId();
-        admin.update(
-                "UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref='acct_test' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='STRIPE',provider_account_ref='acct_test'
+                WHERE id=?""", id(4));
         receive("evt_refund_missing_charge", "pending", lateCharge, 4000);
         process();
         assertThat(count("refund")).isZero();
         assertThat(count("refund_source_observation")).isEqualTo(1);
         assertThat(jdbc.queryForObject("SELECT status FROM platform.webhook_inbox", String.class))
                 .isEqualTo("WAITING");
-        admin.update(
-                "UPDATE platform.provider_account SET provider='FAKE',provider_account_ref='fixture' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='FAKE',provider_account_ref='fixture'
+                WHERE id=?""", id(4));
         service.get(context, payment(p));
-        admin.update(
-                "UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref='acct_test' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='STRIPE',provider_account_ref='acct_test'
+                WHERE id=?""", id(4));
         fake.clock().advance(Duration.ofMinutes(1));
         process();
         assertThat(jdbc.queryForObject("SELECT status FROM platform.webhook_inbox", String.class))

@@ -306,10 +306,12 @@ public final class Pr20PerformanceExperiment {
                                     })
                                     .toList());
                     summary.put("actors", actors.stream().map(Actor::evidence).toList());
-                    summary.put(
-                            "databaseSettings",
-                            admin.queryForList(
-                                    "SELECT name,setting,unit FROM pg_settings WHERE name IN ('max_connections','shared_buffers','work_mem','maintenance_work_mem','wal_buffers','max_wal_size','fsync','synchronous_commit') ORDER BY name"));
+                    summary.put("databaseSettings", admin.queryForList("""
+                                    SELECT name,setting,unit
+                                    FROM pg_settings
+                                    WHERE name IN ('max_connections','shared_buffers','work_mem','maintenance_work_mem','wal_buffers',
+                                        'max_wal_size','fsync','synchronous_commit')
+                                    ORDER BY name"""));
                     historicalCutoff = admin.queryForObject("SELECT clock_timestamp()", Timestamp.class)
                             .toInstant();
                     long historicalUnknown = historyUnknownCount(admin, historicalCutoff);
@@ -511,9 +513,13 @@ public final class Pr20PerformanceExperiment {
 
     void checkHistory() {
         long count = admin.queryForObject("SELECT count(*) FROM platform.payment", Long.class);
-        long valid = admin.queryForObject(
-                "SELECT count(*) FROM platform.payment p JOIN platform.provider_operation o ON o.payment_id=p.id JOIN platform.recovery_task t ON t.operation_id=o.id JOIN platform.api_idempotency_record a ON a.operation_id=o.id WHERE p.resolution_status='UNKNOWN' AND o.status='ESCALATED' AND t.status='ESCALATED'",
-                Long.class);
+        long valid = admin.queryForObject("""
+                SELECT count(*)
+                FROM platform.payment p
+                JOIN platform.provider_operation o ON o.payment_id=p.id
+                JOIN platform.recovery_task t ON t.operation_id=o.id
+                JOIN platform.api_idempotency_record a ON a.operation_id=o.id
+                WHERE p.resolution_status='UNKNOWN' AND o.status='ESCALATED' AND t.status='ESCALATED'""", Long.class);
         if (count != options.history || valid != count)
             throw new IllegalStateException("Historical scoped associations incomplete");
         summary.put(
@@ -911,18 +917,32 @@ public final class Pr20PerformanceExperiment {
                 try {
                     diskGuard(-1);
                     sample.putAll(localState());
-                    sample.put(
-                            "db",
-                            admin.queryForMap(
-                                    "SELECT numbackends,xact_commit,xact_rollback,blks_read,blks_hit,tup_returned,tup_fetched,tup_inserted,tup_updated,deadlocks,temp_bytes,pg_database_size(datname) database_bytes FROM pg_stat_database WHERE datname=current_database()"));
-                    sample.put(
-                            "dbActivity",
-                            admin.queryForList(
-                                    "SELECT state,wait_event_type,wait_event,count(*) sessions FROM pg_stat_activity WHERE datname=current_database() GROUP BY state,wait_event_type,wait_event"));
-                    sample.put(
-                            "provider",
-                            external.queryForMap(
-                                    "SELECT (SELECT count(*) FROM simulator_call) calls,(SELECT count(*) FROM simulator_payment) accepted,(SELECT count(*) FROM simulator_payment) capture_effects"));
+                    sample.put("db", admin.queryForMap("""
+                                    SELECT
+                                        numbackends,
+                                        xact_commit,
+                                        xact_rollback,
+                                        blks_read,
+                                        blks_hit,
+                                        tup_returned,
+                                        tup_fetched,
+                                        tup_inserted,
+                                        tup_updated,
+                                        deadlocks,
+                                        temp_bytes,
+                                        pg_database_size(datname) database_bytes
+                                    FROM pg_stat_database
+                                    WHERE datname=current_database()"""));
+                    sample.put("dbActivity", admin.queryForList("""
+                                    SELECT state,wait_event_type,wait_event,count(*) sessions
+                                    FROM pg_stat_activity
+                                    WHERE datname=current_database()
+                                    GROUP BY state,wait_event_type,wait_event"""));
+                    sample.put("provider", external.queryForMap("""
+                                    SELECT
+                                        (SELECT count(*) FROM simulator_call) calls,
+                                        (SELECT count(*) FROM simulator_payment) accepted,
+                                        (SELECT count(*) FROM simulator_payment) capture_effects"""));
                     var committed = kafka.listConsumerGroupOffsets(ConsumerInboxService.CONSUMER_NAME)
                             .partitionsToOffsetAndMetadata()
                             .get(5, TimeUnit.SECONDS);
@@ -1056,17 +1076,15 @@ public final class Pr20PerformanceExperiment {
         // A single live MVCC snapshot; only the owned fixture scope is included.
         // The seed is fully validated before capturing this cutoff and starting any new request.
         return db.queryForMap("SELECT count(*) FILTER (WHERE " + before
-                + " AND resolution_status='UNKNOWN') AS \"historyUnknown\","
-                + "count(*) FILTER (WHERE " + after + " AND resolution_status<>'KNOWN') AS \"currentLoadUnknown\","
-                + "count(*) FILTER (WHERE payment_status='SUCCEEDED') AS \"localSucceeded\","
-                + "count(*) FILTER (WHERE payment_status='SUCCEEDED' AND financial_status='POSTED') AS \"ledgerPostedPayments\","
-                + "count(*) FILTER (WHERE " + after
-                + " AND (payment_status<>'SUCCEEDED' OR financial_status<>'POSTED')) AS \"uncompletedLoad\","
-                + "coalesce(extract(epoch FROM now()-min(unresolved_since) FILTER (WHERE " + after
-                + " AND resolution_status<>'KNOWN')),0) AS \"unknownAgeSeconds\""
-                + " FROM platform.payment WHERE organization_id='" + PerformanceFixture.ORG
-                + "'::uuid AND environment_id='" + PerformanceFixture.ENV + "'::uuid"
-                + " AND application_id='" + PerformanceFixture.APP + "'::uuid AND provider_account_id='"
+                + " AND resolution_status='UNKNOWN') AS \"historyUnknown\",count(*) FILTER (WHERE " + after
+                + " AND resolution_status<>'KNOWN') AS \"currentLoadUnknown\",count(*) FILTER (WHERE payment_status='SUCCEEDED') AS \"localSucceeded\",count(*) FILTER (WHERE payment_status='SUCCEEDED' AND financial_status='POSTED') AS \"ledgerPostedPayments\",count(*) FILTER (WHERE "
+                + after
+                + " AND (payment_status<>'SUCCEEDED' OR financial_status<>'POSTED')) AS \"uncompletedLoad\",coalesce(extract(epoch FROM now()-min(unresolved_since) FILTER (WHERE "
+                + after
+                + " AND resolution_status<>'KNOWN')),0) AS \"unknownAgeSeconds\" FROM platform.payment WHERE organization_id='"
+                + PerformanceFixture.ORG
+                + "'::uuid AND environment_id='" + PerformanceFixture.ENV + "'::uuid AND application_id='"
+                + PerformanceFixture.APP + "'::uuid AND provider_account_id='"
                 + PerformanceFixture.PROVIDER + "'::uuid AND currency='USD'");
     }
 
@@ -1077,9 +1095,10 @@ public final class Pr20PerformanceExperiment {
             result.put(key, number(payments, key));
         long fulfilled = external.queryForObject("SELECT count(*) FROM merchant_fixture.fulfillment", Long.class);
         result.put("merchantFulfilled", fulfilled);
-        var postedIds = new HashSet<>(admin.queryForList(
-                "SELECT id FROM platform.payment WHERE payment_status='SUCCEEDED' AND financial_status='POSTED'",
-                UUID.class));
+        var postedIds = new HashSet<>(admin.queryForList("""
+                SELECT id
+                FROM platform.payment
+                WHERE payment_status='SUCCEEDED' AND financial_status='POSTED'""", UUID.class));
         long completed =
                 external.queryForList("SELECT payment_id FROM merchant_fixture.fulfillment", UUID.class).stream()
                         .filter(postedIds::contains)
@@ -1104,16 +1123,14 @@ public final class Pr20PerformanceExperiment {
         result.put("totalQueue", total);
         result.put("queues", queues);
         result.put("unknownAgeSeconds", ((Number) payments.get("unknownAgeSeconds")).doubleValue());
-        result.put(
-                "recoveryLeaseAgeSeconds",
-                admin.queryForObject(
-                        "SELECT greatest(0,coalesce(max(extract(epoch FROM now()-updated_at)),0)) FROM platform.recovery_task WHERE status='RUNNING' AND lease_until IS NOT NULL",
-                        Double.class));
-        result.put(
-                "recoveryLeaseExpiredAgeSeconds",
-                admin.queryForObject(
-                        "SELECT greatest(0,coalesce(max(extract(epoch FROM now()-lease_until)),0)) FROM platform.recovery_task WHERE lease_until IS NOT NULL",
-                        Double.class));
+        result.put("recoveryLeaseAgeSeconds", admin.queryForObject("""
+                        SELECT greatest(0,coalesce(max(extract(epoch FROM now()-updated_at)),0))
+                        FROM platform.recovery_task
+                        WHERE status='RUNNING' AND lease_until IS NOT NULL""", Double.class));
+        result.put("recoveryLeaseExpiredAgeSeconds", admin.queryForObject("""
+                        SELECT greatest(0,coalesce(max(extract(epoch FROM now()-lease_until)),0))
+                        FROM platform.recovery_task
+                        WHERE lease_until IS NOT NULL""", Double.class));
         result.put("journals", admin.queryForObject("SELECT count(*) FROM platform.journal", Long.class));
         result.put(
                 "financialEvents", admin.queryForObject("SELECT count(*) FROM platform.financial_event", Long.class));
@@ -1126,30 +1143,45 @@ public final class Pr20PerformanceExperiment {
         result.putAll(localState());
         long externalEffects = external.queryForObject("SELECT count(*) FROM simulator_payment", Long.class);
         result.put("providerCaptured", externalEffects);
-        long externalDuplicates = external.queryForObject(
-                "SELECT count(*) FROM (SELECT metadata->>'payment_id' FROM simulator_payment GROUP BY metadata->>'payment_id' HAVING count(*)>1) x",
-                Long.class);
+        long externalDuplicates = external.queryForObject("""
+                SELECT count(*)
+                FROM (SELECT metadata->>'payment_id' FROM simulator_payment GROUP BY metadata->>'payment_id' HAVING
+                    count(*)>1) x""", Long.class);
         result.put("duplicateExternalCapturesPerPayment", externalDuplicates);
-        long trial = admin.queryForObject(
-                "SELECT count(*) FROM (SELECT journal_id FROM platform.journal_entry GROUP BY journal_id HAVING sum(CASE side WHEN 'DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END)<>0) x",
-                Long.class);
-        long projection = admin.queryForObject(
-                "SELECT count(*) FROM (SELECT a.id,coalesce(sum(CASE e.side WHEN 'DEBIT' THEN e.amount_minor::numeric ELSE -e.amount_minor::numeric END),0) actual,coalesce(p.balance_minor,0) cached FROM platform.ledger_account a LEFT JOIN platform.journal_entry e ON e.ledger_account_id=a.id LEFT JOIN platform.balance_projection p ON p.ledger_account_id=a.id GROUP BY a.id,p.balance_minor HAVING coalesce(sum(CASE e.side WHEN 'DEBIT' THEN e.amount_minor::numeric ELSE -e.amount_minor::numeric END),0)<>coalesce(p.balance_minor,0)) x",
-                Long.class);
-        long duplicate = admin.queryForObject(
-                "SELECT count(*) FROM (SELECT financial_event_id FROM platform.journal GROUP BY financial_event_id HAVING count(*)>1 UNION ALL SELECT id FROM platform.journal WHERE sealed_at IS NULL) x",
-                Long.class);
-        long overrefund = admin.queryForObject(
-                "SELECT count(*) FROM platform.payment p WHERE coalesce((SELECT sum(r.amount_minor) FROM platform.refund r WHERE r.payment_id=p.id AND r.refund_status IN ('SUCCEEDED','RESERVED','SUBMITTED','PENDING','REQUIRES_ACTION')),0)>p.captured_amount_minor",
-                Long.class);
-        long historyResent = admin.queryForObject(
-                "SELECT count(*) FROM platform.provider_operation o JOIN platform.business_order b ON b.id=(SELECT business_order_id FROM platform.payment WHERE id=o.payment_id) WHERE b.order_key LIKE 'pr20-history-%' AND (o.status<>'ESCALATED' OR o.attempt_count<>1)",
-                Long.class);
+        long trial = admin.queryForObject("""
+                SELECT count(*)
+                FROM (SELECT journal_id FROM platform.journal_entry GROUP BY journal_id HAVING sum(CASE side WHEN
+                    'DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END)<>0) x""", Long.class);
+        long projection = admin.queryForObject("""
+                SELECT count(*)
+                FROM (SELECT a.id,coalesce(sum(CASE e.side WHEN 'DEBIT' THEN e.amount_minor::numeric ELSE
+                    -e.amount_minor::numeric END),0) actual,coalesce(p.balance_minor,0) cached FROM
+                    platform.ledger_account a LEFT JOIN platform.journal_entry e ON e.ledger_account_id=a.id LEFT
+                    JOIN platform.balance_projection p ON p.ledger_account_id=a.id GROUP BY a.id,p.balance_minor
+                    HAVING coalesce(sum(CASE e.side WHEN 'DEBIT' THEN e.amount_minor::numeric ELSE
+                    -e.amount_minor::numeric END),0)<>coalesce(p.balance_minor,0)) x""", Long.class);
+        long duplicate = admin.queryForObject("""
+                SELECT count(*)
+                FROM (SELECT financial_event_id FROM platform.journal GROUP BY financial_event_id HAVING count(*)>1
+                    UNION ALL SELECT id FROM platform.journal WHERE sealed_at IS NULL) x""", Long.class);
+        long overrefund = admin.queryForObject("""
+                SELECT count(*)
+                FROM platform.payment p
+                WHERE coalesce((SELECT sum(r.amount_minor) FROM platform.refund r WHERE r.payment_id=p.id AND
+                    r.refund_status IN ('SUCCEEDED','RESERVED','SUBMITTED','PENDING','REQUIRES_ACTION')),
+                    0)>p.captured_amount_minor""", Long.class);
+        long historyResent = admin.queryForObject("""
+                SELECT count(*)
+                FROM platform.provider_operation o
+                JOIN platform.business_order b ON b.id=(SELECT business_order_id FROM platform.payment WHERE
+                    id=o.payment_id)
+                WHERE b.order_key LIKE 'pr20-history-%' AND (o.status<>'ESCALATED' OR o.attempt_count<>1)""", Long.class);
         var providerPayments = new HashSet<>(
                 external.queryForList("SELECT (metadata->>'payment_id')::uuid FROM simulator_payment", UUID.class));
-        var localPosted = new HashSet<>(admin.queryForList(
-                "SELECT id FROM platform.payment WHERE payment_status='SUCCEEDED' AND financial_status='POSTED'",
-                UUID.class));
+        var localPosted = new HashSet<>(admin.queryForList("""
+                SELECT id
+                FROM platform.payment
+                WHERE payment_status='SUCCEEDED' AND financial_status='POSTED'""", UUID.class));
         var fulfilledPayments =
                 new HashSet<>(external.queryForList("SELECT payment_id FROM merchant_fixture.fulfillment", UUID.class));
         long
@@ -1202,23 +1234,24 @@ public final class Pr20PerformanceExperiment {
                 external.queryForObject("SELECT coalesce(sum(amount),0) FROM simulator_payment", Long.class));
         result.put("providerAvailableMinor", number(result, "providerAmountMinor"));
         result.put(
-                "independentPspFundsMinor",
-                admin.queryForObject(
-                        "SELECT coalesce(sum(CASE e.side WHEN 'DEBIT' THEN e.amount_minor::numeric ELSE -e.amount_minor::numeric END),0) FROM platform.journal_entry e JOIN platform.ledger_account a ON a.id=e.ledger_account_id WHERE a.account_purpose='PSP_FUNDS' AND a.provider_account_id='"
-                                + PerformanceFixture.PROVIDER + "'",
-                        Long.class));
+                "independentPspFundsMinor", admin.queryForObject("""
+                        SELECT coalesce(sum(CASE e.side WHEN 'DEBIT' THEN e.amount_minor::numeric ELSE
+                            -e.amount_minor::numeric END),0)
+                        FROM platform.journal_entry e
+                        JOIN platform.ledger_account a ON a.id=e.ledger_account_id
+                        WHERE a.account_purpose='PSP_FUNDS' AND a.provider_account_id='""" + PerformanceFixture.PROVIDER + "'", Long.class));
         result.put(
                 "providerBalanceDifferenceMinor",
                 number(result, "independentPspFundsMinor") - number(result, "providerAvailableMinor"));
-        result.put(
-                "financialEventTypes",
-                admin.queryForList(
-                        "SELECT event_type,count(*) count FROM platform.financial_event GROUP BY event_type ORDER BY event_type"));
-        result.put(
-                "ledgerCaptureAmountMinor",
-                admin.queryForObject(
-                        "SELECT coalesce(sum(captured_amount_minor),0) FROM platform.payment WHERE payment_status='SUCCEEDED'",
-                        Long.class));
+        result.put("financialEventTypes", admin.queryForList("""
+                        SELECT event_type,count(*) count
+                        FROM platform.financial_event
+                        GROUP BY event_type
+                        ORDER BY event_type"""));
+        result.put("ledgerCaptureAmountMinor", admin.queryForObject("""
+                        SELECT coalesce(sum(captured_amount_minor),0)
+                        FROM platform.payment
+                        WHERE payment_status='SUCCEEDED'""", Long.class));
         result.put(
                 "pass",
                 number(result, "providerBalanceDifferenceMinor") == 0

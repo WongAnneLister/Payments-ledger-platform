@@ -77,10 +77,12 @@ class FlywayBaselineIT {
             }
 
             // 5) PR01 不得创建业务表
-            try (ResultSet rs = st.executeQuery("SELECT string_agg(table_name, ',') FROM information_schema.tables "
-                    + "WHERE table_schema = 'platform' "
-                    + "AND table_name IN ('payment','refund','journal','journal_entry',"
-                    + "'balance_projection','financial_event','business_order')")) {
+            try (ResultSet rs = st.executeQuery("""
+                    SELECT string_agg(table_name, ',')
+                    FROM information_schema.tables
+                    WHERE table_schema = 'platform'
+                        AND table_name IN ('payment','refund','journal','journal_entry','balance_projection',
+                            'financial_event','business_order')""")) {
                 assertThat(rs.next()).isTrue();
                 assertThat(rs.getString(1))
                         .as("PR01 baseline must not create business tables")
@@ -96,8 +98,10 @@ class FlywayBaselineIT {
 
             // 7) 回归断言：Flyway 历史表必须落在 platform，不得落在 public。
             //    手动对 Compose 环境启动时发现过此问题（public 在 PG15+ 不授予 CREATE）。
-            try (ResultSet rs = st.executeQuery("SELECT table_schema FROM information_schema.tables "
-                    + "WHERE table_name = 'flyway_schema_history'")) {
+            try (ResultSet rs = st.executeQuery("""
+                    SELECT table_schema
+                    FROM information_schema.tables
+                    WHERE table_name = 'flyway_schema_history'""")) {
                 assertThat(rs.next()).as("flyway_schema_history must exist").isTrue();
                 assertThat(rs.getString(1))
                         .as("history table must live in platform, not public")

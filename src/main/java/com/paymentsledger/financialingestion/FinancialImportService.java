@@ -55,7 +55,10 @@ public class FinancialImportService {
             policy(scope);
             UUID id = UUID.randomUUID();
             jdbc.update(
-                    "INSERT INTO platform.import_window(id,organization_id,environment_id,provider_account_id,livemode,created_gte,created_lt,purpose) VALUES (?,?,?,?,?,?,?,?)",
+                    """
+                    INSERT INTO platform.import_window(id,organization_id,environment_id,provider_account_id,livemode,
+                        created_gte,created_lt,purpose)
+                    VALUES (?,?,?,?,?,?,?,?)""",
                     id,
                     scope.organizationId(),
                     scope.environmentId(),
@@ -76,9 +79,11 @@ public class FinancialImportService {
 
     public String importPage(UUID windowId) {
         outsideTransaction();
-        var snapshot = one(
-                "SELECT w.*,c.next_cursor,c.api_version,c.version AS cursor_version FROM platform.import_window w JOIN platform.import_cursor c ON c.window_id=w.id WHERE w.id=?",
-                windowId);
+        var snapshot = one("""
+                SELECT w.*,c.next_cursor,c.api_version,c.version AS cursor_version
+                FROM platform.import_window w
+                JOIN platform.import_cursor c ON c.window_id=w.id
+                WHERE w.id=?""", windowId);
         if (snapshot == null) throw new IllegalArgumentException("Unknown import window");
         if ("COMPLETE".equals(snapshot.get("state"))) return "COMPLETE";
         ProviderScope scope = scope(snapshot);
@@ -91,9 +96,13 @@ public class FinancialImportService {
                 null);
         var result = provider.listBalanceTransactions(query);
         return transactions.run(() -> {
-            var current = one(
-                    "SELECT w.*,c.next_cursor,c.api_version,c.version AS cursor_version FROM platform.import_window w JOIN platform.import_cursor c ON c.window_id=w.id WHERE w.id=? FOR UPDATE OF w,c",
-                    windowId);
+            var current = one("""
+                    SELECT w.*,c.next_cursor,c.api_version,c.version AS cursor_version
+                    FROM platform.import_window w
+                    JOIN platform.import_cursor c ON c.window_id=w.id
+                    WHERE w.id=?
+                    FOR
+                    UPDATE OF w,c""", windowId);
             UUID observation = observe(scope, windowId, "LIST_BALANCE_TRANSACTIONS", null, result);
             if (!Objects.equals(current.get("cursor_version"), snapshot.get("cursor_version"))
                     || !Objects.equals(current.get("next_cursor"), snapshot.get("next_cursor"))
@@ -101,10 +110,10 @@ public class FinancialImportService {
             String invalid = validate(query, current, result);
             if (invalid != null) {
                 quarantine(scope, observation, null, invalid);
-                jdbc.update(
-                        "UPDATE platform.import_window SET last_error=?,updated_at=now(),version=version+1 WHERE id=?",
-                        invalid,
-                        windowId);
+                jdbc.update("""
+                        UPDATE platform.import_window
+                        SET last_error=?,updated_at=now(),version=version+1
+                        WHERE id=?""", invalid, windowId);
                 return result.classification() == ProviderCallClassification.SUCCESS ? "REJECTED" : "RETRY";
             }
             var shareLocks =
@@ -117,7 +126,10 @@ public class FinancialImportService {
             verifyOwners(scope, page.items(), shareLocks);
             shares.reconcileAll(shareLocks, "bt.import:" + windowId);
             jdbc.update(
-                    "INSERT INTO platform.import_page(window_id,request_cursor,next_cursor,terminal,observation_id,bt_ids) VALUES (?,?,?,?,?,?::text[])",
+                    """
+                    INSERT INTO platform.import_page(window_id,request_cursor,next_cursor,terminal,observation_id,
+                        bt_ids)
+                    VALUES (?,?,?,?,?,?::text[])""",
                     windowId,
                     Objects.toString(query.startingAfterCursor(), ""),
                     page.nextCursor(),
@@ -126,13 +138,15 @@ public class FinancialImportService {
                     textArray(page.items().stream()
                             .map(BalanceTransactionFact::btId)
                             .toList()));
+            jdbc.update("""
+                    UPDATE platform.import_cursor
+                    SET next_cursor=?,api_version=coalesce(api_version,?),version=version+1,updated_at=now()
+                    WHERE window_id=?""", page.nextCursor(), result.evidence().apiVersion(), windowId);
             jdbc.update(
-                    "UPDATE platform.import_cursor SET next_cursor=?,api_version=coalesce(api_version,?),version=version+1,updated_at=now() WHERE window_id=?",
-                    page.nextCursor(),
-                    result.evidence().apiVersion(),
-                    windowId);
-            jdbc.update(
-                    "UPDATE platform.import_window SET state=?,completed_at=?,last_error=null,updated_at=now(),version=version+1 WHERE id=?",
+                    """
+                    UPDATE platform.import_window
+                    SET state=?,completed_at=?,last_error=null,updated_at=now(),version=version+1
+                    WHERE id=?""",
                     page.hasMore() ? "INCOMPLETE" : "COMPLETE",
                     page.hasMore() ? null : ts(clock.instant()),
                     windowId);
@@ -189,7 +203,10 @@ public class FinancialImportService {
             if (source == null) continue;
             if ("charge".equals(type))
                 ids.addAll(jdbc.queryForList(
-                        "SELECT payment_id FROM platform.payment_attempt WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_object_id=?",
+                        """
+                        SELECT payment_id
+                        FROM platform.payment_attempt
+                        WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_object_id=?""",
                         UUID.class,
                         scope.organizationId(),
                         scope.environmentId(),
@@ -197,7 +214,10 @@ public class FinancialImportService {
                         source));
             if ("refund".equals(type))
                 ids.addAll(jdbc.queryForList(
-                        "SELECT payment_id FROM platform.refund WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_refund_id=?",
+                        """
+                        SELECT payment_id
+                        FROM platform.refund
+                        WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_refund_id=?""",
                         UUID.class,
                         scope.organizationId(),
                         scope.environmentId(),
@@ -205,7 +225,14 @@ public class FinancialImportService {
                         source));
             if ("dispute".equals(type))
                 ids.addAll(jdbc.queryForList(
-                        "SELECT payment_id FROM platform.dispute WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_dispute_id=? AND payment_id IS NOT NULL",
+                        """
+                        SELECT payment_id
+                        FROM platform.dispute
+                        WHERE organization_id=?
+                            AND environment_id=?
+                            AND provider_account_id=?
+                            AND provider_dispute_id=?
+                            AND payment_id IS NOT NULL""",
                         UUID.class,
                         scope.organizationId(),
                         scope.environmentId(),
@@ -233,12 +260,11 @@ public class FinancialImportService {
         if (!page.hasMore() && page.nextCursor() != null) return "TERMINAL_CURSOR_MISMATCH";
         if (page.nextCursor() != null
                 && (page.nextCursor().equals(query.startingAfterCursor())
-                        || jdbc.queryForObject(
-                                        "SELECT count(*) FROM platform.import_page WHERE window_id=? AND request_cursor=?",
-                                        Long.class,
-                                        current.get("id"),
-                                        page.nextCursor())
-                                > 0)) return "CURSOR_CYCLE";
+                        || jdbc.queryForObject("""
+                                        SELECT count(*)
+                                        FROM platform.import_page
+                                        WHERE window_id=? AND request_cursor=?""", Long.class, current.get("id"), page.nextCursor()) > 0))
+            return "CURSOR_CYCLE";
         Set<String> ids = new HashSet<>();
         for (var fact : page.items()) {
             if (!supportedStatus(fact)) return "UNSUPPORTED_BT_STATUS";
@@ -288,7 +314,10 @@ public class FinancialImportService {
         var stored = bt(scope, fact.btId(), true);
         if (!tree(stored.get("immutable_fact").toString()).equals(tree(immutable))) {
             jdbc.update(
-                    "INSERT INTO platform.bt_evidence_conflict(organization_id,environment_id,provider_account_id,livemode,balance_transaction_id,observation_id,existing_fact,incoming_fact) VALUES (?,?,?,?,?,?,?::jsonb,?::jsonb)",
+                    """
+                    INSERT INTO platform.bt_evidence_conflict(organization_id,environment_id,provider_account_id,
+                        livemode,balance_transaction_id,observation_id,existing_fact,incoming_fact)
+                    VALUES (?,?,?,?,?,?,?::jsonb,?::jsonb)""",
                     scope.organizationId(),
                     scope.environmentId(),
                     scope.providerAccountId(),
@@ -299,18 +328,25 @@ public class FinancialImportService {
                     immutable);
             return;
         }
-        jdbc.update(
-                "UPDATE platform.balance_transaction SET provider_status=CASE WHEN provider_status='available' THEN provider_status ELSE ? END,available_on=coalesce(?,available_on),fetched_at=greatest(fetched_at,?),version=version+1,updated_at=now() WHERE id=?",
-                fact.status(),
-                ts(fact.availableOn()),
-                ts(clock.instant()),
-                stored.get("id"));
+        jdbc.update("""
+                UPDATE platform.balance_transaction
+                SET
+                    provider_status=CASE WHEN provider_status='available' THEN provider_status ELSE ? END,
+                    available_on=coalesce(?,available_on),
+                    fetched_at=greatest(fetched_at,?),
+                    version=version+1,
+                    updated_at=now()
+                WHERE id=?""", fact.status(), ts(fact.availableOn()), ts(clock.instant()), stored.get("id"));
     }
 
     private UUID observe(ProviderScope scope, UUID window, String call, String object, ProviderCallResult<?> result) {
         UUID id = UUID.randomUUID();
         jdbc.update(
-                "INSERT INTO platform.provider_observation(id,organization_id,environment_id,provider_account_id,observation_domain,livemode,import_window_id,call_type,classification,external_object_id,evidence,fact,fetched_at) VALUES (?,?,?,?,'FINANCIAL',?,?,?,?,?,?::jsonb,?::jsonb,?)",
+                """
+                INSERT INTO platform.provider_observation(id,organization_id,environment_id,provider_account_id,
+                    observation_domain,livemode,import_window_id,call_type,classification,external_object_id,
+                    evidence,fact,fetched_at)
+                VALUES (?,?,?,?,'FINANCIAL',?,?,?,?,?,?::jsonb,?::jsonb,?)""",
                 id,
                 scope.organizationId(),
                 scope.environmentId(),
@@ -328,7 +364,10 @@ public class FinancialImportService {
 
     private void quarantine(ProviderScope scope, UUID observation, UUID bt, String reason) {
         jdbc.update(
-                "INSERT INTO platform.quarantine_observation(organization_id,environment_id,provider_account_id,livemode,observation_id,balance_transaction_id,reason) VALUES (?,?,?,?,?,?,?)",
+                """
+                INSERT INTO platform.quarantine_observation(organization_id,environment_id,provider_account_id,
+                    livemode,observation_id,balance_transaction_id,reason)
+                VALUES (?,?,?,?,?,?,?)""",
                 scope.organizationId(),
                 scope.environmentId(),
                 scope.providerAccountId(),
@@ -350,8 +389,10 @@ public class FinancialImportService {
 
     private Map<String, Object> bt(ProviderScope scope, String btId, boolean lock) {
         return one(
-                "SELECT * FROM platform.balance_transaction WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND bt_id=?"
-                        + (lock ? " FOR UPDATE" : ""),
+                """
+                SELECT *
+                FROM platform.balance_transaction
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND bt_id=?""" + (lock ? " FOR UPDATE" : ""),
                 scope.organizationId(),
                 scope.environmentId(),
                 scope.providerAccountId(),

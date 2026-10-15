@@ -134,10 +134,10 @@ class Pr18ConcurrencyIT extends Pr18Fixture {
         assertThat(List.of(first.replay(), second.replay())).containsExactlyInAnyOrder(true, false);
         assertThat(count("refund")).isEqualTo(1);
         assertThat(held()).isEqualTo(600);
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.provider_operation WHERE operation_type='CREATE_REFUND'",
-                        Long.class))
-                .isEqualTo(1);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.provider_operation
+                        WHERE operation_type='CREATE_REFUND'""", Long.class)).isEqualTo(1);
         assertThat(fake.counters(scope).refundEffectCount()).isZero();
         evidence.put(
                 "checks",
@@ -282,15 +282,17 @@ class Pr18ConcurrencyIT extends Pr18Fixture {
     }
 
     void invariants() {
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM (SELECT journal_id FROM platform.journal_entry GROUP BY journal_id HAVING sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END)<>0) x",
-                        Long.class))
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM (SELECT journal_id FROM platform.journal_entry GROUP BY journal_id HAVING sum(CASE WHEN
+                            side='DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END)<>0) x""", Long.class)).isZero();
         assertThat(count("journal")).isEqualTo(count("financial_event"));
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.financial_event e LEFT JOIN platform.journal j ON j.financial_event_id=e.id WHERE j.id IS NULL",
-                        Long.class))
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.financial_event e
+                        LEFT
+                        JOIN platform.journal j ON j.financial_event_id=e.id
+                        WHERE j.id IS NULL""", Long.class)).isZero();
         assertThat(new BalanceRebuildService(jdbc, fake.clock())
                         .rebuild(
                                 new LedgerScope(id(1), id(2), "USD", null),

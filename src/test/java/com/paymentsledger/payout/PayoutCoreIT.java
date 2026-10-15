@@ -47,25 +47,21 @@ class PayoutCoreIT {
         manager = new DataSourceTransactionManager(ds);
         admin.execute("TRUNCATE platform.organization,platform.currency_config CASCADE");
         admin.update("INSERT INTO platform.organization(id,code) VALUES (?,'payout')", id(1));
-        admin.update(
-                "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'test',false)",
-                id(2),
-                id(1));
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE','fixture',false)",
-                id(4),
-                id(1),
-                id(2));
+        admin.update("""
+                INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                VALUES (?,?,'test',false)""", id(2), id(1));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'FAKE','fixture',false)""", id(4), id(1), id(2));
         admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2)");
-        admin.update(
-                "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD')",
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode) VALUES (?,?,?,false,'ZERO')",
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                VALUES (?,?,'USD')""", id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode)
+                VALUES (?,?,?,false,'ZERO')""", id(1), id(2), id(4));
         service = Class.forName("com.paymentsledger.payout.PayoutService")
                 .getConstructor(
                         JdbcTemplate.class,
@@ -91,10 +87,11 @@ class PayoutCoreIT {
     }
 
     long balance(String purpose) {
-        return jdbc.queryForObject(
-                "SELECT coalesce(sum(p.balance_minor),0) FROM platform.balance_projection p JOIN platform.ledger_account a ON a.id=p.ledger_account_id WHERE a.account_purpose=?",
-                Long.class,
-                purpose);
+        return jdbc.queryForObject("""
+                SELECT coalesce(sum(p.balance_minor),0)
+                FROM platform.balance_projection p
+                JOIN platform.ledger_account a ON a.id=p.ledger_account_id
+                WHERE a.account_purpose=?""", Long.class, purpose);
     }
 
     String post(String bt, String type, long amount, long fee) throws Exception {
@@ -114,14 +111,18 @@ class PayoutCoreIT {
                 List.of(),
                 "digest");
         UUID observation = UUID.randomUUID(), row = UUID.randomUUID();
+        jdbc.update("""
+                INSERT INTO platform.provider_observation(id,organization_id,environment_id,provider_account_id,
+                    observation_domain,livemode,call_type,classification,evidence,fetched_at)
+                VALUES (?,?,?,?,'FINANCIAL',false,'GET','SUCCESS','{}'::jsonb,now())""", observation, id(1), id(2), id(4));
         jdbc.update(
-                "INSERT INTO platform.provider_observation(id,organization_id,environment_id,provider_account_id,observation_domain,livemode,call_type,classification,evidence,fetched_at) VALUES (?,?,?,?,'FINANCIAL',false,'GET','SUCCESS','{}'::jsonb,now())",
-                observation,
-                id(1),
-                id(2),
-                id(4));
-        jdbc.update(
-                "INSERT INTO platform.balance_transaction(id,organization_id,environment_id,provider_account_id,livemode,bt_id,amount_minor,fee_minor,net_minor,currency,source_object_id,source_object_type,business_type,balance_domain,provider_created_at,provider_status,api_version,fetched_at,immutable_fact,fact,first_observation_id) VALUES (?,?,?,?,false,?,?,?,?,'USD','po_test','payout',?,'PAYMENTS',?,'available','v',?,'{}'::jsonb,?::jsonb,?)",
+                """
+                INSERT INTO platform.balance_transaction(id,organization_id,environment_id,provider_account_id,
+                    livemode,bt_id,amount_minor,fee_minor,net_minor,currency,source_object_id,source_object_type,
+                    business_type,balance_domain,provider_created_at,provider_status,api_version,fetched_at,
+                    immutable_fact,fact,first_observation_id)
+                VALUES (?,?,?,?,false,?,?,?,?,'USD','po_test','payout',?,'PAYMENTS',?,'available','v',?,'{}'::jsonb,
+                    ?::jsonb,?)""",
                 row,
                 id(1),
                 id(2),

@@ -33,8 +33,9 @@ public final class SqlPerformanceProvider
             created_at timestamptz NOT NULL DEFAULT clock_timestamp(),UNIQUE(scope,operation_key))
             """);
         db.execute("CREATE INDEX simulator_created ON simulator_payment(created_at,seq)");
-        db.execute(
-                "CREATE TABLE simulator_call(seq bigserial PRIMARY KEY,kind text NOT NULL,at timestamptz NOT NULL DEFAULT clock_timestamp())");
+        db.execute("""
+                CREATE TABLE simulator_call(seq bigserial PRIMARY KEY,kind text NOT NULL,at timestamptz NOT NULL
+                    DEFAULT clock_timestamp())""");
     }
 
     private String scoped(ProviderScope s) {
@@ -55,7 +56,11 @@ public final class SqlPerformanceProvider
     public ProviderCallResult<CheckoutSessionFact> createSession(CreateCheckoutSessionCommand c) {
         try {
             jdbc.update(
-                    "INSERT INTO simulator_payment(scope,operation_key,amount,currency,metadata,expires_at) VALUES(?,?,?,?,?::jsonb,?) ON CONFLICT DO NOTHING",
+                    """
+                    INSERT INTO simulator_payment(scope,operation_key,amount,currency,metadata,expires_at)
+                    VALUES(?,?,?,?,?::jsonb,?)
+                    ON CONFLICT
+                    DO NOTHING""",
                     scoped(c.scope()),
                     c.operationIdempotencyKey(),
                     c.amountMinor(),
@@ -202,7 +207,12 @@ public final class SqlPerformanceProvider
                 : Long.parseLong(q.startingAfterCursor()
                         .substring(q.startingAfterCursor().lastIndexOf('_') + 1));
         var rows = jdbc.queryForList(
-                "SELECT * FROM simulator_payment WHERE scope=? AND created_at>=? AND created_at<? AND seq>? ORDER BY seq LIMIT ?",
+                """
+                SELECT *
+                FROM simulator_payment
+                WHERE scope=? AND created_at>=? AND created_at<? AND seq>?
+                ORDER BY seq
+                LIMIT ?""",
                 scoped(q.scope()),
                 Timestamp.from(q.createdGte()),
                 Timestamp.from(q.createdLt()),

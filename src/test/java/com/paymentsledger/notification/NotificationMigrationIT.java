@@ -31,10 +31,13 @@ class NotificationMigrationIT extends NotificationFixture {
                 financial_status='PENDING_EVIDENCE',latest_charge_id=?,payment_intent_id=?,last_provider_confirmed_at=now()
                 WHERE id=?
                 """, intent.latestChargeId(), intent.paymentIntentId(), payment(old));
-        String identity = jdbc.queryForObject(
-                "SELECT row(organization_id,environment_id,application_id,provider_account_id,business_order_id,amount_minor)::text FROM platform.payment",
-                String.class);
-        admin.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA platform GRANT SELECT,INSERT ON TABLES TO payments_app");
+        String identity = jdbc.queryForObject("""
+                SELECT row(organization_id,environment_id,application_id,provider_account_id,business_order_id,
+                    amount_minor)::text
+                FROM platform.payment""", String.class);
+        admin.execute("""
+                ALTER DEFAULT PRIVILEGES IN SCHEMA platform GRANT
+                SELECT,INSERT ON TABLES TO payments_app""");
         Flyway.configure()
                 .dataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword())
                 .schemas("platform")
@@ -48,10 +51,10 @@ class NotificationMigrationIT extends NotificationFixture {
                             "SELECT has_table_privilege(current_user,?,'INSERT')", Boolean.class, "platform." + table))
                     .as("V7 must revoke inherited default INSERT on %s", table)
                     .isFalse();
-        assertThat(jdbc.queryForObject(
-                        "SELECT row(organization_id,environment_id,application_id,provider_account_id,business_order_id,amount_minor)::text FROM platform.payment",
-                        String.class))
-                .isEqualTo(identity);
+        assertThat(jdbc.queryForObject("""
+                        SELECT row(organization_id,environment_id,application_id,provider_account_id,business_order_id,
+                            amount_minor)::text
+                        FROM platform.payment""", String.class)).isEqualTo(identity);
         service.get(context, payment(old));
         assertThat(count("outbox_event")).isZero();
         var replay = new TransactionTemplate(tx).execute(s -> new OutboxWriter(jdbc).write(payment(old)));

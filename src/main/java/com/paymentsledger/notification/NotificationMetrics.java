@@ -33,13 +33,17 @@ public final class NotificationMetrics {
     public double value(String metric) {
         String sql = switch (metric) {
             case "outbox_backlog" -> "SELECT count(*) FROM platform.outbox_event WHERE status<>'PUBLISHED'";
-            case "delivery_backlog" ->
-                "SELECT count(*) FROM platform.delivery_task WHERE status IN ('READY','RUNNING','HELD')";
+            case "delivery_backlog" -> """
+                SELECT count(*)
+                FROM platform.delivery_task
+                WHERE status IN ('READY','RUNNING','HELD')""";
             case "held" -> "SELECT count(*) FROM platform.delivery_task WHERE status='HELD'";
             case "dead" -> "SELECT count(*) FROM platform.delivery_task WHERE status='DEAD'";
             case "delivered" -> "SELECT count(*) FROM platform.delivery_task WHERE status='DELIVERED'";
-            case "retry_backlog" ->
-                "SELECT count(*) FROM platform.delivery_task WHERE status='READY' AND attempt_count>0";
+            case "retry_backlog" -> """
+                SELECT count(*)
+                FROM platform.delivery_task
+                WHERE status='READY' AND attempt_count>0""";
             case "delivery_attempts" -> "SELECT coalesce(sum(attempt_count),0) FROM platform.delivery_task";
             case "oldest_age_seconds" -> null;
             default -> throw new IllegalArgumentException("Unknown notification metric");

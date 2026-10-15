@@ -75,11 +75,10 @@ public class BankMatcher {
         if (days < -7 || days > 7) throw new IllegalArgumentException("Bank booking outside +/-7 UTC dates");
         boolean credit = "CREDIT".equals(l.get("kind"));
         String kind = credit ? "MATCH" : "CLAWBACK";
-        var prior = one(
-                "SELECT * FROM platform.payout_bank_match WHERE payout_id=? AND line_id=? AND kind=?",
-                payoutId,
-                lineId,
-                kind);
+        var prior = one("""
+                SELECT *
+                FROM platform.payout_bank_match
+                WHERE payout_id=? AND line_id=? AND kind=?""", payoutId, lineId, kind);
         if (prior != null) {
             if (number(prior, "principal_minor") != principal)
                 throw new IllegalArgumentException("Stable match identity conflicts with retry amount");
@@ -90,11 +89,16 @@ public class BankMatcher {
         if (credit
                 && (number(p, "returned_minor") > 0 || number(p, "suspense_minor") > 0)
                 && principal > number(p, "transit_minor")) {
+            jdbc.update("""
+                    UPDATE platform.payout
+                    SET conflict=true,bank_match_state='CONFLICT',updated_at=now()
+                    WHERE id=?""", payoutId);
             jdbc.update(
-                    "UPDATE platform.payout SET conflict=true,bank_match_state='CONFLICT',updated_at=now() WHERE id=?",
-                    payoutId);
-            jdbc.update(
-                    "INSERT INTO platform.payout_case(payout_id,reason,evidence) VALUES (?,'BANK_RECEIPT_RETURN_OVERLAP',?::jsonb) ON CONFLICT(payout_id,reason) DO NOTHING",
+                    """
+                    INSERT INTO platform.payout_case(payout_id,reason,evidence)
+                    VALUES (?,'BANK_RECEIPT_RETURN_OVERLAP',?::jsonb)
+                    ON CONFLICT(payout_id,reason)
+                    DO NOTHING""",
                     payoutId,
                     json.createObjectNode()
                             .put("lineId", lineId.toString())
@@ -119,11 +123,14 @@ public class BankMatcher {
         jdbc.queryForObject("SELECT platform.lock_payout_accounts(?)", Object.class, payoutId);
         var accounts = new HashMap<String, UUID>();
         for (var a : jdbc.queryForList(
-                "SELECT id,account_purpose FROM platform.ledger_account WHERE organization_id=? AND environment_id=? AND currency=? AND ((source_domain='SIMULATED_BANK' AND provider_account_id IS NULL) OR(source_domain='PROVIDER' AND provider_account_id=? AND balance_domain='PAYMENTS'))",
-                scope.organizationId(),
-                scope.environmentId(),
-                p.get("currency"),
-                scope.providerAccountId()))
+                """
+                SELECT id,account_purpose
+                FROM platform.ledger_account
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND currency=?
+                    AND ((source_domain='SIMULATED_BANK' AND provider_account_id IS NULL)
+                        OR(source_domain='PROVIDER' AND provider_account_id=? AND balance_domain='PAYMENTS'))""", scope.organizationId(), scope.environmentId(), p.get("currency"), scope.providerAccountId()))
             accounts.put(a.get("account_purpose").toString(), (UUID) a.get("id"));
         var lines = new ArrayList<PostingLine>();
         if (credit) {
@@ -158,7 +165,10 @@ public class BankMatcher {
                         null));
         UUID match = UUID.randomUUID();
         jdbc.update(
-                "INSERT INTO platform.payout_bank_match(id,payout_id,line_id,organization_id,environment_id,currency,kind,principal_minor,fee_minor,journal_id) VALUES (?,?,?,?,?,?,?,?,?,?)",
+                """
+                INSERT INTO platform.payout_bank_match(id,payout_id,line_id,organization_id,environment_id,currency,
+                    kind,principal_minor,fee_minor,journal_id)
+                VALUES (?,?,?,?,?,?,?,?,?,?)""",
                 match,
                 payoutId,
                 lineId,
@@ -179,19 +189,20 @@ public class BankMatcher {
         String state = Boolean.TRUE.equals(p.get("conflict"))
                 ? "CONFLICT"
                 : bank == number(p, "outgoing_minor") ? "MATCHED" : bank > 0 ? "PARTIAL" : "UNMATCHED";
-        jdbc.update(
-                "UPDATE platform.payout SET transit_minor=?,bank_confirmed_minor=?,returned_minor=?,suspense_minor=?,bank_match_state=?,updated_at=now() WHERE id=?",
-                transit,
-                bank,
-                returned,
-                suspense,
-                state,
-                payoutId);
-        jdbc.update(
-                "UPDATE platform.bank_statement_line SET allocated_minor=?,fee_allocated_minor=? WHERE id=?",
-                consumed,
-                Math.addExact(number(l, "fee_allocated_minor"), fee),
-                lineId);
+        jdbc.update("""
+                UPDATE platform.payout
+                SET
+                    transit_minor=?,
+                    bank_confirmed_minor=?,
+                    returned_minor=?,
+                    suspense_minor=?,
+                    bank_match_state=?,
+                    updated_at=now()
+                WHERE id=?""", transit, bank, returned, suspense, state, payoutId);
+        jdbc.update("""
+                UPDATE platform.bank_statement_line
+                SET allocated_minor=?,fee_allocated_minor=?
+                WHERE id=?""", consumed, Math.addExact(number(l, "fee_allocated_minor"), fee), lineId);
         return new MatchResult(state, match);
     }
     /** External completeness is separate from the commit-time allocation invariant. PR15 consumes this evidence. */
@@ -210,7 +221,26 @@ public class BankMatcher {
                 && number(p, "bank_confirmed_minor") == number(p, "outgoing_minor") - number(p, "returned_minor"))
             return bankEvidenceComplete(p) ? "MATCHED" : "WAITING_EVIDENCE";
         Long complete = jdbc.queryForObject(
-                "SELECT count(*) FROM platform.bank_statement_line l JOIN platform.bank_statement s ON s.id=l.statement_id JOIN platform.payout_bank_match m ON m.line_id=l.id AND m.payout_id=? AND m.kind='MATCH' WHERE l.organization_id=? AND l.environment_id=? AND l.provider_account_id=? AND NOT l.livemode AND l.currency=? AND ?=ANY(l.payout_references) AND l.kind='CREDIT' AND s.complete AND s.coverage_from<=? AND s.coverage_until>? AND s.coverage_until<=clock_timestamp() AND l.allocated_minor=l.principal_minor AND (l.booked_at AT TIME ZONE 'UTC')::date BETWEEN ((CAST(? AS timestamptz) AT TIME ZONE 'UTC')::date-7) AND ((CAST(? AS timestamptz) AT TIME ZONE 'UTC')::date+7)",
+                """
+                SELECT count(*)
+                FROM platform.bank_statement_line l
+                JOIN platform.bank_statement s ON s.id=l.statement_id
+                JOIN platform.payout_bank_match m ON m.line_id=l.id AND m.payout_id=? AND m.kind='MATCH'
+                WHERE l.organization_id=?
+                    AND l.environment_id=?
+                    AND l.provider_account_id=?
+                    AND NOT l.livemode
+                    AND l.currency=?
+                    AND ?=ANY(l.payout_references)
+                    AND l.kind='CREDIT'
+                    AND s.complete
+                    AND s.coverage_from<=?
+                    AND s.coverage_until>?
+                    AND s.coverage_until<=clock_timestamp()
+                    AND l.allocated_minor=l.principal_minor
+                    AND (l.booked_at AT TIME ZONE 'UTC')::date BETWEEN ((CAST(? AS timestamptz) AT TIME ZONE
+                        'UTC')::date-7)
+                    AND ((CAST(? AS timestamptz) AT TIME ZONE 'UTC')::date+7)""",
                 Long.class,
                 payoutId,
                 scope.organizationId(),
@@ -223,7 +253,17 @@ public class BankMatcher {
                 p.get("arrival_date"),
                 p.get("arrival_date"));
         Long waiting = jdbc.queryForObject(
-                "SELECT count(*) FROM platform.bank_statement_line l WHERE l.organization_id=? AND l.environment_id=? AND l.provider_account_id=? AND NOT l.livemode AND l.currency=? AND ?=ANY(l.payout_references) AND l.kind='CREDIT' AND l.allocated_minor<l.principal_minor",
+                """
+                SELECT count(*)
+                FROM platform.bank_statement_line l
+                WHERE l.organization_id=?
+                    AND l.environment_id=?
+                    AND l.provider_account_id=?
+                    AND NOT l.livemode
+                    AND l.currency=?
+                    AND ?=ANY(l.payout_references)
+                    AND l.kind='CREDIT'
+                    AND l.allocated_minor<l.principal_minor""",
                 Long.class,
                 scope.organizationId(),
                 scope.environmentId(),
@@ -248,8 +288,10 @@ public class BankMatcher {
     private Map<String, Object> scopedPayout(ProviderScope scope, UUID id, boolean lock) {
         if (scope == null || scope.livemode()) throw new IllegalArgumentException("Test provider scope required");
         var p = one(
-                "SELECT * FROM platform.payout WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=?"
-                        + (lock ? " FOR UPDATE" : ""),
+                """
+                SELECT *
+                FROM platform.payout
+                WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=?""" + (lock ? " FOR UPDATE" : ""),
                 id,
                 scope.organizationId(),
                 scope.environmentId(),

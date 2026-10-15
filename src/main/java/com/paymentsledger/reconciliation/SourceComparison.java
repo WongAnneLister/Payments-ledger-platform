@@ -44,11 +44,10 @@ final class SourceComparison {
         }
         if (type.equals("refund")) {
             rows = jdbc.queryForList(
-                    "SELECT * FROM platform.refund WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_refund_id=?",
-                    scope.organizationId(),
-                    scope.environmentId(),
-                    scope.providerAccountId(),
-                    source);
+                    """
+                    SELECT *
+                    FROM platform.refund
+                    WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_refund_id=?""", scope.organizationId(), scope.environmentId(), scope.providerAccountId(), source);
             if (rows.size() != 1) return missing(rows);
             var refund = rows.getFirst();
             boolean reversed = business.equals("refund_failure");
@@ -76,7 +75,14 @@ final class SourceComparison {
         }
         if (type.equals("dispute")) {
             rows = jdbc.queryForList(
-                    "SELECT * FROM platform.dispute WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND provider_dispute_id=?",
+                    """
+                    SELECT *
+                    FROM platform.dispute
+                    WHERE organization_id=?
+                        AND environment_id=?
+                        AND provider_account_id=?
+                        AND livemode=?
+                        AND provider_dispute_id=?""",
                     scope.organizationId(),
                     scope.environmentId(),
                     scope.providerAccountId(),
@@ -94,7 +100,14 @@ final class SourceComparison {
         }
         if (type.equals("payout")) {
             rows = jdbc.queryForList(
-                    "SELECT * FROM platform.payout WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND provider_payout_id=?",
+                    """
+                    SELECT *
+                    FROM platform.payout
+                    WHERE organization_id=?
+                        AND environment_id=?
+                        AND provider_account_id=?
+                        AND livemode=?
+                        AND provider_payout_id=?""",
                     scope.organizationId(),
                     scope.environmentId(),
                     scope.providerAccountId(),
@@ -104,13 +117,12 @@ final class SourceComparison {
             var payout = rows.getFirst();
             BigInteger actual = number(bt, "amount_minor").abs(), expected = number(payout, "amount_minor");
             boolean outgoing = business.equals("payout");
-            boolean linked = jdbc.queryForObject(
-                            "SELECT count(*) FROM platform.payout_bt_link WHERE payout_id=? AND bt_id=? AND role=?",
-                            Long.class,
-                            payout.get("id"),
-                            bt.get("bt_id"),
-                            outgoing ? "OUT" : "RETURN")
-                    == 1;
+            boolean linked =
+                    jdbc.queryForObject("""
+                            SELECT count(*)
+                            FROM platform.payout_bt_link
+                            WHERE payout_id=? AND bt_id=? AND role=?""", Long.class, payout.get("id"), bt.get("bt_id"), outgoing ? "OUT" : "RETURN")
+                            == 1;
             boolean mismatch = !Objects.equals(payout.get("currency"), bt.get("currency"))
                     || !linked
                     || (outgoing ? !actual.equals(expected) : actual.compareTo(expected) > 0)

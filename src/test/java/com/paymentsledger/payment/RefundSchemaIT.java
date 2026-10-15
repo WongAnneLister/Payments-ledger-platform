@@ -41,10 +41,24 @@ class RefundSchemaIT {
         String before = admin.queryForObject("SELECT payload FROM platform.outbox_event LIMIT 1", String.class);
         assertThat(admin.queryForObject("SELECT to_regclass('platform.refund') IS NULL", Boolean.class))
                 .isTrue();
-        assertThatThrownBy(
-                        () -> admin.update(
-                                "INSERT INTO platform.provider_operation(organization_id,environment_id,application_id,provider_account_id,currency,operation_target,refund_id,operation_type,operation_key,request_fingerprint,command,expires_at) SELECT organization_id,environment_id,application_id,provider_account_id,currency,'REFUND',gen_random_uuid(),'CREATE_CHECKOUT','forbidden-refund','fp','{}',expires_at FROM platform.payment"))
-                .isInstanceOf(org.springframework.dao.DataAccessException.class);
+        assertThatThrownBy(() -> admin.update("""
+                                INSERT INTO platform.provider_operation(organization_id,environment_id,application_id,
+                                    provider_account_id,currency,operation_target,refund_id,operation_type,operation_key,
+                                    request_fingerprint,command,expires_at)
+                                SELECT
+                                    organization_id,
+                                    environment_id,
+                                    application_id,
+                                    provider_account_id,
+                                    currency,
+                                    'REFUND',
+                                    gen_random_uuid(),
+                                    'CREATE_CHECKOUT',
+                                    'forbidden-refund',
+                                    'fp',
+                                    '{}',
+                                    expires_at
+                                FROM platform.payment""")).isInstanceOf(org.springframework.dao.DataAccessException.class);
         var migration = Flyway.configure()
                 .dataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword())
                 .schemas("platform")
@@ -56,18 +70,14 @@ class RefundSchemaIT {
                 .isEqualTo(before);
         assertThat(jdbc.queryForObject("SELECT operation_key FROM platform.provider_operation", String.class))
                 .isEqualTo("original");
-        assertThat(jdbc.queryForObject(
-                        "SELECT t.payment_id=o.payment_id AND t.refund_id IS NULL FROM platform.recovery_task t JOIN platform.provider_operation o ON o.id=t.operation_id",
-                        Boolean.class))
-                .isTrue();
-        assertThat(jdbc.queryForObject(
-                        "SELECT has_table_privilege(current_user,'platform.refund','SELECT,INSERT,UPDATE')",
-                        Boolean.class))
-                .isTrue();
-        assertThat(jdbc.queryForObject(
-                        "SELECT has_table_privilege(current_user,'platform.refund_source_observation','UPDATE')",
-                        Boolean.class))
-                .isFalse();
+        assertThat(jdbc.queryForObject("""
+                        SELECT t.payment_id=o.payment_id AND t.refund_id IS NULL
+                        FROM platform.recovery_task t
+                        JOIN platform.provider_operation o ON o.id=t.operation_id""", Boolean.class)).isTrue();
+        assertThat(jdbc.queryForObject("""
+                        SELECT has_table_privilege(current_user,'platform.refund','SELECT,INSERT,UPDATE')""", Boolean.class)).isTrue();
+        assertThat(jdbc.queryForObject("""
+                        SELECT has_table_privilege(current_user,'platform.refund_source_observation','UPDATE')""", Boolean.class)).isFalse();
         assertThat(jdbc.queryForObject(
                         "SELECT has_table_privilege(current_user,'platform.outbox_event','INSERT')", Boolean.class))
                 .isFalse();

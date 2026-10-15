@@ -73,34 +73,28 @@ final class ReconciliationChecks {
                 "providerCutoff", ReconciliationService.instant(run, "until_at").toString());
         versions.put("ledgerAsOf", jdbc.queryForObject("SELECT transaction_timestamp()::text", String.class));
         versions.put("balanceTransactions", pins(bts));
+        versions.put("journals", pins(jdbc.queryForList("""
+                        SELECT id,financial_event_id,sealed_at,created_at
+                        FROM platform.journal
+                        WHERE organization_id=? AND environment_id=? AND currency=?
+                        ORDER BY id""", scope.organizationId(), scope.environmentId(), currency)));
+        versions.put("events", pins(jdbc.queryForList("""
+                        SELECT *
+                        FROM platform.financial_event
+                        WHERE organization_id=? AND environment_id=? AND currency=?
+                        ORDER BY id""", scope.organizationId(), scope.environmentId(), currency)));
         versions.put(
-                "journals",
-                pins(jdbc.queryForList(
-                        "SELECT id,financial_event_id,sealed_at,created_at FROM platform.journal WHERE organization_id=? AND environment_id=? AND currency=? ORDER BY id",
-                        scope.organizationId(),
-                        scope.environmentId(),
-                        currency)));
+                "ledgerEntries", pins(jdbc.queryForList("""
+                        SELECT e.*
+                        FROM platform.journal_entry e
+                        WHERE e.organization_id=? AND e.environment_id=? AND e.currency=?
+                        ORDER BY e.journal_id,e.line_no""", scope.organizationId(), scope.environmentId(), currency)));
         versions.put(
-                "events",
-                pins(jdbc.queryForList(
-                        "SELECT * FROM platform.financial_event WHERE organization_id=? AND environment_id=? AND currency=? ORDER BY id",
-                        scope.organizationId(),
-                        scope.environmentId(),
-                        currency)));
-        versions.put(
-                "ledgerEntries",
-                pins(jdbc.queryForList(
-                        "SELECT e.* FROM platform.journal_entry e WHERE e.organization_id=? AND e.environment_id=? AND e.currency=? ORDER BY e.journal_id,e.line_no",
-                        scope.organizationId(),
-                        scope.environmentId(),
-                        currency)));
-        versions.put(
-                "projection",
-                pins(jdbc.queryForList(
-                        "SELECT * FROM platform.balance_projection WHERE organization_id=? AND environment_id=? AND currency=? ORDER BY ledger_account_id",
-                        scope.organizationId(),
-                        scope.environmentId(),
-                        currency)));
+                "projection", pins(jdbc.queryForList("""
+                        SELECT *
+                        FROM platform.balance_projection
+                        WHERE organization_id=? AND environment_id=? AND currency=?
+                        ORDER BY ledger_account_id""", scope.organizationId(), scope.environmentId(), currency)));
         versions.put("openingPolicy", pins(List.of(policy())));
         versions.put(
                 "importCursor",
@@ -109,7 +103,11 @@ final class ReconciliationChecks {
         versions.put(
                 "feeModels",
                 pins(jdbc.queryForList(
-                        "SELECT * FROM platform.fee_model WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND currency=? ORDER BY id",
+                        """
+                        SELECT *
+                        FROM platform.fee_model
+                        WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND currency=?
+                        ORDER BY id""",
                         scope.organizationId(),
                         scope.environmentId(),
                         scope.providerAccountId(),
@@ -169,23 +167,23 @@ final class ReconciliationChecks {
 
     private ReconciliationReport.Check refunds() {
         var controls = jdbc.queryForList(
-                "SELECT c.*,p.captured_amount_minor FROM platform.refund_control c JOIN platform.payment p ON p.id=c.payment_id WHERE c.organization_id=? AND c.environment_id=? AND c.provider_account_id=? AND c.currency=?",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId(),
-                currency);
+                """
+                SELECT c.*,p.captured_amount_minor
+                FROM platform.refund_control c
+                JOIN platform.payment p ON p.id=c.payment_id
+                WHERE c.organization_id=? AND c.environment_id=? AND c.provider_account_id=? AND c.currency=?""", scope.organizationId(), scope.environmentId(), scope.providerAccountId(), currency);
         var refunds = jdbc.queryForList(
-                "SELECT * FROM platform.refund WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND currency=? ORDER BY id",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId(),
-                currency);
+                """
+                SELECT *
+                FROM platform.refund
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND currency=?
+                ORDER BY id""", scope.organizationId(), scope.environmentId(), scope.providerAccountId(), currency);
         var tasks = jdbc.queryForList(
-                "SELECT * FROM platform.recovery_task WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND currency=? ORDER BY id",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId(),
-                currency);
+                """
+                SELECT *
+                FROM platform.recovery_task
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND currency=?
+                ORDER BY id""", scope.organizationId(), scope.environmentId(), scope.providerAccountId(), currency);
         versions.put("refundControls", pins(controls));
         versions.put("refunds", pins(refunds));
         versions.put("recoveryTasks", pins(tasks));
@@ -272,9 +270,10 @@ final class ReconciliationChecks {
             int rate = ((Number) allocation.get("rate_bps")).intValue();
             rateTotals.merge(allocation.get("payment_id"), rate, Integer::sum);
             BigInteger captured = number(allocation, "captured_amount_minor");
-            BigInteger covered = sum(
-                    "SELECT coalesce(sum(amount_minor::numeric),0) FROM platform.balance_transaction WHERE payment_id=? AND state='POSTED' AND lower(business_type)='charge' AND amount_minor>0",
-                    allocation.get("payment_id"));
+            BigInteger covered = sum("""
+                    SELECT coalesce(sum(amount_minor::numeric),0)
+                    FROM platform.balance_transaction
+                    WHERE payment_id=? AND state='POSTED' AND lower(business_type)='charge' AND amount_minor>0""", allocation.get("payment_id"));
             boolean eligible = "KNOWN".equals(allocation.get("resolution_status"))
                     && !"CONFLICT".equals(allocation.get("financial_status"))
                     && "NORMAL".equals(allocation.get("control_state"))
@@ -283,10 +282,12 @@ final class ReconciliationChecks {
                                     "SELECT count(*) FROM platform.dispute WHERE payment_id=? AND blocking",
                                     allocation.get("payment_id"))
                             == 0
-                    && count(
-                                    "SELECT count(*) FROM platform.balance_transaction b WHERE payment_id=? AND (state='QUARANTINED' OR EXISTS(SELECT 1 FROM platform.bt_evidence_conflict c WHERE c.balance_transaction_id=b.id))",
-                                    allocation.get("payment_id"))
-                            == 0;
+                    && count("""
+                                    SELECT count(*)
+                                    FROM platform.balance_transaction b
+                                    WHERE payment_id=?
+                                        AND (state='QUARANTINED' OR EXISTS(SELECT 1 FROM platform.bt_evidence_conflict c WHERE
+                                            c.balance_transaction_id=b.id))""", allocation.get("payment_id")) == 0;
             BigInteger base = eligible
                     ? captured.subtract(number(allocation, "refunded_minor"))
                             .subtract(number(allocation, "reserved_minor"))
@@ -318,9 +319,11 @@ final class ReconciliationChecks {
             } catch (Exception malformed) {
                 failures++;
             }
-            var history = jdbc.queryForList(
-                    "SELECT * FROM platform.share_adjustment WHERE allocation_id=? ORDER BY generation",
-                    allocation.get("id"));
+            var history = jdbc.queryForList("""
+                    SELECT *
+                    FROM platform.share_adjustment
+                    WHERE allocation_id=?
+                    ORDER BY generation""", allocation.get("id"));
             versions.put("shareHistory:" + allocation.get("id"), pins(history));
             BigInteger historical = BigInteger.ZERO;
             long generation = 0;
@@ -329,9 +332,12 @@ final class ReconciliationChecks {
                 if (number(movement, "generation").longValueExact() != generation) failures++;
                 BigInteger delta = number(movement, "delta_minor");
                 historical = historical.add(delta);
-                var entries = jdbc.queryForList(
-                        "SELECT e.*,a.account_purpose,j.sealed_at FROM platform.journal_entry e JOIN platform.ledger_account a ON a.id=e.ledger_account_id JOIN platform.journal j ON j.id=e.journal_id WHERE e.journal_id=?",
-                        movement.get("journal_id"));
+                var entries = jdbc.queryForList("""
+                        SELECT e.*,a.account_purpose,j.sealed_at
+                        FROM platform.journal_entry e
+                        JOIN platform.ledger_account a ON a.id=e.ledger_account_id
+                        JOIN platform.journal j ON j.id=e.journal_id
+                        WHERE e.journal_id=?""", movement.get("journal_id"));
                 BigInteger expense = BigInteger.ZERO, payable = BigInteger.ZERO;
                 for (var entry : entries) {
                     if (entry.get("sealed_at") == null) failures++;
@@ -362,7 +368,11 @@ final class ReconciliationChecks {
 
     private ReconciliationReport.Check payouts() {
         var payouts = jdbc.queryForList(
-                "SELECT * FROM platform.payout WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND currency=? ORDER BY id",
+                """
+                SELECT *
+                FROM platform.payout
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND currency=?
+                ORDER BY id""",
                 scope.organizationId(),
                 scope.environmentId(),
                 scope.providerAccountId(),
@@ -374,7 +384,11 @@ final class ReconciliationChecks {
         versions.put(
                 "bankStatements",
                 pins(jdbc.queryForList(
-                        "SELECT * FROM platform.bank_statement WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND currency=? ORDER BY id",
+                        """
+                        SELECT *
+                        FROM platform.bank_statement
+                        WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND currency=?
+                        ORDER BY id""",
                         scope.organizationId(),
                         scope.environmentId(),
                         scope.providerAccountId(),
@@ -383,7 +397,11 @@ final class ReconciliationChecks {
         versions.put(
                 "bankLines",
                 pins(jdbc.queryForList(
-                        "SELECT * FROM platform.bank_statement_line WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND currency=? ORDER BY id",
+                        """
+                        SELECT *
+                        FROM platform.bank_statement_line
+                        WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND currency=?
+                        ORDER BY id""",
                         scope.organizationId(),
                         scope.environmentId(),
                         scope.providerAccountId(),
@@ -397,12 +415,35 @@ final class ReconciliationChecks {
         var states = new LinkedHashMap<String, Object>();
         for (var payout : payouts) {
             UUID id = (UUID) payout.get("id");
-            var facts = jdbc.queryForList(
-                    "SELECT f.*,b.state AS bt_state,b.payout_id AS bt_payout_id,b.journal_id AS bt_journal_id,j.sealed_at FROM platform.payout_fact f LEFT JOIN platform.balance_transaction b ON b.id=f.balance_transaction_id LEFT JOIN platform.journal j ON j.id=f.journal_id WHERE f.payout_id=? ORDER BY f.id",
-                    id);
-            var matches = jdbc.queryForList(
-                    "SELECT m.*,j.sealed_at,l.fee_minor AS line_fee,l.principal_minor AS line_principal,l.allocated_minor,l.fee_allocated_minor,s.complete,s.coverage_from,s.coverage_until FROM platform.payout_bank_match m LEFT JOIN platform.journal j ON j.id=m.journal_id LEFT JOIN platform.bank_statement_line l ON l.id=m.line_id LEFT JOIN platform.bank_statement s ON s.id=l.statement_id WHERE m.payout_id=? ORDER BY m.id",
-                    id);
+            var facts = jdbc.queryForList("""
+                    SELECT f.*,b.state AS bt_state,b.payout_id AS bt_payout_id,b.journal_id AS bt_journal_id,j.sealed_at
+                    FROM platform.payout_fact f
+                    LEFT
+                    JOIN platform.balance_transaction b ON b.id=f.balance_transaction_id
+                    LEFT
+                    JOIN platform.journal j ON j.id=f.journal_id
+                    WHERE f.payout_id=?
+                    ORDER BY f.id""", id);
+            var matches = jdbc.queryForList("""
+                    SELECT
+                        m.*,
+                        j.sealed_at,
+                        l.fee_minor AS line_fee,
+                        l.principal_minor AS line_principal,
+                        l.allocated_minor,
+                        l.fee_allocated_minor,
+                        s.complete,
+                        s.coverage_from,
+                        s.coverage_until
+                    FROM platform.payout_bank_match m
+                    LEFT
+                    JOIN platform.journal j ON j.id=m.journal_id
+                    LEFT
+                    JOIN platform.bank_statement_line l ON l.id=m.line_id
+                    LEFT
+                    JOIN platform.bank_statement s ON s.id=l.statement_id
+                    WHERE m.payout_id=?
+                    ORDER BY m.id""", id);
             versions.put("payoutFacts:" + id, pins(facts));
             versions.put("payoutBankMatches:" + id, pins(matches));
             BigInteger outgoing = BigInteger.ZERO,
@@ -445,9 +486,12 @@ final class ReconciliationChecks {
                     returned = returned.add(principal);
                     suspense = suspense.subtract(principal);
                 }
-                BigInteger cash = sum(
-                        "SELECT coalesce(sum(CASE WHEN e.side='DEBIT' THEN e.amount_minor::numeric ELSE -e.amount_minor::numeric END),0) FROM platform.journal_entry e JOIN platform.ledger_account a ON a.id=e.ledger_account_id WHERE e.journal_id=? AND a.account_purpose='BANK_CASH'",
-                        match.get("journal_id"));
+                BigInteger cash = sum("""
+                        SELECT coalesce(sum(CASE WHEN e.side='DEBIT' THEN e.amount_minor::numeric ELSE
+                            -e.amount_minor::numeric END),0)
+                        FROM platform.journal_entry e
+                        JOIN platform.ledger_account a ON a.id=e.ledger_account_id
+                        WHERE e.journal_id=? AND a.account_purpose='BANK_CASH'""", match.get("journal_id"));
                 BigInteger expected = "MATCH".equals(match.get("kind"))
                         ? principal.subtract(number(match, "fee_minor"))
                         : principal.negate();
@@ -517,12 +561,15 @@ final class ReconciliationChecks {
             if (!currency.equals(bt.get("currency")) || !"PAYMENTS".equals(bt.get("balance_domain"))) continue;
             String state = bt.get("state").toString();
             if (state.equals("POSTED")) {
-                if (count(
-                                "SELECT count(*) FROM platform.journal j JOIN platform.financial_event e ON e.id=j.financial_event_id WHERE j.id=? AND j.sealed_at IS NOT NULL AND e.source_domain='PROVIDER' AND e.source_ref=? AND e.provider_account_id=?",
-                                bt.get("journal_id"),
-                                bt.get("bt_id"),
-                                scope.providerAccountId())
-                        != 1) failures++;
+                if (count("""
+                                SELECT count(*)
+                                FROM platform.journal j
+                                JOIN platform.financial_event e ON e.id=j.financial_event_id
+                                WHERE j.id=?
+                                    AND j.sealed_at IS NOT NULL
+                                    AND e.source_domain='PROVIDER'
+                                    AND e.source_ref=?
+                                    AND e.provider_account_id=?""", bt.get("journal_id"), bt.get("bt_id"), scope.providerAccountId()) != 1) failures++;
                 if (!journalAmount(bt.get("journal_id"), "PSP_FUNDS").equals(number(bt, "net_minor"))) failures++;
                 if ("UNKNOWN_SOURCE".equals(bt.get("reason"))) unclassified++;
             } else if (state.equals("EXCLUDED")) {
@@ -568,8 +615,10 @@ final class ReconciliationChecks {
                                     Objects.toString(bt.get("source_object_id"), ""))));
                 }
             }
-            if (count("SELECT count(*) FROM platform.bt_evidence_conflict WHERE balance_transaction_id=?", bt.get("id"))
-                    > 0) pending++;
+            if (count("""
+                    SELECT count(*)
+                    FROM platform.bt_evidence_conflict
+                    WHERE balance_transaction_id=?""", bt.get("id")) > 0) pending++;
             if (!Objects.equals(bt.get("api_version"), apiVersion())) pending++;
             // Model expectations explain actual facts; they never change the accepted fee.
             var fee = new FeeModelService(jdbc)
@@ -629,13 +678,15 @@ final class ReconciliationChecks {
     }
 
     private ReconciliationReport.Check psp(IndependentBalanceEvidence evidence) {
-        if (count(
-                        "SELECT count(*) FROM platform.ledger_account WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND currency=? AND account_purpose='PSP_FUNDS' AND balance_domain='PAYMENTS'",
-                        scope.organizationId(),
-                        scope.environmentId(),
-                        scope.providerAccountId(),
-                        currency)
-                != 1)
+        if (count("""
+                        SELECT count(*)
+                        FROM platform.ledger_account
+                        WHERE organization_id=?
+                            AND environment_id=?
+                            AND provider_account_id=?
+                            AND currency=?
+                            AND account_purpose='PSP_FUNDS'
+                            AND balance_domain='PAYMENTS'""", scope.organizationId(), scope.environmentId(), scope.providerAccountId(), currency) != 1)
             return check(
                     5,
                     "Independent PSP three-way balance",
@@ -712,11 +763,10 @@ final class ReconciliationChecks {
             Instant created = ReconciliationService.instant(bt, "provider_created_at");
             if (created.isBefore(cutoff) || openingInclusive && created.equals(cutoff)) continue;
             btDelta = btDelta.add(number(bt, "net_minor"));
-            if (!Set.of("POSTED", "ZERO").contains(bt.get("state"))
-                    || count(
-                                    "SELECT count(*) FROM platform.bt_evidence_conflict WHERE balance_transaction_id=?",
-                                    bt.get("id"))
-                            > 0) unresolved = true;
+            if (!Set.of("POSTED", "ZERO").contains(bt.get("state")) || count("""
+                                    SELECT count(*)
+                                    FROM platform.bt_evidence_conflict
+                                    WHERE balance_transaction_id=?""", bt.get("id")) > 0) unresolved = true;
         }
         if (unknownCutoff)
             return check(
@@ -766,12 +816,10 @@ final class ReconciliationChecks {
     }
 
     private ReconciliationReport.Check projection() {
-        if (count(
-                        "SELECT count(*) FROM platform.ledger_account WHERE organization_id=? AND environment_id=? AND currency=?",
-                        scope.organizationId(),
-                        scope.environmentId(),
-                        currency)
-                == 0)
+        if (count("""
+                        SELECT count(*)
+                        FROM platform.ledger_account
+                        WHERE organization_id=? AND environment_id=? AND currency=?""", scope.organizationId(), scope.environmentId(), currency) == 0)
             return check(
                     7,
                     "Independent projection rebuild and source isolation",
@@ -858,10 +906,12 @@ final class ReconciliationChecks {
     }
 
     private BigInteger journalAmount(Object journal, String purpose) {
-        return sum(
-                "SELECT coalesce(sum(CASE WHEN e.side='DEBIT' THEN e.amount_minor::numeric ELSE -e.amount_minor::numeric END),0) FROM platform.journal_entry e JOIN platform.ledger_account a ON a.id=e.ledger_account_id WHERE e.journal_id=? AND a.account_purpose=?",
-                journal,
-                purpose);
+        return sum("""
+                SELECT coalesce(sum(CASE WHEN e.side='DEBIT' THEN e.amount_minor::numeric ELSE
+                    -e.amount_minor::numeric END),0)
+                FROM platform.journal_entry e
+                JOIN platform.ledger_account a ON a.id=e.ledger_account_id
+                WHERE e.journal_id=? AND a.account_purpose=?""", journal, purpose);
     }
 
     private BigInteger sum(String sql, Object... args) {

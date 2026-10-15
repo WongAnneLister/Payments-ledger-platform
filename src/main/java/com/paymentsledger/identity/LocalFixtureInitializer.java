@@ -71,61 +71,48 @@ public class LocalFixtureInitializer implements InitializingBean {
                 return;
             }
             jdbc.update("INSERT INTO platform.organization(id,code) VALUES (?,'local-fixture')", id(1));
-            jdbc.update(
-                    "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'local',false)",
-                    id(11),
-                    id(1));
-            jdbc.update(
-                    "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES (?,?,?,'demo')",
-                    id(31),
-                    id(1),
-                    id(11));
-            jdbc.update(
-                    "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE','fixture_local_account',false)",
-                    id(21),
-                    id(1),
-                    id(11));
-            jdbc.update(
-                    "INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2) ON CONFLICT (code) DO NOTHING");
-            jdbc.update(
-                    "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD')",
-                    id(1),
-                    id(11));
+            jdbc.update("""
+                    INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                    VALUES (?,?,'local',false)""", id(11), id(1));
+            jdbc.update("""
+                    INSERT INTO platform.application(id,organization_id,environment_id,code)
+                    VALUES (?,?,?,'demo')""", id(31), id(1), id(11));
+            jdbc.update("""
+                    INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                        provider_account_ref,livemode)
+                    VALUES (?,?,?,'FAKE','fixture_local_account',false)""", id(21), id(1), id(11));
+            jdbc.update("""
+                    INSERT INTO platform.currency_config(code,minor_unit_exponent)
+                    VALUES ('USD',2)
+                    ON CONFLICT (code)
+                    DO NOTHING""");
+            jdbc.update("""
+                    INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                    VALUES (?,?,'USD')""", id(1), id(11));
             var start = Timestamp.from(clock.instant());
             var end = Timestamp.from(clock.instant().plus(365, ChronoUnit.DAYS));
             jdbc.update("""
                     INSERT INTO platform.application_credential(id,key_id,organization_id,environment_id,application_id,provider_account_id,secret_hash,not_before,expires_at,granted_scopes)
                     VALUES (?,'local',?,?,?,?,?,?,?,ARRAY['payments:read','payments:write','refunds:read','refunds:write'])
                     """, APP_CREDENTIAL, id(1), id(11), id(31), id(21), tokens.hash(app), start, end);
-            jdbc.update(
-                    "INSERT INTO platform.credential_currency(credential_id,organization_id,environment_id,currency) VALUES (?,?,?,'USD')",
-                    APP_CREDENTIAL,
-                    id(1),
-                    id(11));
-            jdbc.update(
-                    "INSERT INTO platform.ops_identity(id,organization_id,subject,role) VALUES (?,?,'local-viewer','OPS_VIEWER')",
-                    id(51),
-                    id(1));
-            jdbc.update(
-                    "INSERT INTO platform.ops_credential(id,ops_identity_id,organization_id,environment_id,key_id,secret_hash,not_before,expires_at) VALUES (?,?,?,?,'local',?,?,?)",
-                    OPS_CREDENTIAL,
-                    id(51),
-                    id(1),
-                    id(11),
-                    tokens.hash(ops),
-                    start,
-                    end);
-            jdbc.update(
-                    "INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,policy_version,partner_ref,share_basis_points) VALUES (?,?,?,'demo-product',1,'fixture-partner',1500)",
-                    id(71),
-                    id(1),
-                    id(11));
-            jdbc.update(
-                    "INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,currency,amount_minor,share_policy_id) VALUES (?,?,?,'demo-product',1,'USD',10000,?)",
-                    PRICE,
-                    id(1),
-                    id(11),
-                    id(71));
+            jdbc.update("""
+                    INSERT INTO platform.credential_currency(credential_id,organization_id,environment_id,currency)
+                    VALUES (?,?,?,'USD')""", APP_CREDENTIAL, id(1), id(11));
+            jdbc.update("""
+                    INSERT INTO platform.ops_identity(id,organization_id,subject,role)
+                    VALUES (?,?,'local-viewer','OPS_VIEWER')""", id(51), id(1));
+            jdbc.update("""
+                    INSERT INTO platform.ops_credential(id,ops_identity_id,organization_id,environment_id,key_id,
+                        secret_hash,not_before,expires_at)
+                    VALUES (?,?,?,?,'local',?,?,?)""", OPS_CREDENTIAL, id(51), id(1), id(11), tokens.hash(ops), start, end);
+            jdbc.update("""
+                    INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,
+                        policy_version,partner_ref,share_basis_points)
+                    VALUES (?,?,?,'demo-product',1,'fixture-partner',1500)""", id(71), id(1), id(11));
+            jdbc.update("""
+                    INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,
+                        currency,amount_minor,share_policy_id)
+                    VALUES (?,?,?,'demo-product',1,'USD',10000,?)""", PRICE, id(1), id(11), id(71));
         });
     }
 

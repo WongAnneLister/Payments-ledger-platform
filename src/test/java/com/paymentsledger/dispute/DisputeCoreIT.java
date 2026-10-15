@@ -93,9 +93,10 @@ class DisputeCoreIT extends DisputeCoreFixture {
         assertThat(domain.blocks(payment)).isTrue();
         assertThat(count("dispute_observation")).isEqualTo(2);
         assertThat(domain.cases(context, payment)).hasSize(1);
-        assertThatThrownBy(() -> jdbc.update(
-                        "UPDATE platform.dispute SET outstanding_receivable_minor=100,debited_principal_minor=100 WHERE id=?",
-                        dispute))
+        assertThatThrownBy(() -> jdbc.update("""
+                        UPDATE platform.dispute
+                        SET outstanding_receivable_minor=100,debited_principal_minor=100
+                        WHERE id=?""", dispute))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
     }
 }

@@ -73,7 +73,12 @@ public final class ReconciliationSourceRecovery {
                     btId);
             if (pages == 0) throw new IllegalArgumentException("BT is not enumerated in this reconciliation run");
             jdbc.update(
-                    "INSERT INTO platform.recovery_task(organization_id,environment_id,provider_account_id,currency,task_type,reconciliation_run_id,source_bt_id,livemode,available_at) VALUES (?,?,?,?,'RECONCILIATION_SOURCE',?,?,?,?) ON CONFLICT(reconciliation_run_id,source_bt_id) DO NOTHING",
+                    """
+                    INSERT INTO platform.recovery_task(organization_id,environment_id,provider_account_id,currency,
+                        task_type,reconciliation_run_id,source_bt_id,livemode,available_at)
+                    VALUES (?,?,?,?,'RECONCILIATION_SOURCE',?,?,?,?)
+                    ON CONFLICT(reconciliation_run_id,source_bt_id)
+                    DO NOTHING""",
                     scope.organizationId(),
                     scope.environmentId(),
                     scope.providerAccountId(),
@@ -82,11 +87,10 @@ public final class ReconciliationSourceRecovery {
                     bt.get("id"),
                     scope.livemode(),
                     ts(clock.instant()));
-            return jdbc.queryForObject(
-                    "SELECT id FROM platform.recovery_task WHERE reconciliation_run_id=? AND source_bt_id=?",
-                    UUID.class,
-                    runId,
-                    bt.get("id"));
+            return jdbc.queryForObject("""
+                    SELECT id
+                    FROM platform.recovery_task
+                    WHERE reconciliation_run_id=? AND source_bt_id=?""", UUID.class, runId, bt.get("id"));
         });
     }
 
@@ -104,12 +108,16 @@ public final class ReconciliationSourceRecovery {
                 UUID token = UUID.randomUUID();
                 long version = amount(row, "version") + 1;
                 jdbc.update(
-                        "UPDATE platform.recovery_task SET status='RUNNING',lease_token=?,lease_until=?,attempt_count=attempt_count+1,version=?,updated_at=? WHERE id=?",
-                        token,
-                        ts(clock.instant().plusSeconds(60)),
-                        version,
-                        ts(clock.instant()),
-                        row.get("id"));
+                        """
+                        UPDATE platform.recovery_task
+                        SET
+                            status='RUNNING',
+                            lease_token=?,
+                            lease_until=?,
+                            attempt_count=attempt_count+1,
+                            version=?,
+                            updated_at=?
+                        WHERE id=?""", token, ts(clock.instant().plusSeconds(60)), version, ts(clock.instant()), row.get("id"));
                 result.add(
                         new Claim((UUID) row.get("id"), runId, (UUID) row.get("source_bt_id"), scope, token, version));
             }
@@ -232,11 +240,10 @@ public final class ReconciliationSourceRecovery {
         String problem = read.problem();
         if (currentBt == null
                 || Set.of("QUARANTINED", "EXCLUDED").contains(currentBt.get("state"))
-                || jdbc.queryForObject(
-                                "SELECT count(*) FROM platform.bt_evidence_conflict WHERE balance_transaction_id=?",
-                                Long.class,
-                                claim.btId())
-                        > 0) problem = "SOURCE_EVIDENCE_CONFLICT";
+                || jdbc.queryForObject("""
+                                SELECT count(*)
+                                FROM platform.bt_evidence_conflict
+                                WHERE balance_transaction_id=?""", Long.class, claim.btId()) > 0) problem = "SOURCE_EVIDENCE_CONFLICT";
         if (problem == null && binding == null) problem = "NO_TRUSTED_ORDER";
         if (problem == null
                 && (!Objects.equals(binding.get("currency"), bt.get("currency"))
@@ -350,7 +357,10 @@ public final class ReconciliationSourceRecovery {
         String digest = sha(encoded + ev);
         UUID id = UUID.randomUUID();
         jdbc.update(
-                "INSERT INTO platform.reconciliation_source_observation(id,organization_id,environment_id,provider_account_id,livemode,run_id,source_bt_id,outcome,reason,fact,evidence,digest) VALUES (?,?,?,?,?,?,?,?,?,?::jsonb,?::jsonb,?)",
+                """
+                INSERT INTO platform.reconciliation_source_observation(id,organization_id,environment_id,
+                    provider_account_id,livemode,run_id,source_bt_id,outcome,reason,fact,evidence,digest)
+                VALUES (?,?,?,?,?,?,?,?,?,?::jsonb,?::jsonb,?)""",
                 id,
                 claim.scope().organizationId(),
                 claim.scope().environmentId(),
@@ -371,7 +381,10 @@ public final class ReconciliationSourceRecovery {
         var report = one("SELECT finished_at FROM platform.reconciliation_run WHERE id=? FOR UPDATE", claim.runId());
         if (report == null || report.get("finished_at") != null) return;
         jdbc.update(
-                "INSERT INTO platform.reconciliation_exception(run_id,organization_id,environment_id,provider_account_id,livemode,currency,reason,owner,source_ref,input_versions,evidence) VALUES (?,?,?,?,?,?,?,'FINANCE_OPERATIONS',?,'{}',?::jsonb)",
+                """
+                INSERT INTO platform.reconciliation_exception(run_id,organization_id,environment_id,
+                    provider_account_id,livemode,currency,reason,owner,source_ref,input_versions,evidence)
+                VALUES (?,?,?,?,?,?,?,'FINANCE_OPERATIONS',?,'{}',?::jsonb)""",
                 claim.runId(),
                 claim.scope().organizationId(),
                 claim.scope().environmentId(),
@@ -385,7 +398,19 @@ public final class ReconciliationSourceRecovery {
 
     private void complete(Claim claim, String status, String reason) {
         int changed = jdbc.update(
-                "UPDATE platform.recovery_task SET status=?,reason=?,available_at=?,lease_token=null,lease_until=null,version=version+1,updated_at=?,escalated_at=CASE WHEN ?='ESCALATED' THEN ? ELSE escalated_at END,age_alert_at=CASE WHEN ?='ESCALATED' THEN coalesce(age_alert_at,?) ELSE age_alert_at END WHERE id=? AND lease_token=? AND version=? AND lease_until>?",
+                """
+                UPDATE platform.recovery_task
+                SET
+                    status=?,
+                    reason=?,
+                    available_at=?,
+                    lease_token=null,
+                    lease_until=null,
+                    version=version+1,
+                    updated_at=?,
+                    escalated_at=CASE WHEN ?='ESCALATED' THEN ? ELSE escalated_at END,
+                    age_alert_at=CASE WHEN ?='ESCALATED' THEN coalesce(age_alert_at,?) ELSE age_alert_at END
+                WHERE id=? AND lease_token=? AND version=? AND lease_until>?""",
                 status,
                 reason,
                 ts(clock.instant().plusSeconds(300)),
@@ -421,11 +446,10 @@ public final class ReconciliationSourceRecovery {
                 one("SELECT * FROM platform.reconciliation_run WHERE " + SCOPE + " AND id=?", append(args(scope), id));
         if (row == null) throw new IllegalArgumentException("Unknown scoped reconciliation run");
         Long enabled = jdbc.queryForObject(
-                "SELECT count(*) FROM platform.org_currency_enabled WHERE organization_id=? AND environment_id=? AND currency=? AND status='ACTIVE'",
-                Long.class,
-                scope.organizationId(),
-                scope.environmentId(),
-                row.get("currency"));
+                """
+                SELECT count(*)
+                FROM platform.org_currency_enabled
+                WHERE organization_id=? AND environment_id=? AND currency=? AND status='ACTIVE'""", Long.class, scope.organizationId(), scope.environmentId(), row.get("currency"));
         if (enabled != 1) throw new IllegalArgumentException("Active scoped currency required");
         return row;
     }
@@ -433,11 +457,19 @@ public final class ReconciliationSourceRecovery {
     private void active(ProviderScope scope) {
         if (scope == null || scope.livemode()) throw new IllegalArgumentException("Test scope required");
         Long count = jdbc.queryForObject(
-                "SELECT count(*) FROM platform.provider_account p JOIN platform.organization o ON o.id=p.organization_id JOIN platform.environment_config e ON e.id=p.environment_id WHERE p.id=? AND p.organization_id=? AND p.environment_id=? AND NOT p.livemode AND NOT e.livemode AND p.status='ACTIVE' AND o.status='ACTIVE' AND e.status='ACTIVE'",
-                Long.class,
-                scope.providerAccountId(),
-                scope.organizationId(),
-                scope.environmentId());
+                """
+                SELECT count(*)
+                FROM platform.provider_account p
+                JOIN platform.organization o ON o.id=p.organization_id
+                JOIN platform.environment_config e ON e.id=p.environment_id
+                WHERE p.id=?
+                    AND p.organization_id=?
+                    AND p.environment_id=?
+                    AND NOT p.livemode
+                    AND NOT e.livemode
+                    AND p.status='ACTIVE'
+                    AND o.status='ACTIVE'
+                    AND e.status='ACTIVE'""", Long.class, scope.providerAccountId(), scope.organizationId(), scope.environmentId());
         if (count != 1) throw new IllegalArgumentException("Active trusted provider scope required");
     }
 

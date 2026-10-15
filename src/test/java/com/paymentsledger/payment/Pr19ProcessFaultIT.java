@@ -207,11 +207,10 @@ class Pr19ProcessFaultIT extends Pr19ProcessFixture {
                                     "SELECT version,lease_token FROM platform.provider_operation WHERE id=?",
                                     intent.operationId()))
                             .isEqualTo(operation);
-                    assertThat(jdbc.queryForObject(
-                                    "SELECT count(*) FROM platform.provider_observation WHERE operation_id=? AND lease_token::text=?",
-                                    Long.class,
-                                    intent.operationId(),
-                                    oldToken))
+                    assertThat(jdbc.queryForObject("""
+                                    SELECT count(*)
+                                    FROM platform.provider_observation
+                                    WHERE operation_id=? AND lease_token::text=?""", Long.class, intent.operationId(), oldToken))
                             .isEqualTo(1);
                     assertThat(fake.counters(scope).refundEffectCount()).isEqualTo(1);
                     assertThat(held()).isEqualTo(600);
@@ -267,9 +266,10 @@ class Pr19ProcessFaultIT extends Pr19ProcessFixture {
                     checkout = session(resource);
                     var intent = fake.controls().attemptPayment(scope, checkout, FakeControls.AttemptOutcome.SUCCEED);
                     chargeId = intent.latestChargeId();
-                    admin.update(
-                            "UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref='acct_pr19_fixture' WHERE id=?",
-                            id(4));
+                    admin.update("""
+                            UPDATE platform.provider_account
+                            SET provider='STRIPE',provider_account_ref='acct_pr19_fixture'
+                            WHERE id=?""", id(4));
                     var raw = json.createObjectNode()
                             .put("id", "evt_pr19_crash")
                             .put("type", "charge.succeeded")

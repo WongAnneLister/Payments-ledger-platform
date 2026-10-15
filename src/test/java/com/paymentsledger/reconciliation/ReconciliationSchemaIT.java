@@ -72,13 +72,13 @@ class ReconciliationSchemaIT {
 
     @Test
     void feeDirectionIsVersionedAndDefaultsToPrincipalCompatibility() {
-        assertThat(admin.queryForObject(
-                        "SELECT count(*) FROM information_schema.columns WHERE table_schema='platform' AND table_name='fee_model' AND column_name='fee_direction'",
-                        Long.class))
-                .isEqualTo(1);
-        assertThat(admin.queryForObject(
-                        "SELECT column_default FROM information_schema.columns WHERE table_schema='platform' AND table_name='fee_model' AND column_name='fee_direction'",
-                        String.class))
-                .contains("FOLLOW_PRINCIPAL");
+        assertThat(admin.queryForObject("""
+                        SELECT count(*)
+                        FROM information_schema.columns
+                        WHERE table_schema='platform' AND table_name='fee_model' AND column_name='fee_direction'""", Long.class)).isEqualTo(1);
+        assertThat(admin.queryForObject("""
+                        SELECT column_default
+                        FROM information_schema.columns
+                        WHERE table_schema='platform' AND table_name='fee_model' AND column_name='fee_direction'""", String.class)).contains("FOLLOW_PRINCIPAL");
     }
 }

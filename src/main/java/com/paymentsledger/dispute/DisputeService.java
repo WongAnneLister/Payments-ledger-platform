@@ -39,7 +39,16 @@ public final class DisputeService {
     public UUID paymentForCharge(ProviderScope scope, String charge) {
         if (charge == null) return null;
         var rows = jdbc.queryForList(
-                "SELECT DISTINCT p.id FROM platform.payment p LEFT JOIN platform.payment_attempt a ON a.payment_id=p.id WHERE p.organization_id=? AND p.environment_id=? AND p.provider_account_id=? AND (p.latest_charge_id=? OR a.provider_object_id=?) ORDER BY p.id",
+                """
+                SELECT DISTINCT p.id
+                FROM platform.payment p
+                LEFT
+                JOIN platform.payment_attempt a ON a.payment_id=p.id
+                WHERE p.organization_id=?
+                    AND p.environment_id=?
+                    AND p.provider_account_id=?
+                    AND (p.latest_charge_id=? OR a.provider_object_id=?)
+                ORDER BY p.id""",
                 UUID.class,
                 scope.organizationId(),
                 scope.environmentId(),
@@ -50,13 +59,14 @@ public final class DisputeService {
     }
 
     public Map<String, Object> lookup(ProviderScope scope, String id) {
-        return one(
-                "SELECT * FROM platform.dispute WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND provider_dispute_id=?",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId(),
-                scope.livemode(),
-                id);
+        return one("""
+                SELECT *
+                FROM platform.dispute
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND provider_account_id=?
+                    AND livemode=?
+                    AND provider_dispute_id=?""", scope.organizationId(), scope.environmentId(), scope.providerAccountId(), scope.livemode(), id);
     }
 
     public UUID accept(ProviderScope scope, DisputeFact fact, ProviderEvidence evidence) {
@@ -76,9 +86,21 @@ public final class DisputeService {
         Map<String, Object> p = null;
         if (payment != null) {
             p = one("SELECT * FROM platform.payment WHERE id=? FOR UPDATE", payment);
-            jdbc.update(
-                    "INSERT INTO platform.refund_control(payment_id,organization_id,environment_id,application_id,provider_account_id,currency,captured_minor) SELECT id,organization_id,environment_id,application_id,provider_account_id,currency,captured_amount_minor FROM platform.payment WHERE id=? ON CONFLICT(payment_id) DO NOTHING",
-                    payment);
+            jdbc.update("""
+                    INSERT INTO platform.refund_control(payment_id,organization_id,environment_id,application_id,
+                        provider_account_id,currency,captured_minor)
+                    SELECT
+                        id,
+                        organization_id,
+                        environment_id,
+                        application_id,
+                        provider_account_id,
+                        currency,
+                        captured_amount_minor
+                    FROM platform.payment
+                    WHERE id=?
+                    ON CONFLICT(payment_id)
+                    DO NOTHING""", payment);
             jdbc.queryForList("SELECT payment_id FROM platform.refund_control WHERE payment_id=? FOR UPDATE", payment);
             jdbc.queryForList("SELECT id FROM platform.dispute WHERE payment_id=? ORDER BY id FOR UPDATE", payment);
         }
@@ -86,7 +108,13 @@ public final class DisputeService {
                 ? fact.currency().toUpperCase(Locale.ROOT)
                 : p.get("currency").toString();
         jdbc.update(
-                "INSERT INTO platform.dispute(organization_id,environment_id,provider_account_id,livemode,provider_dispute_id,application_id,payment_id,provider_charge_id,currency,provider_status,reason,evidence_due_by,last_observed_at,disputed_principal_minor) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(organization_id,environment_id,provider_account_id,livemode,provider_dispute_id) DO NOTHING",
+                """
+                INSERT INTO platform.dispute(organization_id,environment_id,provider_account_id,livemode,
+                    provider_dispute_id,application_id,payment_id,provider_charge_id,currency,provider_status,
+                    reason,evidence_due_by,last_observed_at,disputed_principal_minor)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                ON CONFLICT(organization_id,environment_id,provider_account_id,livemode,provider_dispute_id)
+                DO NOTHING""",
                 scope.organizationId(),
                 scope.environmentId(),
                 scope.providerAccountId(),
@@ -102,7 +130,16 @@ public final class DisputeService {
                 stamp(evidence.requestedAt()),
                 fact.amountMinor());
         var d = one(
-                "SELECT * FROM platform.dispute WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND provider_dispute_id=? FOR UPDATE",
+                """
+                SELECT *
+                FROM platform.dispute
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND provider_account_id=?
+                    AND livemode=?
+                    AND provider_dispute_id=?
+                FOR
+                UPDATE""",
                 scope.organizationId(),
                 scope.environmentId(),
                 scope.providerAccountId(),
@@ -118,15 +155,17 @@ public final class DisputeService {
             jdbc.queryForObject("SELECT platform.ensure_dispute_accounts(?)", Object.class, payment);
         }
         jdbc.update(
-                "INSERT INTO platform.dispute_observation(dispute_id,fact,evidence) VALUES(?,?::jsonb,?::jsonb)",
+                """
+                INSERT INTO platform.dispute_observation(dispute_id,fact,evidence)
+                VALUES(?,?::jsonb,?::jsonb)""",
                 id,
                 mapper.valueToTree(fact).toString(),
                 safeEvidence(evidence).toString());
-        for (String bt : fact.balanceTransactionIds())
-            jdbc.update(
-                    "INSERT INTO platform.dispute_bt_link(dispute_id,bt_id) VALUES(?,?) ON CONFLICT DO NOTHING",
-                    id,
-                    bt);
+        for (String bt : fact.balanceTransactionIds()) jdbc.update("""
+                    INSERT INTO platform.dispute_bt_link(dispute_id,bt_id)
+                    VALUES(?,?)
+                    ON CONFLICT
+                    DO NOTHING""", id, bt);
         boolean identityConflict = !d.get("currency").equals(fact.currency().toUpperCase(Locale.ROOT))
                 || number(d, "disputed_principal_minor") != fact.amountMinor()
                 || d.get("provider_charge_id") != null && !Objects.equals(d.get("provider_charge_id"), fact.chargeId());
@@ -136,12 +175,10 @@ public final class DisputeService {
             identityConflict = true;
         if (identityConflict) conflict(id, "DISPUTE_IDENTITY_OR_AMOUNT_CONFLICT", mapper.valueToTree(fact));
         if (payment != null && d.get("payment_id") == null) {
-            jdbc.update(
-                    "UPDATE platform.dispute SET payment_id=?,application_id=?,currency=?,updated_at=now() WHERE id=?",
-                    payment,
-                    p.get("application_id"),
-                    p.get("currency"),
-                    id);
+            jdbc.update("""
+                    UPDATE platform.dispute
+                    SET payment_id=?,application_id=?,currency=?,updated_at=now()
+                    WHERE id=?""", payment, p.get("application_id"), p.get("currency"), id);
         }
         Instant previous = ((Timestamp) d.get("last_observed_at")).toInstant();
         String old = Objects.toString(d.get("provider_status"), "");
@@ -152,12 +189,10 @@ public final class DisputeService {
         if (!stale && regression) conflict(id, "DISPUTE_TERMINAL_STATE_CONFLICT", mapper.valueToTree(fact));
         if (!stale && !regression && !identityConflict)
             jdbc.update(
-                    "UPDATE platform.dispute SET provider_status=?,reason=?,evidence_due_by=?,last_observed_at=?,updated_at=now() WHERE id=?",
-                    fact.status(),
-                    fact.reason(),
-                    stamp(fact.evidenceDueBy()),
-                    stamp(evidence.requestedAt()),
-                    id);
+                    """
+                    UPDATE platform.dispute
+                    SET provider_status=?,reason=?,evidence_due_by=?,last_observed_at=?,updated_at=now()
+                    WHERE id=?""", fact.status(), fact.reason(), stamp(fact.evidenceDueBy()), stamp(evidence.requestedAt()), id);
         if (payment != null) {
             lockAccounts(payment);
             reclassify(id);
@@ -182,9 +217,10 @@ public final class DisputeService {
         if (!blocks(paymentId)) return;
         var c = one("SELECT * FROM platform.refund_control WHERE payment_id=?", paymentId);
         if (c != null && (number(c, "reserved_minor") > 0 || number(c, "refunded_minor") > 0)) {
-            jdbc.update(
-                    "UPDATE platform.refund_control SET control_state='EXTERNAL_CONFLICT',version=version+1,updated_at=now() WHERE payment_id=? AND control_state<>'EXTERNAL_CONFLICT'",
-                    paymentId);
+            jdbc.update("""
+                    UPDATE platform.refund_control
+                    SET control_state='EXTERNAL_CONFLICT',version=version+1,updated_at=now()
+                    WHERE payment_id=? AND control_state<>'EXTERNAL_CONFLICT'""", paymentId);
             for (var d : jdbc.queryForList(
                     "SELECT id FROM platform.dispute WHERE payment_id=? AND blocking ORDER BY id", paymentId))
                 conflict(
@@ -208,10 +244,11 @@ public final class DisputeService {
             conflict(id, "DISPUTE_BT_SCOPE_CONFLICT", mapper.valueToTree(fact));
             return quarantine(rowId, "DISPUTE_BT_SCOPE_CONFLICT");
         }
-        jdbc.update(
-                "INSERT INTO platform.dispute_bt_link(dispute_id,bt_id) VALUES(?,?) ON CONFLICT DO NOTHING",
-                id,
-                fact.btId());
+        jdbc.update("""
+                INSERT INTO platform.dispute_bt_link(dispute_id,bt_id)
+                VALUES(?,?)
+                ON CONFLICT
+                DO NOTHING""", id, fact.btId());
         jdbc.update("UPDATE platform.balance_transaction SET dispute_id=?,payment_id=? WHERE id=?", id, payment, rowId);
         long principal = fact.amountMinor(),
                 ar = number(d, "outstanding_receivable_minor"),
@@ -225,15 +262,17 @@ public final class DisputeService {
             return quarantine(rowId, "DISPUTE_DEBIT_EXCEEDS_PRINCIPAL");
         }
         if (principal == 0 && fact.feeMinor() == 0) {
-            jdbc.update(
-                    "UPDATE platform.balance_transaction SET state='ZERO',reason='ZERO_MOVEMENT',updated_at=now() WHERE id=?",
-                    rowId);
+            jdbc.update("""
+                    UPDATE platform.balance_transaction
+                    SET state='ZERO',reason='ZERO_MOVEMENT',updated_at=now()
+                    WHERE id=?""", rowId);
             refresh(id);
             return "ZERO";
         }
-        jdbc.update(
-                "UPDATE platform.dispute SET blocking=true,local_handling=CASE WHEN conflict THEN 'NEEDS_REVIEW' ELSE 'WAITING_EVIDENCE' END WHERE id=?",
-                id);
+        jdbc.update("""
+                UPDATE platform.dispute
+                SET blocking=true,local_handling=CASE WHEN conflict THEN 'NEEDS_REVIEW' ELSE 'WAITING_EVIDENCE' END
+                WHERE id=?""", id);
         jdbc.queryForObject("SELECT platform.ensure_dispute_accounts(?)", Object.class, payment);
         lockAccounts(payment);
         var accounts = accounts(d);
@@ -266,12 +305,16 @@ public final class DisputeService {
                         immutable,
                         lines,
                         null));
+        jdbc.update("""
+                UPDATE platform.balance_transaction
+                SET state='POSTED',journal_id=?,reason=NULL,version=version+1,updated_at=now()
+                WHERE id=?""", journal, rowId);
         jdbc.update(
-                "UPDATE platform.balance_transaction SET state='POSTED',journal_id=?,reason=NULL,version=version+1,updated_at=now() WHERE id=?",
-                journal,
-                rowId);
-        jdbc.update(
-                "INSERT INTO platform.dispute_financial_fact(organization_id,environment_id,currency,dispute_id,balance_transaction_id,journal_id,kind,principal_minor,fee_minor,receivable_delta,loss_delta,suspense_minor) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
+                """
+                INSERT INTO platform.dispute_financial_fact(organization_id,environment_id,currency,dispute_id,
+                    balance_transaction_id,journal_id,kind,principal_minor,fee_minor,receivable_delta,loss_delta,
+                    suspense_minor)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?)""",
                 d.get("organization_id"),
                 d.get("environment_id"),
                 d.get("currency"),
@@ -285,7 +328,16 @@ public final class DisputeService {
                 lossDelta,
                 suspense);
         jdbc.update(
-                "UPDATE platform.dispute SET outstanding_receivable_minor=?,confirmed_loss_minor=?,debited_principal_minor=?,returned_principal_minor=?,dispute_fee_minor=?,updated_at=now() WHERE id=?",
+                """
+                UPDATE platform.dispute
+                SET
+                    outstanding_receivable_minor=?,
+                    confirmed_loss_minor=?,
+                    debited_principal_minor=?,
+                    returned_principal_minor=?,
+                    dispute_fee_minor=?,
+                    updated_at=now()
+                WHERE id=?""",
                 Math.addExact(ar, arDelta),
                 Math.addExact(loss, lossDelta),
                 Math.addExact(debited, debit),
@@ -326,7 +378,10 @@ public final class DisputeService {
                                 new PostingLine(accounts.get("DISPUTE_RECEIVABLE"), Side.CREDIT, amount)),
                         null));
         jdbc.update(
-                "INSERT INTO platform.dispute_financial_fact(organization_id,environment_id,currency,dispute_id,journal_id,kind,principal_minor,receivable_delta,loss_delta,loss_generation) VALUES(?,?,?,?,?,'LOSS',?,?,?,?)",
+                """
+                INSERT INTO platform.dispute_financial_fact(organization_id,environment_id,currency,dispute_id,
+                    journal_id,kind,principal_minor,receivable_delta,loss_delta,loss_generation)
+                VALUES(?,?,?,?,?,'LOSS',?,?,?,?)""",
                 d.get("organization_id"),
                 d.get("environment_id"),
                 d.get("currency"),
@@ -336,11 +391,10 @@ public final class DisputeService {
                 -amount,
                 amount,
                 generation);
-        jdbc.update(
-                "UPDATE platform.dispute SET outstanding_receivable_minor=0,confirmed_loss_minor=?,loss_generation=?,updated_at=now() WHERE id=?",
-                Math.addExact(number(d, "confirmed_loss_minor"), amount),
-                generation,
-                id);
+        jdbc.update("""
+                UPDATE platform.dispute
+                SET outstanding_receivable_minor=0,confirmed_loss_minor=?,loss_generation=?,updated_at=now()
+                WHERE id=?""", Math.addExact(number(d, "confirmed_loss_minor"), amount), generation, id);
     }
 
     private void refresh(UUID id) {
@@ -348,7 +402,12 @@ public final class DisputeService {
         long links =
                 jdbc.queryForObject("SELECT count(*) FROM platform.dispute_bt_link WHERE dispute_id=?", Long.class, id);
         boolean complete = !Boolean.TRUE.equals(jdbc.queryForObject(
-                "SELECT EXISTS(SELECT 1 FROM platform.dispute_bt_link l WHERE l.dispute_id=? AND NOT EXISTS(SELECT 1 FROM platform.balance_transaction b WHERE b.organization_id=? AND b.environment_id=? AND b.provider_account_id=? AND b.livemode=? AND b.bt_id=l.bt_id AND b.dispute_id=? AND b.state IN('POSTED','ZERO') AND NOT EXISTS(SELECT 1 FROM platform.bt_evidence_conflict c WHERE c.balance_transaction_id=b.id)))",
+                """
+                SELECT EXISTS(SELECT 1 FROM platform.dispute_bt_link l WHERE l.dispute_id=? AND NOT EXISTS(SELECT 1
+                    FROM platform.balance_transaction b WHERE b.organization_id=? AND b.environment_id=? AND
+                    b.provider_account_id=? AND b.livemode=? AND b.bt_id=l.bt_id AND b.dispute_id=? AND b.state
+                    IN('POSTED','ZERO') AND NOT EXISTS(SELECT 1 FROM platform.bt_evidence_conflict c WHERE
+                    c.balance_transaction_id=b.id)))""",
                 Boolean.class,
                 id,
                 d.get("organization_id"),
@@ -366,36 +425,40 @@ public final class DisputeService {
                                 && number(d, "debited_principal_minor") > 0
                                 && number(d, "returned_principal_minor") == number(d, "debited_principal_minor"));
         jdbc.update(
-                "UPDATE platform.dispute SET blocking=?,local_handling=?,updated_at=now() WHERE id=?",
+                """
+                UPDATE platform.dispute
+                SET blocking=?,local_handling=?,updated_at=now()
+                WHERE id=?""",
                 !resolved,
                 Boolean.TRUE.equals(d.get("conflict")) ? "NEEDS_REVIEW" : resolved ? "RESOLVED" : "WAITING_EVIDENCE",
                 id);
     }
 
     private void conflict(UUID id, String reason, com.fasterxml.jackson.databind.JsonNode evidence) {
-        jdbc.update(
-                "UPDATE platform.dispute SET conflict=true,blocking=true,local_handling='NEEDS_REVIEW',updated_at=now() WHERE id=?",
-                id);
-        jdbc.update(
-                "INSERT INTO platform.dispute_case(dispute_id,reason,evidence) VALUES(?,?,?::jsonb) ON CONFLICT(dispute_id,reason) DO NOTHING",
-                id,
-                reason,
-                evidence.toString());
+        jdbc.update("""
+                UPDATE platform.dispute
+                SET conflict=true,blocking=true,local_handling='NEEDS_REVIEW',updated_at=now()
+                WHERE id=?""", id);
+        jdbc.update("""
+                INSERT INTO platform.dispute_case(dispute_id,reason,evidence)
+                VALUES(?,?,?::jsonb)
+                ON CONFLICT(dispute_id,reason)
+                DO NOTHING""", id, reason, evidence.toString());
     }
 
     private String pending(UUID id, String reason) {
-        jdbc.update(
-                "UPDATE platform.balance_transaction SET state='PENDING_EVIDENCE',reason=?,updated_at=now() WHERE id=?",
-                reason,
-                id);
+        jdbc.update("""
+                UPDATE platform.balance_transaction
+                SET state='PENDING_EVIDENCE',reason=?,updated_at=now()
+                WHERE id=?""", reason, id);
         return "PENDING_EVIDENCE";
     }
 
     private String quarantine(UUID id, String reason) {
-        jdbc.update(
-                "UPDATE platform.balance_transaction SET state='QUARANTINED',reason=?,updated_at=now() WHERE id=?",
-                reason,
-                id);
+        jdbc.update("""
+                UPDATE platform.balance_transaction
+                SET state='QUARANTINED',reason=?,updated_at=now()
+                WHERE id=?""", reason, id);
         return "QUARANTINED";
     }
 
@@ -406,7 +469,14 @@ public final class DisputeService {
     private Map<String, UUID> accounts(Map<String, Object> d) {
         var result = new HashMap<String, UUID>();
         for (var a : jdbc.queryForList(
-                "SELECT id,account_purpose FROM platform.ledger_account WHERE organization_id=? AND environment_id=? AND currency=? AND ((source_domain='PROVIDER' AND provider_account_id=? AND balance_domain='PAYMENTS') OR (source_domain='INTERNAL' AND account_purpose='DISPUTE_LOSS'))",
+                """
+                SELECT id,account_purpose
+                FROM platform.ledger_account
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND currency=?
+                    AND ((source_domain='PROVIDER' AND provider_account_id=? AND balance_domain='PAYMENTS') OR
+                        (source_domain='INTERNAL' AND account_purpose='DISPUTE_LOSS'))""",
                 d.get("organization_id"),
                 d.get("environment_id"),
                 d.get("currency"),

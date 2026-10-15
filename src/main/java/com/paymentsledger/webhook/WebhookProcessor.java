@@ -104,7 +104,14 @@ public class WebhookProcessor {
         if (Set.of("checkout.session", "payment_intent", "charge").contains(type)) {
             var ids = inbox.jdbc()
                     .queryForList(
-                            "SELECT id FROM platform.payment WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND ((CAST(? AS text) IS NOT NULL AND payment_intent_id=?) OR (?='checkout.session' AND checkout_session_id=?))",
+                            """
+                            SELECT id
+                            FROM platform.payment
+                            WHERE organization_id=?
+                                AND environment_id=?
+                                AND provider_account_id=?
+                                AND ((CAST(? AS text) IS NOT NULL AND payment_intent_id=?) OR (?='checkout.session' AND
+                                    checkout_session_id=?))""",
                             UUID.class,
                             claim.row().get("organization_id"),
                             claim.row().get("environment_id"),
@@ -268,7 +275,14 @@ public class WebhookProcessor {
                 // capture identity.
                 inbox.jdbc()
                         .update(
-                                "INSERT INTO platform.normalized_observation(organization_id,environment_id,provider_account_id,fact_key,fact_kind,object_id,payment_id,fact,first_source,last_source,first_confirmed_at,last_confirmed_at) VALUES (?,?,?,?,'OBJECT',?,?,?::jsonb,'WEBHOOK','WEBHOOK',?,?) ON CONFLICT(organization_id,environment_id,provider_account_id,fact_key) DO UPDATE SET last_confirmed_at=greatest(normalized_observation.last_confirmed_at,excluded.last_confirmed_at)",
+                                """
+                                INSERT INTO platform.normalized_observation(organization_id,environment_id,provider_account_id,
+                                    fact_key,fact_kind,object_id,payment_id,fact,first_source,last_source,first_confirmed_at,
+                                    last_confirmed_at)
+                                VALUES (?,?,?,?,'OBJECT',?,?,?::jsonb,'WEBHOOK','WEBHOOK',?,?)
+                                ON CONFLICT(organization_id,environment_id,provider_account_id,fact_key)
+                                DO UPDATE SET last_confirmed_at=greatest(normalized_observation.last_confirmed_at,
+                                    excluded.last_confirmed_at)""",
                                 p.get("organization_id"),
                                 p.get("environment_id"),
                                 p.get("provider_account_id"),
