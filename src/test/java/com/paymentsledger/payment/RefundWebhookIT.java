@@ -143,8 +143,8 @@ class RefundWebhookIT extends PaymentCoreFixture {
                     NEW.status='DONE' THEN RAISE EXCEPTION 'injected refund acknowledgement crash'; END IF; RETURN
                     NEW; END $$""");
         admin.execute("""
-                CREATE TRIGGER pr11_fail_ack BEFORE
-                UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.pr11_fail_ack()""");
+                CREATE TRIGGER pr11_fail_ack BEFORE UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr11_fail_ack()""");
         try {
             assertThatThrownBy(this::process).isInstanceOf(RuntimeException.class);
             assertThat(count("refund")).isZero();

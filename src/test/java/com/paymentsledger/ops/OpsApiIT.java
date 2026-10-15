@@ -395,11 +395,11 @@ class OpsApiIT {
         var next = call(2, "/ops/adjustments", HttpMethod.POST, adjustment(), "rollback");
         String adjustment = next.getBody().path("adjustmentId").asText();
         admin.execute("""
-                CREATE FUNCTION platform.test_fail_approval() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
-                    EXCEPTION 'test approval rollback'; END $$""");
+                CREATE FUNCTION platform.test_fail_approval() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION
+                    'test approval rollback'; END $$""");
         admin.execute("""
-                CREATE TRIGGER test_fail_approval BEFORE
-                UPDATE ON platform.ops_adjustment FOR EACH ROW EXECUTE FUNCTION platform.test_fail_approval()""");
+                CREATE TRIGGER test_fail_approval BEFORE UPDATE ON platform.ops_adjustment FOR EACH ROW EXECUTE FUNCTION
+                    platform.test_fail_approval()""");
         try {
             assertThat(call(3, "/ops/adjustments/" + adjustment + "/approve", HttpMethod.POST, b, "rollback-approve")
                             .getStatusCode())

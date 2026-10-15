@@ -104,11 +104,11 @@ class PaymentCoreIT extends PaymentCoreFixture {
     @Test
     void rollbackDoesNotLeaveIntentOrCallProvider() {
         admin.execute("""
-                CREATE OR REPLACE FUNCTION platform.fail_payment_task() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
-                    RAISE EXCEPTION 'injected task failure'; END $$""");
+                CREATE OR REPLACE FUNCTION platform.fail_payment_task() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION
+                    'injected task failure'; END $$""");
         admin.execute("""
-                CREATE TRIGGER fail_payment_task BEFORE INSERT ON platform.recovery_task FOR EACH ROW EXECUTE
-                    FUNCTION platform.fail_payment_task()""");
+                CREATE TRIGGER fail_payment_task BEFORE INSERT ON platform.recovery_task FOR EACH ROW EXECUTE FUNCTION
+                    platform.fail_payment_task()""");
         try {
             assertThatThrownBy(() -> service.create(context, "key-key-000", command("order")))
                     .isInstanceOf(RuntimeException.class);

@@ -1156,10 +1156,10 @@ public final class Pr20PerformanceExperiment {
                 SELECT count(*)
                 FROM (SELECT a.id,coalesce(sum(CASE e.side WHEN 'DEBIT' THEN e.amount_minor::numeric ELSE
                     -e.amount_minor::numeric END),0) actual,coalesce(p.balance_minor,0) cached FROM
-                    platform.ledger_account a LEFT JOIN platform.journal_entry e ON e.ledger_account_id=a.id LEFT
-                    JOIN platform.balance_projection p ON p.ledger_account_id=a.id GROUP BY a.id,p.balance_minor
-                    HAVING coalesce(sum(CASE e.side WHEN 'DEBIT' THEN e.amount_minor::numeric ELSE
-                    -e.amount_minor::numeric END),0)<>coalesce(p.balance_minor,0)) x""", Long.class);
+                    platform.ledger_account a LEFT JOIN platform.journal_entry e ON e.ledger_account_id=a.id LEFT JOIN
+                    platform.balance_projection p ON p.ledger_account_id=a.id GROUP BY a.id,p.balance_minor HAVING
+                    coalesce(sum(CASE e.side WHEN 'DEBIT' THEN e.amount_minor::numeric ELSE -e.amount_minor::numeric
+                    END),0)<>coalesce(p.balance_minor,0)) x""", Long.class);
         long duplicate = admin.queryForObject("""
                 SELECT count(*)
                 FROM (SELECT financial_event_id FROM platform.journal GROUP BY financial_event_id HAVING count(*)>1

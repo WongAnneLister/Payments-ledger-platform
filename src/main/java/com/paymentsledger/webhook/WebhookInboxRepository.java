@@ -143,8 +143,7 @@ public class WebhookInboxRepository {
                     WHERE status<>'DONE' AND available_at<=? AND (lease_until IS NULL OR lease_until<=?)
                     ORDER BY available_at,id
                     LIMIT ?
-                    FOR
-                    UPDATE SKIP LOCKED""",
+                    FOR UPDATE SKIP LOCKED""",
                     Timestamp.from(clock.instant()),
                     Timestamp.from(clock.instant()),
                     Math.min(100, Math.max(0, limit)));
@@ -166,8 +165,7 @@ public class WebhookInboxRepository {
                 SELECT id
                 FROM platform.webhook_inbox
                 WHERE id=? AND lease_token=? AND status='RUNNING' AND lease_until>?
-                FOR
-                UPDATE""", claim.id(), claim.token(), Timestamp.from(clock.instant()));
+                FOR UPDATE""", claim.id(), claim.token(), Timestamp.from(clock.instant()));
         return !rows.isEmpty();
     }
 

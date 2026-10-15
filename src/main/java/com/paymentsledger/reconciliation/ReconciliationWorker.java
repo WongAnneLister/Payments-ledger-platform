@@ -97,8 +97,7 @@ public final class ReconciliationWorker {
                     AND r.provider_account_id=?
                     AND r.livemode=?
                     AND r.currency=?
-                    AND r.finished_at IS NULL
-                ORDER BY c.updated_at,r.id
+                    AND r.finished_at IS NULL ORDER BY c.updated_at,r.id
                 LIMIT 5""",
                 UUID.class,
                 scope.organizationId(),
@@ -179,9 +178,8 @@ public final class ReconciliationWorker {
                     AND payload->'report'->>'status' IN ('pending','queued','running')
                     AND payload->'report'->'createdGte'=payload->'requestedFrom'
                     AND payload->'report'->'createdLt'=payload->'requestedUntil'
-                    AND nullif(payload->'report'->>'reportId','') IS NOT NULL
-                ORDER BY created_at DESC,id DESC
-                LIMIT 1""", run.runId());
+                    AND nullif(payload->'report'->>'reportId','') IS NOT NULL ORDER BY created_at DESC,id DESC LIMIT
+                        1""", run.runId());
         String reportId = prior.isEmpty() ? null : (String) prior.getFirst().get("report_id");
         try {
             result = reportId == null

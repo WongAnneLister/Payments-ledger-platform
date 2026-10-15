@@ -409,8 +409,8 @@ public final class ReconciliationSourceRecovery {
                     version=version+1,
                     updated_at=?,
                     escalated_at=CASE WHEN ?='ESCALATED' THEN ? ELSE escalated_at END,
-                    age_alert_at=CASE WHEN ?='ESCALATED' THEN coalesce(age_alert_at,?) ELSE age_alert_at END
-                WHERE id=? AND lease_token=? AND version=? AND lease_until>?""",
+                    age_alert_at=CASE WHEN ?='ESCALATED' THEN coalesce(age_alert_at,?) ELSE age_alert_at END WHERE
+                        id=? AND lease_token=? AND version=? AND lease_until>?""",
                 status,
                 reason,
                 ts(clock.instant().plusSeconds(300)),

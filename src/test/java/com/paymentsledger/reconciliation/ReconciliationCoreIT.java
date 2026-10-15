@@ -244,8 +244,7 @@ class ReconciliationCoreIT {
         admin.execute("ALTER TABLE platform.import_page DISABLE TRIGGER USER");
         try {
             admin.update("""
-                    DELETE
-                    FROM platform.import_page
+                    DELETE FROM platform.import_page
                     WHERE request_cursor=''
                         AND window_id=(SELECT import_window_id FROM platform.reconciliation_run WHERE id=?)""", run);
         } finally {
@@ -1056,8 +1055,8 @@ class ReconciliationCoreIT {
         try {
             admin.update("""
                     UPDATE platform.balance_projection
-                    SET balance_minor=CASE WHEN ledger_account_id=? THEN 101 ELSE -101 END
-                    WHERE ledger_account_id IN (?,?)""", id(20), id(20), id(22));
+                    SET balance_minor=CASE WHEN ledger_account_id=? THEN 101 ELSE -101 END WHERE ledger_account_id IN
+                        (?,?)""", id(20), id(20), id(22));
         } finally {
             admin.execute("ALTER TABLE platform.balance_projection ENABLE TRIGGER USER");
         }
@@ -1108,14 +1107,12 @@ class ReconciliationCoreIT {
         page(false, null, 0);
         advance(run, 1);
         admin.execute("""
-                CREATE FUNCTION platform.pr15_test_pause() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER
-                SET
-                    search_path=pg_catalog,
-                    platform AS $$ BEGIN IF NEW.check_number=1 THEN PERFORM pg_advisory_xact_lock(15154); END IF;
-                        RETURN NEW; END $$""");
+                CREATE FUNCTION platform.pr15_test_pause() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET
+                    search_path=pg_catalog,platform AS $$ BEGIN IF NEW.check_number=1 THEN PERFORM
+                    pg_advisory_xact_lock(15154); END IF; RETURN NEW; END $$""");
         admin.execute("""
-                CREATE TRIGGER zz_pr15_test_pause BEFORE INSERT ON platform.reconciliation_check FOR EACH ROW
-                    EXECUTE FUNCTION platform.pr15_test_pause()""");
+                CREATE TRIGGER zz_pr15_test_pause BEFORE INSERT ON platform.reconciliation_check FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr15_test_pause()""");
         try (var gate = admin.getDataSource().getConnection();
                 var statement = gate.createStatement();
                 var pool = Executors.newFixedThreadPool(2)) {

@@ -290,8 +290,7 @@ class Pr18ConcurrencyIT extends Pr18Fixture {
         assertThat(jdbc.queryForObject("""
                         SELECT count(*)
                         FROM platform.financial_event e
-                        LEFT
-                        JOIN platform.journal j ON j.financial_event_id=e.id
+                        LEFT JOIN platform.journal j ON j.financial_event_id=e.id
                         WHERE j.id IS NULL""", Long.class)).isZero();
         assertThat(new BalanceRebuildService(jdbc, fake.clock())
                         .rebuild(

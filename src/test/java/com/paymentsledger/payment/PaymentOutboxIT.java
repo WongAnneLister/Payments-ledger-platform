@@ -143,11 +143,11 @@ class PaymentOutboxIT extends PaymentCoreFixture {
                 service.create(context, "notification-key", command("order")).resource();
         fake.controls().attemptPayment(scope, session(resource), FakeControls.AttemptOutcome.SUCCEED);
         admin.execute("""
-                CREATE OR REPLACE FUNCTION platform.fail_notification() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
-                    RAISE EXCEPTION 'injected outbox failure'; END $$""");
+                CREATE OR REPLACE FUNCTION platform.fail_notification() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION
+                    'injected outbox failure'; END $$""");
         admin.execute("""
-                CREATE TRIGGER fail_notification BEFORE INSERT ON platform.outbox_event FOR EACH ROW EXECUTE
-                    FUNCTION platform.fail_notification()""");
+                CREATE TRIGGER fail_notification BEFORE INSERT ON platform.outbox_event FOR EACH ROW EXECUTE FUNCTION
+                    platform.fail_notification()""");
         try {
             assertThatThrownBy(() -> service.get(context, payment(resource))).isInstanceOf(RuntimeException.class);
         } finally {

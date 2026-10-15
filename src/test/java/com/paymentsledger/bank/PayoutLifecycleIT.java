@@ -347,11 +347,11 @@ class PayoutLifecycleIT {
         UUID po = outgoing("po_rollback"), l = line(statement("a", "a", "CREDIT", 5700, 0, "po_rollback"));
         long journals = count("journal");
         admin.execute("""
-                CREATE FUNCTION platform.test_match_fail() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
-                    EXCEPTION 'fixture failure'; END $$""");
+                CREATE FUNCTION platform.test_match_fail() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION
+                    'fixture failure'; END $$""");
         admin.execute("""
-                CREATE TRIGGER test_match_fail BEFORE INSERT ON platform.payout_bank_match FOR EACH ROW EXECUTE
-                    FUNCTION platform.test_match_fail()""");
+                CREATE TRIGGER test_match_fail BEFORE INSERT ON platform.payout_bank_match FOR EACH ROW EXECUTE FUNCTION
+                    platform.test_match_fail()""");
         try {
             assertThatThrownBy(() -> matcher.match(scope, po, l, 5700)).isInstanceOf(RuntimeException.class);
         } finally {
@@ -456,8 +456,8 @@ class PayoutLifecycleIT {
                 CREATE FUNCTION platform.test_ack_fail() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF
                     NEW.status='DONE' THEN RAISE EXCEPTION 'fixture ack'; END IF; RETURN NEW; END $$""");
         admin.execute("""
-                CREATE TRIGGER test_ack_fail BEFORE
-                UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.test_ack_fail()""");
+                CREATE TRIGGER test_ack_fail BEFORE UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION
+                    platform.test_ack_fail()""");
         try {
             assertThatThrownBy(() -> handler.process(claim, root.path("data").path("object")))
                     .isInstanceOf(RuntimeException.class);

@@ -144,10 +144,8 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
         assertThat(jdbc.queryForObject("""
                         SELECT count(*)
                         FROM platform.ledger_account a
-                        LEFT
-                        JOIN platform.balance_projection p ON p.ledger_account_id=a.id
-                        LEFT
-                        JOIN (SELECT ledger_account_id,sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE
+                        LEFT JOIN platform.balance_projection p ON p.ledger_account_id=a.id
+                        LEFT JOIN (SELECT ledger_account_id,sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE
                             -amount_minor::numeric END) n FROM platform.journal_entry GROUP BY ledger_account_id) e ON
                             e.ledger_account_id=a.id
                         WHERE coalesce(p.balance_minor,0)<>coalesce(e.n,0)""", Long.class)).isZero();
@@ -305,8 +303,8 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
         capture();
         long journals = count("journal"), operations = count("provider_operation");
         admin.execute("""
-                CREATE FUNCTION platform.pr12_fail_adjustment() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
-                    EXCEPTION 'injected allocation failure'; END $$""");
+                CREATE FUNCTION platform.pr12_fail_adjustment() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION
+                    'injected allocation failure'; END $$""");
         admin.execute("""
                 CREATE TRIGGER pr12_inject BEFORE INSERT ON platform.share_adjustment FOR EACH ROW EXECUTE FUNCTION
                     platform.pr12_fail_adjustment()""");
@@ -328,8 +326,8 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
     @Test
     void captureJournalAndFirstAllocationRollbackTogether() {
         admin.execute("""
-                CREATE FUNCTION platform.pr12_fail_initial() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
-                    EXCEPTION 'injected first accrual failure'; END $$""");
+                CREATE FUNCTION platform.pr12_fail_initial() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION
+                    'injected first accrual failure'; END $$""");
         admin.execute("""
                 CREATE TRIGGER pr12_initial BEFORE INSERT ON platform.share_adjustment FOR EACH ROW EXECUTE FUNCTION
                     platform.pr12_fail_initial()""");
@@ -520,8 +518,7 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
                         SELECT id
                         FROM platform.balance_transaction
                         WHERE bt_id='txn_A_first'
-                        FOR
-                        UPDATE""");
+                        FOR UPDATE""");
             }
             Future<?> pending = worker.submit(() -> new org.springframework.transaction.support.TransactionTemplate(tx)
                     .executeWithoutResult(status -> {
@@ -540,8 +537,7 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
                                         SELECT id
                                         FROM platform.balance_transaction
                                         WHERE bt_id='txn_z_second'
-                                        FOR
-                                        UPDATE NOWAIT""")).doesNotThrowAnyException();
+                                        FOR UPDATE NOWAIT""")).doesNotThrowAnyException();
             } finally {
                 blocker.rollback();
                 pending.get(10, TimeUnit.SECONDS);
