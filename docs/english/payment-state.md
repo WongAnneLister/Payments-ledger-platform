@@ -2,7 +2,7 @@
 
 [English index](README.md) · [Traced creation and recovery](architecture.md)
 
-Four fields answer four different questions. [PaymentRepository.java:1133](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1133) calculates capture from preserved successful attempts and checks posted BT coverage separately; [line 1177](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1177) calculates certainty; [line 1604](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1604) exposes the dimensions separately.
+Four fields answer four different questions. [PaymentRepository.java:1130](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1130) calculates capture from preserved successful attempts and checks posted BT coverage separately; [line 1174](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1174) calculates certainty; [line 1600](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1600) exposes the dimensions separately.
 
 | Dimension | Field | Meaning |
 |---|---|---|
@@ -11,7 +11,7 @@ Four fields answer four different questions. [PaymentRepository.java:1133](../..
 | Certainty | `resolution_status` | KNOWN, UNKNOWN, CONFLICT |
 | Accounting | `financial_status` | NOT_APPLICABLE, PENDING_EVIDENCE, PARTIALLY_POSTED, POSTED, CONFLICT |
 
-The diagram is a source-derived overview of evidence-driven transitions, not an exhaustive product-state certification. Session/query merging is implemented at [PaymentRepository.java:981](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L981), timeout marking at [line 926](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L926), and unsent cancellation at [line 1264](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1264).
+The diagram is a source-derived overview of evidence-driven transitions, not an exhaustive product-state certification. Session/query merging is implemented at [PaymentRepository.java:979](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L979), timeout marking at [line 924](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L924), and unsent cancellation at [line 1261](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1261).
 
 ```mermaid
 stateDiagram-v2
