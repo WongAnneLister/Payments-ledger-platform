@@ -77,6 +77,22 @@ class SqlTraceTest {
     }
 
     @Test
+    void listenerSeesStatementsWhicheverJdbcTemplateMethodIssuedThem() {
+        var seen = new java.util.ArrayList<String>();
+        DataSource ds = new SqlTrace(seen::add).wrap(stubDatabase());
+        var jdbc = new JdbcTemplate(ds);
+        jdbc.update("UPDATE platform.payout SET x=? WHERE id=?", 1, 2);
+        new org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate(jdbc)
+                .update(
+                        "SELECT *\n  FROM platform.payout\n  WHERE id=:id FOR UPDATE",
+                        java.util.Map.of("id", UUID.randomUUID()));
+        assertThat(seen)
+                .containsExactly(
+                        "UPDATE platform.payout SET x=? WHERE id=?",
+                        "SELECT * FROM platform.payout WHERE id=? FOR UPDATE");
+    }
+
+    @Test
     void racingThreadsAreLabelledLocallyAndSortedSoTheWinnerDoesNotMatter() throws Exception {
         String first = traceOfRace(true), second = traceOfRace(false);
         assertThat(first).isEqualTo(second).contains("-- other thread x1");
