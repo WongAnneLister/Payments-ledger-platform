@@ -39,6 +39,11 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
                 Map.of("cart", "c-1"));
     }
 
+    @SuppressWarnings("unchecked")
+    static Map<String, Object> map(Object nested) {
+        return (Map<String, Object>) nested;
+    }
+
     Map<String, Object> row(String sql, Object... args) {
         return admin.queryForMap(sql, args);
     }
@@ -177,9 +182,9 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
                         "lastProviderConfirmedAt",
                         "provider",
                         "nextAction");
-        assertThat(((Map<?, ?>) resource.get("provider")).keySet())
+        assertThat(map(resource.get("provider")).keySet())
                 .containsExactly("checkoutSessionId", "paymentIntentId", "latestChargeId", "attempts");
-        assertThat(((Map<?, ?>) resource.get("recovery")).keySet())
+        assertThat(map(resource.get("recovery")).keySet())
                 .containsExactly("status", "nextAttemptAt", "attemptCount", "lastQueryAt", "reason");
         assertThat(resource.get("id").toString()).startsWith("pay_");
         assertThat(resource.get("businessOrderId").toString()).startsWith("bor_");
@@ -189,7 +194,7 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
     void nextActionRedirectsOnlyWhileTheCheckoutCanStillBePaid() {
         UUID paymentId =
                 payment(service.create(context, "action", command("action")).resource());
-        var redirect = (Map<?, ?>) repository.read(context, paymentId).get("nextAction");
+        var redirect = map(repository.read(context, paymentId).get("nextAction"));
         assertThat(redirect.get("type")).isEqualTo("REDIRECT_TO_HOSTED_CHECKOUT");
         assertThat(redirect.get("hostedUrl")).isNotNull();
         Instant expires = admin.queryForObject(
@@ -210,7 +215,7 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
     }
 
     String nextAction(UUID paymentId) {
-        return ((Map<?, ?>) repository.read(context, paymentId).get("nextAction"))
+        return map(repository.read(context, paymentId).get("nextAction"))
                 .get("type")
                 .toString();
     }
@@ -271,7 +276,7 @@ class PaymentIntentCharacterizationIT extends PaymentCoreFixture {
         assertThat(summary(paymentId)).containsEntry("lastQueryAt", queried.toString());
     }
 
-    Map<?, ?> summary(UUID paymentId) {
-        return (Map<?, ?>) repository.read(context, paymentId).get("recovery");
+    Map<String, Object> summary(UUID paymentId) {
+        return map(repository.read(context, paymentId).get("recovery"));
     }
 }
