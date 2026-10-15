@@ -5,6 +5,9 @@ import com.paymentsledger.common.error.*;
 import com.paymentsledger.identity.*;
 import com.paymentsledger.payment.domain.PaymentEvidenceRules;
 import com.paymentsledger.payment.domain.PaymentFacts;
+import com.paymentsledger.payment.domain.StripeDeployment;
+import com.paymentsledger.payment.repository.PaymentIntentRepository;
+import com.paymentsledger.payment.repository.PaymentRecordRepository;
 import com.paymentsledger.payment.repository.PaymentStateRepository;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
@@ -24,6 +27,8 @@ public class PaymentRepository {
     private RevenueShareService shares = RevenueShareService.disabled();
     private final JdbcTemplate jdbc;
     private final PaymentStateRepository states;
+    private final PaymentIntentService intents;
+    private final PaymentReader reader;
     private final TransactionTemplate tx;
     private final ObjectMapper json;
     final Clock clock;
@@ -48,6 +53,19 @@ public class PaymentRepository {
         this.tx.setIsolationLevel(org.springframework.transaction.TransactionDefinition.ISOLATION_READ_COMMITTED);
         this.json = json;
         this.clock = clock;
+        var records = new PaymentRecordRepository(jdbc);
+        this.intents = new PaymentIntentService(
+                new PaymentIntentRepository(jdbc), records, tx, json, clock, this::stripeDeployment);
+        this.reader = new PaymentReader(intents, records, tx, clock);
+    }
+
+    /** The Stripe account this deployment is configured for; all null when Stripe is not configured. */
+    private StripeDeployment stripeDeployment() {
+        return new StripeDeployment(
+                configured("account-id", "STRIPE_ACCOUNT_ID"),
+                configured("organization-id", "STRIPE_ORGANIZATION_ID"),
+                configured("environment-id", "STRIPE_ENVIRONMENT_ID"),
+                configured("provider-account-id", "STRIPE_PROVIDER_ACCOUNT_ID"));
     }
 
     public Instant now() {
@@ -146,57 +164,13 @@ public class PaymentRepository {
         }
     }
 
-    private void lock(String key) {
-        jdbc.queryForList("SELECT pg_advisory_xact_lock(hashtextextended(?,0))", key);
-    }
-
-    private String scopeKey(TenantContext c) {
-        return c.organizationId() + ":" + c.environmentId() + ":" + c.applicationId();
-    }
-
     private Map<String, Object> one(String sql, Object... args) {
         var rows = jdbc.queryForList(sql, args);
         return rows.isEmpty() ? null : rows.getFirst();
     }
 
-    private Map<String, Object> api(TenantContext c, String key, String type) {
-        return one("""
-                SELECT *
-                FROM platform.api_idempotency_record
-                WHERE organization_id=?
-                    AND environment_id=?
-                    AND application_id=?
-                    AND request_type=?
-                    AND idempotency_key=?""", c.organizationId(), c.environmentId(), c.applicationId(), type, key);
-    }
-
-    private Intent replay(Map<String, Object> row, String fingerprint) {
-        if (!fingerprint.equals(row.get("request_fingerprint"))) throw error(ErrorCode.IDEMPOTENCY_CONFLICT);
-        return new Intent(uuid(row, "payment_id"), uuid(row, "operation_id"), true);
-    }
-
     void checkBinding(TenantContext c, String provider) {
-        var row = one("""
-                SELECT p.provider,p.provider_account_ref FROM platform.provider_account p
-                JOIN platform.organization o ON o.id=p.organization_id
-                JOIN platform.environment_config e ON e.organization_id=p.organization_id AND e.id=p.environment_id
-                JOIN platform.application a ON a.organization_id=p.organization_id AND a.environment_id=p.environment_id
-                WHERE p.organization_id=? AND p.environment_id=? AND p.id=? AND a.id=?
-                AND p.status='ACTIVE' AND o.status='ACTIVE' AND e.status='ACTIVE' AND a.status='ACTIVE'
-                AND NOT p.livemode AND NOT e.livemode
-                """, c.organizationId(), c.environmentId(), c.allowedProviderAccountId(), c.applicationId());
-        if (row == null) throw error(ErrorCode.FORBIDDEN);
-        if (provider == null || !provider.equals(row.get("provider"))) throw error(ErrorCode.SERVICE_UNAVAILABLE);
-        if (provider.equals("STRIPE")
-                && (!Objects.equals(str(row, "provider_account_ref"), configured("account-id", "STRIPE_ACCOUNT_ID"))
-                        || !c.organizationId()
-                                .toString()
-                                .equals(configured("organization-id", "STRIPE_ORGANIZATION_ID"))
-                        || !c.environmentId().toString().equals(configured("environment-id", "STRIPE_ENVIRONMENT_ID"))
-                        || !c.allowedProviderAccountId()
-                                .toString()
-                                .equals(configured("provider-account-id", "STRIPE_PROVIDER_ACCOUNT_ID"))))
-            throw error(ErrorCode.SERVICE_UNAVAILABLE);
+        intents.requireBinding(c, provider);
     }
 
     private String configured(String name, String fallback) {
@@ -206,231 +180,16 @@ public class PaymentRepository {
     }
 
     public Intent prepare(TenantContext c, String key, PaymentRequests.Create request, String provider) {
-        TenantAccessGuard.requireScope(c, "payments:write");
-        PaymentRequests.idempotencyKey(key);
-        return transaction(() -> {
-            lock(scopeKey(c) + ":CREATE_PAYMENT:" + key);
-            var prior = api(c, key, "CREATE_PAYMENT");
-            if (prior != null) return replay(prior, request.fingerprint());
-            TenantAccessGuard.requireCurrency(c, request.currency());
-            lock(scopeKey(c) + ":ORDER:" + request.orderKey());
-            if (one("""
-                            SELECT id
-                            FROM platform.business_order
-                            WHERE organization_id=? AND environment_id=? AND application_id=? AND order_key=?""", c.organizationId(), c.environmentId(), c.applicationId(), request.orderKey()) != null)
-                throw error(ErrorCode.ORDER_INTENT_CONFLICT);
-            checkBinding(c, provider);
-            var price = one(
-                    """
-                SELECT p.*,to_jsonb(p)::text price_snapshot,to_jsonb(s)::text policy_snapshot
-                FROM platform.price_fixture p JOIN platform.share_policy_fixture s
-                 ON s.id=p.share_policy_id AND s.organization_id=p.organization_id AND s.environment_id=p.environment_id AND s.product_ref=p.product_ref
-                JOIN platform.org_currency_enabled e ON e.organization_id=p.organization_id AND e.environment_id=p.environment_id AND e.currency=p.currency
-                WHERE p.organization_id=? AND p.environment_id=? AND p.product_ref=? AND p.price_version=?
-                 AND p.status='ACTIVE' AND s.status='ACTIVE' AND e.status='ACTIVE'
-                 AND p.valid_from<=? AND p.valid_until>? AND s.valid_from<=? AND s.valid_until>?
-                """,
-                    c.organizationId(),
-                    c.environmentId(),
-                    request.productRef(),
-                    request.priceVersion(),
-                    Timestamp.from(clock.instant()),
-                    Timestamp.from(clock.instant()),
-                    Timestamp.from(clock.instant()),
-                    Timestamp.from(clock.instant()));
-            if (price == null) throw error(ErrorCode.NOT_FOUND);
-            RevenueShareService.validatePolicy(
-                    decode(price.get("policy_snapshot"), com.fasterxml.jackson.databind.JsonNode.class));
-            long amount;
-            try {
-                amount = Math.multiplyExact(number(price, "amount_minor"), request.quantity());
-            } catch (ArithmeticException e) {
-                throw error(ErrorCode.AMOUNT_MISMATCH);
-            }
-            if (amount != request.amountMinor() || !request.currency().equals(price.get("currency")))
-                throw error(ErrorCode.AMOUNT_MISMATCH);
-            UUID order = PaymentIds.newId(), payment = PaymentIds.newId(), operation = UUID.randomUUID();
-            Instant expires = clock.instant().plusSeconds(3600).truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
-            jdbc.update(
-                    "INSERT INTO platform.business_order(id," + SCOPE
-                            + ",order_key,request_fingerprint,product_ref,price_version,quantity,unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?::jsonb,?::jsonb)",
-                    order,
-                    c.organizationId(),
-                    c.environmentId(),
-                    c.applicationId(),
-                    c.allowedProviderAccountId(),
-                    request.currency(),
-                    request.orderKey(),
-                    request.fingerprint(),
-                    request.productRef(),
-                    request.priceVersion(),
-                    request.quantity(),
-                    number(price, "amount_minor"),
-                    amount,
-                    price.get("price_snapshot"),
-                    price.get("policy_snapshot"));
-            jdbc.update(
-                    "INSERT INTO platform.payment(id," + SCOPE
-                            + ",business_order_id,amount_minor,expires_at) VALUES (?,?,?,?,?,?,?,?,?)",
-                    payment,
-                    c.organizationId(),
-                    c.environmentId(),
-                    c.applicationId(),
-                    c.allowedProviderAccountId(),
-                    request.currency(),
-                    order,
-                    amount,
-                    Timestamp.from(expires));
-            var metadata = new TreeMap<>(request.metadata());
-            metadata.put("payment_id", payment.toString());
-            metadata.put("business_order_id", order.toString());
-            metadata.put("organization_id", c.organizationId().toString());
-            metadata.put("application_id", c.applicationId().toString());
-            metadata.put("environment_id", c.environmentId().toString());
-            metadata.put("provider_account_id", c.allowedProviderAccountId().toString());
-            var command = new CreateCheckoutSessionCommand(
-                    new ProviderScope(c.organizationId(), c.environmentId(), c.allowedProviderAccountId(), false),
-                    "pay_create_" + operation,
-                    amount,
-                    request.currency(),
-                    request.successUrl(),
-                    request.cancelUrl(),
-                    metadata,
-                    metadata,
-                    expires);
-            insertOperation(
-                    c,
-                    request.currency(),
-                    payment,
-                    operation,
-                    "CREATE_CHECKOUT",
-                    command.operationIdempotencyKey(),
-                    request.fingerprint(),
-                    encode(command),
-                    expires);
-            insertApi(c, request.currency(), key, "CREATE_PAYMENT", request.fingerprint(), payment, operation);
-            return new Intent(payment, operation, false);
-        });
-    }
-
-    private void insertOperation(
-            TenantContext c,
-            String currency,
-            UUID payment,
-            UUID operation,
-            String type,
-            String key,
-            String fingerprint,
-            String command,
-            Instant expires) {
-        jdbc.update(
-                "INSERT INTO platform.provider_operation(id," + SCOPE
-                        + ",operation_target,payment_id,operation_type,operation_key,request_fingerprint,command,expires_at) VALUES (?,?,?,?,?,?,'PAYMENT',?,?,?,?,?::jsonb,?)",
-                operation,
-                c.organizationId(),
-                c.environmentId(),
-                c.applicationId(),
-                c.allowedProviderAccountId(),
-                currency,
-                payment,
-                type,
-                key,
-                fingerprint,
-                command,
-                Timestamp.from(expires));
-        jdbc.update(
-                "INSERT INTO platform.recovery_task(" + SCOPE
-                        + ",operation_id,payment_id,available_at) VALUES (?,?,?,?,?,?,?,?)",
-                c.organizationId(),
-                c.environmentId(),
-                c.applicationId(),
-                c.allowedProviderAccountId(),
-                currency,
-                operation,
-                payment,
-                Timestamp.from(now()));
-    }
-
-    private void insertApi(
-            TenantContext c,
-            String currency,
-            String key,
-            String type,
-            String fingerprint,
-            UUID payment,
-            UUID operation) {
-        jdbc.update(
-                "INSERT INTO platform.api_idempotency_record(" + SCOPE
-                        + ",request_type,idempotency_key,request_fingerprint,payment_id,operation_id) VALUES (?,?,?,?,?,?,?,?,?,?)",
-                c.organizationId(),
-                c.environmentId(),
-                c.applicationId(),
-                c.allowedProviderAccountId(),
-                currency,
-                type,
-                key,
-                fingerprint,
-                payment,
-                operation);
+        return intents.prepare(c, key, request, provider);
     }
 
     public Intent prepareCancel(
             TenantContext c, UUID payment, String key, PaymentRequests.Cancel request, String provider) {
-        TenantAccessGuard.requireScope(c, "payments:write");
-        PaymentRequests.idempotencyKey(key);
-        return transaction(() -> {
-            lock(scopeKey(c) + ":CANCEL_PAYMENT:" + key);
-            var prior = api(c, key, "CANCEL_PAYMENT");
-            if (prior != null) return replay(prior, request.fingerprint(payment));
-            var row = scoped(c, payment, true);
-            checkBinding(c, provider);
-            if ("CONFLICT".equals(row.get("resolution_status"))) throw error(ErrorCode.EVIDENCE_CONFLICT);
-            if ("SUCCEEDED".equals(row.get("payment_status")) || number(row, "captured_amount_minor") > 0)
-                throw error(ErrorCode.PAYMENT_NOT_CANCELABLE);
-            var existing = one("""
-                    SELECT *
-                    FROM platform.provider_operation
-                    WHERE payment_id=? AND operation_type='CANCEL_PAYMENT'""", payment);
-            UUID operation = existing == null ? UUID.randomUUID() : uuid(existing, "id");
-            if (existing == null)
-                insertOperation(
-                        c,
-                        str(row, "currency"),
-                        payment,
-                        operation,
-                        "CANCEL_PAYMENT",
-                        "pay_cancel_" + operation,
-                        request.fingerprint(payment),
-                        encode(request),
-                        instant(row, "expires_at"));
-            insertApi(c, str(row, "currency"), key, "CANCEL_PAYMENT", request.fingerprint(payment), payment, operation);
-            return new Intent(payment, operation, existing != null);
-        });
-    }
-
-    private Map<String, Object> scoped(TenantContext c, UUID id, boolean locked) {
-        TenantAccessGuard.require(c);
-        var row = one(
-                """
-                SELECT p.*,o.order_key
-                FROM platform.payment p
-                JOIN platform.business_order o ON o.id=p.business_order_id
-                WHERE p.id=?
-                    AND p.organization_id=?
-                    AND p.environment_id=?
-                    AND p.application_id=?
-                    AND p.provider_account_id=?""" + (locked ? " FOR UPDATE OF p" : ""),
-                id,
-                c.organizationId(),
-                c.environmentId(),
-                c.applicationId(),
-                c.allowedProviderAccountId());
-        if (row == null || !c.allowedCurrencies().contains(row.get("currency"))) throw error(ErrorCode.NOT_FOUND);
-        return row;
+        return intents.prepareCancel(c, payment, key, request, provider);
     }
 
     public Map<String, Object> read(TenantContext c, UUID id) {
-        return transaction(() -> resource(scoped(c, id, false)));
+        return reader.read(c, id);
     }
 
     Map<String, Object> payment(UUID id) {
@@ -1292,115 +1051,5 @@ public class PaymentRepository {
                 return null;
             });
         return ids.size();
-    }
-
-    private Map<String, Object> recoverySummary(UUID payment) {
-        var rows = jdbc.queryForList("""
-                SELECT t.*,o.last_query_at,o.status operation_status
-                FROM platform.recovery_task t
-                JOIN platform.provider_operation o ON o.id=t.operation_id
-                WHERE t.payment_id=?
-                ORDER BY
-                    CASE t.status WHEN 'ESCALATED' THEN 0 WHEN 'RUNNING' THEN 1 WHEN 'WAITING' THEN 2 WHEN 'READY'
-                        THEN 2 ELSE 3 END,
-                    t.available_at""", payment);
-        var result = new LinkedHashMap<String, Object>();
-        String status = "IDLE";
-        Instant next = null, last = null;
-        int attempts = 0;
-        String reason = null;
-        for (var row : rows) {
-            attempts += ((Number) row.get("attempt_count")).intValue();
-            Instant queried = instant(row, "last_query_at");
-            if (queried != null && (last == null || queried.isAfter(last))) last = queried;
-        }
-        if (!rows.isEmpty()) {
-            var row = rows.getFirst();
-            status = switch (str(row, "status")) {
-                case "ESCALATED" -> "ESCALATED";
-                case "RUNNING" -> "RUNNING";
-                case "WAITING", "READY" -> "WAITING";
-                default -> "IDLE";
-            };
-            if (status.equals("RUNNING")
-                    && (instant(row, "lease_until") == null
-                            || !instant(row, "lease_until").isAfter(now()))) status = "WAITING";
-            if (status.equals("WAITING")) next = instant(row, "available_at");
-            reason = str(row, "reason");
-        }
-        result.put("status", status);
-        result.put("nextAttemptAt", next == null ? null : next.toString());
-        result.put("attemptCount", attempts);
-        result.put("lastQueryAt", last == null ? null : last.toString());
-        result.put("reason", reason);
-        return result;
-    }
-
-    private Map<String, Object> resource(Map<String, Object> p) {
-        var result = new LinkedHashMap<String, Object>();
-        result.put("recovery", recoverySummary(uuid(p, "id")));
-        result.put("id", PaymentIds.format("pay", uuid(p, "id")));
-        result.put("businessOrderId", PaymentIds.format("bor", uuid(p, "business_order_id")));
-        result.put("orderKey", p.get("order_key"));
-        result.put("amountMinor", number(p, "amount_minor"));
-        result.put("currency", p.get("currency"));
-        result.put("paymentStatus", p.get("payment_status"));
-        result.put("providerStatus", p.get("provider_status"));
-        result.put("resolutionStatus", p.get("resolution_status"));
-        result.put("financialStatus", p.get("financial_status"));
-        result.put("capturedAmountMinor", number(p, "captured_amount_minor"));
-        result.put("revenueShares", List.of());
-        result.put("createdAt", instant(p, "created_at").toString());
-        result.put("updatedAt", instant(p, "updated_at").toString());
-        result.put(
-                "lastProviderConfirmedAt",
-                instant(p, "last_provider_confirmed_at") == null
-                        ? null
-                        : instant(p, "last_provider_confirmed_at").toString());
-        var refs = new LinkedHashMap<String, Object>();
-        refs.put("checkoutSessionId", p.get("checkout_session_id"));
-        refs.put("paymentIntentId", p.get("payment_intent_id"));
-        refs.put("latestChargeId", p.get("latest_charge_id"));
-        var attempts = new ArrayList<Map<String, Object>>();
-        for (var a : jdbc.queryForList("""
-                SELECT *
-                FROM platform.payment_attempt
-                WHERE payment_id=?
-                ORDER BY provider_created_at,id""", p.get("id"))) {
-            var view = new LinkedHashMap<String, Object>();
-            view.put("attemptId", PaymentIds.format("att", uuid(a, "id")));
-            view.put("providerObjectType", "CHARGE");
-            view.put("providerObjectId", a.get("provider_object_id"));
-            view.put("providerStatus", a.get("provider_status"));
-            view.put("failureCode", a.get("failure_code"));
-            view.put("captured", a.get("captured"));
-            view.put("amountMinor", a.get("amount_minor"));
-            view.put("balanceTransactionId", a.get("balance_transaction_id"));
-            view.put(
-                    "createdAt",
-                    instant(a, "provider_created_at") == null
-                            ? null
-                            : instant(a, "provider_created_at").toString());
-            attempts.add(view);
-        }
-        refs.put("attempts", attempts);
-        result.put("provider", refs);
-        String state = str(p, "payment_status");
-        Map<String, Object> action;
-        if (!"KNOWN".equals(p.get("resolution_status"))) action = Map.of("type", "WAIT_FOR_CONFIRMATION");
-        else if (Set.of("SUCCEEDED", "CANCELED").contains(state)) action = Map.of("type", "NONE");
-        else if (p.get("hosted_url") != null
-                && Set.of("AWAITING_CUSTOMER", "REQUIRES_ACTION").contains(state)
-                && instant(p, "expires_at").isAfter(clock.instant()))
-            action = Map.of(
-                    "type",
-                    "REDIRECT_TO_HOSTED_CHECKOUT",
-                    "hostedUrl",
-                    p.get("hosted_url"),
-                    "expiresAt",
-                    instant(p, "expires_at").toString());
-        else action = Map.of("type", "WAIT_FOR_CONFIRMATION");
-        result.put("nextAction", action);
-        return result;
     }
 }
