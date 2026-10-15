@@ -15,7 +15,7 @@ public final class PersistentFakeClock extends Clock {
     public Instant advance(Duration duration) {
         if (duration == null || duration.isNegative()) throw new IllegalArgumentException("Clock cannot move backwards");
         return store.update(s -> {
-            Instant next = Instant.parse(s.path("now").asText()).plus(duration);
+            Instant next = Instant.parse(s.path("now").asText()).plus(duration).truncatedTo(java.time.temporal.ChronoUnit.MICROS);
             s.put("now",next.toString()); return next;
         });
     }

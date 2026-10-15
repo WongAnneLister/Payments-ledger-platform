@@ -31,7 +31,8 @@ final class FakeStateStore {
         try { Files.createDirectories(directory); this.directory = directory.toRealPath(); }
         catch (IOException e) { throw new IllegalStateException("Cannot open simulator directory", e); }
         this.lock = LOCKS.computeIfAbsent(this.directory, ignored -> new ReentrantLock());
-        this.seed = seed; this.initialTime = initialTime; this.retention = retention;
+        // PostgreSQL timestamptz keeps microseconds; finer origins round on write and diverge from Java comparisons.
+        this.seed = seed; this.initialTime = initialTime.truncatedTo(java.time.temporal.ChronoUnit.MICROS); this.retention = retention;
         update(s -> null);
     }
 
