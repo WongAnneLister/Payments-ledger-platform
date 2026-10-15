@@ -11,12 +11,20 @@ import org.springframework.stereotype.Component;
 public class TestModeGuard implements InitializingBean {
     private final IdentityRepository repository;
     private final Environment environment;
-    public TestModeGuard(IdentityRepository repository,Environment environment) { this.repository=repository; this.environment=environment; }
-    @Override public void afterPropertiesSet() {
-        if(environment.getProperty("platform.livemode",Boolean.class,false)) throw new IllegalStateException("Live mode is forbidden");
-        for(String name:new String[]{"STRIPE_API_KEY","stripe.api-key","platform.stripe.api-key"}) {
-            String key=environment.getProperty(name,"").trim();
-            if(key.startsWith("sk_live_") || key.startsWith("rk_live_")) throw new IllegalStateException("Live provider credentials are forbidden");
+
+    public TestModeGuard(IdentityRepository repository, Environment environment) {
+        this.repository = repository;
+        this.environment = environment;
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        if (environment.getProperty("platform.livemode", Boolean.class, false))
+            throw new IllegalStateException("Live mode is forbidden");
+        for (String name : new String[] {"STRIPE_API_KEY", "stripe.api-key", "platform.stripe.api-key"}) {
+            String key = environment.getProperty(name, "").trim();
+            if (key.startsWith("sk_live_") || key.startsWith("rk_live_"))
+                throw new IllegalStateException("Live provider credentials are forbidden");
         }
         repository.assertTestOnly();
     }

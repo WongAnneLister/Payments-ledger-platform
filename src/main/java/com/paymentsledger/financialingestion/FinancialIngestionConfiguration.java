@@ -1,10 +1,10 @@
 package com.paymentsledger.financialingestion;
 
-import com.paymentsledger.revenueshare.RevenueShareService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.ledger.LedgerPostingService;
 import com.paymentsledger.provider.BalanceTransactionPort;
 import com.paymentsledger.provider.ProviderScope;
+import com.paymentsledger.revenueshare.RevenueShareService;
 import java.time.Clock;
 import java.util.UUID;
 import org.springframework.beans.factory.ObjectProvider;
@@ -15,20 +15,21 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 
-@Configuration(proxyBeanMethods=false)
+@Configuration(proxyBeanMethods = false)
 @Profile("worker")
 @EnableScheduling
-@ConditionalOnProperty(name="platform.financial-ingestion.enabled", havingValue="true")
+@ConditionalOnProperty(name = "platform.financial-ingestion.enabled", havingValue = "true")
 public class FinancialIngestionConfiguration {
-    @Bean(name="taskScheduler")
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(name="taskScheduler")
+    @Bean(name = "taskScheduler")
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean(name = "taskScheduler")
     org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler applicationTaskScheduler(
             ObjectProvider<org.springframework.boot.task.ThreadPoolTaskSchedulerBuilder> builders) {
         // Keep unqualified payment/webhook/notification schedules on their own default scheduler.
-        return builders.getIfAvailable(org.springframework.boot.task.ThreadPoolTaskSchedulerBuilder::new).build();
+        return builders.getIfAvailable(org.springframework.boot.task.ThreadPoolTaskSchedulerBuilder::new)
+                .build();
     }
 
-    @Bean(name="financialIngestionScheduler")
+    @Bean(name = "financialIngestionScheduler")
     org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler financialIngestionScheduler() {
         var scheduler = new org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler();
         scheduler.setPoolSize(1);
@@ -37,29 +38,69 @@ public class FinancialIngestionConfiguration {
         return scheduler;
     }
 
-    @Bean FinancialImportService financialImportService(JdbcTemplate jdbc, PlatformTransactionManager transactions,
-            ObjectMapper mapper, BalanceTransactionPort provider, Clock clock,ObjectProvider<RevenueShareService> shares) {
-        return new FinancialImportService(jdbc, transactions, mapper, provider, clock,shares.getIfAvailable(RevenueShareService::disabled));
+    @Bean
+    FinancialImportService financialImportService(
+            JdbcTemplate jdbc,
+            PlatformTransactionManager transactions,
+            ObjectMapper mapper,
+            BalanceTransactionPort provider,
+            Clock clock,
+            ObjectProvider<RevenueShareService> shares) {
+        return new FinancialImportService(
+                jdbc, transactions, mapper, provider, clock, shares.getIfAvailable(RevenueShareService::disabled));
     }
 
-    @Bean FinancialReplayService financialReplayService(JdbcTemplate jdbc, PlatformTransactionManager transactions,
-            ObjectMapper mapper, LedgerPostingService posting, ObjectProvider<RefundEvidencePort> refunds,ObjectProvider<RevenueShareService> shares,ObjectProvider<com.paymentsledger.dispute.DisputeService> disputes,ObjectProvider<com.paymentsledger.payout.PayoutService> payouts) {
-        return new FinancialReplayService(jdbc, transactions, mapper, posting,
-                refunds.getIfAvailable(RefundEvidencePort::unavailable),shares.getIfAvailable(RevenueShareService::disabled),disputes.getIfAvailable(),payouts.getIfAvailable());
+    @Bean
+    FinancialReplayService financialReplayService(
+            JdbcTemplate jdbc,
+            PlatformTransactionManager transactions,
+            ObjectMapper mapper,
+            LedgerPostingService posting,
+            ObjectProvider<RefundEvidencePort> refunds,
+            ObjectProvider<RevenueShareService> shares,
+            ObjectProvider<com.paymentsledger.dispute.DisputeService> disputes,
+            ObjectProvider<com.paymentsledger.payout.PayoutService> payouts) {
+        return new FinancialReplayService(
+                jdbc,
+                transactions,
+                mapper,
+                posting,
+                refunds.getIfAvailable(RefundEvidencePort::unavailable),
+                shares.getIfAvailable(RevenueShareService::disabled),
+                disputes.getIfAvailable(),
+                payouts.getIfAvailable());
     }
 
-    @Bean FinancialIngestionWorker financialIngestionWorker(JdbcTemplate jdbc, FinancialImportService importer,
-            FinancialReplayService replay, Clock clock,ObjectProvider<RefundSourceResolver> refundSources,ObjectProvider<DisputeSourceResolver> disputeSources,ObjectProvider<PayoutSourceResolver> payoutSources,
+    @Bean
+    FinancialIngestionWorker financialIngestionWorker(
+            JdbcTemplate jdbc,
+            FinancialImportService importer,
+            FinancialReplayService replay,
+            Clock clock,
+            ObjectProvider<RefundSourceResolver> refundSources,
+            ObjectProvider<DisputeSourceResolver> disputeSources,
+            ObjectProvider<PayoutSourceResolver> payoutSources,
             @Value("${platform.financial-ingestion.organization-id:}") String organization,
             @Value("${platform.financial-ingestion.environment-id:}") String environment,
             @Value("${platform.financial-ingestion.provider-account-id:}") String providerAccount) {
         ProviderScope scope;
         try {
-            scope = new ProviderScope(UUID.fromString(organization), UUID.fromString(environment),
-                    UUID.fromString(providerAccount), false);
+            scope = new ProviderScope(
+                    UUID.fromString(organization),
+                    UUID.fromString(environment),
+                    UUID.fromString(providerAccount),
+                    false);
         } catch (IllegalArgumentException invalid) {
             throw new IllegalArgumentException("Financial ingestion requires configured scope UUIDs");
         }
-        return new FinancialIngestionWorker(jdbc, importer, replay, scope, clock,refundSources.getIfAvailable(RefundSourceResolver::unavailable),disputeSources.getIfAvailable(DisputeSourceResolver::unavailable),payoutSources.getIfAvailable(PayoutSourceResolver::unavailable));
+        return new FinancialIngestionWorker(
+                jdbc,
+                importer,
+                replay,
+                scope,
+                clock,
+                refundSources.getIfAvailable(RefundSourceResolver::unavailable),
+                disputeSources.getIfAvailable(DisputeSourceResolver::unavailable),
+                payoutSources.getIfAvailable(PayoutSourceResolver::unavailable));
     }
 }

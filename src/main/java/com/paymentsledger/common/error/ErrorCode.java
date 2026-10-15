@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
  * 禁止换键重发（ADR-0003）。
  */
 public enum ErrorCode {
-
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST, false),
     IDEMPOTENCY_KEY_REQUIRED(HttpStatus.BAD_REQUEST, false),
     SIGNATURE_VERIFICATION_FAILED(HttpStatus.BAD_REQUEST, false),

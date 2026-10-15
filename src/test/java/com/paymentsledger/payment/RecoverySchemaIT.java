@@ -1,18 +1,30 @@
 package com.paymentsledger.payment;
+
 import static org.assertj.core.api.Assertions.*;
+
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
+
 @Testcontainers
 class RecoverySchemaIT {
- @Container static final PostgreSQLContainer<?> DB=new PostgreSQLContainer<>("postgres:16").withInitScript("db/pr02-runtime-role.sql");
- @Test void v4UpgradePreservesOriginalOperationWithoutInventingVerifiedRetryWindow(){
-  Flyway.configure().dataSource(DB.getJdbcUrl(),DB.getUsername(),DB.getPassword()).schemas("platform").target("4").load().migrate();
-  var admin=new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(),DB.getUsername(),DB.getPassword()));
-  admin.execute("""
+    @Container
+    static final PostgreSQLContainer<?> DB =
+            new PostgreSQLContainer<>("postgres:16").withInitScript("db/pr02-runtime-role.sql");
+
+    @Test
+    void v4UpgradePreservesOriginalOperationWithoutInventingVerifiedRetryWindow() {
+        Flyway.configure()
+                .dataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword())
+                .schemas("platform")
+                .target("4")
+                .load()
+                .migrate();
+        var admin = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword()));
+        admin.execute("""
    DO $$ DECLARE org uuid=gen_random_uuid();env uuid=gen_random_uuid();app uuid=gen_random_uuid();account uuid=gen_random_uuid();ord uuid=gen_random_uuid();pay uuid=gen_random_uuid();op uuid=gen_random_uuid();BEGIN
     INSERT INTO platform.organization(id,code) VALUES(org,'v4');
     INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES(env,org,'test',false);
@@ -26,12 +38,27 @@ class RecoverySchemaIT {
     INSERT INTO platform.recovery_task(organization_id,environment_id,application_id,provider_account_id,currency,operation_id,status) VALUES(org,env,app,account,'USD',op,'WAITING');
    END $$;
    """);
-  var migration=Flyway.configure().dataSource(DB.getJdbcUrl(),DB.getUsername(),DB.getPassword()).schemas("platform").load();
-  assertThat(migration.migrate().migrationsExecuted).isEqualTo(12);assertThat(migration.migrate().migrationsExecuted).isZero();
-  var jdbc=new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(),"payments_app","pr02_test_only"));
-  assertThat(jdbc.queryForObject("SELECT first_send_at=created_at AND retry_until IS NULL AND operation_key='original' FROM platform.provider_operation",Boolean.class)).isTrue();
-  assertThat(jdbc.queryForObject("SELECT t.payment_id=o.payment_id FROM platform.recovery_task t JOIN platform.provider_operation o ON o.id=t.operation_id",Boolean.class)).isTrue();
-  assertThatThrownBy(()->jdbc.update("UPDATE platform.provider_operation SET retry_until=first_send_at+interval '1 day'")).isInstanceOf(org.springframework.dao.DataAccessException.class);
-  assertThat(jdbc.queryForObject("SELECT has_table_privilege(current_user,'platform.recovery_account_limit','SELECT,INSERT,UPDATE')",Boolean.class)).isTrue();
- }
+        var migration = Flyway.configure()
+                .dataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword())
+                .schemas("platform")
+                .load();
+        assertThat(migration.migrate().migrationsExecuted).isEqualTo(12);
+        assertThat(migration.migrate().migrationsExecuted).isZero();
+        var jdbc = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), "payments_app", "pr02_test_only"));
+        assertThat(jdbc.queryForObject(
+                        "SELECT first_send_at=created_at AND retry_until IS NULL AND operation_key='original' FROM platform.provider_operation",
+                        Boolean.class))
+                .isTrue();
+        assertThat(jdbc.queryForObject(
+                        "SELECT t.payment_id=o.payment_id FROM platform.recovery_task t JOIN platform.provider_operation o ON o.id=t.operation_id",
+                        Boolean.class))
+                .isTrue();
+        assertThatThrownBy(() -> jdbc.update(
+                        "UPDATE platform.provider_operation SET retry_until=first_send_at+interval '1 day'"))
+                .isInstanceOf(org.springframework.dao.DataAccessException.class);
+        assertThat(jdbc.queryForObject(
+                        "SELECT has_table_privilege(current_user,'platform.recovery_account_limit','SELECT,INSERT,UPDATE')",
+                        Boolean.class))
+                .isTrue();
+    }
 }

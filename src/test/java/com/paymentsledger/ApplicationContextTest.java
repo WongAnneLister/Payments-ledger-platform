@@ -20,10 +20,11 @@ import org.springframework.test.context.ActiveProfiles;
  * <p>验证运行角色解析与基础横切组件（Clock、requestId 过滤器、统一错误渲染）确实装配成功。
  * 数据库相关的验证在 {@code FlywayBaselineIT} / {@code ActuatorHealthIT} 中进行。
  */
-@SpringBootTest(properties = {
-        "spring.flyway.enabled=false",
-        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration"
-})
+@SpringBootTest(
+        properties = {
+            "spring.flyway.enabled=false",
+            "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration"
+        })
 @ActiveProfiles("api")
 class ApplicationContextTest {
 
@@ -58,7 +59,9 @@ class ApplicationContextTest {
     void paymentAndLedgerServicesAreWiredWithoutRefundService() {
         assertThat(context.getBeanDefinitionNames())
                 .noneMatch(name -> name.toLowerCase().contains("refundservice"));
-        assertThat(context.getBean(com.paymentsledger.payment.PaymentService.class)).isNotNull();
-        assertThat(context.getBean(com.paymentsledger.ledger.LedgerPostingService.class)).isNotNull();
+        assertThat(context.getBean(com.paymentsledger.payment.PaymentService.class))
+                .isNotNull();
+        assertThat(context.getBean(com.paymentsledger.ledger.LedgerPostingService.class))
+                .isNotNull();
     }
 }

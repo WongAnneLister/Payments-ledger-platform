@@ -36,10 +36,9 @@ public class RunRoleConfig {
                 .toList();
 
         if (matched.size() != 1) {
-            throw new IllegalStateException(
-                    "Exactly one run role profile must be active, got " + matched
-                            + " from active profiles " + active
-                            + ". Start with --spring.profiles.active=api or =worker.");
+            throw new IllegalStateException("Exactly one run role profile must be active, got " + matched
+                    + " from active profiles " + active
+                    + ". Start with --spring.profiles.active=api or =worker.");
         }
         return matched.get(0);
     }

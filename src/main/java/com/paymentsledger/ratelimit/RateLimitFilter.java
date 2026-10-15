@@ -35,62 +35,106 @@ import org.springframework.web.filter.OncePerRequestFilter;
  */
 public final class RateLimitFilter extends OncePerRequestFilter implements Ordered {
     /** After {@code AuthenticationFilter} (HIGHEST_PRECEDENCE+20), which establishes the tenant. */
-    static final int ORDER=Ordered.HIGHEST_PRECEDENCE+30;
-    private static final Set<String> READ_METHODS=Set.of("GET","HEAD","OPTIONS");
-    private static final Logger log=LoggerFactory.getLogger(RateLimitFilter.class);
+    static final int ORDER = Ordered.HIGHEST_PRECEDENCE + 30;
+
+    private static final Set<String> READ_METHODS = Set.of("GET", "HEAD", "OPTIONS");
+    private static final Logger log = LoggerFactory.getLogger(RateLimitFilter.class);
 
     private final RateLimiter limiter;
-    private final RateLimitPolicy read,write;
-    private final Function<HttpServletRequest,Optional<TenantContext>> tenants;
+    private final RateLimitPolicy read, write;
+    private final Function<HttpServletRequest, Optional<TenantContext>> tenants;
     private final ObjectMapper mapper;
     private final Clock clock;
     private final Duration bypassAfterFailure;
     private final MeterRegistry meters;
-    private volatile Instant bypassUntil=Instant.MIN;
+    private volatile Instant bypassUntil = Instant.MIN;
 
-    public RateLimitFilter(RateLimiter limiter,RateLimitPolicy read,RateLimitPolicy write,
-                           Function<HttpServletRequest,Optional<TenantContext>> tenants,ObjectMapper mapper,
-                           Clock clock,Duration bypassAfterFailure,MeterRegistry meters) {
-        if(bypassAfterFailure.isNegative())throw new IllegalArgumentException("Bypass window cannot be negative");
-        this.limiter=limiter;this.read=read;this.write=write;this.tenants=tenants;this.mapper=mapper;
-        this.clock=clock;this.bypassAfterFailure=bypassAfterFailure;this.meters=meters;
+    public RateLimitFilter(
+            RateLimiter limiter,
+            RateLimitPolicy read,
+            RateLimitPolicy write,
+            Function<HttpServletRequest, Optional<TenantContext>> tenants,
+            ObjectMapper mapper,
+            Clock clock,
+            Duration bypassAfterFailure,
+            MeterRegistry meters) {
+        if (bypassAfterFailure.isNegative()) throw new IllegalArgumentException("Bypass window cannot be negative");
+        this.limiter = limiter;
+        this.read = read;
+        this.write = write;
+        this.tenants = tenants;
+        this.mapper = mapper;
+        this.clock = clock;
+        this.bypassAfterFailure = bypassAfterFailure;
+        this.meters = meters;
     }
 
-    @Override public int getOrder(){return ORDER;}
+    @Override
+    public int getOrder() {
+        return ORDER;
+    }
 
-    static String key(TenantContext tenant,String bucket) {
+    static String key(TenantContext tenant, String bucket) {
         // Hash tag keeps one account's buckets on the same Redis Cluster slot.
-        return "rl:{"+tenant.organizationId()+":"+tenant.environmentId()+":"+tenant.allowedProviderAccountId()+"}:"+bucket;
+        return "rl:{" + tenant.organizationId() + ":" + tenant.environmentId() + ":" + tenant.allowedProviderAccountId()
+                + "}:" + bucket;
     }
 
-    @Override protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response,FilterChain chain)
-            throws ServletException,IOException {
-        String path=request.getRequestURI().substring(request.getContextPath().length());
-        Optional<TenantContext> tenant=path.equals("/v1") || path.startsWith("/v1/")?tenants.apply(request):Optional.empty();
-        if(tenant.isEmpty()){chain.doFilter(request,response);return;}
-        boolean writes=!READ_METHODS.contains(request.getMethod());
-        String bucket=writes?"write":"read";
-        Instant now=clock.instant();
-        if(now.isBefore(bypassUntil)){count(bucket,"bypassed");chain.doFilter(request,response);return;}
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+        String path = request.getRequestURI().substring(request.getContextPath().length());
+        Optional<TenantContext> tenant =
+                path.equals("/v1") || path.startsWith("/v1/") ? tenants.apply(request) : Optional.empty();
+        if (tenant.isEmpty()) {
+            chain.doFilter(request, response);
+            return;
+        }
+        boolean writes = !READ_METHODS.contains(request.getMethod());
+        String bucket = writes ? "write" : "read";
+        Instant now = clock.instant();
+        if (now.isBefore(bypassUntil)) {
+            count(bucket, "bypassed");
+            chain.doFilter(request, response);
+            return;
+        }
         RateLimiter.Decision decision;
         try {
-            decision=limiter.acquire(key(tenant.get(),bucket),writes?write:read);
-        } catch(RuntimeException ex) {
-            bypassUntil=now.plus(bypassAfterFailure);count(bucket,"bypassed");
-            log.warn("rate_limit_store_unavailable action=fail_open bypass_ms={} error={}",bypassAfterFailure.toMillis(),ex.getClass().getSimpleName());
-            chain.doFilter(request,response);return;
+            decision = limiter.acquire(key(tenant.get(), bucket), writes ? write : read);
+        } catch (RuntimeException ex) {
+            bypassUntil = now.plus(bypassAfterFailure);
+            count(bucket, "bypassed");
+            log.warn(
+                    "rate_limit_store_unavailable action=fail_open bypass_ms={} error={}",
+                    bypassAfterFailure.toMillis(),
+                    ex.getClass().getSimpleName());
+            chain.doFilter(request, response);
+            return;
         }
-        if(decision.allowed()){count(bucket,"allowed");chain.doFilter(request,response);return;}
-        count(bucket,"limited");
-        long seconds=Math.max(1,(decision.retryAfter().toNanos()+999_999_999L)/1_000_000_000L);
+        if (decision.allowed()) {
+            count(bucket, "allowed");
+            chain.doFilter(request, response);
+            return;
+        }
+        count(bucket, "limited");
+        long seconds = Math.max(1, (decision.retryAfter().toNanos() + 999_999_999L) / 1_000_000_000L);
         response.setStatus(ErrorCode.RATE_LIMITED.httpStatus().value());
-        response.setHeader("Retry-After",Long.toString(seconds));
-        response.setHeader("Cache-Control","no-store");
+        response.setHeader("Retry-After", Long.toString(seconds));
+        response.setHeader("Cache-Control", "no-store");
         response.setContentType("application/json");
-        mapper.writeValue(response.getOutputStream(),ApiError.of(ErrorCode.RATE_LIMITED,"Too many requests for this account scope",RequestContext.currentRequestId()));
+        mapper.writeValue(
+                response.getOutputStream(),
+                ApiError.of(
+                        ErrorCode.RATE_LIMITED,
+                        "Too many requests for this account scope",
+                        RequestContext.currentRequestId()));
     }
 
-    private void count(String bucket,String outcome) {
-        Counter.builder("platform.ratelimit.decisions").tag("bucket",bucket).tag("outcome",outcome).register(meters).increment();
+    private void count(String bucket, String outcome) {
+        Counter.builder("platform.ratelimit.decisions")
+                .tag("bucket", bucket)
+                .tag("outcome", outcome)
+                .register(meters)
+                .increment();
     }
 }

@@ -1,5 +1,7 @@
 package com.paymentsledger.provider.adapter.stripe;
 
+import static com.paymentsledger.provider.ProviderCallClassification.*;
+
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.*;
 import com.paymentsledger.provider.*;
@@ -14,7 +16,6 @@ import java.security.*;
 import java.time.*;
 import java.util.*;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import static com.paymentsledger.provider.ProviderCallClassification.*;
 
 /** One credential bound to one trusted test-account scope. No SDK globals or business persistence. */
 public final class StripeGateway {
@@ -43,21 +44,32 @@ public final class StripeGateway {
             throw new IllegalStateException("Stripe dependency differs from the frozen contract");
         this.accountId = accountId;
         this.clock = Objects.requireNonNull(clock);
-        var builder = StripeClient.builder().setApiKey(apiKey).setConnectTimeout(5000)
-                .setReadTimeout(15000).setMaxNetworkRetries(0);
+        var builder = StripeClient.builder()
+                .setApiKey(apiKey)
+                .setConnectTimeout(5000)
+                .setReadTimeout(15000)
+                .setMaxNetworkRetries(0);
         if (transport != null) builder.setHttpClient(transport);
         client = builder.build();
     }
 
     void guard(ProviderScope requested) {
-        if (!scope.equals(requested)) throw new IllegalArgumentException("Provider scope differs from credential binding");
+        if (!scope.equals(requested))
+            throw new IllegalArgumentException("Provider scope differs from credential binding");
         if (TransactionSynchronizationManager.isActualTransactionActive()
                 || TransactionSynchronizationManager.isSynchronizationActive())
             throw new IllegalStateException("Stripe calls must execute outside local transactions and business locks");
     }
 
-    @FunctionalInterface interface Work<T> { T run(Call call) throws StripeException; }
-    @FunctionalInterface interface Fetch<T extends StripeObject> { T get() throws StripeException; }
+    @FunctionalInterface
+    interface Work<T> {
+        T run(Call call) throws StripeException;
+    }
+
+    @FunctionalInterface
+    interface Fetch<T extends StripeObject> {
+        T get() throws StripeException;
+    }
 
     <T> ProviderCallResult<T> call(ProviderScope requested, String key, Work<T> work) {
         guard(requested);
@@ -74,7 +86,8 @@ public final class StripeGateway {
             T fact = work.run(call);
             if (fact == null) throw mismatch();
             var classification = fact instanceof PaymentIntentFact pi && "requires_action".equals(pi.status())
-                    ? AUTH_REQUIRED : SUCCESS;
+                    ? AUTH_REQUIRED
+                    : SUCCESS;
             return new ProviderCallResult<>(classification, fact, call.evidence(null, fact));
         } catch (Signal signal) {
             return new ProviderCallResult<>(signal.classification, null, call.evidence(signal.code, null));
@@ -116,61 +129,121 @@ public final class StripeGateway {
         private Instant responded;
         private String key, sentKey, usedKey, requestId;
         private Integer status;
-        private final List<Map<String,Object>> observations = new ArrayList<>();
-        Call(Instant started) { this.started = started; }
-        StripeClient client() { return client; }
-        Clock clock() { return clock; }
-        RequestOptions options() {
-            return RequestOptions.builder().setMaxNetworkRetries(0).setConnectTimeout(5000)
-                    .setReadTimeout(15000).setIdempotencyKey(key).build();
+        private final List<Map<String, Object>> observations = new ArrayList<>();
+
+        Call(Instant started) {
+            this.started = started;
         }
+
+        StripeClient client() {
+            return client;
+        }
+
+        Clock clock() {
+            return clock;
+        }
+
+        RequestOptions options() {
+            return RequestOptions.builder()
+                    .setMaxNetworkRetries(0)
+                    .setConnectTimeout(5000)
+                    .setReadTimeout(15000)
+                    .setIdempotencyKey(key)
+                    .build();
+        }
+
         <T extends StripeObject> T fetch(Fetch<T> fetch) throws StripeException {
-            sentKey = null; usedKey = null;
-            requestId = null; status = null; responded = null;
-            if (!ProviderRequestBudget.tryAcquire())
-                throw new Signal(RETRYABLE_TRANSIENT,"query_budget_exhausted");
-            sentKey = key; usedKey = key;
+            sentKey = null;
+            usedKey = null;
+            requestId = null;
+            status = null;
+            responded = null;
+            if (!ProviderRequestBudget.tryAcquire()) throw new Signal(RETRYABLE_TRANSIENT, "query_budget_exhausted");
+            sentKey = key;
+            usedKey = key;
             T result = fetch.get();
             responded = clock.instant();
             if (result == null || result.getLastResponse() == null) throw mismatch();
             var response = result.getLastResponse();
-            requestId = response.requestId(); status = response.code();
-            observations.add(Map.of("requestId", Objects.toString(requestId,""), "httpStatus",status));
+            requestId = response.requestId();
+            status = response.code();
+            observations.add(Map.of("requestId", Objects.toString(requestId, ""), "httpStatus", status));
             var version = response.headers().firstValue("Stripe-Version");
             if (version.isPresent() && !API_VERSION.equals(version.get())) throw mismatch();
             return result;
         }
+
         ProviderEvidence evidence(String code, Object fact) {
-            var summary = new LinkedHashMap<String,Object>();
-            summary.put("scope",scope); summary.put("stripeAccountId",accountId);
-            summary.put("responses",observations); summary.put("errorCode",code);
-            summary.put("fact",fact);
-            return new ProviderEvidence(requestId,usedKey,started,responded,status,code,digest(summary),API_VERSION);
+            var summary = new LinkedHashMap<String, Object>();
+            summary.put("scope", scope);
+            summary.put("stripeAccountId", accountId);
+            summary.put("responses", observations);
+            summary.put("errorCode", code);
+            summary.put("fact", fact);
+            return new ProviderEvidence(
+                    requestId, usedKey, started, responded, status, code, digest(summary), API_VERSION);
         }
     }
 
-    static Signal mismatch() { return new Signal(CONTRACT_MISMATCH,"stripe_contract_mismatch"); }
-    static Signal empty() { return new Signal(TRANSIENT_EMPTY,"stripe_query_empty"); }
-    static Signal unavailable(String code) { return new Signal(CAPABILITY_UNAVAILABLE,code); }
-    static Signal reject(String code) { return new Signal(DEFINITIVE_REJECT,code); }
-    static final class Signal extends RuntimeException {
-        final ProviderCallClassification classification; final String code;
-        Signal(ProviderCallClassification classification, String code) { super(code); this.classification=classification; this.code=code; }
+    static Signal mismatch() {
+        return new Signal(CONTRACT_MISMATCH, "stripe_contract_mismatch");
     }
-    static void testMode(Boolean mode) { if (!Boolean.FALSE.equals(mode)) throw mismatch(); }
-    static String required(String value) { if (value == null || value.isBlank()) throw mismatch(); return value; }
-    static Instant instant(Long value) { if (value == null) throw mismatch(); return Instant.ofEpochSecond(value); }
-    static Map<String,String> metadata(Map<String,String> value) { return value == null ? Map.of() : value; }
+
+    static Signal empty() {
+        return new Signal(TRANSIENT_EMPTY, "stripe_query_empty");
+    }
+
+    static Signal unavailable(String code) {
+        return new Signal(CAPABILITY_UNAVAILABLE, code);
+    }
+
+    static Signal reject(String code) {
+        return new Signal(DEFINITIVE_REJECT, code);
+    }
+
+    static final class Signal extends RuntimeException {
+        final ProviderCallClassification classification;
+        final String code;
+
+        Signal(ProviderCallClassification classification, String code) {
+            super(code);
+            this.classification = classification;
+            this.code = code;
+        }
+    }
+
+    static void testMode(Boolean mode) {
+        if (!Boolean.FALSE.equals(mode)) throw mismatch();
+    }
+
+    static String required(String value) {
+        if (value == null || value.isBlank()) throw mismatch();
+        return value;
+    }
+
+    static Instant instant(Long value) {
+        if (value == null) throw mismatch();
+        return Instant.ofEpochSecond(value);
+    }
+
+    static Map<String, String> metadata(Map<String, String> value) {
+        return value == null ? Map.of() : value;
+    }
+
     static String digest(Object value) {
         try {
             JsonNode tree = JSON.valueToTree(value);
             redact(tree);
-            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
-                    .digest(JSON.writeValueAsString(tree).getBytes(StandardCharsets.UTF_8)));
-        } catch (Exception error) { throw new IllegalStateException("Cannot construct redacted evidence"); }
+            return HexFormat.of()
+                    .formatHex(MessageDigest.getInstance("SHA-256")
+                            .digest(JSON.writeValueAsString(tree).getBytes(StandardCharsets.UTF_8)));
+        } catch (Exception error) {
+            throw new IllegalStateException("Cannot construct redacted evidence");
+        }
     }
+
     private static void redact(JsonNode tree) {
-        if (tree instanceof ObjectNode object) object.remove(List.of("metadata","hostedUrl","description"));
+        if (tree instanceof ObjectNode object) object.remove(List.of("metadata", "hostedUrl", "description"));
         for (JsonNode child : tree) redact(child);
     }
 }

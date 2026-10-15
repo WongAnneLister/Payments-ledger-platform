@@ -27,9 +27,8 @@ public class RequestIdFilter extends OncePerRequestFilter {
     private static final Pattern SAFE_REQUEST_ID = Pattern.compile("^[A-Za-z0-9_-]{1,64}$");
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
         String requestId = resolve(request.getHeader(RequestContext.HEADER));
         RequestContext.set(requestId);
         MDC.put(RequestContext.MDC_KEY, requestId);

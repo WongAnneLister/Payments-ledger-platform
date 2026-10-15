@@ -27,11 +27,10 @@ class FlywayBaselineIT {
     private static final String ISOLATED_DB = "pr01_isolated_migration_check";
 
     @Container
-    private static final PostgreSQLContainer<?> POSTGRES =
-            new PostgreSQLContainer<>("postgres:16")
-                    .withDatabaseName(ISOLATED_DB)
-                    .withUsername("pr01_migrator")
-                    .withPassword("pr01_migrator_pw");
+    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:16")
+            .withDatabaseName(ISOLATED_DB)
+            .withUsername("pr01_migrator")
+            .withPassword("pr01_migrator_pw");
 
     private static Flyway flyway() {
         return Flyway.configure()
@@ -47,8 +46,7 @@ class FlywayBaselineIT {
     }
 
     private static Connection connection() throws Exception {
-        return DriverManager.getConnection(
-                POSTGRES.getJdbcUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
+        return DriverManager.getConnection(POSTGRES.getJdbcUrl(), POSTGRES.getUsername(), POSTGRES.getPassword());
     }
 
     @Test
@@ -58,7 +56,10 @@ class FlywayBaselineIT {
         assertThat(POSTGRES.getJdbcUrl()).contains(ISOLATED_DB);
 
         // 2) 空库首次迁移
-        Flyway baseline = Flyway.configure().configuration(flyway().getConfiguration()).target("1").load();
+        Flyway baseline = Flyway.configure()
+                .configuration(flyway().getConfiguration())
+                .target("1")
+                .load();
         MigrateResult first = baseline.migrate();
         assertThat(first.migrationsExecuted).isEqualTo(1);
 
@@ -66,7 +67,8 @@ class FlywayBaselineIT {
         MigrateResult second = baseline.migrate();
         assertThat(second.migrationsExecuted).isZero();
 
-        try (Connection conn = connection(); Statement st = conn.createStatement()) {
+        try (Connection conn = connection();
+                Statement st = conn.createStatement()) {
             // 4) baseline schema 已建立
             try (ResultSet rs = st.executeQuery(
                     "SELECT count(*) FROM information_schema.schemata WHERE schema_name = 'platform'")) {
@@ -75,11 +77,10 @@ class FlywayBaselineIT {
             }
 
             // 5) PR01 不得创建业务表
-            try (ResultSet rs = st.executeQuery(
-                    "SELECT string_agg(table_name, ',') FROM information_schema.tables "
-                            + "WHERE table_schema = 'platform' "
-                            + "AND table_name IN ('payment','refund','journal','journal_entry',"
-                            + "'balance_projection','financial_event','business_order')")) {
+            try (ResultSet rs = st.executeQuery("SELECT string_agg(table_name, ',') FROM information_schema.tables "
+                    + "WHERE table_schema = 'platform' "
+                    + "AND table_name IN ('payment','refund','journal','journal_entry',"
+                    + "'balance_projection','financial_event','business_order')")) {
                 assertThat(rs.next()).isTrue();
                 assertThat(rs.getString(1))
                         .as("PR01 baseline must not create business tables")
@@ -87,8 +88,7 @@ class FlywayBaselineIT {
             }
 
             // 6) 基线标记写入且只有一行
-            try (ResultSet rs = st.executeQuery(
-                    "SELECT baseline_pr, count(*) OVER () FROM platform.schema_baseline")) {
+            try (ResultSet rs = st.executeQuery("SELECT baseline_pr, count(*) OVER () FROM platform.schema_baseline")) {
                 assertThat(rs.next()).isTrue();
                 assertThat(rs.getString(1)).isEqualTo("PR01");
                 assertThat(rs.getInt(2)).isEqualTo(1);
@@ -96,9 +96,8 @@ class FlywayBaselineIT {
 
             // 7) 回归断言：Flyway 历史表必须落在 platform，不得落在 public。
             //    手动对 Compose 环境启动时发现过此问题（public 在 PG15+ 不授予 CREATE）。
-            try (ResultSet rs = st.executeQuery(
-                    "SELECT table_schema FROM information_schema.tables "
-                            + "WHERE table_name = 'flyway_schema_history'")) {
+            try (ResultSet rs = st.executeQuery("SELECT table_schema FROM information_schema.tables "
+                    + "WHERE table_name = 'flyway_schema_history'")) {
                 assertThat(rs.next()).as("flyway_schema_history must exist").isTrue();
                 assertThat(rs.getString(1))
                         .as("history table must live in platform, not public")

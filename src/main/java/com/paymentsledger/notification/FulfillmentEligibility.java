@@ -4,19 +4,32 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /** Native fulfillment and proven historical recovery both require current server order eligibility. */
 public interface FulfillmentEligibility {
-    record Decision(boolean eligible,String reason) {
-        public static Decision allow(){return new Decision(true,"ELIGIBLE");}
-        public static Decision hold(String reason){return new Decision(false,reason);}
+    record Decision(boolean eligible, String reason) {
+        public static Decision allow() {
+            return new Decision(true, "ELIGIBLE");
+        }
+
+        public static Decision hold(String reason) {
+            return new Decision(false, reason);
+        }
     }
+
     Decision evaluate(NotificationEvent event);
 
     final class Database implements FulfillmentEligibility {
         private final JdbcTemplate jdbc;
-        public Database(JdbcTemplate jdbc){this.jdbc=jdbc;}
-        @Override public Decision evaluate(NotificationEvent event) {
-            if(!event.eventType().equals("payment.succeeded"))return Decision.allow();
-            if(!java.util.Set.of("NATIVE","RECONCILIATION").contains(event.origin()))return Decision.hold("ORIGIN_NOT_ELIGIBLE");
-            Integer count=jdbc.queryForObject("""
+
+        public Database(JdbcTemplate jdbc) {
+            this.jdbc = jdbc;
+        }
+
+        @Override
+        public Decision evaluate(NotificationEvent event) {
+            if (!event.eventType().equals("payment.succeeded")) return Decision.allow();
+            if (!java.util.Set.of("NATIVE", "RECONCILIATION").contains(event.origin()))
+                return Decision.hold("ORIGIN_NOT_ELIGIBLE");
+            Integer count = jdbc.queryForObject(
+                    """
                 SELECT count(*) FROM platform.payment p
                 JOIN platform.business_order o ON o.id=p.business_order_id
                  AND (o.organization_id,o.environment_id,o.application_id,o.provider_account_id,o.currency)
@@ -43,9 +56,21 @@ public interface FulfillmentEligibility {
                    AND (b.eligible_until IS NULL OR b.eligible_until>current_timestamp))))
                  AND p.amount_minor=(?::jsonb->>'amountMinor')::bigint
                  AND p.captured_amount_minor=(?::jsonb->>'capturedAmountMinor')::bigint
-                """,Integer.class,event.paymentId(),event.orderId(),event.organizationId(),event.environmentId(),
-                    event.applicationId(),event.providerAccountId(),event.currency(),event.origin(),event.origin(),event.origin(),event.payload(),event.payload());
-            return count!=null && count==1?Decision.allow():Decision.hold("FULFILLMENT_NOT_ELIGIBLE");
+                """,
+                    Integer.class,
+                    event.paymentId(),
+                    event.orderId(),
+                    event.organizationId(),
+                    event.environmentId(),
+                    event.applicationId(),
+                    event.providerAccountId(),
+                    event.currency(),
+                    event.origin(),
+                    event.origin(),
+                    event.origin(),
+                    event.payload(),
+                    event.payload());
+            return count != null && count == 1 ? Decision.allow() : Decision.hold("FULFILLMENT_NOT_ELIGIBLE");
         }
     }
 }

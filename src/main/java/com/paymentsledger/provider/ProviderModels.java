@@ -9,12 +9,21 @@ import java.util.Objects;
 public final class ProviderModels {
     private ProviderModels() {}
 
-    public enum CheckoutSessionStatus { OPEN, COMPLETE, EXPIRED }
+    public enum CheckoutSessionStatus {
+        OPEN,
+        COMPLETE,
+        EXPIRED
+    }
 
     public record CreateCheckoutSessionCommand(
-            ProviderScope scope, String operationIdempotencyKey,
-            long amountMinor, String currency, String successUrl, String cancelUrl,
-            Map<String, String> sessionMetadata, Map<String, String> paymentIntentMetadata,
+            ProviderScope scope,
+            String operationIdempotencyKey,
+            long amountMinor,
+            String currency,
+            String successUrl,
+            String cancelUrl,
+            Map<String, String> sessionMetadata,
+            Map<String, String> paymentIntentMetadata,
             Instant expiresAt) {
         public CreateCheckoutSessionCommand {
             Objects.requireNonNull(scope, "scope");
@@ -32,8 +41,13 @@ public final class ProviderModels {
     }
 
     public record CheckoutSessionFact(
-            String sessionId, CheckoutSessionStatus status, String hostedUrl, String paymentIntentId,
-            String paymentStatus, Instant expiresAt, Map<String, String> metadata) {
+            String sessionId,
+            CheckoutSessionStatus status,
+            String hostedUrl,
+            String paymentIntentId,
+            String paymentStatus,
+            Instant expiresAt,
+            Map<String, String> metadata) {
         public CheckoutSessionFact {
             requireText(sessionId, "sessionId");
             Objects.requireNonNull(status, "status");
@@ -42,9 +56,16 @@ public final class ProviderModels {
     }
 
     public record PaymentIntentFact(
-            String paymentIntentId, String status, long amountMinor, Long amountReceivedMinor, String currency,
-            List<String> chargeIds, String latestChargeId, String nextActionType,
-            Map<String, String> metadata, Instant createdAt) {
+            String paymentIntentId,
+            String status,
+            long amountMinor,
+            Long amountReceivedMinor,
+            String currency,
+            List<String> chargeIds,
+            String latestChargeId,
+            String nextActionType,
+            Map<String, String> metadata,
+            Instant createdAt) {
         public PaymentIntentFact {
             requireText(paymentIntentId, "paymentIntentId");
             requireCurrency(currency);
@@ -56,9 +77,17 @@ public final class ProviderModels {
     }
 
     public record ChargeFact(
-            String chargeId, String paymentIntentId, String status, boolean captured,
-            long amountMinor, Long amountCapturedMinor, String currency, String balanceTransactionId,
-            String failureCode, String outcomeType, Instant createdAt) {
+            String chargeId,
+            String paymentIntentId,
+            String status,
+            boolean captured,
+            long amountMinor,
+            Long amountCapturedMinor,
+            String currency,
+            String balanceTransactionId,
+            String failureCode,
+            String outcomeType,
+            Instant createdAt) {
         public ChargeFact {
             requireText(chargeId, "chargeId");
             requireCurrency(currency);
@@ -68,8 +97,12 @@ public final class ProviderModels {
     }
 
     public record CreateRefundCommand(
-            ProviderScope scope, String operationIdempotencyKey, String chargeId, String paymentIntentId,
-            long amountMinor, String reason) {
+            ProviderScope scope,
+            String operationIdempotencyKey,
+            String chargeId,
+            String paymentIntentId,
+            long amountMinor,
+            String reason) {
         public CreateRefundCommand {
             Objects.requireNonNull(scope, "scope");
             requireText(operationIdempotencyKey, "operationIdempotencyKey");
@@ -82,8 +115,15 @@ public final class ProviderModels {
     }
 
     public record RefundFact(
-            String refundId, String chargeId, String status, long amountMinor, String currency,
-            String balanceTransactionId, String failureReason, String failureBalanceTransactionId, Instant createdAt) {
+            String refundId,
+            String chargeId,
+            String status,
+            long amountMinor,
+            String currency,
+            String balanceTransactionId,
+            String failureReason,
+            String failureBalanceTransactionId,
+            Instant createdAt) {
         public RefundFact {
             requireText(refundId, "refundId");
             requirePositive(amountMinor, "amountMinor");
@@ -92,8 +132,12 @@ public final class ProviderModels {
     }
 
     public record ListBalanceTransactionsQuery(
-            ProviderScope scope, Instant createdGte, Instant createdLt,
-            String startingAfterCursor, int limit, String payoutId) {
+            ProviderScope scope,
+            Instant createdGte,
+            Instant createdLt,
+            String startingAfterCursor,
+            int limit,
+            String payoutId) {
         public ListBalanceTransactionsQuery {
             Objects.requireNonNull(scope, "scope");
             requireWindow(createdGte, createdLt);
@@ -103,13 +147,26 @@ public final class ProviderModels {
     }
 
     public record FeeDetail(long amountMinor, String currency, String type, String description) {
-        public FeeDetail { requireCurrency(currency); }
+        public FeeDetail {
+            requireCurrency(currency);
+        }
     }
 
     public record BalanceTransactionFact(
-            String btId, String type, long amountMinor, long feeMinor, long netMinor,
-            String currency, String balanceDomain, String sourceObjectId, String sourceObjectType,
-            String status, Instant createdAt, Instant availableOn, List<FeeDetail> feeDetails, String rawDigest) {
+            String btId,
+            String type,
+            long amountMinor,
+            long feeMinor,
+            long netMinor,
+            String currency,
+            String balanceDomain,
+            String sourceObjectId,
+            String sourceObjectType,
+            String status,
+            Instant createdAt,
+            Instant availableOn,
+            List<FeeDetail> feeDetails,
+            String rawDigest) {
         public BalanceTransactionFact {
             requireText(btId, "btId");
             requireCurrency(currency);
@@ -132,8 +189,14 @@ public final class ProviderModels {
     }
 
     public record DisputeFact(
-            String disputeId, String chargeId, String status, String reason, long amountMinor, String currency,
-            Instant evidenceDueBy, List<String> balanceTransactionIds) {
+            String disputeId,
+            String chargeId,
+            String status,
+            String reason,
+            long amountMinor,
+            String currency,
+            Instant evidenceDueBy,
+            List<String> balanceTransactionIds) {
         public DisputeFact {
             requireText(disputeId, "disputeId");
             requirePositive(amountMinor, "amountMinor");
@@ -143,9 +206,15 @@ public final class ProviderModels {
     }
 
     public record PayoutFact(
-            String payoutId, String status, long amountMinor, String currency,
-            String balanceTransactionId, String failureBalanceTransactionId,
-            boolean automatic, Instant arrivalDate, String failureCode) {
+            String payoutId,
+            String status,
+            long amountMinor,
+            String currency,
+            String balanceTransactionId,
+            String failureBalanceTransactionId,
+            boolean automatic,
+            Instant arrivalDate,
+            String failureCode) {
         public PayoutFact {
             requireText(payoutId, "payoutId");
             requirePositive(amountMinor, "amountMinor");
@@ -154,8 +223,8 @@ public final class ProviderModels {
     }
 
     /** A current observation, not an inferred historic closing balance. */
-    public record BalanceSnapshot(String currency, String balanceDomain, long availableMinor, long pendingMinor,
-                                  Instant capturedAt) {
+    public record BalanceSnapshot(
+            String currency, String balanceDomain, long availableMinor, long pendingMinor, Instant capturedAt) {
         public BalanceSnapshot {
             requireCurrency(currency);
             requireText(balanceDomain, "balanceDomain");
@@ -163,8 +232,8 @@ public final class ProviderModels {
         }
     }
 
-    public record PageQuery(ProviderScope scope, Instant createdGte, Instant createdLt,
-                            String startingAfterCursor, int limit) {
+    public record PageQuery(
+            ProviderScope scope, Instant createdGte, Instant createdLt, String startingAfterCursor, int limit) {
         public PageQuery {
             Objects.requireNonNull(scope, "scope");
             requireWindow(createdGte, createdLt);
@@ -188,8 +257,13 @@ public final class ProviderModels {
         }
     }
 
-    public record ReportFact(String reportId, String status, Instant createdGte, Instant createdLt,
-                             List<BalanceSnapshot> balances, String rawDigest) {
+    public record ReportFact(
+            String reportId,
+            String status,
+            Instant createdGte,
+            Instant createdLt,
+            List<BalanceSnapshot> balances,
+            String rawDigest) {
         public ReportFact {
             requireText(reportId, "reportId");
             requireWindow(createdGte, createdLt);
@@ -197,7 +271,8 @@ public final class ProviderModels {
         }
     }
 
-    public record VerifiedWebhook(String eventId, String eventType, String objectId, Instant createdAt, boolean livemode) {
+    public record VerifiedWebhook(
+            String eventId, String eventType, String objectId, Instant createdAt, boolean livemode) {
         public VerifiedWebhook {
             requireText(eventId, "eventId");
             requireText(eventType, "eventType");

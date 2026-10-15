@@ -15,8 +15,11 @@ public record LedgerScope(UUID organizationId, UUID environmentId, String curren
 
     public static LedgerScope from(TenantContext tenant, String currency) {
         TenantAccessGuard.requireCurrency(tenant, currency);
-        return new LedgerScope(tenant.organizationId(), tenant.environmentId(), currency, tenant.allowedProviderAccountId());
+        return new LedgerScope(
+                tenant.organizationId(), tenant.environmentId(), currency, tenant.allowedProviderAccountId());
     }
 
-    public LedgerScope moneyScope() { return new LedgerScope(organizationId, environmentId, currency, null); }
+    public LedgerScope moneyScope() {
+        return new LedgerScope(organizationId, environmentId, currency, null);
+    }
 }
