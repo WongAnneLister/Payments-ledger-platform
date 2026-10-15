@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.bank.*;
+import com.paymentsledger.bank.repository.BankMatchRepository;
+import com.paymentsledger.bank.repository.BankStatementRepository;
 import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.ledger.*;
 import com.paymentsledger.payout.PayoutService;
@@ -624,7 +626,7 @@ class ReconciliationCoreIT {
         var mapper = new ObjectMapper().findAndRegisterModules();
         var ledger = new LedgerPostingService(jdbc, mapper);
         var payouts = new PayoutService(jdbc, tx, mapper, ledger);
-        var bank = new BankMatcher(jdbc, tx, mapper, ledger, payouts);
+        var bank = new BankMatcher(new BankMatchRepository(jdbc), tx, mapper, ledger);
         replay = new FinancialReplayService(
                 jdbc,
                 tx,
@@ -692,12 +694,12 @@ class ReconciliationCoreIT {
                 .put("principalMinor", 2900)
                 .put("feeMinor", 10);
         line.putArray("payoutReferences").add("po_test");
-        new BankStatementImporter(jdbc, tx, mapper).importStatement(scope, fixture);
+        new BankStatementImporter(new BankStatementRepository(jdbc), tx).importStatement(scope, fixture);
         UUID lineId = jdbc.queryForObject("""
                 SELECT id
                 FROM platform.bank_statement_line
                 WHERE external_line_id='partial_line'""", UUID.class);
-        new BankMatcher(jdbc, tx, mapper, new LedgerPostingService(jdbc, mapper), payouts)
+        new BankMatcher(new BankMatchRepository(jdbc), tx, mapper, new LedgerPostingService(jdbc, mapper))
                 .match(scope, payout, lineId, 2900);
         finish(run, evidence(-5712, scope, until));
         assertThat(jdbc.queryForObject("""

@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.*;
 import com.paymentsledger.bank.*;
+import com.paymentsledger.bank.repository.BankMatchRepository;
+import com.paymentsledger.bank.repository.BankStatementRepository;
 import com.paymentsledger.dispute.*;
 import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.identity.TenantContext;
@@ -96,8 +98,8 @@ abstract class Pr20RecoveryFixture extends Pr20RecoveryBaseFixture {
         service = new PaymentService(repository, executor);
         refunds = new RefundRepository(jdbc, tx, json, fake.clock(), repository, shares, disputes);
         payouts = new PayoutService(jdbc, tx, json, posting);
-        banks = new BankStatementImporter(jdbc, tx, json);
-        matcher = new BankMatcher(jdbc, tx, json, posting, payouts);
+        banks = new BankStatementImporter(new BankStatementRepository(jdbc), tx);
+        matcher = new BankMatcher(new BankMatchRepository(jdbc), tx, json, posting);
         BalanceTransactionPort reads = new BalanceTransactionPort() {
             public ProviderCallResult<BalanceTransactionPage> listBalanceTransactions(ListBalanceTransactionsQuery q) {
                 assertThat(org.springframework.transaction.support.TransactionSynchronizationManager
