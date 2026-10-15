@@ -49,6 +49,11 @@ abstract class Pr18Fixture extends PaymentCoreFixture {
     long currentSeed;
     int resetNumber;
 
+    @Override
+    boolean traceSql() {
+        return false;
+    }
+
     void reset(long seed) {
         if (caseRoot == null) caseRoot = directory;
         if (pool != null) pool.close();

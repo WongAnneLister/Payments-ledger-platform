@@ -73,7 +73,32 @@ class SqlTraceTest {
                         "COMMIT",
                         "AUTOCOMMIT",
                         "CONNECT",
-                        "INSERT INTO platform.x(at,ref) VALUES (?,?) [Timestamp:1970-01-01T00:00:00Z, UUID:U1]");
+                        "INSERT INTO platform.x(at,ref) VALUES (?,?) [Timestamp:@1, UUID:U1]");
+    }
+
+    @Test
+    void runVaryingIdsAndInstantsInsideStringsAreLabelledPerKind() throws Exception {
+        var trace = new SqlTrace();
+        var jdbc = new JdbcTemplate(trace.wrap(stubDatabase()));
+        String payment = "pay_01M4RJQNKY9KZWRRDF5R3H5DCE", other = "pay_01M4RJQNKYBPS6FVANFZ0C40NW";
+        Instant at = Instant.parse("2026-10-12T17:31:58.956948Z");
+        jdbc.update(
+                "INSERT INTO platform.e(doc,seen) VALUES (?::jsonb,?)",
+                "{\"id\":\"" + payment + "\",\"at\":\"" + at + "\"}",
+                Timestamp.from(at));
+        jdbc.update(
+                "INSERT INTO platform.e(doc) VALUES (?::jsonb)",
+                "{\"id\":\"" + other + "\",\"again\":\"" + payment + "\",\"at\":\"" + at.plusSeconds(1) + "\"}");
+        Path out = directory.resolve("ids.txt");
+        trace.write(out);
+        assertThat(Files.readAllLines(out))
+                .containsExactly(
+                        "CONNECT",
+                        "INSERT INTO platform.e(doc,seen) VALUES (?::jsonb,?) [String:{\"id\":\"ID1\",\"at\":\"@1\"},"
+                                + " Timestamp:@1]",
+                        "CONNECT",
+                        "INSERT INTO platform.e(doc) VALUES (?::jsonb) [String:{\"id\":\"ID2\",\"again\":\"ID1\","
+                                + "\"at\":\"@2\"}]");
     }
 
     @Test

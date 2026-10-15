@@ -31,13 +31,17 @@ import javax.sql.DataSource;
  * the lock order), with the same parameters and the same commit/rollback boundaries. Run the suite before and after
  * the refactor and compare the written traces.
  *
- * <p>Output is normalized so two runs compare equal: SQL whitespace is collapsed, UUIDs become stable labels in order
+ * <p>Output is normalized so two runs compare equal: SQL whitespace is collapsed, UUIDs, ULID IDs and instants become stable labels in order
  * of first appearance, and statements issued by threads other than the test thread are written as separately
  * labelled blocks sorted by content, because which racing thread wins is not deterministic.
  */
 public final class SqlTrace {
-    private static final Pattern UUID_PATTERN =
-            Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
+    /** Values that differ between runs: random UUIDs, ULID wire IDs (pay_01J...) and wall-clock instants. */
+    private static final Pattern VOLATILE =
+            Pattern.compile("(?<uuid>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
+                    + "|(?<ulid>\\b[a-z]+_[0-9A-HJKMNP-TV-Z]{26}\\b)"
+                    + "|(?<instant>\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(?::\\d{2}(?:\\.\\d{1,9})?)?Z)");
+
     private static final Set<String> EXECUTE =
             Set.of("execute", "executeQuery", "executeUpdate", "executeLargeUpdate", "addBatch");
 
@@ -75,12 +79,12 @@ public final class SqlTrace {
     /** Writes the normalized trace; the file name is usually the test method name. */
     public synchronized void write(Path file) {
         var lines = new ArrayList<String>();
-        var labels = new HashMap<String, String>();
+        var labels = new Labels();
         for (String event : events.getOrDefault(testThread, List.of())) lines.add(label(event, labels, "U"));
         var others = new TreeMap<String, Integer>();
         for (var entry : events.entrySet()) {
             if (entry.getKey() == testThread) continue;
-            var local = new HashMap<String, String>();
+            var local = new Labels();
             var block = new StringBuilder();
             for (String event : entry.getValue())
                 block.append("  ").append(label(event, local, "T")).append('\n');
@@ -151,11 +155,23 @@ public final class SqlTrace {
         return value.getClass().getSimpleName() + ":" + value;
     }
 
-    private static String label(String event, Map<String, String> labels, String prefix) {
-        Matcher m = UUID_PATTERN.matcher(event);
+    /** Labels for volatile values, numbered per kind (U, T, ID, @) in order of first appearance. */
+    private static final class Labels {
+        private final Map<String, String> byValue = new HashMap<>();
+        private final Map<String, Integer> counters = new HashMap<>();
+
+        String of(String kind, String value) {
+            return byValue.computeIfAbsent(value, ignored -> kind + counters.merge(kind, 1, Integer::sum));
+        }
+    }
+
+    private static String label(String event, Labels labels, String uuidPrefix) {
+        Matcher m = VOLATILE.matcher(event);
         var out = new StringBuilder();
-        while (m.find())
-            m.appendReplacement(out, labels.computeIfAbsent(m.group(), ignored -> prefix + (labels.size() + 1)));
+        while (m.find()) {
+            String kind = m.group("uuid") != null ? uuidPrefix : m.group("ulid") != null ? "ID" : "@";
+            m.appendReplacement(out, Matcher.quoteReplacement(labels.of(kind, m.group())));
+        }
         m.appendTail(out);
         return out.toString();
     }

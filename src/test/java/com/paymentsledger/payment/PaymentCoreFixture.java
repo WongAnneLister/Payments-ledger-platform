@@ -8,10 +8,12 @@ import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.*;
+import com.paymentsledger.testsupport.SqlTrace;
 import java.nio.file.Path;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
+import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
@@ -32,6 +34,10 @@ abstract class PaymentCoreFixture {
     JdbcTemplate admin, jdbc;
     DataSourceTransactionManager tx;
     com.zaxxer.hikari.HikariDataSource pool;
+    /** The application-role DataSource behind jdbc and tx; build any extra JdbcTemplate from this, not pool. */
+    DataSource dataSource;
+
+    final SqlTrace trace = new SqlTrace();
     PaymentRepository repository;
     PaymentExecutor executor;
     PaymentService service;
@@ -58,8 +64,10 @@ abstract class PaymentCoreFixture {
         pool.setPassword("pr02_test_only");
         pool.setMaximumPoolSize(12);
         pool.setAutoCommit(true);
-        jdbc = new JdbcTemplate(pool);
-        tx = new DataSourceTransactionManager(pool);
+        // jdbc and tx must share one DataSource so statements join transactions; subclasses use dataSource too.
+        dataSource = traceSql() ? trace.wrap(pool) : pool;
+        jdbc = new JdbcTemplate(dataSource);
+        tx = new DataSourceTransactionManager(dataSource);
         admin.execute("TRUNCATE platform.organization,platform.currency_config CASCADE");
         admin.update("INSERT INTO platform.organization(id,code) VALUES (?,'org')", id(1));
         admin.update("""
@@ -91,8 +99,21 @@ abstract class PaymentCoreFixture {
     }
 
     @AfterEach
-    void close() {
+    void close(TestInfo test) {
+        if (traceSql())
+            trace.write(Path.of(
+                    "target/failsafe-reports/sql-trace",
+                    getClass().getSimpleName(),
+                    test.getTestMethod().orElseThrow().getName() + ".txt"));
         if (pool != null) pool.close();
+    }
+
+    /**
+     * Records application-role SQL per test for before/after refactor comparison. Property and fault suites opt out:
+     * they reset the fixture per seed and run thousands of steps.
+     */
+    boolean traceSql() {
+        return true;
     }
 
     PaymentRequests.Create command(String order) {
