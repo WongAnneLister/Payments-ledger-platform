@@ -447,8 +447,7 @@ abstract class Pr20RecoveryFixture extends Pr20RecoveryBaseFixture {
         long missing = jdbc.queryForObject("""
                 SELECT count(*)
                 FROM platform.financial_event e
-                FULL
-                JOIN platform.journal j ON j.financial_event_id=e.id
+                FULL JOIN platform.journal j ON j.financial_event_id=e.id
                 WHERE e.id IS NULL OR j.id IS NULL""", Long.class);
         assertThat(trial).isZero();
         assertThat(missing).isZero();

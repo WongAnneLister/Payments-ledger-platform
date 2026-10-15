@@ -22,8 +22,7 @@ class FinancialSchemaIT {
     static void migrate() {
         admin = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword()));
         admin.execute("""
-                ALTER DEFAULT PRIVILEGES IN SCHEMA platform GRANT
-                SELECT,INSERT ON TABLES TO payments_app""");
+                ALTER DEFAULT PRIVILEGES IN SCHEMA platform GRANT SELECT,INSERT ON TABLES TO payments_app""");
         Flyway.configure()
                 .dataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword())
                 .schemas("platform")

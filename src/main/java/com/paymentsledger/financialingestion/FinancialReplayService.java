@@ -90,8 +90,7 @@ public class FinancialReplayService {
                         SELECT *
                         FROM platform.payment
                         WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=?
-                        FOR
-                        UPDATE""", payment, scope.organizationId(), scope.environmentId(), scope.providerAccountId());
+                        FOR UPDATE""", payment, scope.organizationId(), scope.environmentId(), scope.providerAccountId());
             // Acquire rank 20/30/50 before BT and journal locks; reuse the handle after posting.
             var shareLocks = payment == null ? null : shares.lock(payment);
             var payoutRow = payouts != null && "payout".equals(fact.sourceObjectType())

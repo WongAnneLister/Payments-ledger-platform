@@ -24,8 +24,7 @@ final class ImportCoverage {
         var windows = jdbc.queryForList("""
                 SELECT w.*,c.next_cursor,c.api_version,c.version AS cursor_version
                 FROM platform.import_window w
-                LEFT
-                JOIN platform.import_cursor c ON c.window_id=w.id
+                LEFT JOIN platform.import_cursor c ON c.window_id=w.id
                 WHERE w.id=?""", windowId);
         if (windows.size() != 1) return incomplete("MISSING_IMPORT_WINDOW", List.of());
         var window = windows.getFirst();

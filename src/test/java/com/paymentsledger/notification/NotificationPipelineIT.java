@@ -54,8 +54,8 @@ class NotificationPipelineIT extends NotificationFixture {
         var event = success();
         var ack = new AtomicInteger();
         admin.execute("""
-                CREATE OR REPLACE FUNCTION platform.fail_delivery() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
-                    RAISE EXCEPTION 'injected'; END $$""");
+                CREATE OR REPLACE FUNCTION platform.fail_delivery() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION
+                    'injected'; END $$""");
         admin.execute("""
                 CREATE TRIGGER fail_delivery BEFORE INSERT ON platform.delivery_task FOR EACH ROW EXECUTE FUNCTION
                     platform.fail_delivery()""");

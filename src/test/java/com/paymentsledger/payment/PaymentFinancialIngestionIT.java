@@ -171,8 +171,8 @@ class PaymentFinancialIngestionIT extends PaymentCoreFixture {
                 RETURN NEW; END $$
                 """);
         admin.execute("""
-                CREATE TRIGGER pr10_test_fail_financial BEFORE
-                UPDATE ON platform.payment FOR EACH ROW EXECUTE FUNCTION platform.pr10_test_fail_financial()""");
+                CREATE TRIGGER pr10_test_fail_financial BEFORE UPDATE ON platform.payment FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr10_test_fail_financial()""");
         try {
             assertThatThrownBy(() -> replay.replay(scope, fact.btId())).isInstanceOf(RuntimeException.class);
             assertThat(count("journal")).isZero();

@@ -142,8 +142,8 @@ class NotificationKafkaIT extends NotificationFixture {
                 CREATE OR REPLACE FUNCTION platform.kafka_delivery_failure() RETURNS trigger LANGUAGE plpgsql AS $$
                     BEGIN RAISE EXCEPTION 'injected database failure'; END $$""");
         admin.execute("""
-                CREATE TRIGGER kafka_delivery_failure BEFORE INSERT ON platform.delivery_task FOR EACH ROW EXECUTE
-                    FUNCTION platform.kafka_delivery_failure()""");
+                CREATE TRIGGER kafka_delivery_failure BEFORE INSERT ON platform.delivery_task FOR EACH ROW EXECUTE FUNCTION
+                    platform.kafka_delivery_failure()""");
         try (var producer = producer();
                 var observer = consumer(topic, group)) {
             producer.send(new ProducerRecord<>(topic, event.businessKey(), event.bytes()))

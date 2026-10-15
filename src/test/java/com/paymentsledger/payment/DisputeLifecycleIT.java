@@ -163,10 +163,8 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
         assertThat(jdbc.queryForObject("""
                         SELECT count(*)
                         FROM platform.ledger_account a
-                        LEFT
-                        JOIN platform.balance_projection p ON p.ledger_account_id=a.id
-                        LEFT
-                        JOIN (SELECT ledger_account_id,sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE
+                        LEFT JOIN platform.balance_projection p ON p.ledger_account_id=a.id
+                        LEFT JOIN (SELECT ledger_account_id,sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE
                             -amount_minor::numeric END) n FROM platform.journal_entry GROUP BY ledger_account_id) e ON
                             e.ledger_account_id=a.id
                         WHERE coalesce(p.balance_minor,0)<>coalesce(e.n,0)""", Long.class)).isZero();
@@ -531,11 +529,11 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
         capture();
         long journals = count("journal");
         admin.execute("""
-                CREATE FUNCTION platform.pr13_fail_share() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
-                    EXCEPTION 'injected dispute share failure'; END $$""");
+                CREATE FUNCTION platform.pr13_fail_share() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION
+                    'injected dispute share failure'; END $$""");
         admin.execute("""
-                CREATE TRIGGER pr13_fail_share BEFORE INSERT ON platform.share_adjustment FOR EACH ROW EXECUTE
-                    FUNCTION platform.pr13_fail_share()""");
+                CREATE TRIGGER pr13_fail_share BEFORE INSERT ON platform.share_adjustment FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr13_fail_share()""");
         try {
             assertThatThrownBy(() -> observe("du_rollback", "needs_response"))
                     .hasStackTraceContaining("injected dispute share failure");
@@ -564,8 +562,8 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
                     NEW.status='DONE' THEN RAISE EXCEPTION 'injected dispute ack failure'; END IF; RETURN NEW; END
                     $$""");
         admin.execute("""
-                CREATE TRIGGER pr13_fail_ack BEFORE
-                UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.pr13_fail_ack()""");
+                CREATE TRIGGER pr13_fail_ack BEFORE UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr13_fail_ack()""");
         try {
             assertThatThrownBy(() -> processor.process(current))
                     .hasStackTraceContaining("injected dispute ack failure");
@@ -673,11 +671,11 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
         ingest(movement("txn_money_rollback", "du_money_rollback", -3000, 1500));
         long journals = count("journal");
         admin.execute("""
-                CREATE FUNCTION platform.pr13_fail_money() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
-                    EXCEPTION 'injected dispute money failure'; END $$""");
+                CREATE FUNCTION platform.pr13_fail_money() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION
+                    'injected dispute money failure'; END $$""");
         admin.execute("""
-                CREATE TRIGGER pr13_fail_money BEFORE INSERT ON platform.dispute_financial_fact FOR EACH ROW EXECUTE
-                    FUNCTION platform.pr13_fail_money()""");
+                CREATE TRIGGER pr13_fail_money BEFORE INSERT ON platform.dispute_financial_fact FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr13_fail_money()""");
         try {
             assertThatThrownBy(() -> replay.replay(scope, "txn_money_rollback"))
                     .hasStackTraceContaining("injected dispute money failure");
@@ -765,8 +763,7 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
                         SELECT id
                         FROM platform.ledger_account
                         WHERE account_purpose='PARTNER_SHARE_EXPENSE'
-                        FOR
-                        UPDATE""");
+                        FOR UPDATE""");
             }
             var pending = worker.submit(() -> new org.springframework.transaction.support.TransactionTemplate(tx)
                     .execute(status -> {
@@ -783,8 +780,7 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
                                         SELECT id
                                         FROM platform.ledger_account
                                         WHERE account_purpose='PSP_FUNDS'
-                                        FOR
-                                        UPDATE NOWAIT""")).doesNotThrowAnyException();
+                                        FOR UPDATE NOWAIT""")).doesNotThrowAnyException();
             } finally {
                 blocker.rollback();
                 assertThat(pending.get(10, TimeUnit.SECONDS)).isEqualTo("POSTED");

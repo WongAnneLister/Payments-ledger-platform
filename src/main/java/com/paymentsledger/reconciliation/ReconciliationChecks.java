@@ -418,10 +418,8 @@ final class ReconciliationChecks {
             var facts = jdbc.queryForList("""
                     SELECT f.*,b.state AS bt_state,b.payout_id AS bt_payout_id,b.journal_id AS bt_journal_id,j.sealed_at
                     FROM platform.payout_fact f
-                    LEFT
-                    JOIN platform.balance_transaction b ON b.id=f.balance_transaction_id
-                    LEFT
-                    JOIN platform.journal j ON j.id=f.journal_id
+                    LEFT JOIN platform.balance_transaction b ON b.id=f.balance_transaction_id
+                    LEFT JOIN platform.journal j ON j.id=f.journal_id
                     WHERE f.payout_id=?
                     ORDER BY f.id""", id);
             var matches = jdbc.queryForList("""
@@ -436,12 +434,9 @@ final class ReconciliationChecks {
                         s.coverage_from,
                         s.coverage_until
                     FROM platform.payout_bank_match m
-                    LEFT
-                    JOIN platform.journal j ON j.id=m.journal_id
-                    LEFT
-                    JOIN platform.bank_statement_line l ON l.id=m.line_id
-                    LEFT
-                    JOIN platform.bank_statement s ON s.id=l.statement_id
+                    LEFT JOIN platform.journal j ON j.id=m.journal_id
+                    LEFT JOIN platform.bank_statement_line l ON l.id=m.line_id
+                    LEFT JOIN platform.bank_statement s ON s.id=l.statement_id
                     WHERE m.payout_id=?
                     ORDER BY m.id""", id);
             versions.put("payoutFacts:" + id, pins(facts));

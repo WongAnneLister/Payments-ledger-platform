@@ -645,8 +645,8 @@ class Pr19WebhookFaultIT extends Pr19FaultFixture {
                         case "outside-tolerance" -> signed = signature(legal, timestamp - 301, SECRET);
                         case "inbox-persistence-failure" -> {
                             admin.execute("""
-                                    CREATE FUNCTION platform.pr19_fail_inbox() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
-                                        EXCEPTION 'PR19_INJECTED_INBOX_UNAVAILABLE'; END $$""");
+                                    CREATE FUNCTION platform.pr19_fail_inbox() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION
+                                        'PR19_INJECTED_INBOX_UNAVAILABLE'; END $$""");
                             admin.execute("""
                                     CREATE TRIGGER pr19_fail_inbox BEFORE INSERT ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION
                                         platform.pr19_fail_inbox()""");

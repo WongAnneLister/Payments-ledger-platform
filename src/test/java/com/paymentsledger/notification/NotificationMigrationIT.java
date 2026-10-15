@@ -36,8 +36,7 @@ class NotificationMigrationIT extends NotificationFixture {
                     amount_minor)::text
                 FROM platform.payment""", String.class);
         admin.execute("""
-                ALTER DEFAULT PRIVILEGES IN SCHEMA platform GRANT
-                SELECT,INSERT ON TABLES TO payments_app""");
+                ALTER DEFAULT PRIVILEGES IN SCHEMA platform GRANT SELECT,INSERT ON TABLES TO payments_app""");
         Flyway.configure()
                 .dataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword())
                 .schemas("platform")

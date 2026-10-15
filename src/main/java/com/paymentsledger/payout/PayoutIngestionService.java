@@ -67,8 +67,7 @@ public class PayoutIngestionService {
                             SELECT id
                             FROM platform.payout_observation
                             WHERE payout_id=?
-                            ORDER BY created_at DESC,id DESC
-                            LIMIT 1""", UUID.class, payout);
+                            ORDER BY created_at DESC,id DESC LIMIT 1""", UUID.class, payout);
             UUID id = UUID.randomUUID();
             jdbc.update(
                     """

@@ -447,8 +447,7 @@ public class OpsQueryService {
                 SELECT evidence_version
                 FROM platform.reconciliation_evidence
                 WHERE run_id=? AND evidence_kind IN ('PERIOD_REPORT','QUIESCENT_SNAPSHOT','INDEPENDENT_FIXTURE')
-                ORDER BY created_at DESC,id DESC
-                LIMIT 1""", id);
+                ORDER BY created_at DESC,id DESC LIMIT 1""", id);
         set(out, "externalEvidenceVersion", external == null ? null : external.get("evidence_version"));
         var evidence = out.putArray("evidence");
         for (var item : jdbc.queryForList("""
@@ -513,8 +512,7 @@ public class OpsQueryService {
                 SELECT status,evidence_refs,resolution_journal_id
                 FROM platform.ops_exception_action
                 WHERE exception_id=?
-                ORDER BY action_order DESC
-                LIMIT 1""", r.get("id"));
+                ORDER BY action_order DESC LIMIT 1""", r.get("id"));
         var out = json.createObjectNode()
                 .put("exceptionId", r.get("id").toString())
                 .put("type", exceptionType(r.get("reason").toString()))
@@ -588,8 +586,7 @@ public class OpsQueryService {
         var rows = jdbc.queryForList("""
                 SELECT a.*,p.balance_minor
                 FROM platform.ledger_account a
-                LEFT
-                JOIN platform.balance_projection p ON p.ledger_account_id=a.id
+                LEFT JOIN platform.balance_projection p ON p.ledger_account_id=a.id
                 JOIN platform.org_currency_enabled ce ON ce.organization_id=a.organization_id
                     AND ce.environment_id=a.environment_id
                     AND ce.currency=a.currency
@@ -671,8 +668,7 @@ public class OpsQueryService {
                         WHERE
                         """ + field + """
                                         =? AND organization_id=? AND environment_id=? AND provider_account_id=? AND currency=?
-                                        ORDER BY provider_created_at DESC,id DESC
-                                        LIMIT 101""",
+                                        ORDER BY provider_created_at DESC,id DESC LIMIT 101""",
                         id,
                         c.organizationId(),
                         c.environmentId(),
@@ -707,8 +703,7 @@ public class OpsQueryService {
                     jdbc.queryForList(
                             "SELECT * FROM platform.recovery_task WHERE " + field + """
                                             =? AND organization_id=? AND environment_id=?
-                                            ORDER BY created_at DESC,id DESC
-                                            LIMIT 101""",
+                                            ORDER BY created_at DESC,id DESC LIMIT 101""",
                             id,
                             c.organizationId(),
                             c.environmentId()))) operations.add(task(t));
@@ -733,8 +728,7 @@ public class OpsQueryService {
                             JOIN platform.bank_statement_line l ON l.id=m.line_id
                             JOIN platform.bank_statement s ON s.id=l.statement_id
                             WHERE m.payout_id=? AND m.organization_id=? AND m.environment_id=?
-                            ORDER BY l.booked_at DESC,l.id DESC
-                            LIMIT 101""", id, c.organizationId(), c.environmentId())))
+                            ORDER BY l.booked_at DESC,l.id DESC LIMIT 101""", id, c.organizationId(), c.environmentId())))
                 banks.add(project(
                         line,
                         "id",
@@ -771,8 +765,7 @@ public class OpsQueryService {
                                         =? AND b.organization_id=e.organization_id AND b.environment_id=e.environment_id AND
                                             b.provider_account_id=e.provider_account_id AND b.currency=e.currency AND (e.source_ref=b.bt_id
                                             OR e.source_ref=b.id::text)))
-                                        ORDER BY e.created_at DESC,e.id DESC
-                                        LIMIT 101""",
+                                        ORDER BY e.created_at DESC,e.id DESC LIMIT 101""",
                         c.organizationId(),
                         c.environmentId(),
                         resource.get("provider_account_id"),
@@ -802,8 +795,7 @@ public class OpsQueryService {
                             WHERE
                             """ + field + """
                                             =? AND organization_id=? AND environment_id=? AND provider_account_id=? AND currency=?
-                                            ORDER BY created_at DESC,id DESC
-                                            LIMIT 101""",
+                                            ORDER BY created_at DESC,id DESC LIMIT 101""",
                             id,
                             c.organizationId(),
                             c.environmentId(),
@@ -871,8 +863,7 @@ public class OpsQueryService {
                             JOIN platform.bank_statement s ON s.id=l.statement_id
                             WHERE b.""" + field + """
                                             =? AND b.organization_id=? AND b.environment_id=? AND b.provider_account_id=? AND b.currency=?
-                                            ORDER BY l.booked_at DESC,l.id DESC
-                                            LIMIT 101""",
+                                            ORDER BY l.booked_at DESC,l.id DESC LIMIT 101""",
                             id,
                             c.organizationId(),
                             c.environmentId(),

@@ -64,8 +64,8 @@ class WebhookSchemaIT {
                                 JOIN platform.provider_operation o ON o.payment_id=p.id
                                 JOIN platform.recovery_task t ON t.operation_id=o.id""")).isEqualTo(original);
         assertThat(jdbc.queryForObject("""
-                        SELECT last_query_confirmed_at=last_provider_confirmed_at AND last_webhook_created_at IS NULL
-                        FROM platform.payment""", Boolean.class)).isTrue();
+                        SELECT last_query_confirmed_at=last_provider_confirmed_at AND last_webhook_created_at IS NULL FROM
+                            platform.payment""", Boolean.class)).isTrue();
         jdbc.update("""
           INSERT INTO platform.webhook_inbox(id,organization_id,environment_id,provider_account_id,livemode,
           provider_account_ref,event_id,event_type,object_id,object_type,event_created_at,received_at,verified_at,

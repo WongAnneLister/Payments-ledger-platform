@@ -325,8 +325,7 @@ public final class RevenueShareService {
         var ids = jdbc.queryForList("""
                 SELECT p.id
                 FROM platform.payment p
-                LEFT
-                JOIN platform.share_catchup_cursor c ON c.payment_id=p.id
+                LEFT JOIN platform.share_catchup_cursor c ON c.payment_id=p.id
                 WHERE p.organization_id=?
                     AND p.environment_id=?
                     AND p.provider_account_id=?

@@ -661,8 +661,7 @@ public class OpsCommandService {
                     SELECT status
                     FROM platform.ops_exception_action
                     WHERE exception_id=?
-                    ORDER BY action_order DESC
-                    LIMIT 1""", target);
+                    ORDER BY action_order DESC LIMIT 1""", target);
             out.put("exceptionId", target.toString());
             out.put("status", latest == null ? "OPEN" : latest.get("status").toString());
         } else if (action.equals("RETRY_TASK")) {
