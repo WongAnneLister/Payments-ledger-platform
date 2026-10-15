@@ -7,12 +7,13 @@ import com.paymentsledger.bank.repository.BankMatchRepository;
 import com.paymentsledger.common.error.*;
 import com.paymentsledger.dispute.DisputeService;
 import com.paymentsledger.ledger.*;
-import com.paymentsledger.payout.PayoutService;
 import com.paymentsledger.pr18.Pr18Artifacts;
 import com.paymentsledger.revenueshare.RevenueShareService;
+import com.paymentsledger.testsupport.SqlTrace;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Supplier;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -316,29 +317,11 @@ class Pr18ConcurrencyIT extends Pr18Fixture {
 
         Actor(String name) {
             this.name = name;
-            tx = new DataSourceTransactionManager(pool);
-            jdbc = new JdbcTemplate(pool) {
-                void capture(String sql) {
-                    // Normalize before matching: a line break inside "FOR UPDATE" must not hide a lock.
-                    String flat = sql.replaceAll("\\s+", " ");
-                    if (flat.contains("pg_advisory_xact_lock")
-                            || flat.contains("FOR UPDATE")
-                            || flat.contains("platform.lock_")
-                            || flat.contains("post_ledger")) trace.add(flat);
-                }
-
-                @Override
-                public List<Map<String, Object>> queryForList(String sql, Object... args) {
-                    capture(sql);
-                    return super.queryForList(sql, args);
-                }
-
-                @Override
-                public <T> T queryForObject(String sql, Class<T> type, Object... args) {
-                    capture(sql);
-                    return super.queryForObject(sql, type, args);
-                }
-            };
+            // Observe locks at the DataSource: every statement passes through it, whichever JdbcTemplate or
+            // NamedParameterJdbcTemplate method issued it. The transaction manager must share the same DataSource.
+            DataSource traced = new SqlTrace(this::captureLock).wrap(pool);
+            tx = new DataSourceTransactionManager(traced);
+            jdbc = new JdbcTemplate(traced);
             var ledger = new LedgerPostingService(jdbc, json);
             final DisputeService[] dispute = new DisputeService[1];
             shares = new RevenueShareService(
@@ -347,8 +330,14 @@ class Pr18ConcurrencyIT extends Pr18Fixture {
             dispute[0] = disputes;
             repository = new PaymentRepository(jdbc, tx, json, fake.clock(), shares);
             refunds = new RefundRepository(jdbc, tx, json, fake.clock(), repository, shares, disputes);
-            var payouts = new PayoutService(jdbc, tx, json, ledger);
             matcher = new BankMatcher(new BankMatchRepository(jdbc), tx, json, ledger);
+        }
+
+        void captureLock(String sql) {
+            if (sql.contains("pg_advisory_xact_lock")
+                    || sql.contains("FOR UPDATE")
+                    || sql.contains("platform.lock_")
+                    || sql.contains("post_ledger")) trace.add(sql);
         }
 
         Object reserve(String key, long amount) {
