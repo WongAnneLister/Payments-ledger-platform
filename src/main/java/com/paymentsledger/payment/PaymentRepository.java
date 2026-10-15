@@ -3,6 +3,9 @@ package com.paymentsledger.payment;
 import com.fasterxml.jackson.databind.*;
 import com.paymentsledger.common.error.*;
 import com.paymentsledger.identity.*;
+import com.paymentsledger.payment.domain.PaymentEvidenceRules;
+import com.paymentsledger.payment.domain.PaymentFacts;
+import com.paymentsledger.payment.repository.PaymentStateRepository;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.revenueshare.RevenueShareService;
@@ -20,6 +23,7 @@ import org.springframework.transaction.support.*;
 public class PaymentRepository {
     private RevenueShareService shares = RevenueShareService.disabled();
     private final JdbcTemplate jdbc;
+    private final PaymentStateRepository states;
     private final TransactionTemplate tx;
     private final ObjectMapper json;
     final Clock clock;
@@ -39,6 +43,7 @@ public class PaymentRepository {
     public PaymentRepository(
             JdbcTemplate jdbc, PlatformTransactionManager transactions, ObjectMapper json, Clock clock) {
         this.jdbc = jdbc;
+        this.states = new PaymentStateRepository(jdbc);
         this.tx = new TransactionTemplate(transactions);
         this.tx.setIsolationLevel(org.springframework.transaction.TransactionDefinition.ISOLATION_READ_COMMITTED);
         this.json = json;
@@ -94,25 +99,6 @@ public class PaymentRepository {
             Map<String, Object> payment) {}
 
     public record Observation(String type, ProviderCallResult<?> result, String externalId) {}
-
-    public record Facts(
-            CheckoutSessionFact session,
-            PaymentIntentFact intent,
-            List<ChargeFact> charges,
-            boolean complete,
-            boolean conflict,
-            Instant confirmedAt,
-            Long paymentVersion) {
-        public Facts(
-                CheckoutSessionFact session,
-                PaymentIntentFact intent,
-                List<ChargeFact> charges,
-                boolean complete,
-                boolean conflict,
-                Instant confirmedAt) {
-            this(session, intent, charges, complete, conflict, confirmedAt, null);
-        }
-    }
 
     <T> T transaction(Supplier<T> work) {
         return tx.execute(s -> work.get());
@@ -866,7 +852,7 @@ public class PaymentRepository {
     }
 
     static String sessionStatus(CheckoutSessionFact fact) {
-        return fact.status().name().toLowerCase(Locale.ROOT);
+        return PaymentEvidenceRules.sessionStatus(fact);
     }
 
     void completeOperation(Claim claim, String status, String resolution, String external, String providerStatus) {
@@ -935,7 +921,7 @@ public class PaymentRepository {
         shares.reconcile(payment, "payment.resolution");
     }
 
-    void mergeQuery(UUID payment, UUID operation, List<Observation> observations, Facts facts) {
+    void mergeQuery(UUID payment, UUID operation, List<Observation> observations, PaymentFacts facts) {
         transaction(() -> {
             lockPayment(payment);
             observations(operation, payment, null, observations);
@@ -960,268 +946,27 @@ public class PaymentRepository {
         return one("SELECT * FROM platform.payment WHERE id=? FOR UPDATE", payment);
     }
 
-    public boolean mergeWebhook(UUID payment, Facts facts) {
+    public boolean mergeWebhook(UUID payment, PaymentFacts facts) {
         if (!TransactionSynchronizationManager.isActualTransactionActive())
             throw new IllegalStateException("Webhook merge requires transaction");
         return merge(payment, facts, false);
     }
     /** Verified reconciliation reads use query ordering; they are not webhook events. */
-    public boolean mergeReconciliationQuery(UUID payment, Facts facts) {
+    public boolean mergeReconciliationQuery(UUID payment, PaymentFacts facts) {
         if (!TransactionSynchronizationManager.isActualTransactionActive())
             throw new IllegalStateException("Reconciliation query merge requires transaction");
         return merge(payment, facts, true);
     }
 
-    private boolean merge(UUID payment, Facts facts) {
+    private boolean merge(UUID payment, PaymentFacts facts) {
         return merge(payment, facts, true);
     }
 
-    private boolean merge(UUID payment, Facts facts, boolean query) {
-        var p = one("SELECT * FROM platform.payment WHERE id=? FOR UPDATE", payment);
-        if (shares.enabled()) {
-            shares.lock(payment);
-            com.paymentsledger.financialingestion.FinancialSourceLocks.lock(
-                    jdbc,
-                    payment,
-                    facts.charges().stream().map(ChargeFact::chargeId).toList());
-        }
-        boolean stale = facts.paymentVersion() != null && facts.paymentVersion() != number(p, "version")
-                || instant(p, "last_provider_confirmed_at") != null
-                        && facts.confirmedAt().toEpochMilli()
-                                < instant(p, "last_provider_confirmed_at").toEpochMilli();
-        if (!query) {
-            Instant eventTime = instant(p, "last_webhook_created_at"),
-                    queryTime = instant(p, "last_query_confirmed_at");
-            stale = (eventTime != null && facts.confirmedAt().isBefore(eventTime))
-                    || (queryTime != null && !facts.confirmedAt().isAfter(queryTime));
-        }
-        boolean conflict = facts.conflict() || "CONFLICT".equals(p.get("resolution_status"));
-        // Provider object identities are immutable evidence; missing links can be filled even by an older snapshot.
-        String observedSession =
-                facts.session() == null ? null : facts.session().sessionId();
-        String observedIntent = facts.intent() != null
-                ? facts.intent().paymentIntentId()
-                : facts.session() == null ? null : facts.session().paymentIntentId();
-        if (observedSession != null
-                && p.get("checkout_session_id") != null
-                && !observedSession.equals(p.get("checkout_session_id"))) {
-            conflict = true;
-            observedSession = null;
-        }
-        if (observedIntent != null
-                && p.get("payment_intent_id") != null
-                && !observedIntent.equals(p.get("payment_intent_id"))) {
-            conflict = true;
-            observedIntent = null;
-        }
-        for (var charge : facts.charges()) {
-            var previousAttempt = one(
-                    """
-                    SELECT *
-                    FROM platform.payment_attempt
-                    WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_object_id=?""",
-                    p.get("organization_id"),
-                    p.get("environment_id"),
-                    p.get("provider_account_id"),
-                    charge.chargeId());
-            if (previousAttempt != null
-                    && (previousAttempt.get("balance_transaction_id") != null
-                                    && charge.balanceTransactionId() != null
-                                    && !charge.balanceTransactionId()
-                                            .equals(previousAttempt.get("balance_transaction_id"))
-                            || !payment.equals(previousAttempt.get("payment_id"))
-                            || !Objects.equals(charge.paymentIntentId(), previousAttempt.get("payment_intent_id"))
-                            || !charge.currency()
-                                    .equalsIgnoreCase(
-                                            previousAttempt.get("currency").toString())
-                            || charge.amountMinor() != number(previousAttempt, "amount_minor")
-                            || Boolean.TRUE.equals(previousAttempt.get("captured"))
-                                    && charge.captured()
-                                    && !Objects.equals(
-                                            charge.amountCapturedMinor(),
-                                            previousAttempt.get("amount_captured_minor")))) {
-                conflict = true;
-                continue;
-            }
-            if (previousAttempt != null
-                    && !charge.captured()
-                    && facts.confirmedAt().isBefore(instant(previousAttempt, "fetched_at"))) continue;
-            if (charge.captured() && charge.status().equals("succeeded")) {
-                var normalized = new LinkedHashMap<String, Object>();
-                normalized.put("charge_id", charge.chargeId());
-                normalized.put("payment_intent_id", charge.paymentIntentId());
-                normalized.put("payment_id", payment.toString());
-                normalized.put("amount_minor", charge.amountMinor());
-                normalized.put("amount_captured_minor", charge.amountCapturedMinor());
-                normalized.put("currency", charge.currency().toUpperCase(Locale.ROOT));
-                int accepted = jdbc.update(
-                        """
-                        INSERT INTO platform.normalized_observation(organization_id,environment_id,provider_account_id,
-                            fact_key,fact_kind,object_id,payment_id,fact,first_source,last_source,first_confirmed_at,
-                            last_confirmed_at)
-                        VALUES (?,?,?,?,'CAPTURE',?,?,?::jsonb,?,?,?,?)
-                        ON CONFLICT(organization_id,environment_id,provider_account_id,fact_key)
-                        DO UPDATE SET
-                            last_confirmed_at=greatest(normalized_observation.last_confirmed_at,excluded.last_confirmed_at),
-                            last_source=CASE WHEN normalized_observation.last_source='QUERY' THEN 'QUERY' ELSE
-                                excluded.last_source END WHERE normalized_observation.fact=excluded.fact""",
-                        p.get("organization_id"),
-                        p.get("environment_id"),
-                        p.get("provider_account_id"),
-                        "CAPTURE:" + charge.chargeId(),
-                        charge.chargeId(),
-                        payment,
-                        encode(normalized),
-                        query ? "QUERY" : "WEBHOOK",
-                        query ? "QUERY" : "WEBHOOK",
-                        Timestamp.from(facts.confirmedAt()),
-                        Timestamp.from(facts.confirmedAt()));
-                if (accepted == 0) {
-                    conflict = true;
-                    continue;
-                }
-            }
-            int written = jdbc.update(
-                    "INSERT INTO platform.payment_attempt(id," + SCOPE + """
-                                    ,payment_id,provider_object_id,provider_status,payment_intent_id,captured,amount_minor,
-                                        amount_captured_minor,balance_transaction_id,failure_code,provider_created_at,fetched_at)
-                                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-                                    ON CONFLICT (organization_id,environment_id,provider_account_id,provider_object_id)
-                                    DO UPDATE SET
-                                        provider_status=CASE WHEN payment_attempt.captured THEN payment_attempt.provider_status ELSE
-                                            excluded.provider_status END,
-                                        captured=payment_attempt.captured OR excluded.captured,
-                                        amount_captured_minor=CASE WHEN payment_attempt.captured THEN
-                                            payment_attempt.amount_captured_minor ELSE greatest(payment_attempt.amount_captured_minor,
-                                            excluded.amount_captured_minor) END,
-                                        balance_transaction_id=coalesce(excluded.balance_transaction_id,
-                                            payment_attempt.balance_transaction_id),
-                                        fetched_at=greatest(payment_attempt.fetched_at,excluded.fetched_at),
-                                        version=payment_attempt.version+CASE WHEN (NOT payment_attempt.captured AND
-                                            (payment_attempt.provider_status,payment_attempt.captured,
-                                            payment_attempt.amount_captured_minor) IS DISTINCT FROM (excluded.provider_status,
-                                            excluded.captured,excluded.amount_captured_minor)) OR (excluded.balance_transaction_id IS NOT NULL AND
-                                            payment_attempt.balance_transaction_id IS DISTINCT FROM excluded.balance_transaction_id)
-                                            THEN 1 ELSE 0 END,
-                                        updated_at=now()
-                                    WHERE payment_attempt.payment_id=excluded.payment_id
-                                        AND payment_attempt.currency=excluded.currency
-                                        AND payment_attempt.payment_intent_id=excluded.payment_intent_id
-                                        AND payment_attempt.amount_minor=excluded.amount_minor""",
-                    PaymentIds.newId(),
-                    p.get("organization_id"),
-                    p.get("environment_id"),
-                    p.get("application_id"),
-                    p.get("provider_account_id"),
-                    p.get("currency"),
-                    payment,
-                    charge.chargeId(),
-                    charge.status(),
-                    charge.paymentIntentId(),
-                    charge.captured(),
-                    charge.amountMinor(),
-                    charge.amountCapturedMinor(),
-                    charge.balanceTransactionId(),
-                    charge.failureCode(),
-                    charge.createdAt() == null ? null : Timestamp.from(charge.createdAt()),
-                    Timestamp.from(facts.confirmedAt()));
-            if (written == 0) conflict = true;
-        }
-        long captured = jdbc.queryForObject("""
-                SELECT coalesce(sum(amount_captured_minor),0)
-                FROM platform.payment_attempt
-                WHERE payment_id=? AND captured AND provider_status='succeeded'""", Long.class, payment);
-        String state = str(p, "payment_status"),
-                providerStatus = str(p, "provider_status"),
-                financial = str(p, "financial_status");
-        if (captured > 0) {
-            if (state.equals("CANCELED")) conflict = true;
-            else state = "SUCCEEDED";
-            long covered = jdbc.queryForObject("""
-                    SELECT coalesce(sum(amount_minor),0) FROM platform.balance_transaction
-                    WHERE payment_id=? AND state='POSTED' AND lower(business_type)='charge'
-                    """, Long.class, payment);
-            if ("CONFLICT".equals(financial) || covered > captured) financial = "CONFLICT";
-            else if (covered == captured) financial = "POSTED";
-            else financial = covered > 0 ? "PARTIALLY_POSTED" : "PENDING_EVIDENCE";
-            if (captured > number(p, "amount_minor")) conflict = true;
-        } else if (!stale && !Set.of("SUCCEEDED", "CANCELED").contains(state)) {
-            if (facts.intent() != null) {
-                providerStatus = facts.intent().status();
-                state = switch (providerStatus) {
-                    case "requires_action" -> "REQUIRES_ACTION";
-                    case "requires_payment_method" ->
-                        facts.session() != null && facts.session().status() == CheckoutSessionStatus.OPEN
-                                ? "AWAITING_CUSTOMER"
-                                : "PROCESSING";
-                    default -> "PROCESSING";
-                };
-            } else if (facts.session() != null) {
-                providerStatus = sessionStatus(facts.session());
-                state = facts.session().status() == CheckoutSessionStatus.OPEN ? "AWAITING_CUSTOMER" : "PROCESSING";
-            }
-        }
-        if (query
-                && !stale
-                && !conflict
-                && captured == 0
-                && !"SUCCEEDED".equals(state)
-                && ProviderQueryService.unpaid(facts)
-                && facts.session().status() == CheckoutSessionStatus.EXPIRED) state = "CANCELED";
-        if (!stale && facts.intent() != null) providerStatus = facts.intent().status();
-        var session = stale ? null : facts.session();
-        var intent = stale ? null : facts.intent();
-        String resolution =
-                conflict ? "CONFLICT" : stale ? str(p, "resolution_status") : facts.complete() ? "KNOWN" : "UNKNOWN";
-        jdbc.update(
-                """
-                UPDATE platform.payment
-                SET
-                    payment_status=?,
-                    provider_status=?,
-                    resolution_status=?,
-                    unresolved_since=CASE WHEN ?='KNOWN' THEN NULL ELSE coalesce(unresolved_since,?) END,
-                    financial_status=?,
-                    captured_amount_minor=greatest(captured_amount_minor,?),
-                    checkout_session_id=coalesce(checkout_session_id,?),
-                    payment_intent_id=coalesce(payment_intent_id,?),
-                    latest_charge_id=coalesce(?,latest_charge_id),
-                    hosted_url=CASE WHEN ? THEN ? ELSE hosted_url END,
-                    last_provider_confirmed_at=CASE WHEN ? THEN ? ELSE last_provider_confirmed_at END,
-                    version=version+1,
-                    updated_at=now()
-                WHERE id=? AND version=?""",
-                state,
-                providerStatus,
-                resolution,
-                resolution,
-                Timestamp.from(now()),
-                financial,
-                captured,
-                observedSession,
-                observedIntent,
-                intent == null ? null : intent.latestChargeId(),
-                session != null && (query || session.hostedUrl() != null),
-                session == null ? null : session.hostedUrl(),
-                !stale && facts.complete() && !facts.conflict(),
-                Timestamp.from(facts.confirmedAt()),
-                payment,
-                number(p, "version"));
-        shares.reconcile(payment, "payment.observation");
-        if (query && !stale && facts.complete() && !facts.conflict())
-            jdbc.update(
-                    "UPDATE platform.payment SET last_query_confirmed_at=? WHERE id=?",
-                    Timestamp.from(facts.confirmedAt()),
-                    payment);
-        if (!query && !stale)
-            jdbc.update(
-                    "UPDATE platform.payment SET last_webhook_created_at=? WHERE id=?",
-                    Timestamp.from(facts.confirmedAt()),
-                    payment);
-        return !stale && "KNOWN".equals(resolution);
+    private boolean merge(UUID payment, PaymentFacts facts, boolean query) {
+        return new PaymentStateMerger(states, shares, json, clock).merge(payment, facts, query);
     }
 
-    void finishCancel(Claim claim, List<Observation> observations, Facts facts, boolean canceled) {
+    void finishCancel(Claim claim, List<Observation> observations, PaymentFacts facts, boolean canceled) {
         transaction(() -> {
             lockPayment(claim.paymentId());
             observations(claim.operationId(), claim.paymentId(), claim.token(), observations);

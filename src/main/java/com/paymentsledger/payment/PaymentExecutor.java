@@ -3,6 +3,7 @@ package com.paymentsledger.payment;
 import static com.paymentsledger.payment.PaymentRepository.*;
 
 import com.paymentsledger.common.error.*;
+import com.paymentsledger.payment.domain.PaymentFacts;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import java.time.*;
@@ -128,7 +129,7 @@ public class PaymentExecutor {
         return new ProviderQueryService(repository, checkout, intents, charges).query(payment);
     }
 
-    private boolean unpaid(Facts facts) {
+    private boolean unpaid(PaymentFacts facts) {
         return ProviderQueryService.unpaid(facts);
     }
 
@@ -142,7 +143,7 @@ public class PaymentExecutor {
         if (claim.payment().get("checkout_session_id") == null) {
             if (repository.cancelUnsent(claim)) return;
             repository.finishCancel(
-                    claim, List.of(), new Facts(null, null, List.of(), false, false, repository.now()), false);
+                    claim, List.of(), new PaymentFacts(null, null, List.of(), false, false, repository.now()), false);
             return;
         }
         var before = new ProviderQueryService(repository, checkout, intents, charges)
@@ -184,7 +185,7 @@ public class PaymentExecutor {
         }
         // Persist uncertain cancellation separately even if the query has known facts.
         if (!canceled && facts.charges().stream().noneMatch(ChargeFact::captured))
-            facts = new Facts(
+            facts = new PaymentFacts(
                     facts.session(),
                     facts.intent(),
                     facts.charges(),

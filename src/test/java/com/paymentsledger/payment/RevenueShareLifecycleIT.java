@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.ledger.LedgerPostingService;
+import com.paymentsledger.payment.domain.PaymentFacts;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.FakeControls;
@@ -359,7 +360,7 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
                 paymentId,
                 operation,
                 List.of(),
-                new PaymentRepository.Facts(
+                new PaymentFacts(
                         null, null, List.of(), false, true, fake.clock().instant()));
         assertThat(effective()).isZero();
         assertThat(balance("PSP_FUNDS")).isEqualTo(psp);

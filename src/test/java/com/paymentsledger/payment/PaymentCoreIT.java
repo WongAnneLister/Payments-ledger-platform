@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.common.error.*;
 import com.paymentsledger.identity.TenantContext;
+import com.paymentsledger.payment.domain.PaymentFacts;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.*;
@@ -357,7 +358,7 @@ class PaymentCoreIT extends PaymentCoreFixture {
                 payment,
                 repository.createOperation(payment),
                 List.of(),
-                new PaymentRepository.Facts(
+                new PaymentFacts(
                         null,
                         stale,
                         List.of(),
@@ -408,7 +409,7 @@ class PaymentCoreIT extends PaymentCoreFixture {
                 payment,
                 operation,
                 List.of(new PaymentRepository.Observation("QUERY_PAYMENT_INTENT", result, "pi_unknown")),
-                new PaymentRepository.Facts(
+                new PaymentFacts(
                         null, null, List.of(), false, false, fake.clock().instant()));
         String stored = jdbc.queryForObject("""
                 SELECT fact::text
@@ -524,7 +525,7 @@ class PaymentCoreIT extends PaymentCoreFixture {
         repository.finishCancel(
                 claim,
                 List.of(new PaymentRepository.Observation("EXPIRE_SESSION", expired, session(resource))),
-                new PaymentRepository.Facts(
+                new PaymentFacts(
                         expired.payload(),
                         pi,
                         List.of(),
