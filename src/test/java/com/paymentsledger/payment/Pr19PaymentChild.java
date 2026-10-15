@@ -2,6 +2,7 @@ package com.paymentsledger.payment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.bank.BankMatcher;
+import com.paymentsledger.bank.repository.BankMatchRepository;
 import com.paymentsledger.common.error.ApiException;
 import com.paymentsledger.dispute.DisputeService;
 import com.paymentsledger.financialingestion.*;
@@ -98,7 +99,7 @@ public final class Pr19PaymentChild {
         executor = new PaymentExecutor(repository, fake, fake, fake, "FAKE");
         refunds = new RefundRepository(jdbc, tx, json, fake.clock(), repository, shares, disputes);
         payouts = new PayoutService(jdbc, tx, json, posting);
-        matcher = new BankMatcher(jdbc, tx, json, posting, payouts);
+        matcher = new BankMatcher(new BankMatchRepository(jdbc), tx, json, posting);
     }
 
     public static void main(String[] args) {

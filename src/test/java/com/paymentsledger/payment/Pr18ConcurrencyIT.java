@@ -3,6 +3,7 @@ package com.paymentsledger.payment;
 import static org.assertj.core.api.Assertions.*;
 
 import com.paymentsledger.bank.BankMatcher;
+import com.paymentsledger.bank.repository.BankMatchRepository;
 import com.paymentsledger.common.error.*;
 import com.paymentsledger.dispute.DisputeService;
 import com.paymentsledger.ledger.*;
@@ -347,7 +348,7 @@ class Pr18ConcurrencyIT extends Pr18Fixture {
             repository = new PaymentRepository(jdbc, tx, json, fake.clock(), shares);
             refunds = new RefundRepository(jdbc, tx, json, fake.clock(), repository, shares, disputes);
             var payouts = new PayoutService(jdbc, tx, json, ledger);
-            matcher = new BankMatcher(jdbc, tx, json, ledger, payouts);
+            matcher = new BankMatcher(new BankMatchRepository(jdbc), tx, json, ledger);
         }
 
         Object reserve(String key, long amount) {

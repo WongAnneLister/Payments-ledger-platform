@@ -3,6 +3,8 @@ package com.paymentsledger.bank;
 import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.*;
+import com.paymentsledger.bank.repository.BankMatchRepository;
+import com.paymentsledger.bank.repository.BankStatementRepository;
 import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.ledger.*;
 import com.paymentsledger.payout.*;
@@ -80,8 +82,8 @@ abstract class PayoutBankFixture {
                 VALUES (?,?,?,false,'ZERO')""", id(1), id(2), id(4));
         ledger = new LedgerPostingService(jdbc, json);
         payouts = new PayoutService(jdbc, tx, json, ledger);
-        banks = new BankStatementImporter(jdbc, tx, json);
-        matcher = new BankMatcher(jdbc, tx, json, ledger, payouts);
+        banks = new BankStatementImporter(new BankStatementRepository(jdbc), tx);
+        matcher = new BankMatcher(new BankMatchRepository(jdbc), tx, json, ledger);
         reads = new Reads();
         importer =
                 new FinancialImportService(jdbc, tx, json, reads, Clock.fixed(until.plusSeconds(100), ZoneOffset.UTC));

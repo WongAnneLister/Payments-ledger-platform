@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.bank.BankMatcher;
+import com.paymentsledger.bank.repository.BankMatchRepository;
 import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.ledger.*;
 import com.paymentsledger.notification.*;
@@ -54,7 +55,7 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
         var ledger = new LedgerPostingService(jdbc, json);
         replay = new FinancialReplayService(jdbc, tx, json, ledger, RefundEvidencePort.unavailable());
         var payouts = new PayoutService(jdbc, tx, json, ledger);
-        var bank = new BankMatcher(jdbc, tx, json, ledger, payouts);
+        var bank = new BankMatcher(new BankMatchRepository(jdbc), tx, json, ledger);
         Class<?> core = require("com.paymentsledger.reconciliation.ReconciliationService");
         engine = core.getConstructor(
                         org.springframework.jdbc.core.JdbcTemplate.class,
