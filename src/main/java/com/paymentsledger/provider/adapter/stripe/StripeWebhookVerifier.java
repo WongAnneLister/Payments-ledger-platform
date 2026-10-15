@@ -1,5 +1,7 @@
 package com.paymentsledger.provider.adapter.stripe;
 
+import static com.paymentsledger.provider.ProviderCallClassification.*;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,7 +13,6 @@ import com.paymentsledger.provider.ProviderModels.VerifiedWebhook;
 import com.paymentsledger.provider.ProviderScope;
 import com.paymentsledger.provider.WebhookVerifierPort;
 import com.stripe.net.Webhook;
-
 import java.nio.ByteBuffer;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
@@ -24,8 +25,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.paymentsledger.provider.ProviderCallClassification.*;
-
 /** Verifies snapshot webhooks for one bound direct Stripe test account; no Connect routing. */
 public final class StripeWebhookVerifier implements WebhookVerifierPort {
     private static final String PINNED_API_VERSION = "2026-07-29.dahlia";
@@ -37,8 +36,12 @@ public final class StripeWebhookVerifier implements WebhookVerifierPort {
     private final Clock clock;
     private final Duration tolerance;
 
-    public StripeWebhookVerifier(ProviderScope expectedScope, String expectedStripeAccountId,
-                                 String expectedApiVersion, Clock clock, Duration tolerance) {
+    public StripeWebhookVerifier(
+            ProviderScope expectedScope,
+            String expectedStripeAccountId,
+            String expectedApiVersion,
+            Clock clock,
+            Duration tolerance) {
         Objects.requireNonNull(expectedScope, "expectedScope");
         if (expectedScope.livemode()) throw new IllegalArgumentException("Only test mode is supported");
         if (expectedStripeAccountId == null || !expectedStripeAccountId.matches("acct_[A-Za-z0-9]+"))
@@ -58,14 +61,20 @@ public final class StripeWebhookVerifier implements WebhookVerifierPort {
         Instant requestedAt = clock.instant();
         String body;
         try {
-            if (rawBytes == null || signatureHeader == null || signatureHeader.isBlank()
-                    || secret == null || !secret.startsWith("whsec_") || secret.substring(6).isBlank())
+            if (rawBytes == null
+                    || signatureHeader == null
+                    || signatureHeader.isBlank()
+                    || secret == null
+                    || !secret.startsWith("whsec_")
+                    || secret.substring(6).isBlank())
                 return failure(DEFINITIVE_REJECT, "stripe_webhook_invalid_signature", requestedAt);
             // REPORT is essential: replacement decoding would verify bytes other than those received.
-            body = StandardCharsets.UTF_8.newDecoder()
+            body = StandardCharsets.UTF_8
+                    .newDecoder()
                     .onMalformedInput(CodingErrorAction.REPORT)
                     .onUnmappableCharacter(CodingErrorAction.REPORT)
-                    .decode(ByteBuffer.wrap(rawBytes)).toString();
+                    .decode(ByteBuffer.wrap(rawBytes))
+                    .toString();
             // The SDK's timestamp check is past-only. Verify the MAC with it, then bound both directions.
             Webhook.Signature.verifyHeader(body, signatureHeader, secret, 0, Clock.fixed(requestedAt, clock.getZone()));
             Instant signedAt = Instant.ofEpochSecond(signatureTimestamp(signatureHeader));
@@ -78,20 +87,28 @@ public final class StripeWebhookVerifier implements WebhookVerifierPort {
 
         try {
             JsonNode event = JSON.readTree(body);
-            if (event == null || !event.isObject() || !"event".equals(requiredText(event, "object"))
+            if (event == null
+                    || !event.isObject()
+                    || !"event".equals(requiredText(event, "object"))
                     || !expectedApiVersion.equals(requiredText(event, "api_version"))
-                    || !event.path("livemode").isBoolean() || event.path("livemode").booleanValue())
+                    || !event.path("livemode").isBoolean()
+                    || event.path("livemode").booleanValue())
                 return failure(CONTRACT_MISMATCH, "stripe_webhook_contract_mismatch", requestedAt);
             JsonNode account = event.get("account");
             // Direct account events omit account. Only the endpoint's configured binding supplies it.
-            if (account != null && !account.isNull()
+            if (account != null
+                    && !account.isNull()
                     && (!account.isTextual() || !expectedStripeAccountId.equals(account.textValue())))
                 return failure(CONTRACT_MISMATCH, "stripe_webhook_contract_mismatch", requestedAt);
             JsonNode created = event.path("created");
             if (!created.isIntegralNumber() || !created.canConvertToLong() || created.longValue() < 0)
                 return failure(CONTRACT_MISMATCH, "stripe_webhook_contract_mismatch", requestedAt);
-            VerifiedWebhook fact = new VerifiedWebhook(requiredText(event, "id"), requiredText(event, "type"),
-                    requiredText(event.path("data").path("object"), "id"), Instant.ofEpochSecond(created.longValue()), false);
+            VerifiedWebhook fact = new VerifiedWebhook(
+                    requiredText(event, "id"),
+                    requiredText(event, "type"),
+                    requiredText(event.path("data").path("object"), "id"),
+                    Instant.ofEpochSecond(created.longValue()),
+                    false);
             return new ProviderCallResult<>(SUCCESS, fact, evidence(requestedAt, null, digest(fact)));
         } catch (Exception invalidContract) {
             return failure(CONTRACT_MISMATCH, "stripe_webhook_contract_mismatch", requestedAt);
@@ -127,8 +144,8 @@ public final class StripeWebhookVerifier implements WebhookVerifierPort {
         return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(JSON.writeValueAsBytes(allowed)));
     }
 
-    private ProviderCallResult<VerifiedWebhook> failure(ProviderCallClassification classification,
-                                                       String code, Instant requestedAt) {
+    private ProviderCallResult<VerifiedWebhook> failure(
+            ProviderCallClassification classification, String code, Instant requestedAt) {
         return new ProviderCallResult<>(classification, null, evidence(requestedAt, code, null));
     }
 

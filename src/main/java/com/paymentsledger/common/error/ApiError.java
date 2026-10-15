@@ -13,23 +13,22 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ApiError(
-        String code,
-        String message,
-        boolean retryable,
-        String requestId,
-        List<Detail> details,
-        String docUrl) {
+        String code, String message, boolean retryable, String requestId, List<Detail> details, String docUrl) {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record Detail(String field, String issue) {
-    }
+    public record Detail(String field, String issue) {}
 
     public static ApiError of(ErrorCode code, String message, String requestId) {
         return new ApiError(code.name(), message, code.retryable(), requestId, null, null);
     }
 
     public static ApiError of(ErrorCode code, String message, String requestId, List<Detail> details) {
-        return new ApiError(code.name(), message, code.retryable(), requestId,
-                details == null || details.isEmpty() ? null : List.copyOf(details), null);
+        return new ApiError(
+                code.name(),
+                message,
+                code.retryable(),
+                requestId,
+                details == null || details.isEmpty() ? null : List.copyOf(details),
+                null);
     }
 }

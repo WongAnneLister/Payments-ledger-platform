@@ -54,6 +54,8 @@ mvnw.cmd clean verify
 ```
 
 > `verify` 会跑集成测试，需要 Docker 在运行。只想快速编译加单元测试用 `./mvnw test`。
+>
+> 代码格式由 Spotless（palantir-java-format）统一：提交前运行 `./mvnw spotless:apply`，CI 用 `spotless:check` 拦截未格式化代码。
 
 ### 4. 分别启动两个运行角色
 

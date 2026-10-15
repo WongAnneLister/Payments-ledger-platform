@@ -3,6 +3,7 @@ package com.paymentsledger.provider;
 /** A synchronous query batch shares its HTTP budget across ports and pagination. */
 public final class ProviderRequestBudget {
     private static final ThreadLocal<Counter> CURRENT = new ThreadLocal<>();
+
     private ProviderRequestBudget() {}
 
     public static Scope openOrJoin(int maximumRequests) {
@@ -23,14 +24,22 @@ public final class ProviderRequestBudget {
 
     private static final class Counter {
         private int remaining;
-        private Counter(int remaining) { this.remaining = remaining; }
+
+        private Counter(int remaining) {
+            this.remaining = remaining;
+        }
     }
 
     public static final class Scope implements AutoCloseable {
         private final boolean owner;
         private boolean closed;
-        private Scope(boolean owner) { this.owner = owner; }
-        @Override public void close() {
+
+        private Scope(boolean owner) {
+            this.owner = owner;
+        }
+
+        @Override
+        public void close() {
             if (!closed && owner) CURRENT.remove();
             closed = true;
         }

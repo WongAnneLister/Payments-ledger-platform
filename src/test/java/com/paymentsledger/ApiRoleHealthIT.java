@@ -27,11 +27,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 class ApiRoleHealthIT {
 
     @Container
-    private static final PostgreSQLContainer<?> POSTGRES =
-            new PostgreSQLContainer<>("postgres:16")
-                    .withDatabaseName("pr01_isolated_api_role_check")
-                    .withUsername("pr01_app")
-                    .withPassword("pr01_app_pw");
+    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:16")
+            .withDatabaseName("pr01_isolated_api_role_check")
+            .withUsername("pr01_app")
+            .withPassword("pr01_app_pw");
 
     @DynamicPropertySource
     static void datasourceProperties(DynamicPropertyRegistry registry) {
@@ -66,13 +65,14 @@ class ApiRoleHealthIT {
                 .contains("\"requestId\":");
         assertThat(response.getHeaders().getFirst("X-Request-Id")).isNotBlank();
     }
+
     @Test
     void unconfiguredWebhookDoesNotFalselyAcknowledgeReceipt() {
-        var headers=new org.springframework.http.HttpHeaders();
+        var headers = new org.springframework.http.HttpHeaders();
         headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
-        var response=restTemplate.postForEntity("/webhooks/stripe",new org.springframework.http.HttpEntity<>("{}",headers),String.class);
+        var response = restTemplate.postForEntity(
+                "/webhooks/stripe", new org.springframework.http.HttpEntity<>("{}", headers), String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
         assertThat(response.getBody()).contains("\"retryable\":true");
     }
-
 }

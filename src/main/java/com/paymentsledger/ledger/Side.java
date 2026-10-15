@@ -1,7 +1,10 @@
 package com.paymentsledger.ledger;
 
 public enum Side {
-    DEBIT, CREDIT;
+    DEBIT,
+    CREDIT;
 
-    public Side opposite() { return this == DEBIT ? CREDIT : DEBIT; }
+    public Side opposite() {
+        return this == DEBIT ? CREDIT : DEBIT;
+    }
 }

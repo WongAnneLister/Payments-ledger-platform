@@ -15,7 +15,9 @@ public class ReversalService {
     private final ObjectMapper mapper;
 
     public ReversalService(JournalQueryService journals, LedgerPostingService posting, ObjectMapper mapper) {
-        this.journals = journals; this.posting = posting; this.mapper = mapper;
+        this.journals = journals;
+        this.posting = posting;
+        this.mapper = mapper;
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -23,9 +25,19 @@ public class ReversalService {
         if (reason == null || reason.isBlank() || reason.length() > 512)
             throw new ApiException(ErrorCode.VALIDATION_ERROR, "A bounded reversal reason is required");
         var original = journals.get(scope, originalId);
-        var facts = mapper.createObjectNode().put("originalJournalId", original.id().toString())
-                .put("originalEventKey", original.eventKey()).put("reason", reason);
-        return posting.post(scope, new PostingCommand(eventKey, "L-REVERSAL", original.sourceDomain(), "journal:" + originalId,
-                facts, original.entries().stream().map(PostingLine::reversed).toList(), originalId));
+        var facts = mapper.createObjectNode()
+                .put("originalJournalId", original.id().toString())
+                .put("originalEventKey", original.eventKey())
+                .put("reason", reason);
+        return posting.post(
+                scope,
+                new PostingCommand(
+                        eventKey,
+                        "L-REVERSAL",
+                        original.sourceDomain(),
+                        "journal:" + originalId,
+                        facts,
+                        original.entries().stream().map(PostingLine::reversed).toList(),
+                        originalId));
     }
 }

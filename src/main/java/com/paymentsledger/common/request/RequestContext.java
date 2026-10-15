@@ -13,8 +13,7 @@ public final class RequestContext {
 
     private static final ThreadLocal<String> CURRENT = new ThreadLocal<>();
 
-    private RequestContext() {
-    }
+    private RequestContext() {}
 
     static void set(String requestId) {
         CURRENT.set(requestId);

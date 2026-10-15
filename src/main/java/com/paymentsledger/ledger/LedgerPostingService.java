@@ -17,24 +17,44 @@ public class LedgerPostingService {
     private final JdbcTemplate jdbc;
     private final ObjectMapper mapper;
 
-    public LedgerPostingService(JdbcTemplate jdbc, ObjectMapper mapper) { this.jdbc = jdbc; this.mapper = mapper; }
+    public LedgerPostingService(JdbcTemplate jdbc, ObjectMapper mapper) {
+        this.jdbc = jdbc;
+        this.mapper = mapper;
+    }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public UUID post(LedgerScope scope, PostingCommand command) {
-        if (scope == null || command == null) throw new ApiException(ErrorCode.VALIDATION_ERROR, "Ledger scope and command required");
+        if (scope == null || command == null)
+            throw new ApiException(ErrorCode.VALIDATION_ERROR, "Ledger scope and command required");
         try {
-            return jdbc.queryForObject("SELECT platform.post_ledger(?,?,?,?,?,?,?,?,?::jsonb,?::jsonb,?)", UUID.class,
-                    scope.organizationId(), scope.environmentId(), scope.currency(), scope.providerAccountId(),
-                    command.eventKey(), command.eventType(), command.sourceDomain(), command.sourceRef(),
-                    command.facts().toString(), mapper.valueToTree(command.entries()).toString(), command.reversalOf());
+            return jdbc.queryForObject(
+                    "SELECT platform.post_ledger(?,?,?,?,?,?,?,?,?::jsonb,?::jsonb,?)",
+                    UUID.class,
+                    scope.organizationId(),
+                    scope.environmentId(),
+                    scope.currency(),
+                    scope.providerAccountId(),
+                    command.eventKey(),
+                    command.eventType(),
+                    command.sourceDomain(),
+                    command.sourceRef(),
+                    command.facts().toString(),
+                    mapper.valueToTree(command.entries()).toString(),
+                    command.reversalOf());
         } catch (DataAccessException ex) {
             for (Throwable cause = ex; cause != null; cause = cause.getCause()) {
                 if (cause instanceof SQLException sql) {
                     String state = sql.getSQLState();
                     if ("P0003".equals(state) || "23505".equals(state))
-                        throw new ApiException(ErrorCode.EVIDENCE_CONFLICT, "Ledger event or reversal conflicts with existing evidence");
-                    if ("P0002".equals(state)) throw new ApiException(ErrorCode.NOT_FOUND, "Ledger resource not found in scope");
-                    if ("23514".equals(state) || "23503".equals(state) || "22003".equals(state) || "22P02".equals(state))
+                        throw new ApiException(
+                                ErrorCode.EVIDENCE_CONFLICT,
+                                "Ledger event or reversal conflicts with existing evidence");
+                    if ("P0002".equals(state))
+                        throw new ApiException(ErrorCode.NOT_FOUND, "Ledger resource not found in scope");
+                    if ("23514".equals(state)
+                            || "23503".equals(state)
+                            || "22003".equals(state)
+                            || "22P02".equals(state))
                         throw new ApiException(ErrorCode.VALIDATION_ERROR, "Invalid ledger scope, amount or entry set");
                 }
             }
