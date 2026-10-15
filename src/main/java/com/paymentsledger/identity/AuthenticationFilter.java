@@ -27,6 +27,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     public static TenantContext tenant(HttpServletRequest request) {
         return TenantAccessGuard.require((TenantContext)request.getAttribute(TENANT));
     }
+    /** For downstream filters that must not fail when the route is unauthenticated. */
+    public static java.util.Optional<TenantContext> authenticatedTenant(HttpServletRequest request) {
+        return java.util.Optional.ofNullable((TenantContext)request.getAttribute(TENANT));
+    }
     public static OpsContext ops(HttpServletRequest request) {
         OpsContext context=(OpsContext)request.getAttribute(OPS);
         if(context==null)throw new ApiException(ErrorCode.UNAUTHORIZED,"Ops identity required");

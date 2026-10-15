@@ -41,7 +41,28 @@ spring:
   jackson:
     default-property-inclusion: non_null
 
+  data:
+    redis:
+      # 只承担可重建的限流状态（ADR-0001）；超时要短，限流不可用时快速放行
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: ${REDIS_TIMEOUT:100ms}
+      connect-timeout: ${REDIS_CONNECT_TIMEOUT:200ms}
+      repositories:
+        enabled: false
+
 platform:
+  rate-limit:
+    # 账户级令牌桶（organization × environment × provider account），读写分桶
+    enabled: ${RATE_LIMIT_ENABLED:false}
+    read:
+      capacity: ${RATE_LIMIT_READ_CAPACITY:100}
+      refill-per-second: ${RATE_LIMIT_READ_REFILL_PER_SECOND:50}
+    write:
+      capacity: ${RATE_LIMIT_WRITE_CAPACITY:20}
+      refill-per-second: ${RATE_LIMIT_WRITE_REFILL_PER_SECOND:10}
+    # Redis 故障后放行并在此窗口内跳过 Redis，避免每个请求都等连接超时
+    bypass-after-failure: ${RATE_LIMIT_BYPASS_AFTER_FAILURE:PT1S}
   revenue-share:
     enabled: ${REVENUE_SHARE_ENABLED:true}
     poll-ms: ${REVENUE_SHARE_POLL_MS:300000}
@@ -81,6 +102,9 @@ management:
   health:
     defaults:
       enabled: true
+    # Redis 不是正确性依赖：限流降级为放行，不应让实例被摘除
+    redis:
+      enabled: false
 
 logging:
   level:
