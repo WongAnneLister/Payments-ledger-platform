@@ -3,6 +3,7 @@ package com.paymentsledger.payment;
 import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.paymentsledger.payment.domain.PaymentFacts;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.webhook.*;
@@ -158,7 +159,7 @@ class WebhookProcessingIT extends PaymentCoreFixture {
                 p,
                 op,
                 List.of(),
-                new PaymentRepository.Facts(
+                new PaymentFacts(
                         null, null, List.of(fact), true, false, fake.clock().instant()));
         assertThat(count("payment_attempt")).isEqualTo(1);
         assertThat(jdbc.queryForObject(
@@ -311,7 +312,7 @@ class WebhookProcessingIT extends PaymentCoreFixture {
                 p,
                 op,
                 List.of(),
-                new PaymentRepository.Facts(
+                new PaymentFacts(
                         null, fact, List.of(), true, false, fake.clock().instant()));
         byte[] older =
                 raw("evt_old", "payment_intent.payment_failed", pi(p).replace("succeeded", "requires_payment_method"));
@@ -367,7 +368,7 @@ class WebhookProcessingIT extends PaymentCoreFixture {
                         p,
                         op,
                         List.of(),
-                        new PaymentRepository.Facts(
+                        new PaymentFacts(
                                 null,
                                 null,
                                 List.of(fact),

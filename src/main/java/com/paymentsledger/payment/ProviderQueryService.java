@@ -2,6 +2,8 @@ package com.paymentsledger.payment;
 
 import static com.paymentsledger.payment.PaymentRepository.*;
 
+import com.paymentsledger.payment.domain.PaymentEvidenceRules;
+import com.paymentsledger.payment.domain.PaymentFacts;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import java.time.*;
@@ -29,7 +31,7 @@ public final class ProviderQueryService {
         return this;
     }
 
-    record Queried(Facts facts, List<Observation> observations) {}
+    record Queried(PaymentFacts facts, List<Observation> observations) {}
 
     private ProviderScope scope(Map<String, Object> p) {
         return new ProviderScope(
@@ -79,7 +81,7 @@ public final class ProviderQueryService {
         boolean complete = true, conflict = false;
         if ((checkout == null || expectedSession == null) && expectedIntent == null)
             return new Queried(
-                    new Facts(null, null, List.of(), false, false, queryStarted, paymentVersion), observations);
+                    new PaymentFacts(null, null, List.of(), false, false, queryStarted, paymentVersion), observations);
         if (expectedSession != null && checkout != null) {
             var sessionResult = call(() -> checkout.querySession(providerScope, expectedSession), null);
             observations.add(new Observation(
@@ -161,7 +163,7 @@ public final class ProviderQueryService {
             }
         } else if (session != null && session.status() == CheckoutSessionStatus.COMPLETE) complete = false;
         return new Queried(
-                new Facts(
+                new PaymentFacts(
                         session,
                         intent,
                         List.copyOf(verified.values()),
@@ -183,16 +185,7 @@ public final class ProviderQueryService {
                                 && charge.amountCapturedMinor() <= charge.amountMinor());
     }
 
-    static boolean unpaid(Facts facts) {
-        if (!facts.complete()
-                || facts.conflict()
-                || facts.session() == null
-                || "paid".equals(facts.session().paymentStatus())) return false;
-        if (facts.charges().stream().anyMatch(c -> c.captured() || !c.status().equals("failed"))) return false;
-        var intent = facts.intent();
-        return intent == null
-                || Set.of("requires_payment_method", "canceled").contains(intent.status())
-                        && intent.amountReceivedMinor() != null
-                        && intent.amountReceivedMinor() == 0;
+    static boolean unpaid(PaymentFacts facts) {
+        return PaymentEvidenceRules.unpaid(facts);
     }
 }

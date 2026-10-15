@@ -2,6 +2,7 @@ package com.paymentsledger.payment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.financialingestion.FinancialReplayService;
+import com.paymentsledger.payment.domain.PaymentFacts;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import java.nio.charset.StandardCharsets;
@@ -309,8 +310,7 @@ public final class ReconciliationSourceRecovery {
         }
         // Existing repository owns normalized capture/attempt/control/share and canonical notification updates.
         if (!payments.mergeReconciliationQuery(
-                paymentId,
-                new PaymentRepository.Facts(null, read.intent(), List.of(read.charge()), true, false, clock.instant())))
+                paymentId, new PaymentFacts(null, read.intent(), List.of(read.charge()), true, false, clock.instant())))
             throw new IllegalStateException("Verified source merge did not apply");
         complete(claim, "DONE", "LINKED");
         return new Linked("LINKED", paymentId);

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import com.paymentsledger.common.error.ApiException;
 import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.ledger.*;
+import com.paymentsledger.payment.domain.PaymentFacts;
 import com.paymentsledger.pr18.*;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
@@ -260,7 +261,7 @@ class Pr18SequenceIT extends Pr18Fixture {
                         paymentId,
                         repository.createOperation(paymentId),
                         List.of(),
-                        new PaymentRepository.Facts(
+                        new PaymentFacts(
                                 null,
                                 null,
                                 List.of(),

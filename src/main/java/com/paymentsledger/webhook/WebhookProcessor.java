@@ -2,7 +2,7 @@ package com.paymentsledger.webhook;
 
 import com.fasterxml.jackson.databind.*;
 import com.paymentsledger.payment.*;
-import com.paymentsledger.payment.PaymentRepository.Facts;
+import com.paymentsledger.payment.domain.PaymentFacts;
 import com.paymentsledger.provider.ProviderModels.*;
 import java.sql.Timestamp;
 import java.time.*;
@@ -188,7 +188,7 @@ public class WebhookProcessor {
                 }
                 Instant eventTime = ((Timestamp) claim.row().get("event_created_at")).toInstant();
                 if (error != null) {
-                    payments.mergeWebhook(payment, new Facts(null, null, List.of(), false, true, eventTime));
+                    payments.mergeWebhook(payment, new PaymentFacts(null, null, List.of(), false, true, eventTime));
                     inbox.waitFor(claim, "EVIDENCE", objectId, error);
                     return null;
                 }
@@ -270,7 +270,7 @@ public class WebhookProcessor {
                     }
                 }
                 boolean capture = charges.stream().anyMatch(ChargeFact::captured);
-                payments.mergeWebhook(payment, new Facts(session, intent, charges, capture, false, eventTime));
+                payments.mergeWebhook(payment, new PaymentFacts(session, intent, charges, capture, false, eventTime));
                 // Per-snapshot identity records the source evidence, including new BT relationships, independently of
                 // capture identity.
                 inbox.jdbc()
@@ -305,7 +305,7 @@ public class WebhookProcessor {
                 if (p != null)
                     payments.mergeWebhook(
                             payment,
-                            new Facts(
+                            new PaymentFacts(
                                     null,
                                     null,
                                     List.of(),

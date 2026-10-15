@@ -2,6 +2,7 @@ package com.paymentsledger.payment;
 
 import static org.assertj.core.api.Assertions.*;
 
+import com.paymentsledger.payment.domain.PaymentFacts;
 import com.paymentsledger.provider.ProviderModels.*;
 import java.time.Instant;
 import java.util.List;
@@ -54,11 +55,11 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
         return new ChargeFact(id, intent, status, captured, amount, capturedAmount, "usd", null, null, null, later(0));
     }
 
-    boolean query(PaymentRepository.Facts facts) {
+    boolean query(PaymentFacts facts) {
         return new TransactionTemplate(tx).execute(s -> repository.mergeReconciliationQuery(payment, facts));
     }
 
-    boolean webhook(PaymentRepository.Facts facts) {
+    boolean webhook(PaymentFacts facts) {
         return new TransactionTemplate(tx).execute(s -> repository.mergeWebhook(payment, facts));
     }
 
@@ -78,8 +79,8 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
                 .containsEntry("financial_status", financial);
     }
 
-    PaymentRepository.Facts open(String intentStatus, long seconds) {
-        return new PaymentRepository.Facts(
+    PaymentFacts open(String intentStatus, long seconds) {
+        return new PaymentFacts(
                 sessionFact(session, CheckoutSessionStatus.OPEN, "unpaid", "https://checkout.test/open"),
                 intentFact(intent, intentStatus, 0L, null),
                 List.of(),
@@ -108,7 +109,7 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
     @Test
     void sessionWithoutIntentUsesSessionStatus() {
         created("session");
-        var facts = new PaymentRepository.Facts(
+        var facts = new PaymentFacts(
                 sessionFact(session, CheckoutSessionStatus.COMPLETE, "unpaid", null),
                 null,
                 List.of(),
@@ -125,7 +126,7 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
     @Test
     void incompleteEvidenceIsUnknownNotFailure() {
         created("unknown");
-        var facts = new PaymentRepository.Facts(
+        var facts = new PaymentFacts(
                 sessionFact(session, CheckoutSessionStatus.OPEN, "unpaid", null),
                 null,
                 List.of(),
@@ -142,7 +143,7 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
     @Test
     void capturedChargeSucceedsWithPendingAccountingEvidence() {
         created("capture");
-        var facts = new PaymentRepository.Facts(
+        var facts = new PaymentFacts(
                 sessionFact(session, CheckoutSessionStatus.COMPLETE, "paid", null),
                 intentFact(intent, "succeeded", 10000L, "ch_capture"),
                 List.of(charge("ch_capture", "succeeded", true, 10000, 10000L)),
@@ -163,7 +164,7 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
     @Test
     void capturingMoreThanTheOrderAmountIsAConflict() {
         created("over");
-        var facts = new PaymentRepository.Facts(
+        var facts = new PaymentFacts(
                 null, null, List.of(charge("ch_over", "succeeded", true, 12000, 12000L)), true, false, later(1));
         assertThat(query(facts)).isFalse();
         assertState("SUCCEEDED", "open", "CONFLICT", "PENDING_EVIDENCE");
@@ -172,7 +173,7 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
     @Test
     void foreignSessionOrIntentIdentityIsAConflictAndIsNotAdopted() {
         created("identity");
-        var foreignSession = new PaymentRepository.Facts(
+        var foreignSession = new PaymentFacts(
                 sessionFact("cs_foreign", CheckoutSessionStatus.OPEN, "unpaid", null),
                 null,
                 List.of(),
@@ -183,7 +184,7 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
         assertThat(row()).containsEntry("resolution_status", "CONFLICT").containsEntry("checkout_session_id", session);
 
         created("identity-intent");
-        var foreignIntent = new PaymentRepository.Facts(
+        var foreignIntent = new PaymentFacts(
                 null, intentFact("pi_foreign", "processing", 0L, null), List.of(), true, false, later(1));
         assertThat(query(foreignIntent)).isFalse();
         assertThat(row()).containsEntry("resolution_status", "CONFLICT").containsEntry("payment_intent_id", intent);
@@ -200,7 +201,7 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
                 .isFalse();
         assertState("REQUIRES_ACTION", "requires_action", "KNOWN", "NOT_APPLICABLE");
 
-        var wrongVersion = new PaymentRepository.Facts(
+        var wrongVersion = new PaymentFacts(
                 sessionFact(session, CheckoutSessionStatus.OPEN, "unpaid", null),
                 intentFact(intent, "processing", 0L, null),
                 List.of(),
@@ -231,7 +232,7 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
     @Test
     void onlyAQueryCanCancelAnExpiredUnpaidSession() {
         created("expire-webhook");
-        var expired = new PaymentRepository.Facts(
+        var expired = new PaymentFacts(
                 sessionFact(session, CheckoutSessionStatus.EXPIRED, "unpaid", null),
                 intentFact(intent, "requires_payment_method", 0L, null),
                 List.of(),
@@ -242,7 +243,7 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
         assertState("PROCESSING", "requires_payment_method", "KNOWN", "NOT_APPLICABLE");
 
         created("expire-query");
-        var expiredQuery = new PaymentRepository.Facts(
+        var expiredQuery = new PaymentFacts(
                 sessionFact(session, CheckoutSessionStatus.EXPIRED, "unpaid", null),
                 intentFact(intent, "requires_payment_method", 0L, null),
                 List.of(),
@@ -256,14 +257,14 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
     @Test
     void captureAfterCancellationIsAConflictThatKeepsTheCancellation() {
         created("cancel-then-capture");
-        query(new PaymentRepository.Facts(
+        query(new PaymentFacts(
                 sessionFact(session, CheckoutSessionStatus.EXPIRED, "unpaid", null),
                 intentFact(intent, "requires_payment_method", 0L, null),
                 List.of(),
                 true,
                 false,
                 later(1)));
-        var capture = new PaymentRepository.Facts(
+        var capture = new PaymentFacts(
                 null, null, List.of(charge("ch_late", "succeeded", true, 10000, 10000L)), true, false, later(2));
         assertThat(query(capture)).isFalse();
         assertState("CANCELED", "requires_payment_method", "CONFLICT", "PENDING_EVIDENCE");
@@ -272,15 +273,15 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
     @Test
     void contradictoryRepeatOfAChargeIsAConflictAndOlderFailuresAreIgnored() {
         created("attempts");
-        query(new PaymentRepository.Facts(
+        query(new PaymentFacts(
                 null, null, List.of(charge("ch_failed", "failed", false, 10000, 0L)), true, false, later(10)));
-        assertThat(query(new PaymentRepository.Facts(
+        assertThat(query(new PaymentFacts(
                         null, null, List.of(charge("ch_failed", "failed", false, 10000, 0L)), true, false, later(5))))
                 .as("an older uncaptured observation of a known charge is skipped")
                 .isFalse();
         assertThat(row()).containsEntry("resolution_status", "KNOWN");
 
-        assertThat(query(new PaymentRepository.Facts(
+        assertThat(query(new PaymentFacts(
                         null, null, List.of(charge("ch_failed", "failed", false, 9999, 0L)), true, false, later(20))))
                 .isFalse();
         assertThat(row()).containsEntry("resolution_status", "CONFLICT");
@@ -293,7 +294,7 @@ class PaymentStateCharacterizationIT extends PaymentCoreFixture {
         created("hosted");
         String original = (String) row().get("hosted_url");
         assertThat(original).isNotNull();
-        webhook(new PaymentRepository.Facts(
+        webhook(new PaymentFacts(
                 sessionFact(session, CheckoutSessionStatus.OPEN, "unpaid", null),
                 null,
                 List.of(),
