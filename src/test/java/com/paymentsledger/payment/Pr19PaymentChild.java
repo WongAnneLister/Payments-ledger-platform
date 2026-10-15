@@ -57,10 +57,12 @@ public final class Pr19PaymentChild {
         pool.setAutoCommit(true);
         jdbc = new JdbcTemplate(pool) {
             void capture(String sql) {
-                if (sql.contains("pg_advisory_xact_lock")
-                        || sql.contains("FOR UPDATE")
-                        || sql.contains("platform.lock_")
-                        || sql.contains("post_ledger")) trace.add(sql.replaceAll("\\s+", " "));
+                // Normalize before matching: a line break inside "FOR UPDATE" must not hide a lock.
+                String flat = sql.replaceAll("\\s+", " ");
+                if (flat.contains("pg_advisory_xact_lock")
+                        || flat.contains("FOR UPDATE")
+                        || flat.contains("platform.lock_")
+                        || flat.contains("post_ledger")) trace.add(flat);
             }
 
             @Override
