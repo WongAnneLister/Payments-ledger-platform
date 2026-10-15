@@ -188,9 +188,10 @@ class Pr18SequenceIT extends Pr18Fixture {
                 execute(c, oracle);
                 oracle.apply(c);
                 if (mutant && c.kind() == SequenceCommand.Kind.RESERVE) {
-                    UUID expense = jdbc.queryForObject(
-                            "SELECT id FROM platform.ledger_account WHERE account_purpose='PARTNER_SHARE_EXPENSE'",
-                            UUID.class);
+                    UUID expense = jdbc.queryForObject("""
+                            SELECT id
+                            FROM platform.ledger_account
+                            WHERE account_purpose='PARTNER_SHARE_EXPENSE'""", UUID.class);
                     UUID payable = jdbc.queryForObject(
                             "SELECT id FROM platform.ledger_account WHERE account_purpose='PARTNER_PAYABLE'",
                             UUID.class);
@@ -310,18 +311,19 @@ class Pr18SequenceIT extends Pr18Fixture {
                 assertThat(reclaimed.operation().get("operation_key"))
                         .isEqualTo(abandoned.operation().get("operation_key"));
                 new RefundExecutor(repository, refunds, timeout, "FAKE").executeClaim(reclaimed);
-                var beforeStale = jdbc.queryForMap(
-                        "SELECT status,resolution,version,lease_token FROM platform.provider_operation WHERE id=?",
-                        operation);
+                var beforeStale = jdbc.queryForMap("""
+                        SELECT status,resolution,version,lease_token
+                        FROM platform.provider_operation
+                        WHERE id=?""", operation);
                 long observations = count("provider_observation");
                 refunds.finish(
                         abandoned,
                         new ProviderCallResult<>(ProviderCallClassification.TIMEOUT_UNKNOWN, null, evidence()),
                         false);
-                assertThat(jdbc.queryForMap(
-                                "SELECT status,resolution,version,lease_token FROM platform.provider_operation WHERE id=?",
-                                operation))
-                        .isEqualTo(beforeStale);
+                assertThat(jdbc.queryForMap("""
+                                SELECT status,resolution,version,lease_token
+                                FROM platform.provider_operation
+                                WHERE id=?""", operation)).isEqualTo(beforeStale);
                 assertThat(count("provider_observation")).isGreaterThan(observations);
                 assertThat(jdbc.queryForObject(
                                 "SELECT reserved_minor FROM platform.refund_control WHERE payment_id=?",
@@ -418,21 +420,26 @@ class Pr18SequenceIT extends Pr18Fixture {
 
     void verify(SequenceOracle oracle, SequenceCommand c) {
         String label = "seed=" + currentSeed + " command=" + c.id();
-        for (var account : jdbc.queryForList(
-                "SELECT a.account_purpose,coalesce(b.balance_minor,0) amount FROM platform.ledger_account a LEFT JOIN platform.balance_projection b ON a.id=b.ledger_account_id"))
+        for (var account : jdbc.queryForList("""
+                SELECT a.account_purpose,coalesce(b.balance_minor,0) amount
+                FROM platform.ledger_account a
+                LEFT
+                JOIN platform.balance_projection b ON a.id=b.ledger_account_id"""))
             assertThat(((Number) account.get("amount")).longValue())
                     .as(label + " account=" + account.get("account_purpose"))
                     .isEqualTo(
                             oracle.ledger.balance(account.get("account_purpose").toString()));
         assertThat(count("journal")).as(label + " I02 exact journal coverage").isEqualTo(oracle.ledger.journals());
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM (SELECT financial_event_id FROM platform.journal GROUP BY financial_event_id HAVING count(*)<>1) x",
-                        Long.class))
-                .as("I02 unique")
-                .isZero();
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.financial_event e LEFT JOIN platform.journal j ON j.financial_event_id=e.id WHERE j.id IS NULL",
-                        Long.class))
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM (SELECT financial_event_id FROM platform.journal GROUP BY financial_event_id HAVING
+                            count(*)<>1) x""", Long.class)).as("I02 unique").isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.financial_event e
+                        LEFT
+                        JOIN platform.journal j ON j.financial_event_id=e.id
+                        WHERE j.id IS NULL""", Long.class))
                 .as("I02 no unjournaled events")
                 .isZero();
         assertThat(new HashSet<>(jdbc.queryForList(
@@ -440,19 +447,19 @@ class Pr18SequenceIT extends Pr18Fixture {
                         String.class)))
                 .as(label + " I02 provider source exact set")
                 .isEqualTo(oracle.providerJournals());
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM (SELECT journal_id FROM platform.journal_entry GROUP BY journal_id HAVING sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END)<>0) x",
-                        Long.class))
-                .as("I01 per journal")
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM (SELECT journal_id FROM platform.journal_entry GROUP BY journal_id HAVING sum(CASE WHEN
+                            side='DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END)<>0) x""", Long.class)).as("I01 per journal").isZero();
         if (paymentId != null)
             assertThat(jdbc.queryForObject(
                             "SELECT captured_amount_minor FROM platform.payment WHERE id=?", Long.class, paymentId))
                     .as(label + " C")
                     .isEqualTo(oracle.payment.captured());
-        var control = jdbc.queryForList(
-                "SELECT captured_minor,refunded_minor,reserved_minor FROM platform.refund_control WHERE payment_id=?",
-                paymentId);
+        var control = jdbc.queryForList("""
+                SELECT captured_minor,refunded_minor,reserved_minor
+                FROM platform.refund_control
+                WHERE payment_id=?""", paymentId);
         if (!control.isEmpty()) {
             assertThat(((Number) control.getFirst().get("captured_minor")).longValue())
                     .isEqualTo(oracle.payment.captured());
@@ -473,11 +480,12 @@ class Pr18SequenceIT extends Pr18Fixture {
                         .matches())
                 .as("I07 independent rebuild")
                 .isTrue();
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.journal_entry e JOIN platform.journal j ON j.id=e.journal_id WHERE (e.organization_id,e.environment_id,e.currency) IS DISTINCT FROM (j.organization_id,j.environment_id,j.currency)",
-                        Long.class))
-                .as("I07 scope")
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.journal_entry e
+                        JOIN platform.journal j ON j.id=e.journal_id
+                        WHERE (e.organization_id,e.environment_id,e.currency) IS DISTINCT
+                        FROM (j.organization_id,j.environment_id,j.currency)""", Long.class)).as("I07 scope").isZero();
         if (payoutId != null) {
             var p = payouts.lookup(scope, "payout");
             assertThat(((Number) p.get("transit_minor")).longValue())
@@ -491,8 +499,12 @@ class Pr18SequenceIT extends Pr18Fixture {
     Map<String, Object> lightSnapshot() {
         return Map.of(
                 "balances",
-                jdbc.queryForList(
-                        "SELECT a.account_purpose,coalesce(b.balance_minor,0) balance_minor FROM platform.ledger_account a LEFT JOIN platform.balance_projection b ON a.id=b.ledger_account_id ORDER BY a.account_purpose"),
+                jdbc.queryForList("""
+                        SELECT a.account_purpose,coalesce(b.balance_minor,0) balance_minor
+                        FROM platform.ledger_account a
+                        LEFT
+                        JOIN platform.balance_projection b ON a.id=b.ledger_account_id
+                        ORDER BY a.account_purpose"""),
                 "journals",
                 count("journal"),
                 "providerRequests",
@@ -500,8 +512,9 @@ class Pr18SequenceIT extends Pr18Fixture {
                 "providerEffects",
                 fake.controls().effects(scope),
                 "refundControl",
-                jdbc.queryForList(
-                        "SELECT captured_minor,refunded_minor,reserved_minor,control_state FROM platform.refund_control"),
+                jdbc.queryForList("""
+                        SELECT captured_minor,refunded_minor,reserved_minor,control_state
+                        FROM platform.refund_control"""),
                 "outboxEvents",
                 count("outbox_event"));
     }

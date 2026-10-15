@@ -63,15 +63,20 @@ public class PayoutIngestionService {
         if (from == null || until == null || !from.isBefore(until) || until.isAfter(Instant.now()))
             throw new IllegalArgumentException("Passed half-open UTC window required");
         return tx.execute(status -> {
-            UUID observation = payout == null
-                    ? null
-                    : jdbc.queryForObject(
-                            "SELECT id FROM platform.payout_observation WHERE payout_id=? ORDER BY created_at DESC,id DESC LIMIT 1",
-                            UUID.class,
-                            payout);
+            UUID observation = payout == null ? null : jdbc.queryForObject("""
+                            SELECT id
+                            FROM platform.payout_observation
+                            WHERE payout_id=?
+                            ORDER BY created_at DESC,id DESC
+                            LIMIT 1""", UUID.class, payout);
             UUID id = UUID.randomUUID();
             jdbc.update(
-                    "INSERT INTO platform.payout_read_run(id,organization_id,environment_id,provider_account_id,livemode,kind,payout_id,source_observation_id,created_gte,created_lt) VALUES (?,?,?,?,?,?,?,?,?,?) ON CONFLICT(payout_id,source_observation_id,created_gte,created_lt) DO NOTHING",
+                    """
+                    INSERT INTO platform.payout_read_run(id,organization_id,environment_id,provider_account_id,livemode,
+                        kind,payout_id,source_observation_id,created_gte,created_lt)
+                    VALUES (?,?,?,?,?,?,?,?,?,?)
+                    ON CONFLICT(payout_id,source_observation_id,created_gte,created_lt)
+                    DO NOTHING""",
                     id,
                     scope.organizationId(),
                     scope.environmentId(),
@@ -84,12 +89,10 @@ public class PayoutIngestionService {
                     Timestamp.from(until));
             if (payout != null)
                 return jdbc.queryForObject(
-                        "SELECT id FROM platform.payout_read_run WHERE payout_id=? AND source_observation_id=? AND created_gte=? AND created_lt=?",
-                        UUID.class,
-                        payout,
-                        observation,
-                        Timestamp.from(from),
-                        Timestamp.from(until));
+                        """
+                        SELECT id
+                        FROM platform.payout_read_run
+                        WHERE payout_id=? AND source_observation_id=? AND created_gte=? AND created_lt=?""", UUID.class, payout, observation, Timestamp.from(from), Timestamp.from(until));
             return id;
         });
     }
@@ -120,7 +123,10 @@ public class PayoutIngestionService {
                         scopedPayout(scope, (UUID) snapshot.get("payout_id")).get("automatic")))
             throw new IllegalArgumentException("Manual membership unavailable");
         if (membership ? btProvider == null : provider == null) {
-            jdbc.update("UPDATE platform.payout_read_run SET last_error='PROVIDER_UNAVAILABLE' WHERE id=?", runId);
+            jdbc.update("""
+                    UPDATE platform.payout_read_run
+                    SET last_error='PROVIDER_UNAVAILABLE'
+                    WHERE id=?""", runId);
             return "UNAVAILABLE";
         }
         ProviderCallResult<?> result = membership
@@ -175,20 +181,17 @@ public class PayoutIngestionService {
             if (snapshot.get("api_version") != null
                     && !snapshot.get("api_version").equals(result.evidence().apiVersion()))
                 invalid = "API_VERSION_DRIFT";
-            if (next != null
-                    && jdbc.queryForObject(
-                                    "SELECT count(*) FROM platform.payout_read_page WHERE run_id=? AND request_cursor=?",
-                                    Long.class,
-                                    runId,
-                                    next)
-                            > 0) invalid = "CURSOR_CYCLE";
+            if (next != null && jdbc.queryForObject("""
+                                    SELECT count(*)
+                                    FROM platform.payout_read_page
+                                    WHERE run_id=? AND request_cursor=?""", Long.class, runId, next) > 0) invalid = "CURSOR_CYCLE";
         }
         if (invalid != null) {
             String error = invalid;
-            tx.executeWithoutResult(status -> jdbc.update(
-                    "UPDATE platform.payout_read_run SET last_error=?,updated_at=clock_timestamp() WHERE id=?",
-                    error,
-                    runId));
+            tx.executeWithoutResult(status -> jdbc.update("""
+                    UPDATE platform.payout_read_run
+                    SET last_error=?,updated_at=clock_timestamp()
+                    WHERE id=?""", error, runId));
             return result.classification() == ProviderCallClassification.SUCCESS ? "REJECTED" : "RETRY";
         }
         // Each canonical object commits separately, so no transaction locks multiple payout parents after BT locks.
@@ -219,29 +222,24 @@ public class PayoutIngestionService {
                         } catch (java.io.IOException e) {
                             throw new IllegalStateException(e);
                         }
-                    } else
-                        jdbc.update(
-                                "INSERT INTO platform.payout_membership(payout_id,bt_id,run_id,observation_id,fact) VALUES (?,?,?,?,?::jsonb)",
-                                snapshot.get("payout_id"),
-                                id,
-                                runId,
-                                observation,
-                                fact.toString());
+                    } else jdbc.update("""
+                                INSERT INTO platform.payout_membership(payout_id,bt_id,run_id,observation_id,fact)
+                                VALUES (?,?,?,?,?::jsonb)""", snapshot.get("payout_id"), id, runId, observation, fact.toString());
                 }
-            jdbc.update(
-                    "INSERT INTO platform.payout_read_page(run_id,request_cursor,next_cursor,terminal,observation_id,object_ids) VALUES (?,?,?,?,?,?::text[])",
-                    runId,
-                    Objects.toString(cursor, ""),
-                    nextCursor,
-                    terminal,
-                    observation,
-                    array(ids));
-            jdbc.update(
-                    "UPDATE platform.payout_read_run SET next_cursor=?,api_version=coalesce(api_version,?),state=?,last_error=null,version=version+1,updated_at=clock_timestamp() WHERE id=?",
-                    nextCursor,
-                    result.evidence().apiVersion(),
-                    terminal ? "COMPLETE" : "INCOMPLETE",
-                    runId);
+            jdbc.update("""
+                    INSERT INTO platform.payout_read_page(run_id,request_cursor,next_cursor,terminal,observation_id,
+                        object_ids)
+                    VALUES (?,?,?,?,?,?::text[])""", runId, Objects.toString(cursor, ""), nextCursor, terminal, observation, array(ids));
+            jdbc.update("""
+                    UPDATE platform.payout_read_run
+                    SET
+                        next_cursor=?,
+                        api_version=coalesce(api_version,?),
+                        state=?,
+                        last_error=null,
+                        version=version+1,
+                        updated_at=clock_timestamp()
+                    WHERE id=?""", nextCursor, result.evidence().apiVersion(), terminal ? "COMPLETE" : "INCOMPLETE", runId);
             return terminal ? "COMPLETE" : "ACCEPTED";
         });
     }
@@ -251,7 +249,10 @@ public class PayoutIngestionService {
         return tx.execute(status -> {
             UUID observation = UUID.randomUUID();
             jdbc.update(
-                    "INSERT INTO platform.payout_read_observation(id,organization_id,environment_id,provider_account_id,livemode,run_id,operation,object_id,classification,payload,evidence) VALUES (?,?,?,?,?,?,?,?,?,?::jsonb,?::jsonb)",
+                    """
+                    INSERT INTO platform.payout_read_observation(id,organization_id,environment_id,provider_account_id,
+                        livemode,run_id,operation,object_id,classification,payload,evidence)
+                    VALUES (?,?,?,?,?,?,?,?,?,?::jsonb,?::jsonb)""",
                     observation,
                     scope.organizationId(),
                     scope.environmentId(),
@@ -287,7 +288,19 @@ public class PayoutIngestionService {
     void validateScope(ProviderScope scope) {
         if (scope.livemode()
                 || jdbc.queryForObject(
-                                "SELECT count(*) FROM platform.provider_account p JOIN platform.environment_config e ON e.id=p.environment_id AND e.organization_id=p.organization_id JOIN platform.organization o ON o.id=p.organization_id WHERE p.id=? AND p.organization_id=? AND p.environment_id=? AND NOT p.livemode AND NOT e.livemode AND p.status='ACTIVE' AND e.status='ACTIVE' AND o.status='ACTIVE'",
+                                """
+                                SELECT count(*)
+                                FROM platform.provider_account p
+                                JOIN platform.environment_config e ON e.id=p.environment_id AND e.organization_id=p.organization_id
+                                JOIN platform.organization o ON o.id=p.organization_id
+                                WHERE p.id=?
+                                    AND p.organization_id=?
+                                    AND p.environment_id=?
+                                    AND NOT p.livemode
+                                    AND NOT e.livemode
+                                    AND p.status='ACTIVE'
+                                    AND e.status='ACTIVE'
+                                    AND o.status='ACTIVE'""",
                                 Long.class,
                                 scope.providerAccountId(),
                                 scope.organizationId(),
@@ -297,12 +310,10 @@ public class PayoutIngestionService {
 
     Map<String, Object> scopedPayout(ProviderScope scope, UUID id) {
         var p = one(
-                "SELECT * FROM platform.payout WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=?",
-                id,
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId(),
-                scope.livemode());
+                """
+                SELECT *
+                FROM platform.payout
+                WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=?""", id, scope.organizationId(), scope.environmentId(), scope.providerAccountId(), scope.livemode());
         if (p == null) throw new IllegalArgumentException("Payout not in scope");
         return p;
     }

@@ -70,9 +70,10 @@ public class OpsAuditService {
             for (var ref : body.path("evidenceRefs")) digests.add(digest(ref.toString()));
         }
         jdbc.update(
-                "INSERT INTO"
-                        + " platform.audit_log(id,organization_id,environment_id,actor_id,role,action,target,request_id,reason_summary,evidence_summary,before_summary,after_summary,result)"
-                        + " VALUES (?,?,?,?,?,?,?,?,?::jsonb,?::jsonb,?::jsonb,?::jsonb,?)",
+                """
+                INSERT INTO platform.audit_log(id,organization_id,environment_id,actor_id,role,action,target,
+                    request_id,reason_summary,evidence_summary,before_summary,after_summary,result)
+                VALUES (?,?,?,?,?,?,?,?,?::jsonb,?::jsonb,?::jsonb,?::jsonb,?)""",
                 id,
                 c == null ? null : c.organizationId(),
                 c == null ? null : c.environmentId(),

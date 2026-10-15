@@ -27,14 +27,14 @@ class PaymentSchemaIT {
                 .load()
                 .migrate();
         var jdbc = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), "payments_app", "pr02_test_only"));
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM information_schema.tables WHERE table_schema='platform' AND table_name IN ('business_order','payment','api_idempotency_record','provider_operation','payment_attempt','recovery_task','provider_observation')",
-                        Integer.class))
-                .isEqualTo(7);
-        assertThat(jdbc.queryForObject(
-                        "SELECT has_table_privilege(current_user,'platform.provider_observation','SELECT,INSERT')",
-                        Boolean.class))
-                .isTrue();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM information_schema.tables
+                        WHERE table_schema='platform'
+                            AND table_name IN ('business_order','payment','api_idempotency_record','provider_operation',
+                                'payment_attempt','recovery_task','provider_observation')""", Integer.class)).isEqualTo(7);
+        assertThat(jdbc.queryForObject("""
+                        SELECT has_table_privilege(current_user,'platform.provider_observation','SELECT,INSERT')""", Boolean.class)).isTrue();
         for (String privilege : new String[] {"UPDATE", "DELETE", "TRUNCATE"})
             assertThat(jdbc.queryForObject(
                             "SELECT has_table_privilege(current_user,'platform.provider_observation',?)",

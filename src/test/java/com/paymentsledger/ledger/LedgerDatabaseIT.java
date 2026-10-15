@@ -61,19 +61,19 @@ class LedgerDatabaseIT {
         try (var c = owner()) {
             sql(c, "TRUNCATE platform.organization,platform.currency_config CASCADE");
             sql(c, "INSERT INTO platform.organization(id,code) VALUES ('" + ORG + "','ledger-test')");
-            sql(
-                    c,
-                    "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES ('" + ENV + "','"
-                            + ORG + "','test',false)");
-            sql(
-                    c,
-                    "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES ('"
-                            + PROVIDER + "','" + ORG + "','" + ENV + "','FAKE','ledger-test',false)");
-            sql(c, "INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2),('JPY',0)");
-            sql(
-                    c,
-                    "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES ('" + ORG
-                            + "','" + ENV + "','USD'),('" + ORG + "','" + ENV + "','JPY')");
+            sql(c, """
+                    INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                    VALUES ('""" + ENV + "','" + ORG + "','test',false)");
+            sql(c, """
+                    INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                        provider_account_ref,livemode)
+                    VALUES ('""" + PROVIDER + "','" + ORG + "','" + ENV + "','FAKE','ledger-test',false)");
+            sql(c, """
+                    INSERT INTO platform.currency_config(code,minor_unit_exponent)
+                    VALUES ('USD',2),('JPY',0)""");
+            sql(c, """
+                    INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                    VALUES ('""" + ORG + "','" + ENV + "','USD'),('" + ORG + "','" + ENV + "','JPY')");
             account(c, PSP, "PSP_FUNDS", "PROVIDER", PROVIDER, "PAYMENTS");
             account(c, REVENUE, "SALES_REVENUE", "INTERNAL", null, null);
             account(c, BANK, "BANK_CASH", "SIMULATED_BANK", null, null);
@@ -82,8 +82,10 @@ class LedgerDatabaseIT {
 
     static void account(Connection c, UUID id, String purpose, String source, UUID provider, String domain)
             throws SQLException {
-        try (var p = c.prepareStatement(
-                "INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain,provider_account_id,balance_domain) VALUES (?,?,?,'USD',?,?,?,?)")) {
+        try (var p = c.prepareStatement("""
+                INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                    source_domain,provider_account_id,balance_domain)
+                VALUES (?,?,?,'USD',?,?,?,?)""")) {
             p.setObject(1, id);
             p.setObject(2, ORG);
             p.setObject(3, ENV);
@@ -101,8 +103,8 @@ class LedgerDatabaseIT {
     }
 
     static UUID post(Connection c, String key, String facts, String entries, UUID reversal) throws SQLException {
-        try (var p = c.prepareStatement(
-                "SELECT platform.post_ledger(?,?,'USD',?,?,'L-CHARGE','PROVIDER','evidence',?::jsonb,?::jsonb,?)")) {
+        try (var p = c.prepareStatement("""
+                SELECT platform.post_ledger(?,?,'USD',?,?,'L-CHARGE','PROVIDER','evidence',?::jsonb,?::jsonb,?)""")) {
             p.setObject(1, ORG);
             p.setObject(2, ENV);
             p.setObject(3, PROVIDER);
@@ -213,7 +215,10 @@ class LedgerDatabaseIT {
                     "23514",
                     () -> sql(
                             c,
-                            "INSERT INTO platform.journal_entry(journal_id,ledger_account_id,organization_id,environment_id,currency,side,amount_minor,line_no) VALUES ('"
+                            """
+                            INSERT INTO platform.journal_entry(journal_id,ledger_account_id,organization_id,environment_id,
+                                currency,side,amount_minor,line_no)
+                            VALUES ('"""
                                     + journal + "','" + PSP + "','" + ORG + "','" + ENV + "','USD','DEBIT',1,3),('"
                                     + journal + "','" + REVENUE + "','" + ORG + "','" + ENV + "','USD','CREDIT',1,4)"));
         }
@@ -224,7 +229,10 @@ class LedgerDatabaseIT {
         UUID id = UUID.randomUUID();
         sql(
                 c,
-                "INSERT INTO platform.financial_event(id,organization_id,environment_id,currency,provider_account_id,event_key,event_type,source_domain,source_ref,facts) VALUES ('"
+                """
+                INSERT INTO platform.financial_event(id,organization_id,environment_id,currency,provider_account_id,
+                    event_key,event_type,source_domain,source_ref,facts)
+                VALUES ('"""
                         + id + "','" + ORG + "','" + ENV + "','USD','" + PROVIDER + "','" + key
                         + "','L-TEST','PROVIDER','test','{}')");
         return id;
@@ -232,10 +240,9 @@ class LedgerDatabaseIT {
 
     static UUID journal(Connection c, UUID event) throws SQLException {
         UUID id = UUID.randomUUID();
-        sql(
-                c,
-                "INSERT INTO platform.journal(id,organization_id,environment_id,currency,financial_event_id) VALUES ('"
-                        + id + "','" + ORG + "','" + ENV + "','USD','" + event + "')");
+        sql(c, """
+                INSERT INTO platform.journal(id,organization_id,environment_id,currency,financial_event_id)
+                VALUES ('""" + id + "','" + ORG + "','" + ENV + "','USD','" + event + "')");
         return id;
     }
 
@@ -243,7 +250,10 @@ class LedgerDatabaseIT {
             throws SQLException {
         sql(
                 c,
-                "INSERT INTO platform.journal_entry(journal_id,ledger_account_id,organization_id,environment_id,currency,side,amount_minor,line_no) VALUES ('"
+                """
+                INSERT INTO platform.journal_entry(journal_id,ledger_account_id,organization_id,environment_id,
+                    currency,side,amount_minor,line_no)
+                VALUES ('"""
                         + journal + "','" + account + "','" + ORG + "','" + ENV + "','USD','" + side + "'," + amount
                         + "," + line + ")");
     }
@@ -276,20 +286,15 @@ class LedgerDatabaseIT {
             c.setAutoCommit(false);
             UUID e = event(c, "forge");
             sql(c, "SET LOCAL platform.posting='on'");
-            state(
-                    "23514",
-                    () -> sql(
-                            c,
-                            "INSERT INTO platform.journal(organization_id,environment_id,currency,financial_event_id,sealed_at) VALUES ('"
-                                    + ORG + "','" + ENV + "','USD','" + e + "',now())"));
+            state("23514", () -> sql(c, """
+                            INSERT INTO platform.journal(organization_id,environment_id,currency,financial_event_id,sealed_at)
+                            VALUES ('""" + ORG + "','" + ENV + "','USD','" + e + "',now())"));
             c.rollback();
             UUID eventId = event(c, "forge-tx");
-            state(
-                    "23514",
-                    () -> sql(
-                            c,
-                            "INSERT INTO platform.journal(organization_id,environment_id,currency,financial_event_id,construction_txid) VALUES ('"
-                                    + ORG + "','" + ENV + "','USD','" + eventId + "',1)"));
+            state("23514", () -> sql(c, """
+                            INSERT INTO platform.journal(organization_id,environment_id,currency,financial_event_id,
+                                construction_txid)
+                            VALUES ('""" + ORG + "','" + ENV + "','USD','" + eventId + "',1)"));
             c.rollback();
         }
     }
@@ -327,21 +332,25 @@ class LedgerDatabaseIT {
             sql(c, "INSERT INTO platform.organization(id,code) VALUES ('" + otherOrg + "','other')");
             sql(
                     c,
-                    "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES ('" + otherEnv
+                    """
+                    INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                    VALUES ('""" + otherEnv
                             + "','" + otherOrg + "','test',false),('" + siblingEnv + "','" + ORG
                             + "','sibling',false)");
-            sql(
-                    c,
-                    "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES ('"
-                            + otherOrg + "','" + otherEnv + "','USD'),('" + ORG + "','" + siblingEnv + "','USD')");
-            sql(
-                    c,
-                    "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES ('"
-                            + otherProvider + "','" + ORG + "','" + ENV + "','FAKE','other-provider',false)");
+            sql(c, """
+                    INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                    VALUES ('""" + otherOrg + "','" + otherEnv + "','USD'),('" + ORG + "','" + siblingEnv + "','USD')");
+            sql(c, """
+                    INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                        provider_account_ref,livemode)
+                    VALUES ('""" + otherProvider + "','" + ORG + "','" + ENV + "','FAKE','other-provider',false)");
             account(c, id(104), "PSP_FUNDS", "PROVIDER", otherProvider, "PAYMENTS");
             sql(
                     c,
-                    "INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain) VALUES ('"
+                    """
+                    INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                        source_domain)
+                    VALUES ('"""
                             + id(105) + "','" + otherOrg + "','" + otherEnv + "','USD','SALES_REVENUE','INTERNAL'),('"
                             + id(106) + "','" + ORG + "','" + siblingEnv + "','USD','SALES_REVENUE','INTERNAL'),('"
                             + id(107) + "','" + ORG + "','" + ENV + "','JPY','SALES_REVENUE','INTERNAL')");
@@ -369,20 +378,20 @@ class LedgerDatabaseIT {
     void definerHasFixedPathAndPublicCannotExecuteIt() throws Exception {
         try (var c = owner();
                 var st = c.createStatement();
-                var r = st.executeQuery(
-                        "SELECT prosecdef,proconfig::text,has_function_privilege('public',oid,'EXECUTE') FROM pg_proc WHERE oid='platform.post_ledger(uuid,uuid,text,uuid,text,text,text,text,jsonb,jsonb,uuid)'::regprocedure")) {
+                var r = st.executeQuery("""
+                        SELECT prosecdef,proconfig::text,has_function_privilege('public',oid,'EXECUTE')
+                        FROM pg_proc
+                        WHERE
+                            oid='platform.post_ledger(uuid,uuid,text,uuid,text,text,text,text,jsonb,jsonb,uuid)'::regprocedure""")) {
             r.next();
             assertThat(r.getBoolean(1)).isTrue();
             assertThat(r.getString(2)).contains("search_path=pg_catalog, platform, pg_temp");
             assertThat(r.getBoolean(3)).isFalse();
         }
         try (var c = app()) {
-            state(
-                    "42501",
-                    () -> sql(
-                            c,
-                            "INSERT INTO platform.balance_projection(ledger_account_id,organization_id,environment_id,currency) VALUES ('"
-                                    + PSP + "','" + ORG + "','" + ENV + "','USD')"));
+            state("42501", () -> sql(c, """
+                            INSERT INTO platform.balance_projection(ledger_account_id,organization_id,environment_id,currency)
+                            VALUES ('""" + PSP + "','" + ORG + "','" + ENV + "','USD')"));
             state("42501", () -> account(c, id(200), "OPENING_EQUITY", "INTERNAL", null, null));
             state("42501", () -> sql(c, "SELECT platform.check_journal_final()"));
         }
@@ -391,21 +400,22 @@ class LedgerDatabaseIT {
     @Test
     void rejectsLiveScopeEvenWhenConfiguredAfterMigration() throws Exception {
         try (var c = owner()) {
+            sql(c, """
+                    INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                    VALUES ('""" + id(300) + "','" + ORG + "','live',true)");
+            sql(c, """
+                    INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                        provider_account_ref,livemode)
+                    VALUES ('""" + id(301) + "','" + ORG + "','" + id(300) + "','STRIPE','live-config',true)");
+            sql(c, """
+                    INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                    VALUES ('""" + ORG + "','" + id(300) + "','USD')");
             sql(
                     c,
-                    "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES ('" + id(300)
-                            + "','" + ORG + "','live',true)");
-            sql(
-                    c,
-                    "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES ('"
-                            + id(301) + "','" + ORG + "','" + id(300) + "','STRIPE','live-config',true)");
-            sql(
-                    c,
-                    "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES ('" + ORG
-                            + "','" + id(300) + "','USD')");
-            sql(
-                    c,
-                    "INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain) VALUES ('"
+                    """
+                    INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                        source_domain)
+                    VALUES ('"""
                             + id(302) + "','" + ORG + "','" + id(300) + "','USD','SALES_REVENUE','INTERNAL'),('"
                             + id(303) + "','" + ORG + "','" + id(300) + "','USD','OPENING_EQUITY','INTERNAL')");
         }

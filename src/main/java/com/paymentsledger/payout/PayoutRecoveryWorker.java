@@ -53,7 +53,15 @@ public final class PayoutRecoveryWorker {
                                     .toInstant(),
                     from = until.minus(Duration.ofDays(7));
             Long exists = jdbc.queryForObject(
-                    "SELECT count(*) FROM platform.payout_read_run WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND kind='PAYOUTS' AND created_gte=? AND created_lt=?",
+                    """
+                    SELECT count(*)
+                    FROM platform.payout_read_run
+                    WHERE organization_id=?
+                        AND environment_id=?
+                        AND provider_account_id=?
+                        AND kind='PAYOUTS'
+                        AND created_gte=?
+                        AND created_lt=?""",
                     Long.class,
                     scope.organizationId(),
                     scope.environmentId(),
@@ -63,31 +71,38 @@ public final class PayoutRecoveryWorker {
             if (exists == 0) reads.createWindow(scope, from, until);
         });
         for (UUID id : jdbc.queryForList(
-                "SELECT id FROM platform.payout_read_run WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND NOT livemode AND state='INCOMPLETE' ORDER BY updated_at,id LIMIT 5",
-                UUID.class,
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId())) guarded(() -> reads.importPage(id));
-        for (var p : jdbc.queryForList(
-                "SELECT * FROM platform.payout WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND NOT livemode ORDER BY last_query_attempt_at NULLS FIRST,id LIMIT 25",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId()))
+                """
+                SELECT id
+                FROM platform.payout_read_run
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND provider_account_id=?
+                    AND NOT livemode
+                    AND state='INCOMPLETE'
+                ORDER BY updated_at,id
+                LIMIT 5""", UUID.class, scope.organizationId(), scope.environmentId(), scope.providerAccountId()))
+            guarded(() -> reads.importPage(id));
+        for (var p : jdbc.queryForList("""
+                SELECT *
+                FROM platform.payout
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND NOT livemode
+                ORDER BY last_query_attempt_at NULLS FIRST,id
+                LIMIT 25""", scope.organizationId(), scope.environmentId(), scope.providerAccountId()))
             guarded(() -> {
                 jdbc.update(
                         "UPDATE platform.payout SET last_query_attempt_at=clock_timestamp() WHERE id=?", p.get("id"));
                 source.resolve(scope, p.get("provider_payout_id").toString());
                 if (Boolean.TRUE.equals(p.get("automatic"))) {
-                    UUID latest = jdbc.queryForObject(
-                            "SELECT id FROM platform.payout_observation WHERE payout_id=? ORDER BY created_at DESC,id DESC LIMIT 1",
-                            UUID.class,
-                            p.get("id"));
-                    if (jdbc.queryForObject(
-                                    "SELECT count(*) FROM platform.payout_read_run WHERE payout_id=? AND source_observation_id=?",
-                                    Long.class,
-                                    p.get("id"),
-                                    latest)
-                            == 0)
+                    UUID latest = jdbc.queryForObject("""
+                            SELECT id
+                            FROM platform.payout_observation
+                            WHERE payout_id=?
+                            ORDER BY created_at DESC,id DESC
+                            LIMIT 1""", UUID.class, p.get("id"));
+                    if (jdbc.queryForObject("""
+                                    SELECT count(*)
+                                    FROM platform.payout_read_run
+                                    WHERE payout_id=? AND source_observation_id=?""", Long.class, p.get("id"), latest) == 0)
                         reads.createMembershipWindow(scope, (UUID) p.get("id"), Instant.EPOCH, clock.instant());
                 }
             });

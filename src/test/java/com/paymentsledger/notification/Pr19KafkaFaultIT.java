@@ -46,15 +46,21 @@ class Pr19KafkaFaultIT extends NotificationFixture {
         new JdbcTemplate(new DriverManagerDataSource(
                         MERCHANT.getJdbcUrl(), MERCHANT.getUsername(), MERCHANT.getPassword()))
                 .execute("DROP SCHEMA IF EXISTS merchant_fixture CASCADE");
-        admin.execute(
-                "CREATE TABLE IF NOT EXISTS platform.pr19_notification_transition(payment_id uuid,old_status text,new_status text)");
+        admin.execute("""
+                CREATE TABLE IF NOT EXISTS platform.pr19_notification_transition(payment_id uuid,old_status text,
+                    new_status text)""");
         admin.execute("TRUNCATE platform.pr19_notification_transition");
         admin.execute("GRANT INSERT,SELECT ON platform.pr19_notification_transition TO payments_app");
-        admin.execute(
-                "CREATE OR REPLACE FUNCTION platform.pr19_notification_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF OLD.payment_status IS DISTINCT FROM NEW.payment_status THEN INSERT INTO platform.pr19_notification_transition VALUES(NEW.id,OLD.payment_status,NEW.payment_status); END IF; RETURN NEW; END $$");
+        admin.execute("""
+                CREATE OR REPLACE FUNCTION platform.pr19_notification_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+                    BEGIN IF OLD.payment_status IS DISTINCT
+                FROM NEW.payment_status THEN
+                INSERT INTO platform.pr19_notification_transition
+                VALUES(NEW.id,OLD.payment_status,NEW.payment_status); END IF; RETURN NEW; END $$""");
         admin.execute("DROP TRIGGER IF EXISTS pr19_notification_audit ON platform.payment");
-        admin.execute(
-                "CREATE TRIGGER pr19_notification_audit AFTER UPDATE ON platform.payment FOR EACH ROW EXECUTE FUNCTION platform.pr19_notification_audit()");
+        admin.execute("""
+                CREATE TRIGGER pr19_notification_audit AFTER
+                UPDATE ON platform.payment FOR EACH ROW EXECUTE FUNCTION platform.pr19_notification_audit()""");
     }
 
     @Test
@@ -117,13 +123,10 @@ class Pr19KafkaFaultIT extends NotificationFixture {
                     try (var merchant = new SimulatedMerchantServer(
                                     new InetSocketAddress("127.0.0.1", 0), ds, SECRET, fake.clock());
                             var producer = Pr19KafkaClients.producer(KAFKA.getBootstrapServers())) {
-                        admin.update(
-                                "INSERT INTO platform.merchant_notification_target(organization_id,environment_id,application_id,url,key_ref,version) VALUES (?,?,?,?,?,1)",
-                                id(1),
-                                id(2),
-                                id(3),
-                                merchant.uri().toString(),
-                                "pr19-fixture");
+                        admin.update("""
+                                INSERT INTO platform.merchant_notification_target(organization_id,environment_id,application_id,url,
+                                    key_ref,version)
+                                VALUES (?,?,?,?,?,1)""", id(1), id(2), id(3), merchant.uri().toString(), "pr19-fixture");
                         var payment = service.create(
                                         context, "pr19-notification-key", command("pr19-notification-order"))
                                 .resource();

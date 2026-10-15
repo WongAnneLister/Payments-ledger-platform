@@ -28,15 +28,17 @@ class RevenueShareCoreIT extends RevenueShareCoreFixture {
         var start = java.sql.Timestamp.from(fake.clock().instant().minusSeconds(86400));
         admin.update("UPDATE platform.price_fixture SET valid_from=?", start);
         admin.update("UPDATE platform.share_policy_fixture SET valid_from=?", start);
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode) VALUES (?,?,?,false,'ZERO')",
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode)
+                VALUES (?,?,?,false,'ZERO')""", id(1), id(2), id(4));
         for (String purpose : List.of("PSP_FUNDS", "PSP_FEE_EXPENSE", "SALES_REVENUE", "SALES_RETURNS", "SUSPENSE")) {
             boolean provider = !purpose.startsWith("SALES_");
             admin.update(
-                    "INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,source_domain,provider_account_id,balance_domain) VALUES (?,?,'USD',?,?,?,?)",
+                    """
+                    INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,
+                        source_domain,provider_account_id,balance_domain)
+                    VALUES (?,?,'USD',?,?,?,?)""",
                     id(1),
                     id(2),
                     purpose,
@@ -124,8 +126,10 @@ class RevenueShareCoreIT extends RevenueShareCoreFixture {
 
     @Test
     void multiplePartnersShareOnlyOneInternalAccountPairAndRoundCumulatively() {
-        admin.update(
-                "UPDATE platform.share_policy_fixture SET allocations='[{\"partner_ref\":\"a\",\"share_basis_points\":3333},{\"partner_ref\":\"b\",\"share_basis_points\":6667}]'::jsonb");
+        admin.update("""
+                UPDATE platform.share_policy_fixture
+                SET
+                    allocations='[{\"partner_ref\":\"a\",\"share_basis_points\":3333},{\"partner_ref\":\"b\",\"share_basis_points\":6667}]'::jsonb""");
         paymentAndCapture(false);
         assertThat(effective()).isEqualTo(10000);
         assertThat(count("share_adjustment")).isEqualTo(2);
@@ -142,14 +146,15 @@ class RevenueShareCoreIT extends RevenueShareCoreFixture {
                     "SELECT effective_minor FROM platform.share_allocation ORDER BY partner_ref", Long.class);
             assertThat(amounts).containsExactly((10000L - held) * 3333 / 10000, (10000L - held) * 6667 / 10000);
         }
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.ledger_account WHERE account_purpose IN ('PARTNER_SHARE_EXPENSE','PARTNER_PAYABLE') AND provider_account_id IS NULL",
-                        Long.class))
-                .isEqualTo(2);
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.share_adjustment h JOIN platform.journal j ON j.id=h.journal_id WHERE j.sealed_at IS NOT NULL",
-                        Long.class))
-                .isEqualTo(count("share_adjustment"));
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.ledger_account
+                        WHERE account_purpose IN ('PARTNER_SHARE_EXPENSE','PARTNER_PAYABLE') AND provider_account_id IS NULL""", Long.class)).isEqualTo(2);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.share_adjustment h
+                        JOIN platform.journal j ON j.id=h.journal_id
+                        WHERE j.sealed_at IS NOT NULL""", Long.class)).isEqualTo(count("share_adjustment"));
     }
 
     @Test
@@ -163,10 +168,12 @@ class RevenueShareCoreIT extends RevenueShareCoreFixture {
                 "UPDATE platform.share_allocation SET effective_minor=1000",
                 "UPDATE platform.share_allocation SET policy_version='2'"))
             assertThatThrownBy(() -> jdbc.update(sql)).isInstanceOf(RuntimeException.class);
-        assertThatThrownBy(
-                        () -> jdbc.update(
-                                "INSERT INTO platform.share_adjustment(organization_id,environment_id,currency,allocation_id,generation,delta_minor,journal_id,cause) SELECT a.organization_id,a.environment_id,a.currency,a.id,a.generation+1,1,b.journal_id,'bad' FROM platform.share_allocation a JOIN platform.balance_transaction b ON b.payment_id=a.payment_id"))
-                .isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() -> jdbc.update("""
+                                INSERT INTO platform.share_adjustment(organization_id,environment_id,currency,allocation_id,
+                                    generation,delta_minor,journal_id,cause)
+                                SELECT a.organization_id,a.environment_id,a.currency,a.id,a.generation+1,1,b.journal_id,'bad'
+                                FROM platform.share_allocation a
+                                JOIN platform.balance_transaction b ON b.payment_id=a.payment_id""")).isInstanceOf(RuntimeException.class);
         assertThat(count("share_adjustment")).isEqualTo(histories);
         assertThat(count("journal")).isEqualTo(journals);
         assertThat(effective()).isEqualTo(2000);
@@ -177,15 +184,19 @@ class RevenueShareCoreIT extends RevenueShareCoreFixture {
         paymentAndCapture(false);
         new TransactionTemplate(tx).executeWithoutResult(status -> {
             var locked = shares.lock(paymentId);
-            jdbc.update(
-                    "UPDATE platform.payment SET captured_amount_minor=9999,version=version+1 WHERE id=?", paymentId);
+            jdbc.update("""
+                    UPDATE platform.payment
+                    SET captured_amount_minor=9999,version=version+1
+                    WHERE id=?""", paymentId);
             shares.reconcile(locked, "excess-capture-evidence");
         });
         assertThat(effective()).isZero();
         new TransactionTemplate(tx).executeWithoutResult(status -> {
             var locked = shares.lock(paymentId);
-            jdbc.update(
-                    "UPDATE platform.payment SET captured_amount_minor=10000,version=version+1 WHERE id=?", paymentId);
+            jdbc.update("""
+                    UPDATE platform.payment
+                    SET captured_amount_minor=10000,version=version+1
+                    WHERE id=?""", paymentId);
             shares.reconcile(locked, "evidence-aligned");
         });
         assertThat(effective()).isEqualTo(2000);
@@ -198,10 +209,10 @@ class RevenueShareCoreIT extends RevenueShareCoreFixture {
             shares.reconcile(locked, "quarantined-canonical-source");
         });
         assertThat(effective()).isZero();
-        assertThat(jdbc.queryForObject(
-                        "SELECT payment_id IS NULL FROM platform.balance_transaction WHERE bt_id='txn_quarantined'",
-                        Boolean.class))
-                .isTrue();
+        assertThat(jdbc.queryForObject("""
+                        SELECT payment_id IS NULL
+                        FROM platform.balance_transaction
+                        WHERE bt_id='txn_quarantined'""", Boolean.class)).isTrue();
     }
 
     @Test

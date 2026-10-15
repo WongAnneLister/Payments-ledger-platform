@@ -41,7 +41,7 @@ class CorrelationLogTest {
     @Test
     void suppressesSecretLikeCardAndUnboundedAssociationValues() throws Exception {
         for (String value : List.of(
-                "sk_test_" + "synthetic",
+                "sk_test_synthetic",
                 "pi_fixture_secret_synthetic",
                 "whsec_synthetic",
                 "4242".repeat(4),
@@ -102,7 +102,7 @@ class CorrelationLogTest {
         };
         events.start();
         logger.addAppender(events);
-        String sensitive = "reqsk_test_" + "synthetic";
+        String sensitive = "reqsk_test_synthetic";
         MDC.put("requestId", sensitive);
         MDC.put("paymentId", sensitive);
         MDC.put("rawBody", sensitive);

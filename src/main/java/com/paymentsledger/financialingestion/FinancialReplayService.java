@@ -85,12 +85,13 @@ public class FinancialReplayService {
                     || kind == FinancialEventNormalizer.Kind.REFUND_FAILURE;
             Map<String, Object> paymentRow = null;
             if (payment != null)
-                paymentRow = one(
-                        "SELECT * FROM platform.payment WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? FOR UPDATE",
-                        payment,
-                        scope.organizationId(),
-                        scope.environmentId(),
-                        scope.providerAccountId());
+                paymentRow =
+                        one("""
+                        SELECT *
+                        FROM platform.payment
+                        WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=?
+                        FOR
+                        UPDATE""", payment, scope.organizationId(), scope.environmentId(), scope.providerAccountId());
             // Acquire rank 20/30/50 before BT and journal locks; reuse the handle after posting.
             var shareLocks = payment == null ? null : shares.lock(payment);
             var payoutRow = payouts != null && "payout".equals(fact.sourceObjectType())
@@ -123,23 +124,24 @@ public class FinancialReplayService {
         }
         String state = (String) row.get("state");
         if (!"PENDING_EVIDENCE".equals(state)) return state;
-        var policy = one(
-                "SELECT * FROM platform.ingestion_policy WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=?",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId(),
-                scope.livemode());
+        var policy =
+                one("""
+                SELECT *
+                FROM platform.ingestion_policy
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=?""", scope.organizationId(), scope.environmentId(), scope.providerAccountId(), scope.livemode());
         if (policy == null) return mark(row, "PENDING_EVIDENCE", "OPENING_POLICY_REQUIRED");
         if (policy.get("cutoff_at") instanceof Timestamp cutoff
                 && !fact.createdAt().isAfter(cutoff.toInstant()))
             return mark(row, "EXCLUDED", "BEFORE_VERIFIED_CUTOFF");
+        if (jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.bt_evidence_conflict
+                        WHERE balance_transaction_id=?""", Long.class, row.get("id")) > 0) return quarantine(row, "EVIDENCE_CONFLICT");
         if (jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.bt_evidence_conflict WHERE balance_transaction_id=?",
-                        Long.class,
-                        row.get("id"))
-                > 0) return quarantine(row, "EVIDENCE_CONFLICT");
-        if (jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.org_currency_enabled WHERE organization_id=? AND environment_id=? AND currency=?",
+                        """
+                        SELECT count(*)
+                        FROM platform.org_currency_enabled
+                        WHERE organization_id=? AND environment_id=? AND currency=?""",
                         Long.class,
                         scope.organizationId(),
                         scope.environmentId(),
@@ -199,7 +201,13 @@ public class FinancialReplayService {
             return mark(row, "ZERO", "UNKNOWN_SOURCE_ZERO_MOVEMENT");
         Map<String, UUID> accounts = new HashMap<>();
         for (var account : jdbc.queryForList(
-                "SELECT id,account_purpose FROM platform.ledger_account WHERE organization_id=? AND environment_id=? AND currency=? AND (provider_account_id=? OR provider_account_id IS NULL)",
+                """
+                SELECT id,account_purpose
+                FROM platform.ledger_account
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND currency=?
+                    AND (provider_account_id=? OR provider_account_id IS NULL)""",
                 scope.organizationId(),
                 scope.environmentId(),
                 fact.currency().toUpperCase(Locale.ROOT),
@@ -221,7 +229,10 @@ public class FinancialReplayService {
                         scope.providerAccountId()),
                 command);
         jdbc.update(
-                "UPDATE platform.balance_transaction SET state='POSTED',journal_id=?,payment_id=?,refund_id=?,reason=?,updated_at=now(),version=version+1 WHERE id=?",
+                """
+                UPDATE platform.balance_transaction
+                SET state='POSTED',journal_id=?,payment_id=?,refund_id=?,reason=?,updated_at=now(),version=version+1
+                WHERE id=?""",
                 journal,
                 payment,
                 localRefundId,
@@ -230,18 +241,18 @@ public class FinancialReplayService {
         if (kind == FinancialEventNormalizer.Kind.UNKNOWN) recordQuarantine(row, "UNKNOWN_SOURCE");
         if (kind == FinancialEventNormalizer.Kind.CHARGE) {
             // Already owns payment(20); this financial-only update cannot emit a duplicate payment.succeeded event.
-            long covered = jdbc.queryForObject(
-                    "SELECT coalesce(sum(amount_minor),0) FROM platform.balance_transaction WHERE payment_id=? AND state='POSTED' AND lower(business_type)='charge'",
-                    Long.class,
-                    payment);
+            long covered = jdbc.queryForObject("""
+                    SELECT coalesce(sum(amount_minor),0)
+                    FROM platform.balance_transaction
+                    WHERE payment_id=? AND state='POSTED' AND lower(business_type)='charge'""", Long.class, payment);
             long captured = ((Number) paymentRow.get("captured_amount_minor")).longValue();
             String financial = "CONFLICT".equals(paymentRow.get("financial_status")) || covered > captured
                     ? "CONFLICT"
                     : covered == captured ? "POSTED" : "PARTIALLY_POSTED";
-            jdbc.update(
-                    "UPDATE platform.payment SET financial_status=?,version=version+1,updated_at=now() WHERE id=?",
-                    financial,
-                    payment);
+            jdbc.update("""
+                    UPDATE platform.payment
+                    SET financial_status=?,version=version+1,updated_at=now()
+                    WHERE id=?""", financial, payment);
         }
         return "POSTED";
     }
@@ -263,11 +274,10 @@ public class FinancialReplayService {
     }
 
     private String mark(Map<String, Object> row, String state, String reason) {
-        jdbc.update(
-                "UPDATE platform.balance_transaction SET state=?,reason=?,updated_at=now(),version=version+1 WHERE id=?",
-                state,
-                reason,
-                row.get("id"));
+        jdbc.update("""
+                UPDATE platform.balance_transaction
+                SET state=?,reason=?,updated_at=now(),version=version+1
+                WHERE id=?""", state, reason, row.get("id"));
         return state;
     }
 
@@ -278,7 +288,10 @@ public class FinancialReplayService {
 
     private void recordQuarantine(Map<String, Object> row, String reason) {
         jdbc.update(
-                "INSERT INTO platform.quarantine_observation(organization_id,environment_id,provider_account_id,livemode,observation_id,balance_transaction_id,reason) VALUES (?,?,?,?,?,?,?)",
+                """
+                INSERT INTO platform.quarantine_observation(organization_id,environment_id,provider_account_id,
+                    livemode,observation_id,balance_transaction_id,reason)
+                VALUES (?,?,?,?,?,?,?)""",
                 row.get("organization_id"),
                 row.get("environment_id"),
                 row.get("provider_account_id"),
@@ -289,18 +302,18 @@ public class FinancialReplayService {
     }
 
     private Map<String, Object> charge(ProviderScope scope, String source) {
-        return one(
-                "SELECT * FROM platform.payment_attempt WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_object_id=?",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId(),
-                source);
+        return one("""
+                SELECT *
+                FROM platform.payment_attempt
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_object_id=?""", scope.organizationId(), scope.environmentId(), scope.providerAccountId(), source);
     }
 
     private Map<String, Object> bt(ProviderScope scope, String btId, boolean lock) {
         return one(
-                "SELECT * FROM platform.balance_transaction WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND bt_id=?"
-                        + (lock ? " FOR UPDATE" : ""),
+                """
+                SELECT *
+                FROM platform.balance_transaction
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND bt_id=?""" + (lock ? " FOR UPDATE" : ""),
                 scope.organizationId(),
                 scope.environmentId(),
                 scope.providerAccountId(),

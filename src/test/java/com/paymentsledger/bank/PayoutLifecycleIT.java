@@ -55,27 +55,23 @@ class PayoutLifecycleIT {
         tx = new DataSourceTransactionManager(ds);
         admin.execute("TRUNCATE platform.organization,platform.currency_config CASCADE");
         admin.update("INSERT INTO platform.organization(id,code) VALUES (?,'payout')", id(1));
-        admin.update(
-                "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'test',false)",
-                id(2),
-                id(1));
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE','payout',false)",
-                id(4),
-                id(1),
-                id(2));
-        admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2),('JPY',0)");
-        admin.update(
-                "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD'),(?,?,'JPY')",
-                id(1),
-                id(2),
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode) VALUES (?,?,?,false,'ZERO')",
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                VALUES (?,?,'test',false)""", id(2), id(1));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'FAKE','payout',false)""", id(4), id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.currency_config(code,minor_unit_exponent)
+                VALUES ('USD',2),('JPY',0)""");
+        admin.update("""
+                INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                VALUES (?,?,'USD'),(?,?,'JPY')""", id(1), id(2), id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode)
+                VALUES (?,?,?,false,'ZERO')""", id(1), id(2), id(4));
         ledger = new LedgerPostingService(jdbc, json);
         payouts = new PayoutService(jdbc, tx, json, ledger);
         banks = new BankStatementImporter(jdbc, tx, json);
@@ -141,10 +137,11 @@ class PayoutLifecycleIT {
     }
 
     long balance(String purpose) {
-        return jdbc.queryForObject(
-                "SELECT coalesce(sum(CASE WHEN e.side='DEBIT' THEN e.amount_minor ELSE -e.amount_minor END),0) FROM platform.journal_entry e JOIN platform.ledger_account a ON a.id=e.ledger_account_id WHERE a.account_purpose=?",
-                Long.class,
-                purpose);
+        return jdbc.queryForObject("""
+                SELECT coalesce(sum(CASE WHEN e.side='DEBIT' THEN e.amount_minor ELSE -e.amount_minor END),0)
+                FROM platform.journal_entry e
+                JOIN platform.ledger_account a ON a.id=e.ledger_account_id
+                WHERE a.account_purpose=?""", Long.class, purpose);
     }
 
     long count(String table) {
@@ -349,10 +346,12 @@ class PayoutLifecycleIT {
     void matchInsertFailureRollsBackJournalProjectionAndBothCounters() {
         UUID po = outgoing("po_rollback"), l = line(statement("a", "a", "CREDIT", 5700, 0, "po_rollback"));
         long journals = count("journal");
-        admin.execute(
-                "CREATE FUNCTION platform.test_match_fail() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture failure'; END $$");
-        admin.execute(
-                "CREATE TRIGGER test_match_fail BEFORE INSERT ON platform.payout_bank_match FOR EACH ROW EXECUTE FUNCTION platform.test_match_fail()");
+        admin.execute("""
+                CREATE FUNCTION platform.test_match_fail() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
+                    EXCEPTION 'fixture failure'; END $$""");
+        admin.execute("""
+                CREATE TRIGGER test_match_fail BEFORE INSERT ON platform.payout_bank_match FOR EACH ROW EXECUTE
+                    FUNCTION platform.test_match_fail()""");
         try {
             assertThatThrownBy(() -> matcher.match(scope, po, l, 5700)).isInstanceOf(RuntimeException.class);
         } finally {
@@ -423,9 +422,10 @@ class PayoutLifecycleIT {
 
     @Test
     void payoutWebhookAcceptAndAckAreAtomicAndPaidCreatesNoBankCash() throws Exception {
-        admin.update(
-                "UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref='acct_test' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='STRIPE',provider_account_ref='acct_test'
+                WHERE id=?""", id(4));
         var inbox = new com.paymentsledger.webhook.WebhookInboxRepository(
                 jdbc, tx, json, Clock.fixed(until, ZoneOffset.UTC));
         var root = json.createObjectNode();
@@ -452,10 +452,12 @@ class PayoutLifecycleIT {
                 new ProviderCallResult<>(ProviderCallClassification.SUCCESS, verified, evidence()));
         var claim = inbox.claimDue(1).getFirst();
         var handler = new com.paymentsledger.webhook.PayoutWebhookHandler(inbox, payouts);
-        admin.execute(
-                "CREATE FUNCTION platform.test_ack_fail() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.status='DONE' THEN RAISE EXCEPTION 'fixture ack'; END IF; RETURN NEW; END $$");
-        admin.execute(
-                "CREATE TRIGGER test_ack_fail BEFORE UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.test_ack_fail()");
+        admin.execute("""
+                CREATE FUNCTION platform.test_ack_fail() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF
+                    NEW.status='DONE' THEN RAISE EXCEPTION 'fixture ack'; END IF; RETURN NEW; END $$""");
+        admin.execute("""
+                CREATE TRIGGER test_ack_fail BEFORE
+                UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.test_ack_fail()""");
         try {
             assertThatThrownBy(() -> handler.process(claim, root.path("data").path("object")))
                     .isInstanceOf(RuntimeException.class);
@@ -650,11 +652,10 @@ class PayoutLifecycleIT {
         UUID po = outgoing("po_lineage");
         var queries = new PayoutIngestionService(jdbc, tx, json, reads, reads, payouts);
         UUID run = queries.createWindow(scope, from, until);
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE','other',false)",
-                id(8),
-                id(1),
-                id(2));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'FAKE','other',false)""", id(8), id(1), id(2));
         var other = new ProviderScope(id(1), id(2), id(8), false);
         var result = new ProviderCallResult<>(
                 ProviderCallClassification.SUCCESS,
@@ -663,13 +664,10 @@ class PayoutLifecycleIT {
         assertThatThrownBy(() -> queries.recordRead(other, run, "LIST_PAYOUTS", null, result))
                 .isInstanceOf(RuntimeException.class);
         assertThatThrownBy(() -> jdbc.update(
-                        "INSERT INTO platform.payout_read_run(organization_id,environment_id,provider_account_id,livemode,kind,payout_id,created_gte,created_lt) VALUES (?,?,?,false,'MEMBERSHIP',?,?,?)",
-                        id(1),
-                        id(2),
-                        id(4),
-                        po,
-                        java.sql.Timestamp.from(from),
-                        java.sql.Timestamp.from(until)))
+                        """
+                        INSERT INTO platform.payout_read_run(organization_id,environment_id,provider_account_id,livemode,
+                            kind,payout_id,created_gte,created_lt)
+                        VALUES (?,?,?,false,'MEMBERSHIP',?,?,?)""", id(1), id(2), id(4), po, java.sql.Timestamp.from(from), java.sql.Timestamp.from(until)))
                 .isInstanceOf(RuntimeException.class);
     }
 
@@ -697,11 +695,10 @@ class PayoutLifecycleIT {
         assertThat(jdbc.queryForObject(
                         "SELECT count(*) FROM platform.payout_read_run WHERE payout_id=?", Long.class, po))
                 .isEqualTo(2);
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.payout_read_run WHERE payout_id=? AND state='INCOMPLETE'",
-                        Long.class,
-                        po))
-                .isEqualTo(1);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.payout_read_run
+                        WHERE payout_id=? AND state='INCOMPLETE'""", Long.class, po)).isEqualTo(1);
     }
 
     @Test

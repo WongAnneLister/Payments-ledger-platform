@@ -17,40 +17,23 @@ class Pr18ScopeIsolationIT extends Pr18Fixture {
         capturePayment();
         post(bt("capture", "charge", 10000, 300, chargeId, "charge"));
         admin.update("INSERT INTO platform.organization(id,code) VALUES (?,'foreign-org')", id(90));
-        admin.update(
-                "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'foreign-test',false),(?,?,'other-test',false)",
-                id(91),
-                id(90),
-                id(94),
-                id(1));
-        admin.update(
-                "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES (?,?,?,'foreign-app'),(?,?,?,'other-app')",
-                id(92),
-                id(90),
-                id(91),
-                id(95),
-                id(1),
-                id(94));
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE','foreign-provider',false),(?,?,?,'FAKE','other-environment-provider',false),(?,?,?,'FAKE','other-provider',false)",
-                id(93),
-                id(90),
-                id(91),
-                id(96),
-                id(1),
-                id(94),
-                id(97),
-                id(1),
-                id(2));
+        admin.update("""
+                INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                VALUES (?,?,'foreign-test',false),(?,?,'other-test',false)""", id(91), id(90), id(94), id(1));
+        admin.update("""
+                INSERT INTO platform.application(id,organization_id,environment_id,code)
+                VALUES (?,?,?,'foreign-app'),(?,?,?,'other-app')""", id(92), id(90), id(91), id(95), id(1), id(94));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES
+                    (?,?,?,'FAKE','foreign-provider',false),
+                    (?,?,?,'FAKE','other-environment-provider',false),
+                    (?,?,?,'FAKE','other-provider',false)""", id(93), id(90), id(91), id(96), id(1), id(94), id(97), id(1), id(2));
         admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('EUR',2)");
-        admin.update(
-                "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD'),(?,?,'USD'),(?,?,'EUR')",
-                id(90),
-                id(91),
-                id(1),
-                id(94),
-                id(1),
-                id(2));
+        admin.update("""
+                INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                VALUES (?,?,'USD'),(?,?,'USD'),(?,?,'EUR')""", id(90), id(91), id(1), id(94), id(1), id(2));
         long journals = count("journal"), operations = count("provider_operation");
         var rejected = new ArrayList<String>();
         for (var tenant : List.of(
@@ -68,20 +51,18 @@ class Pr18ScopeIsolationIT extends Pr18Fixture {
                     .isInstanceOf(ApiException.class);
             rejected.add(tenant.toString());
         }
-        admin.update(
-                "INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain) VALUES (?,?,?,'USD','SALES_REVENUE','INTERNAL')",
-                id(98),
-                id(90),
-                id(91));
-        admin.update(
-                "INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain) VALUES (?,?,?,'EUR','SALES_REVENUE','INTERNAL')",
-                id(99),
-                id(1),
-                id(2));
-        UUID local = jdbc.queryForObject(
-                "SELECT id FROM platform.ledger_account WHERE currency='USD' AND account_purpose='SALES_REVENUE' AND organization_id=?",
-                UUID.class,
-                id(1));
+        admin.update("""
+                INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                    source_domain)
+                VALUES (?,?,?,'USD','SALES_REVENUE','INTERNAL')""", id(98), id(90), id(91));
+        admin.update("""
+                INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                    source_domain)
+                VALUES (?,?,?,'EUR','SALES_REVENUE','INTERNAL')""", id(99), id(1), id(2));
+        UUID local = jdbc.queryForObject("""
+                SELECT id
+                FROM platform.ledger_account
+                WHERE currency='USD' AND account_purpose='SALES_REVENUE' AND organization_id=?""", UUID.class, id(1));
         for (UUID foreign : List.of(id(98), id(99)))
             assertThatThrownBy(() -> posting.post(
                             new LedgerScope(id(1), id(2), "USD", id(4)),

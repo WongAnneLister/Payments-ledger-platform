@@ -249,13 +249,15 @@ class OperationRecoveryIT extends PaymentCoreFixture {
         var first = repository.prepare(context, "guard-first", command("first"), "FAKE");
         repository.claim(first.operationId(), "FAKE");
         var second = repository.prepare(context, "guard-second", command("second"), "FAKE");
-        assertThatThrownBy(() -> jdbc.update(
-                        "UPDATE platform.provider_operation SET first_send_at=first_send_at+interval '1 hour' WHERE id=?",
-                        first.operationId()))
+        assertThatThrownBy(() -> jdbc.update("""
+                        UPDATE platform.provider_operation
+                        SET first_send_at=first_send_at+interval '1 hour'
+                        WHERE id=?""", first.operationId()))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
-        assertThatThrownBy(() -> jdbc.update(
-                        "UPDATE platform.provider_operation SET retry_until=retry_until+interval '1 hour' WHERE id=?",
-                        first.operationId()))
+        assertThatThrownBy(() -> jdbc.update("""
+                        UPDATE platform.provider_operation
+                        SET retry_until=retry_until+interval '1 hour'
+                        WHERE id=?""", first.operationId()))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
         assertThatThrownBy(() -> jdbc.update(
                         "UPDATE platform.recovery_task SET payment_id=? WHERE operation_id=?",
@@ -424,10 +426,10 @@ class OperationRecoveryIT extends PaymentCoreFixture {
         var canceled =
                 service.cancel(context, payment(resource), "cancel-now-key", new PaymentRequests.Cancel("OTHER", null));
         assertThat(((Map<?, ?>) canceled.get("recovery")).get("lastQueryAt")).isNotNull();
-        assertThat(jdbc.queryForObject(
-                        "SELECT last_query_at IS NOT NULL FROM platform.provider_operation WHERE operation_type='CANCEL_PAYMENT'",
-                        Boolean.class))
-                .isTrue();
+        assertThat(jdbc.queryForObject("""
+                        SELECT last_query_at IS NOT NULL
+                        FROM platform.provider_operation
+                        WHERE operation_type='CANCEL_PAYMENT'""", Boolean.class)).isTrue();
     }
 
     @Test
@@ -456,10 +458,9 @@ class OperationRecoveryIT extends PaymentCoreFixture {
         assertThat(jdbc.queryForObject(
                         "SELECT age_alert_at IS NOT NULL FROM platform.provider_operation", Boolean.class))
                 .isTrue();
-        assertThat(jdbc.queryForObject(
-                        "SELECT age_alert_at IS NOT NULL AND escalated_at IS NOT NULL FROM platform.recovery_task",
-                        Boolean.class))
-                .isTrue();
+        assertThat(jdbc.queryForObject("""
+                        SELECT age_alert_at IS NOT NULL AND escalated_at IS NOT NULL
+                        FROM platform.recovery_task""", Boolean.class)).isTrue();
         assertThat(fake.counters(scope).requestCount()).isGreaterThan(requests);
         assertThat(fake.counters(scope).sessionCreatedCount()).isEqualTo(1);
         assertThat(fake.counters(scope).paymentEffectCount()).isZero();
@@ -471,10 +472,10 @@ class OperationRecoveryIT extends PaymentCoreFixture {
                 service.create(context, "age-clock-key", command("ageclock")).resource();
         var payment = payment(resource);
         var operation = repository.createOperation(payment);
-        admin.update(
-                "UPDATE platform.payment SET resolution_status='UNKNOWN',unresolved_since=? WHERE id=?",
-                java.sql.Timestamp.from(fake.clock().instant().minusSeconds(7200)),
-                payment);
+        admin.update("""
+                UPDATE platform.payment
+                SET resolution_status='UNKNOWN',unresolved_since=?
+                WHERE id=?""", java.sql.Timestamp.from(fake.clock().instant().minusSeconds(7200)), payment);
         fake.clock().advance(Duration.ofSeconds(6));
         var claim = repository.claimRecovery(operation, "FAKE", true);
         fake.controls()

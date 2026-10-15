@@ -43,14 +43,10 @@ class DisputeSchemaIT {
                                 permission))
                         .isFalse();
         }
-        assertThat(jdbc.queryForObject(
-                        "SELECT has_function_privilege(current_user,'platform.ensure_dispute_accounts(uuid)','EXECUTE')",
-                        Boolean.class))
-                .isTrue();
-        assertThat(jdbc.queryForObject(
-                        "SELECT has_function_privilege(current_user,'platform.lock_dispute_accounts(uuid)','EXECUTE')",
-                        Boolean.class))
-                .isTrue();
+        assertThat(jdbc.queryForObject("""
+                        SELECT has_function_privilege(current_user,'platform.ensure_dispute_accounts(uuid)','EXECUTE')""", Boolean.class)).isTrue();
+        assertThat(jdbc.queryForObject("""
+                        SELECT has_function_privilege(current_user,'platform.lock_dispute_accounts(uuid)','EXECUTE')""", Boolean.class)).isTrue();
         for (String function : new String[] {"pr13_identity_guard()", "pr13_history_guard()", "pr13_bt_link_guard()"})
             assertThat(jdbc.queryForObject(
                             "SELECT has_function_privilege(current_user,?,'EXECUTE')",

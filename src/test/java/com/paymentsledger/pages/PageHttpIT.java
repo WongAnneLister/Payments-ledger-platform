@@ -69,62 +69,42 @@ class PageHttpIT {
         admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2)");
         for (int o : List.of(1, 2)) {
             admin.update("INSERT INTO platform.organization(id,code) VALUES (?,?)", id(o), "page-" + o);
-            admin.update(
-                    "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'test',false)",
-                    id(10 + o),
-                    id(o));
-            admin.update(
-                    "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE',?,false)",
-                    id(20 + o),
-                    id(o),
-                    id(10 + o),
-                    "page-fixture-" + o);
-            admin.update(
-                    "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD')",
-                    id(o),
-                    id(10 + o));
-            admin.update(
-                    "INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,policy_version,partner_ref,share_basis_points) VALUES (?,?,?,'demo',1,'partner',1000)",
-                    id(70 + o),
-                    id(o),
-                    id(10 + o));
-            admin.update(
-                    "INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,currency,amount_minor,share_policy_id) VALUES (?,?,?,'demo',1,'USD',100,?)",
-                    id(80 + o),
-                    id(o),
-                    id(10 + o),
-                    id(70 + o));
-            admin.update(
-                    "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES (?,?,?,?)",
-                    id(30 + o),
-                    id(o),
-                    id(10 + o),
-                    "page-app-" + o);
-            admin.update(
-                    "INSERT INTO platform.application_credential(id,key_id,organization_id,environment_id,application_id,provider_account_id,secret_hash,not_before,expires_at,granted_scopes) VALUES (?,'page',?,?,?,?,?,now()-interval '1 day',now()+interval '1 day',ARRAY['payments:read','payments:write'])",
-                    id(40 + o),
-                    id(o),
-                    id(10 + o),
-                    id(30 + o),
-                    id(20 + o),
-                    HASH);
-            admin.update(
-                    "INSERT INTO platform.credential_currency(credential_id,organization_id,environment_id,currency) VALUES (?,?,?,'USD')",
-                    id(40 + o),
-                    id(o),
-                    id(10 + o));
-            admin.update(
-                    "INSERT INTO platform.ops_identity(id,organization_id,subject,role) VALUES (?,?,?,'OPS_VIEWER')",
-                    id(100 + o),
-                    id(o),
-                    "page-viewer-" + o);
-            admin.update(
-                    "INSERT INTO platform.ops_credential(id,ops_identity_id,organization_id,environment_id,key_id,secret_hash,not_before,expires_at) VALUES (?,?,?,?,'page',?,now()-interval '1 day',now()+interval '1 day')",
-                    id(110 + o),
-                    id(100 + o),
-                    id(o),
-                    id(10 + o),
-                    HASH);
+            admin.update("""
+                    INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                    VALUES (?,?,'test',false)""", id(10 + o), id(o));
+            admin.update("""
+                    INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                        provider_account_ref,livemode)
+                    VALUES (?,?,?,'FAKE',?,false)""", id(20 + o), id(o), id(10 + o), "page-fixture-" + o);
+            admin.update("""
+                    INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                    VALUES (?,?,'USD')""", id(o), id(10 + o));
+            admin.update("""
+                    INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,
+                        policy_version,partner_ref,share_basis_points)
+                    VALUES (?,?,?,'demo',1,'partner',1000)""", id(70 + o), id(o), id(10 + o));
+            admin.update("""
+                    INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,
+                        currency,amount_minor,share_policy_id)
+                    VALUES (?,?,?,'demo',1,'USD',100,?)""", id(80 + o), id(o), id(10 + o), id(70 + o));
+            admin.update("""
+                    INSERT INTO platform.application(id,organization_id,environment_id,code)
+                    VALUES (?,?,?,?)""", id(30 + o), id(o), id(10 + o), "page-app-" + o);
+            admin.update("""
+                    INSERT INTO platform.application_credential(id,key_id,organization_id,environment_id,application_id,
+                        provider_account_id,secret_hash,not_before,expires_at,granted_scopes)
+                    VALUES (?,'page',?,?,?,?,?,now()-interval '1 day',now()+interval '1 day',ARRAY['payments:read',
+                        'payments:write'])""", id(40 + o), id(o), id(10 + o), id(30 + o), id(20 + o), HASH);
+            admin.update("""
+                    INSERT INTO platform.credential_currency(credential_id,organization_id,environment_id,currency)
+                    VALUES (?,?,?,'USD')""", id(40 + o), id(o), id(10 + o));
+            admin.update("""
+                    INSERT INTO platform.ops_identity(id,organization_id,subject,role)
+                    VALUES (?,?,?,'OPS_VIEWER')""", id(100 + o), id(o), "page-viewer-" + o);
+            admin.update("""
+                    INSERT INTO platform.ops_credential(id,ops_identity_id,organization_id,environment_id,key_id,
+                        secret_hash,not_before,expires_at)
+                    VALUES (?,?,?,?,'page',?,now()-interval '1 day',now()+interval '1 day')""", id(110 + o), id(100 + o), id(o), id(10 + o), HASH);
         }
     }
 
@@ -200,9 +180,10 @@ class PageHttpIT {
     void opsHttpKeepsUnknownAndPendingEvidenceIndependentAndNeverRoundsMoney() {
         String payment = create();
         UUID row = admin.queryForObject("SELECT id FROM platform.payment WHERE organization_id=?", UUID.class, id(1));
-        admin.update(
-                "UPDATE platform.payment SET resolution_status='UNKNOWN',financial_status='PENDING_EVIDENCE' WHERE id=?",
-                row);
+        admin.update("""
+                UPDATE platform.payment
+                SET resolution_status='UNKNOWN',financial_status='PENDING_EVIDENCE'
+                WHERE id=?""", row);
         var response = get("/ops/payments/" + payment, "OpsBearer ops_" + id(111) + "." + SECRET);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().path("resolutionStatus").asText()).isEqualTo("UNKNOWN");

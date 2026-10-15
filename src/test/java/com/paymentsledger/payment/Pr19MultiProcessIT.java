@@ -206,10 +206,10 @@ class Pr19MultiProcessIT extends Pr19ProcessFixture {
                                     x -> assertThat(x.path("outcome").asText()).isEqualTo("ACCEPTED"));
                     assertThat(count("balance_transaction")).isEqualTo(1);
                     assertThat(count("import_page")).isEqualTo(2);
-                    assertThat(jdbc.queryForObject(
-                                    "SELECT count(*) FROM platform.financial_event WHERE source_ref='capture' AND event_type='L-CHARGE'",
-                                    Long.class))
-                            .isEqualTo(1);
+                    assertThat(jdbc.queryForObject("""
+                                    SELECT count(*)
+                                    FROM platform.financial_event
+                                    WHERE source_ref='capture' AND event_type='L-CHARGE'""", Long.class)).isEqualTo(1);
                     assertThat(jdbc.queryForObject(
                                     "SELECT state FROM platform.balance_transaction WHERE bt_id='capture'",
                                     String.class))

@@ -69,49 +69,30 @@ class OpsApiIT {
     void seed() {
         admin = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword()));
         admin.execute("TRUNCATE platform.organization,platform.currency_config CASCADE");
-        admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES" + " ('USD',2),('JPY',0)");
+        admin.update("""
+                INSERT INTO platform.currency_config(code,minor_unit_exponent)
+                VALUES ('USD',2),('JPY',0)""");
         for (int o : List.of(1, 2)) {
             admin.update("INSERT INTO platform.organization(id,code) VALUES (?,?)", id(o), "ops-" + o);
             for (int e : List.of(10 + o, 20 + o)) {
-                admin.update(
-                        "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES"
-                                + " (?,?,?,false)",
-                        id(e),
-                        id(o),
-                        "test-" + e);
-                admin.update(
-                        "INSERT INTO"
-                                + " platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode)"
-                                + " VALUES (?,?,?,'FAKE',?,false)",
-                        id(100 + e),
-                        id(o),
-                        id(e),
-                        "ops-" + e);
-                admin.update(
-                        "INSERT INTO"
-                                + " platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode)"
-                                + " VALUES (?,?,?,false,'ZERO')",
-                        id(o),
-                        id(e),
-                        id(100 + e));
-                admin.update(
-                        "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)"
-                                + " VALUES (?,?,'USD'),(?,?,'JPY')",
-                        id(o),
-                        id(e),
-                        id(o),
-                        id(e));
-                admin.update(
-                        "INSERT INTO"
-                                + " platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain)"
-                                + " VALUES"
-                                + " (?,?,?,'USD','BANK_CASH','SIMULATED_BANK'),(?,?,?,'USD','OPENING_EQUITY','INTERNAL')",
-                        id(200 + e),
-                        id(o),
-                        id(e),
-                        id(300 + e),
-                        id(o),
-                        id(e));
+                admin.update("""
+                        INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                        VALUES (?,?,?,false)""", id(e), id(o), "test-" + e);
+                admin.update("""
+                        INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                            provider_account_ref,livemode)
+                        VALUES (?,?,?,'FAKE',?,false)""", id(100 + e), id(o), id(e), "ops-" + e);
+                admin.update("""
+                        INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                            opening_mode)
+                        VALUES (?,?,?,false,'ZERO')""", id(o), id(e), id(100 + e));
+                admin.update("""
+                        INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                        VALUES (?,?,'USD'),(?,?,'JPY')""", id(o), id(e), id(o), id(e));
+                admin.update("""
+                        INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                            source_domain)
+                        VALUES (?,?,?,'USD','BANK_CASH','SIMULATED_BANK'),(?,?,?,'USD','OPENING_EQUITY','INTERNAL')""", id(200 + e), id(o), id(e), id(300 + e), id(o), id(e));
             }
         }
         String[] roles = {
@@ -126,23 +107,13 @@ class OpsApiIT {
         };
         for (int a = 1; a <= roles.length; a++) {
             int org = a == 7 ? 2 : 1, env = a == 8 ? 21 : 10 + org;
-            admin.update(
-                    "INSERT INTO platform.ops_identity(id,organization_id,subject,role,partner_id) VALUES"
-                            + " (?,?,?,?,?)",
-                    id(400 + a),
-                    id(org),
-                    "actor-" + a,
-                    roles[a - 1],
-                    a == 5 ? id(900) : null);
-            admin.update(
-                    "INSERT INTO"
-                            + " platform.ops_credential(id,ops_identity_id,organization_id,environment_id,key_id,secret_hash,not_before,expires_at)"
-                            + " VALUES (?,?,?,?,'ops',?,now()-interval '1 day',now()+interval '1 day')",
-                    id(500 + a),
-                    id(400 + a),
-                    id(org),
-                    id(env),
-                    HASH);
+            admin.update("""
+                    INSERT INTO platform.ops_identity(id,organization_id,subject,role,partner_id)
+                    VALUES (?,?,?,?,?)""", id(400 + a), id(org), "actor-" + a, roles[a - 1], a == 5 ? id(900) : null);
+            admin.update("""
+                    INSERT INTO platform.ops_credential(id,ops_identity_id,organization_id,environment_id,key_id,
+                        secret_hash,not_before,expires_at)
+                    VALUES (?,?,?,?,'ops',?,now()-interval '1 day',now()+interval '1 day')""", id(500 + a), id(400 + a), id(org), id(env), HASH);
         }
     }
 
@@ -184,51 +155,33 @@ class OpsApiIT {
     com.paymentsledger.ledger.LedgerPostingService ledger;
 
     void resources() {
-        admin.update(
-                "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES"
-                        + " (?,?,?,'ops-app')",
-                id(600),
-                id(1),
-                id(11));
+        admin.update("""
+                INSERT INTO platform.application(id,organization_id,environment_id,code)
+                VALUES (?,?,?,'ops-app')""", id(600), id(1), id(11));
         String policy = "{\"policy_version\":1,\"allocations\":[{\"partner_ref\":\""
                 + id(900)
                 + "\",\"share_basis_points\":1000},{\"partner_ref\":\""
                 + id(901)
                 + "\",\"share_basis_points\":1000}]}";
-        admin.update(
-                "INSERT INTO"
-                        + " platform.business_order(id,organization_id,environment_id,application_id,provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot)"
-                        + " VALUES (?,?,?,?,?,'USD','ops-order','fp','demo',1,1,100,100,'{}',?::jsonb)",
-                id(601),
-                id(1),
-                id(11),
-                id(600),
-                id(111),
-                policy);
-        admin.update(
-                "INSERT INTO"
-                        + " platform.payment(id,organization_id,environment_id,application_id,provider_account_id,currency,business_order_id,amount_minor,expires_at,resolution_status,financial_status)"
-                        + " VALUES (?,?,?,?,?,'USD',?,100,now()+interval '1 day','UNKNOWN','PENDING_EVIDENCE')",
-                id(602),
-                id(1),
-                id(11),
-                id(600),
-                id(111),
-                id(601));
-        admin.update(
-                "INSERT INTO"
-                        + " platform.refund_control(payment_id,organization_id,environment_id,application_id,provider_account_id,currency,captured_minor)"
-                        + " VALUES (?,?,?,?,?,'USD',0)",
-                id(602),
-                id(1),
-                id(11),
-                id(600),
-                id(111));
+        admin.update("""
+                INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,
+                    unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot)
+                VALUES (?,?,?,?,?,'USD','ops-order','fp','demo',1,1,100,100,'{}',?::jsonb)""", id(601), id(1), id(11), id(600), id(111), policy);
+        admin.update("""
+                INSERT INTO platform.payment(id,organization_id,environment_id,application_id,provider_account_id,
+                    currency,business_order_id,amount_minor,expires_at,resolution_status,financial_status)
+                VALUES (?,?,?,?,?,'USD',?,100,now()+interval '1 day','UNKNOWN','PENDING_EVIDENCE')""", id(602), id(1), id(11), id(600), id(111), id(601));
+        admin.update("""
+                INSERT INTO platform.refund_control(payment_id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,captured_minor)
+                VALUES (?,?,?,?,?,'USD',0)""", id(602), id(1), id(11), id(600), id(111));
         for (int partner : List.of(900, 901))
             admin.update(
-                    "INSERT INTO"
-                            + " platform.share_allocation(id,organization_id,environment_id,application_id,provider_account_id,currency,payment_id,partner_ref,policy_version,rate_bps)"
-                            + " VALUES (?,?,?,?,?,'USD',?,?, '1',1000)",
+                    """
+                    INSERT INTO platform.share_allocation(id,organization_id,environment_id,application_id,
+                        provider_account_id,currency,payment_id,partner_ref,policy_version,rate_bps)
+                    VALUES (?,?,?,?,?,'USD',?,?, '1',1000)""",
                     id(1000 + partner),
                     id(1),
                     id(11),
@@ -236,70 +189,37 @@ class OpsApiIT {
                     id(111),
                     id(602),
                     id(partner).toString());
-        admin.update(
-                "INSERT INTO"
-                        + " platform.refund(id,organization_id,environment_id,application_id,provider_account_id,currency,payment_id,amount_minor,request_fingerprint,source,provider_charge_id)"
-                        + " VALUES (?,?,?,?,?,'USD',?,10,'fp','LOCAL','ch_ops')",
-                id(603),
-                id(1),
-                id(11),
-                id(600),
-                id(111),
-                id(602));
-        admin.update(
-                "INSERT INTO"
-                        + " platform.dispute(id,organization_id,environment_id,provider_account_id,livemode,provider_dispute_id,currency,provider_status,disputed_principal_minor,last_observed_at)"
-                        + " VALUES (?,?,?,?,false,'dp_ops','USD','needs_response',10,now())",
-                id(604),
-                id(1),
-                id(11),
-                id(111));
-        admin.update(
-                "INSERT INTO"
-                        + " platform.payout(id,organization_id,environment_id,provider_account_id,livemode,provider_payout_id,currency,amount_minor,automatic,provider_status,last_observed_at)"
-                        + " VALUES (?,?,?,?,false,'po_ops','USD',100,true,'paid',now())",
-                id(605),
-                id(1),
-                id(11),
-                id(111));
-        admin.update(
-                "INSERT INTO"
-                        + " platform.provider_operation(id,organization_id,environment_id,application_id,provider_account_id,currency,operation_target,payment_id,operation_type,operation_key,request_fingerprint,command,expires_at)"
-                        + " VALUES"
-                        + " (?,?,?,?,?,'USD','PAYMENT',?,'CREATE_CHECKOUT','ops-key','fp','{}',now()+interval"
-                        + " '1 day')",
-                id(606),
-                id(1),
-                id(11),
-                id(600),
-                id(111),
-                id(602));
-        admin.update(
-                "INSERT INTO"
-                        + " platform.recovery_task(id,organization_id,environment_id,application_id,provider_account_id,currency,operation_id,payment_id)"
-                        + " VALUES (?,?,?,?,?,'USD',?,?)",
-                id(607),
-                id(1),
-                id(11),
-                id(600),
-                id(111),
-                id(606),
-                id(602));
+        admin.update("""
+                INSERT INTO platform.refund(id,organization_id,environment_id,application_id,provider_account_id,
+                    currency,payment_id,amount_minor,request_fingerprint,source,provider_charge_id)
+                VALUES (?,?,?,?,?,'USD',?,10,'fp','LOCAL','ch_ops')""", id(603), id(1), id(11), id(600), id(111), id(602));
+        admin.update("""
+                INSERT INTO platform.dispute(id,organization_id,environment_id,provider_account_id,livemode,
+                    provider_dispute_id,currency,provider_status,disputed_principal_minor,last_observed_at)
+                VALUES (?,?,?,?,false,'dp_ops','USD','needs_response',10,now())""", id(604), id(1), id(11), id(111));
+        admin.update("""
+                INSERT INTO platform.payout(id,organization_id,environment_id,provider_account_id,livemode,
+                    provider_payout_id,currency,amount_minor,automatic,provider_status,last_observed_at)
+                VALUES (?,?,?,?,false,'po_ops','USD',100,true,'paid',now())""", id(605), id(1), id(11), id(111));
+        admin.update("""
+                INSERT INTO platform.provider_operation(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,operation_target,payment_id,operation_type,operation_key,
+                    request_fingerprint,command,expires_at)
+                VALUES (?,?,?,?,?,'USD','PAYMENT',?,'CREATE_CHECKOUT','ops-key','fp','{}',now()+interval '1 day')""", id(606), id(1), id(11), id(600), id(111), id(602));
+        admin.update("""
+                INSERT INTO platform.recovery_task(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,operation_id,payment_id)
+                VALUES (?,?,?,?,?,'USD',?,?)""", id(607), id(1), id(11), id(600), id(111), id(606), id(602));
     }
 
     UUID reconciliationException() {
         var response = call(2, "/ops/reconciliation-runs", HttpMethod.POST, run(), "run-seed");
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
         UUID runId = UUID.fromString(response.getBody().path("runId").asText());
-        admin.update(
-                "INSERT INTO"
-                        + " platform.reconciliation_exception(id,run_id,organization_id,environment_id,provider_account_id,livemode,currency,reason,owner,residual,input_versions,evidence)"
-                        + " VALUES (?,?,?,?,?,false,'USD','BALANCE_RESIDUAL','OPS',10,'{}','{}')",
-                id(608),
-                runId,
-                id(1),
-                id(11),
-                id(111));
+        admin.update("""
+                INSERT INTO platform.reconciliation_exception(id,run_id,organization_id,environment_id,
+                    provider_account_id,livemode,currency,reason,owner,residual,input_versions,evidence)
+                VALUES (?,?,?,?,?,false,'USD','BALANCE_RESIDUAL','OPS',10,'{}','{}')""", id(608), runId, id(1), id(11), id(111));
         return runId;
     }
 
@@ -396,20 +316,20 @@ class OpsApiIT {
                 .isEqualTo("true");
         assertThat(admin.queryForObject("SELECT count(*) FROM platform.recovery_task", Long.class))
                 .isEqualTo(1);
-        admin.update(
-                "UPDATE platform.recovery_task SET status='RUNNING',lease_until=now()+interval '1 hour'"
-                        + " WHERE id=?",
-                id(607));
+        admin.update("""
+                UPDATE platform.recovery_task
+                SET status='RUNNING',lease_until=now()+interval '1 hour'
+                WHERE id=?""", id(607));
         assertThat(call(2, path, HttpMethod.POST, reason, "retry-lease").getStatusCode())
                 .isEqualTo(HttpStatus.CONFLICT);
         admin.update("UPDATE platform.recovery_task SET status='DONE',lease_until=NULL WHERE id=?", id(607));
         assertThat(call(2, path, HttpMethod.POST, reason, "retry-final").getStatusCode())
                 .isEqualTo(HttpStatus.CONFLICT);
         admin.update("UPDATE platform.recovery_task SET status='WAITING' WHERE id=?", id(607));
-        admin.update(
-                "UPDATE platform.provider_operation SET status='UNKNOWN',first_send_at=now()-interval '2"
-                        + " days',retry_until=now()-interval '1 day' WHERE id=?",
-                id(606));
+        admin.update("""
+                UPDATE platform.provider_operation
+                SET status='UNKNOWN',first_send_at=now()-interval '2 days',retry_until=now()-interval '1 day'
+                WHERE id=?""", id(606));
         assertThat(call(2, path, HttpMethod.POST, reason, "retry-unknown").getStatusCode())
                 .isEqualTo(HttpStatus.CONFLICT);
         assertThat(admin.queryForObject(
@@ -474,10 +394,12 @@ class OpsApiIT {
         admin.update("UPDATE platform.ops_identity SET role='OPS_OPERATOR' WHERE id=?", id(402));
         var next = call(2, "/ops/adjustments", HttpMethod.POST, adjustment(), "rollback");
         String adjustment = next.getBody().path("adjustmentId").asText();
-        admin.execute("CREATE FUNCTION platform.test_fail_approval() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN"
-                + " RAISE EXCEPTION 'test approval rollback'; END $$");
-        admin.execute("CREATE TRIGGER test_fail_approval BEFORE UPDATE ON platform.ops_adjustment FOR EACH ROW"
-                + " EXECUTE FUNCTION platform.test_fail_approval()");
+        admin.execute("""
+                CREATE FUNCTION platform.test_fail_approval() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
+                    EXCEPTION 'test approval rollback'; END $$""");
+        admin.execute("""
+                CREATE TRIGGER test_fail_approval BEFORE
+                UPDATE ON platform.ops_adjustment FOR EACH ROW EXECUTE FUNCTION platform.test_fail_approval()""");
         try {
             assertThat(call(3, "/ops/adjustments/" + adjustment + "/approve", HttpMethod.POST, b, "rollback-approve")
                             .getStatusCode())
@@ -504,11 +426,13 @@ class OpsApiIT {
         assertThat(created.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         UUID id = UUID.fromString(created.getBody().path("adjustmentId").asText());
         var approve = json.createObjectNode().put("decision", "APPROVE").put("reason", "reviewed");
-        admin.execute("CREATE FUNCTION platform.test_fail_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF"
-                + " NEW.action='APPROVE_ADJUSTMENT' AND NEW.result='SUCCEEDED' THEN RAISE EXCEPTION"
-                + " 'test audit rollback'; END IF; RETURN NEW; END $$");
-        admin.execute("CREATE TRIGGER test_fail_audit BEFORE INSERT ON platform.audit_log FOR EACH ROW EXECUTE"
-                + " FUNCTION platform.test_fail_audit()");
+        admin.execute("""
+                CREATE FUNCTION platform.test_fail_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF
+                    NEW.action='APPROVE_ADJUSTMENT' AND NEW.result='SUCCEEDED' THEN RAISE EXCEPTION
+                    'test audit rollback'; END IF; RETURN NEW; END $$""");
+        admin.execute("""
+                CREATE TRIGGER test_fail_audit BEFORE INSERT ON platform.audit_log FOR EACH ROW EXECUTE FUNCTION
+                    platform.test_fail_audit()""");
         try {
             assertThat(call(3, "/ops/adjustments/" + id + "/approve", HttpMethod.POST, approve, "audit-fail")
                             .getStatusCode())
@@ -570,19 +494,18 @@ class OpsApiIT {
             UUID refund,
             UUID journal) {
         UUID observation = UUID.randomUUID();
+        admin.update("""
+                INSERT INTO platform.provider_observation(id,organization_id,environment_id,provider_account_id,
+                    observation_domain,livemode,call_type,classification,evidence,fact,fetched_at)
+                VALUES (?,?,?,?,'FINANCIAL',false,'QUERY','SUCCESS','{}','{}',now())""", observation, id(1), id(11), id(111));
         admin.update(
-                "INSERT INTO"
-                        + " platform.provider_observation(id,organization_id,environment_id,provider_account_id,observation_domain,livemode,call_type,classification,evidence,fact,fetched_at)"
-                        + " VALUES (?,?,?,?,'FINANCIAL',false,'QUERY','SUCCESS','{}','{}',now())",
-                observation,
-                id(1),
-                id(11),
-                id(111));
-        admin.update(
-                "INSERT INTO"
-                        + " platform.balance_transaction(id,organization_id,environment_id,provider_account_id,livemode,bt_id,amount_minor,fee_minor,net_minor,currency,source_object_id,source_object_type,business_type,balance_domain,provider_created_at,provider_status,api_version,fetched_at,immutable_fact,fact,first_observation_id,payment_id,refund_id,journal_id,state)"
-                        + " VALUES"
-                        + " (?,?,?,?,false,?,?,0,?,'USD',?,?,?,'PAYMENTS','2026-09-01T00:00:00Z','available','v1',now(),'{}','{}',?,?,?,?,?)",
+                """
+                INSERT INTO platform.balance_transaction(id,organization_id,environment_id,provider_account_id,
+                    livemode,bt_id,amount_minor,fee_minor,net_minor,currency,source_object_id,source_object_type,
+                    business_type,balance_domain,provider_created_at,provider_status,api_version,fetched_at,
+                    immutable_fact,fact,first_observation_id,payment_id,refund_id,journal_id,state)
+                VALUES (?,?,?,?,false,?,?,0,?,'USD',?,?,?,'PAYMENTS','2026-09-01T00:00:00Z','available','v1',now(),
+                    '{}','{}',?,?,?,?,?)""",
                 bt,
                 id(1),
                 id(11),
@@ -618,20 +541,22 @@ class OpsApiIT {
                                         id(311), com.paymentsledger.ledger.Side.CREDIT, 10)),
                         null));
         bt(id(709), "bt_refund_out", -10, "refund", "refund", "re_ops", id(602), id(603), journal);
-        admin.update(
-                "UPDATE platform.refund SET"
-                        + " refund_status='FAILED',balance_transaction_id='bt_refund_out',failure_balance_transaction_id='bt_refund_missing'"
-                        + " WHERE id=?",
-                id(603));
+        admin.update("""
+                UPDATE platform.refund
+                SET
+                    refund_status='FAILED',
+                    balance_transaction_id='bt_refund_out',
+                    failure_balance_transaction_id='bt_refund_missing'
+                WHERE id=?""", id(603));
         var refund =
                 call(1, "/ops/refunds/" + id(603), HttpMethod.GET, null, null).getBody();
         assertThat(refund.path("financialStatus").asText()).isEqualTo("PARTIALLY_POSTED");
         admin.update(
-                "INSERT INTO"
-                        + " platform.provider_observation(id,organization_id,environment_id,application_id,provider_account_id,currency,operation_id,payment_id,call_type,classification,external_object_id,evidence,fact)"
-                        + " VALUES (?,?,?,?,?,'USD',?,?,'QUERY','SUCCESS','cs_ops','{\"rawDigest\":\""
-                        + "a".repeat(64)
-                        + "\",\"apiVersion\":\"v1\"}','{\"secret\":\"raw-fact-must-not-be-returned\"}')",
+                """
+                INSERT INTO platform.provider_observation(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,operation_id,payment_id,call_type,classification,
+                    external_object_id,evidence,fact)
+                VALUES (?,?,?,?,?,'USD',?,?,'QUERY','SUCCESS','cs_ops','{\"rawDigest\":\"""" + "a".repeat(64) + "\",\"apiVersion\":\"v1\"}','{\"secret\":\"raw-fact-must-not-be-returned\"}')",
                 id(711),
                 id(1),
                 id(11),
@@ -795,16 +720,10 @@ class OpsApiIT {
         assertThat(call(2, "/ops/exceptions/" + id(608) + "/actions", HttpMethod.POST, resolve, "unrelated-resolution")
                         .getStatusCode())
                 .isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
-        admin.update(
-                "INSERT INTO"
-                        + " platform.reconciliation_evidence(id,run_id,organization_id,environment_id,provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload)"
-                        + " VALUES (?,?,?,?,?,false,'USD','INDEPENDENT_FIXTURE','ops-fixture','v1',?,'{}')",
-                id(713),
-                runId,
-                id(1),
-                id(11),
-                id(111),
-                "e".repeat(64));
+        admin.update("""
+                INSERT INTO platform.reconciliation_evidence(id,run_id,organization_id,environment_id,
+                    provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload)
+                VALUES (?,?,?,?,?,false,'USD','INDEPENDENT_FIXTURE','ops-fixture','v1',?,'{}')""", id(713), runId, id(1), id(11), id(111), "e".repeat(64));
         var proposal = adjustment().put("targetType", "EXCEPTION").put("targetId", id(608).toString());
         proposal.putArray("evidenceRefs").add("reconciliation-evidence:" + id(713));
         var scoped = call(2, "/ops/adjustments", HttpMethod.POST, proposal, "exception-adjustment");
@@ -842,18 +761,11 @@ class OpsApiIT {
     }
 
     void check(UUID runId, int number, String outcome, String versions) {
-        admin.update(
-                "INSERT INTO"
-                        + " platform.reconciliation_check(run_id,check_number,name,organization_id,environment_id,provider_account_id,livemode,currency,outcome,residual,reason,owner,input_versions,snapshot,completeness)"
-                        + " VALUES (?,?,'fixture"
-                        + " check',?,?,?,false,'USD',?,0,'fixture','OPS',?::jsonb,'fixture','{}')",
-                runId,
-                number,
-                id(1),
-                id(11),
-                id(111),
-                outcome,
-                versions);
+        admin.update("""
+                INSERT INTO platform.reconciliation_check(run_id,check_number,name,organization_id,environment_id,
+                    provider_account_id,livemode,currency,outcome,residual,reason,owner,input_versions,snapshot,
+                    completeness)
+                VALUES (?,?,'fixture check',?,?,?,false,'USD',?,0,'fixture','OPS',?::jsonb,'fixture','{}')""", runId, number, id(1), id(11), id(111), outcome, versions);
     }
 
     @Test
@@ -948,16 +860,10 @@ class OpsApiIT {
         assertThat(other.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
         UUID otherRun = UUID.fromString(other.getBody().path("runId").asText());
         for (int n : List.of(713, 714))
-            admin.update(
-                    "INSERT INTO"
-                            + " platform.reconciliation_evidence(id,run_id,organization_id,environment_id,provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload)"
-                            + " VALUES (?,?,?,?,?,false,'USD','INDEPENDENT_FIXTURE','ops-fixture','v1',?,'{}')",
-                    id(n),
-                    n == 713 ? otherRun : ownRun,
-                    id(1),
-                    id(11),
-                    id(111),
-                    "e".repeat(64));
+            admin.update("""
+                    INSERT INTO platform.reconciliation_evidence(id,run_id,organization_id,environment_id,
+                        provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload)
+                    VALUES (?,?,?,?,?,false,'USD','INDEPENDENT_FIXTURE','ops-fixture','v1',?,'{}')""", id(n), n == 713 ? otherRun : ownRun, id(1), id(11), id(111), "e".repeat(64));
         var resolve = json.createObjectNode().put("actionType", "RESOLVE").put("reason", "independent review");
         resolve.putArray("evidenceRefs").add("reconciliation-evidence:" + id(713));
         assertThat(call(2, "/ops/exceptions/" + id(608) + "/actions", HttpMethod.POST, resolve, "wrong-run-ref")
@@ -996,12 +902,10 @@ class OpsApiIT {
                 .isEqualTo(HttpStatus.FORBIDDEN);
         assertThat(admin.queryForObject("SELECT count(*) FROM platform.audit_log WHERE result='DENIED'", Long.class))
                 .isEqualTo(2);
-        assertThat(admin.queryForObject(
-                        "SELECT count(*) FROM platform.audit_log WHERE organization_id=? AND" + " environment_id=?",
-                        Long.class,
-                        id(1),
-                        id(11)))
-                .isEqualTo(2);
+        assertThat(admin.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.audit_log
+                        WHERE organization_id=? AND environment_id=?""", Long.class, id(1), id(11))).isEqualTo(2);
         assertThat(admin.queryForObject(
                         "SELECT string_agg(row_to_json(a)::text,'') FROM platform.audit_log a", String.class))
                 .doesNotContain(SECRET, "OpsBearer", id(2).toString());
@@ -1026,13 +930,10 @@ class OpsApiIT {
     @Test
     void reconciliationCompletedDayUsesConfiguredBusinessZoneOnly() {
         admin.execute("TRUNCATE platform.ingestion_policy CASCADE");
-        admin.update(
-                "INSERT INTO"
-                        + " platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode,business_zone)"
-                        + " VALUES (?,?,?,false,'ZERO','Asia/Shanghai')",
-                id(1),
-                id(11),
-                id(111));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode,business_zone)
+                VALUES (?,?,?,false,'ZERO','Asia/Shanghai')""", id(1), id(11), id(111));
         var commands = new OpsCommandService(
                 runtime,
                 json,
@@ -1134,10 +1035,10 @@ class OpsApiIT {
     void runEvidenceReferencesAreDiscoverableWithoutRawPayload() {
         UUID runId = reconciliationException();
         admin.update(
-                "INSERT INTO"
-                        + " platform.reconciliation_evidence(id,run_id,organization_id,environment_id,provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload)"
-                        + " VALUES"
-                        + " (?,?,?,?,?,false,'USD','INDEPENDENT_FIXTURE','ops-fixture','fixture-v2',?,?::jsonb)",
+                """
+                INSERT INTO platform.reconciliation_evidence(id,run_id,organization_id,environment_id,
+                    provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload)
+                VALUES (?,?,?,?,?,false,'USD','INDEPENDENT_FIXTURE','ops-fixture','fixture-v2',?,?::jsonb)""",
                 id(713),
                 runId,
                 id(1),
@@ -1174,16 +1075,10 @@ class OpsApiIT {
     void sourceRetryUsesWorkerTaskThenBalanceTransactionLockOrder() throws Exception {
         UUID runId = reconciliationException();
         bt(id(720), "bt_source_lock", 100, "charge", "charge", "ch_lock", null, null, null);
-        admin.update(
-                "INSERT INTO"
-                        + " platform.recovery_task(id,organization_id,environment_id,provider_account_id,currency,task_type,reconciliation_run_id,source_bt_id,livemode,status)"
-                        + " VALUES (?,?,?,?,'USD','RECONCILIATION_SOURCE',?,?,false,'WAITING')",
-                id(721),
-                id(1),
-                id(11),
-                id(111),
-                runId,
-                id(720));
+        admin.update("""
+                INSERT INTO platform.recovery_task(id,organization_id,environment_id,provider_account_id,currency,
+                    task_type,reconciliation_run_id,source_bt_id,livemode,status)
+                VALUES (?,?,?,?,'USD','RECONCILIATION_SOURCE',?,?,false,'WAITING')""", id(721), id(1), id(11), id(111), runId, id(720));
         try (var worker = java.sql.DriverManager.getConnection(DB.getJdbcUrl(), "payments_app", "pr02_test_only");
                 var pool = java.util.concurrent.Executors.newSingleThreadExecutor()) {
             worker.setAutoCommit(false);
@@ -1202,12 +1097,13 @@ class OpsApiIT {
                 long deadline = System.nanoTime() + java.util.concurrent.TimeUnit.SECONDS.toNanos(10);
                 boolean waiting = false;
                 while (System.nanoTime() < deadline) {
-                    waiting = admin.queryForObject(
-                                    "SELECT count(*) FROM pg_stat_activity WHERE usename='payments_app' AND"
-                                            + " wait_event_type='Lock' AND query LIKE '%platform.recovery_task%' AND"
-                                            + " query LIKE '%FOR UPDATE%'",
-                                    Long.class)
-                            > 0;
+                    waiting = admin.queryForObject("""
+                                    SELECT count(*)
+                                    FROM pg_stat_activity
+                                    WHERE usename='payments_app'
+                                        AND wait_event_type='Lock'
+                                        AND query LIKE '%platform.recovery_task%'
+                                        AND query LIKE '%FOR UPDATE%'""", Long.class) > 0;
                     if (waiting) break;
                     Thread.sleep(10);
                 }
@@ -1218,7 +1114,7 @@ class OpsApiIT {
                 // hold the BT while waiting for this task, or the worker cannot acquire its next lock.
                 assertThatCode(() -> {
                             try (var btLock = worker.prepareStatement(
-                                    "SELECT id FROM platform.balance_transaction WHERE id=? FOR UPDATE" + " NOWAIT")) {
+                                    "SELECT id FROM platform.balance_transaction WHERE id=? FOR UPDATE NOWAIT")) {
                                 btLock.setObject(1, id(720));
                                 btLock.executeQuery().close();
                             }
@@ -1332,10 +1228,11 @@ class OpsApiIT {
         resources();
         for (int n = 0; n < 101; n++) {
             admin.update(
-                    "INSERT INTO"
-                            + " platform.provider_observation(id,organization_id,environment_id,application_id,provider_account_id,currency,operation_id,payment_id,call_type,classification,external_object_id,evidence,fact,created_at)"
-                            + " VALUES"
-                            + " (?,?,?,?,?,'USD',?,?,'QUERY','SUCCESS',?,'{}','{\"secret\":\"never-return-raw-trace\"}',?)",
+                    """
+                    INSERT INTO platform.provider_observation(id,organization_id,environment_id,application_id,
+                        provider_account_id,currency,operation_id,payment_id,call_type,classification,
+                        external_object_id,evidence,fact,created_at)
+                    VALUES (?,?,?,?,?,'USD',?,?,'QUERY','SUCCESS',?,'{}','{\"secret\":\"never-return-raw-trace\"}',?)""",
                     id(8000 + n),
                     id(1),
                     id(11),
@@ -1377,19 +1274,11 @@ class OpsApiIT {
                                     new com.paymentsledger.ledger.PostingLine(
                                             id(311), com.paymentsledger.ledger.Side.CREDIT, 1)),
                             null));
-            admin.update(
-                    "INSERT INTO"
-                            + " platform.ops_adjustment(id,organization_id,environment_id,provider_account_id,currency,target_type,target_id,created_by,approved_by,status,approved_at,posted_journal_id,entries,evidence_refs,reason_digest,reason_length)"
-                            + " VALUES"
-                            + " (?,?,?,?,'USD','PAYMENT',?,?,?,'APPROVED',now(),?,'[{},{}]','[\"fixture\"]','digest',1)",
-                    adjustmentId,
-                    id(1),
-                    id(11),
-                    id(111),
-                    id(602),
-                    id(402),
-                    id(403),
-                    journal);
+            admin.update("""
+                    INSERT INTO platform.ops_adjustment(id,organization_id,environment_id,provider_account_id,currency,
+                        target_type,target_id,created_by,approved_by,status,approved_at,posted_journal_id,entries,
+                        evidence_refs,reason_digest,reason_length)
+                    VALUES (?,?,?,?,'USD','PAYMENT',?,?,?,'APPROVED',now(),?,'[{},{}]','[\"fixture\"]','digest',1)""", adjustmentId, id(1), id(11), id(111), id(602), id(402), id(403), journal);
         }
         var detail = call(1, "/ops/payments/" + id(602), HttpMethod.GET, null, null);
         assertThat(detail.getStatusCode()).isEqualTo(HttpStatus.OK);

@@ -123,11 +123,11 @@ public final class SimulatedMerchantServer implements AutoCloseable {
             }
             String digest = digest(body);
             boolean accepted = Boolean.TRUE.equals(tx.execute(s -> {
-                int inserted = jdbc.update(
-                        "INSERT INTO merchant_fixture.inbox(event_id,business_key,digest) VALUES(?,?,?) ON CONFLICT DO NOTHING",
-                        id,
-                        key,
-                        digest);
+                int inserted = jdbc.update("""
+                        INSERT INTO merchant_fixture.inbox(event_id,business_key,digest)
+                        VALUES(?,?,?)
+                        ON CONFLICT
+                        DO NOTHING""", id, key, digest);
                 if (inserted == 0)
                     return digest.equals(jdbc.queryForObject(
                             "SELECT digest FROM merchant_fixture.inbox WHERE event_id=?", String.class, id));

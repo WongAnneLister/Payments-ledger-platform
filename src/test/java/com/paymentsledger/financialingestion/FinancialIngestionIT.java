@@ -50,32 +50,31 @@ class FinancialIngestionIT {
         tx = new DataSourceTransactionManager(ds);
         admin.execute("TRUNCATE platform.organization,platform.currency_config CASCADE");
         admin.update("INSERT INTO platform.organization(id,code) VALUES (?,'financial')", id(1));
-        admin.update(
-                "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'test',false)",
-                id(2),
-                id(1));
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE','financial',false)",
-                id(4),
-                id(1),
-                id(2));
-        admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2),('JPY',0)");
-        admin.update(
-                "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD'),(?,?,'JPY')",
-                id(1),
-                id(2),
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode) VALUES (?,?,?,false,'ZERO')",
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                VALUES (?,?,'test',false)""", id(2), id(1));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'FAKE','financial',false)""", id(4), id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.currency_config(code,minor_unit_exponent)
+                VALUES ('USD',2),('JPY',0)""");
+        admin.update("""
+                INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                VALUES (?,?,'USD'),(?,?,'JPY')""", id(1), id(2), id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode)
+                VALUES (?,?,?,false,'ZERO')""", id(1), id(2), id(4));
         int n = 20;
         for (String purpose : List.of("PSP_FUNDS", "PSP_FEE_EXPENSE", "SALES_REVENUE", "SALES_RETURNS", "SUSPENSE")) {
             boolean internal = purpose.startsWith("SALES");
             admin.update(
-                    "INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain,provider_account_id,balance_domain) VALUES (?,?,?,'USD',?,?,?,?)",
+                    """
+                    INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                        source_domain,provider_account_id,balance_domain)
+                    VALUES (?,?,?,'USD',?,?,?,?)""",
                     id(n++),
                     id(1),
                     id(2),
@@ -248,14 +247,14 @@ class FinancialIngestionIT {
                                 null)
                         .matches())
                 .isTrue();
-        assertThat(admin.queryForObject(
-                        "SELECT count(*) FROM platform.financial_event e JOIN platform.journal j ON j.financial_event_id=e.id WHERE event_key LIKE 'bt:%'",
-                        Long.class))
-                .isEqualTo(1);
-        assertThat(admin.queryForObject(
-                        "SELECT sum(CASE WHEN side='DEBIT' THEN amount_minor ELSE -amount_minor END) FROM platform.journal_entry",
-                        Long.class))
-                .isZero();
+        assertThat(admin.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.financial_event e
+                        JOIN platform.journal j ON j.financial_event_id=e.id
+                        WHERE event_key LIKE 'bt:%'""", Long.class)).isEqualTo(1);
+        assertThat(admin.queryForObject("""
+                        SELECT sum(CASE WHEN side='DEBIT' THEN amount_minor ELSE -amount_minor END)
+                        FROM platform.journal_entry""", Long.class)).isZero();
     }
 
     @Test
@@ -308,10 +307,9 @@ class FinancialIngestionIT {
 
     @Test
     void cutoffExcludesHistoryAndPolicyFreezesAfterAcceptance() {
-        admin.update(
-                "UPDATE platform.ingestion_policy SET opening_mode='VERIFIED_CUTOFF',cutoff_at=?,evidence_ref='verified',evidence_digest=?",
-                java.sql.Timestamp.from(until),
-                "a".repeat(64));
+        admin.update("""
+                UPDATE platform.ingestion_policy
+                SET opening_mode='VERIFIED_CUTOFF',cutoff_at=?,evidence_ref='verified',evidence_digest=?""", java.sql.Timestamp.from(until), "a".repeat(64));
         ingest(fact("opening", 100, "USD", "adjustment", "PAYMENTS"));
         assertThat(replay.replay(scope, "opening")).isEqualTo("EXCLUDED");
         assertThat(count("journal")).isZero();
@@ -334,26 +332,18 @@ class FinancialIngestionIT {
     @Test
     void trustedRefundReplayUsesRealScopedDependencyAndActualNegativeFee() {
         UUID app = id(80), order = id(81), payment = id(82);
-        admin.update(
-                "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES (?,?,?,'refund-app')",
-                app,
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot) VALUES (?,?,?,?,?,'USD','refund-order','fingerprint','fixture',1,1,1000,1000,'{}','{}')",
-                order,
-                id(1),
-                id(2),
-                app,
-                id(4));
-        admin.update(
-                "INSERT INTO platform.payment(id,organization_id,environment_id,application_id,provider_account_id,currency,business_order_id,amount_minor,expires_at,payment_status,captured_amount_minor) VALUES (?,?,?,?,?,'USD',?,1000,now(),'SUCCEEDED',1000)",
-                payment,
-                id(1),
-                id(2),
-                app,
-                id(4),
-                order);
+        admin.update("""
+                INSERT INTO platform.application(id,organization_id,environment_id,code)
+                VALUES (?,?,?,'refund-app')""", app, id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,
+                    unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot)
+                VALUES (?,?,?,?,?,'USD','refund-order','fingerprint','fixture',1,1,1000,1000,'{}','{}')""", order, id(1), id(2), app, id(4));
+        admin.update("""
+                INSERT INTO platform.payment(id,organization_id,environment_id,application_id,provider_account_id,
+                    currency,business_order_id,amount_minor,expires_at,payment_status,captured_amount_minor)
+                VALUES (?,?,?,?,?,'USD',?,1000,now(),'SUCCEEDED',1000)""", payment, id(1), id(2), app, id(4), order);
         var f = new BalanceTransactionFact(
                 "refund_ready",
                 "refund",
@@ -398,10 +388,12 @@ class FinancialIngestionIT {
     void pageCursorFailureRollsBackEvidenceAndFactsAndCanResume() {
         UUID w = window();
         provider.pages.add(page(List.of(fact("atomic", 100, "USD", "adjustment", "PAYMENTS")), false, null, "v1"));
-        admin.execute(
-                "CREATE FUNCTION platform.pr10_test_cursor_failure() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected cursor failure'; END $$");
-        admin.execute(
-                "CREATE TRIGGER pr10_test_cursor_failure BEFORE UPDATE ON platform.import_cursor FOR EACH ROW EXECUTE FUNCTION platform.pr10_test_cursor_failure()");
+        admin.execute("""
+                CREATE FUNCTION platform.pr10_test_cursor_failure() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+                    RAISE EXCEPTION 'injected cursor failure'; END $$""");
+        admin.execute("""
+                CREATE TRIGGER pr10_test_cursor_failure BEFORE
+                UPDATE ON platform.import_cursor FOR EACH ROW EXECUTE FUNCTION platform.pr10_test_cursor_failure()""");
         try {
             assertThatThrownBy(() -> importer.importPage(w)).hasMessageContaining("injected cursor failure");
             assertThat(count("balance_transaction")).isZero();
@@ -452,12 +444,10 @@ class FinancialIngestionIT {
         ingest(f);
         assertThat(replay.replay(scope, f.btId())).isEqualTo("PENDING_EVIDENCE");
         assertThat(count("journal")).isZero();
-        admin.update(
-                "INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain,provider_account_id,balance_domain) VALUES (?,?,?,'USD','PSP_FUNDS','PROVIDER',?,'PAYMENTS')",
-                id(20),
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                    source_domain,provider_account_id,balance_domain)
+                VALUES (?,?,?,'USD','PSP_FUNDS','PROVIDER',?,'PAYMENTS')""", id(20), id(1), id(2), id(4));
         assertThat(replay.replay(scope, f.btId())).isEqualTo("POSTED");
         var fees = List.of(new FeeDetail(1, "usd", "a", null), new FeeDetail(2, "USD", "b", null));
         for (var list : List.of(fees, List.of(fees.getLast(), fees.getFirst())))
@@ -504,10 +494,15 @@ class FinancialIngestionIT {
         UUID w = window();
         provider.pages.add(page(List.of(fact("retry", 100, "USD", "adjustment", "PAYMENTS")), false, null, "v1"));
         admin.execute("CREATE SEQUENCE platform.pr10_test_retry_sequence");
-        admin.execute(
-                "CREATE FUNCTION platform.pr10_test_retry() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,platform AS $$ BEGIN IF nextval('platform.pr10_test_retry_sequence')<3 THEN RAISE EXCEPTION 'injected serialization' USING ERRCODE='40001'; END IF; RETURN NEW; END $$");
-        admin.execute(
-                "CREATE TRIGGER pr10_test_retry BEFORE UPDATE ON platform.import_cursor FOR EACH ROW EXECUTE FUNCTION platform.pr10_test_retry()");
+        admin.execute("""
+                CREATE FUNCTION platform.pr10_test_retry() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER
+                SET
+                    search_path=pg_catalog,
+                    platform AS $$ BEGIN IF nextval('platform.pr10_test_retry_sequence')<3 THEN RAISE EXCEPTION
+                        'injected serialization' USING ERRCODE='40001'; END IF; RETURN NEW; END $$""");
+        admin.execute("""
+                CREATE TRIGGER pr10_test_retry BEFORE
+                UPDATE ON platform.import_cursor FOR EACH ROW EXECUTE FUNCTION platform.pr10_test_retry()""");
         try {
             assertThat(importer.importPage(w)).isEqualTo("COMPLETE");
             assertThat(count("provider_observation")).isEqualTo(1);
@@ -579,10 +574,9 @@ class FinancialIngestionIT {
 
     @Test
     void cutoffExcludesExactInclusiveSnapshotBoundary() {
-        admin.update(
-                "UPDATE platform.ingestion_policy SET opening_mode='VERIFIED_CUTOFF',cutoff_at=?,evidence_ref='inclusive snapshot',evidence_digest=?",
-                java.sql.Timestamp.from(from.plusSeconds(1)),
-                "a".repeat(64));
+        admin.update("""
+                UPDATE platform.ingestion_policy
+                SET opening_mode='VERIFIED_CUTOFF',cutoff_at=?,evidence_ref='inclusive snapshot',evidence_digest=?""", java.sql.Timestamp.from(from.plusSeconds(1)), "a".repeat(64));
         ingest(fact("exact_cutoff", 100, "USD", "adjustment", "PAYMENTS"));
         assertThat(replay.replay(scope, "exact_cutoff")).isEqualTo("EXCLUDED");
         assertThat(count("journal")).isZero();
@@ -622,10 +616,9 @@ class FinancialIngestionIT {
         ingest(fact("scope_page", 100, "USD", "adjustment", "PAYMENTS"));
         UUID w = window();
         UUID observation = jdbc.queryForObject("SELECT id FROM platform.provider_observation", UUID.class);
-        assertThatThrownBy(() -> jdbc.update(
-                        "INSERT INTO platform.import_page(window_id,request_cursor,terminal,observation_id,bt_ids) VALUES (?,'',true,?,'{}')",
-                        w,
-                        observation))
+        assertThatThrownBy(() -> jdbc.update("""
+                        INSERT INTO platform.import_page(window_id,request_cursor,terminal,observation_id,bt_ids)
+                        VALUES (?,'',true,?,'{}')""", w, observation))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
         UUID another = window();
         admin.update("DELETE FROM platform.import_cursor WHERE window_id=?", another);

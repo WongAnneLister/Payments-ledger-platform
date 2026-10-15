@@ -174,13 +174,14 @@ public class PaymentRepository {
     }
 
     private Map<String, Object> api(TenantContext c, String key, String type) {
-        return one(
-                "SELECT * FROM platform.api_idempotency_record WHERE organization_id=? AND environment_id=? AND application_id=? AND request_type=? AND idempotency_key=?",
-                c.organizationId(),
-                c.environmentId(),
-                c.applicationId(),
-                type,
-                key);
+        return one("""
+                SELECT *
+                FROM platform.api_idempotency_record
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND application_id=?
+                    AND request_type=?
+                    AND idempotency_key=?""", c.organizationId(), c.environmentId(), c.applicationId(), type, key);
     }
 
     private Intent replay(Map<String, Object> row, String fingerprint) {
@@ -227,13 +228,11 @@ public class PaymentRepository {
             if (prior != null) return replay(prior, request.fingerprint());
             TenantAccessGuard.requireCurrency(c, request.currency());
             lock(scopeKey(c) + ":ORDER:" + request.orderKey());
-            if (one(
-                            "SELECT id FROM platform.business_order WHERE organization_id=? AND environment_id=? AND application_id=? AND order_key=?",
-                            c.organizationId(),
-                            c.environmentId(),
-                            c.applicationId(),
-                            request.orderKey())
-                    != null) throw error(ErrorCode.ORDER_INTENT_CONFLICT);
+            if (one("""
+                            SELECT id
+                            FROM platform.business_order
+                            WHERE organization_id=? AND environment_id=? AND application_id=? AND order_key=?""", c.organizationId(), c.environmentId(), c.applicationId(), request.orderKey()) != null)
+                throw error(ErrorCode.ORDER_INTENT_CONFLICT);
             checkBinding(c, provider);
             var price = one(
                     """
@@ -402,9 +401,10 @@ public class PaymentRepository {
             if ("CONFLICT".equals(row.get("resolution_status"))) throw error(ErrorCode.EVIDENCE_CONFLICT);
             if ("SUCCEEDED".equals(row.get("payment_status")) || number(row, "captured_amount_minor") > 0)
                 throw error(ErrorCode.PAYMENT_NOT_CANCELABLE);
-            var existing = one(
-                    "SELECT * FROM platform.provider_operation WHERE payment_id=? AND operation_type='CANCEL_PAYMENT'",
-                    payment);
+            var existing = one("""
+                    SELECT *
+                    FROM platform.provider_operation
+                    WHERE payment_id=? AND operation_type='CANCEL_PAYMENT'""", payment);
             UUID operation = existing == null ? UUID.randomUUID() : uuid(existing, "id");
             if (existing == null)
                 insertOperation(
@@ -425,8 +425,15 @@ public class PaymentRepository {
     private Map<String, Object> scoped(TenantContext c, UUID id, boolean locked) {
         TenantAccessGuard.require(c);
         var row = one(
-                "SELECT p.*,o.order_key FROM platform.payment p JOIN platform.business_order o ON o.id=p.business_order_id WHERE p.id=? AND p.organization_id=? AND p.environment_id=? AND p.application_id=? AND p.provider_account_id=?"
-                        + (locked ? " FOR UPDATE OF p" : ""),
+                """
+                SELECT p.*,o.order_key
+                FROM platform.payment p
+                JOIN platform.business_order o ON o.id=p.business_order_id
+                WHERE p.id=?
+                    AND p.organization_id=?
+                    AND p.environment_id=?
+                    AND p.application_id=?
+                    AND p.provider_account_id=?""" + (locked ? " FOR UPDATE OF p" : ""),
                 id,
                 c.organizationId(),
                 c.environmentId(),
@@ -441,9 +448,11 @@ public class PaymentRepository {
     }
 
     Map<String, Object> payment(UUID id) {
-        return transaction(() -> one(
-                "SELECT p.*,o.order_key FROM platform.payment p JOIN platform.business_order o ON o.id=p.business_order_id WHERE p.id=?",
-                id));
+        return transaction(() -> one("""
+                SELECT p.*,o.order_key
+                FROM platform.payment p
+                JOIN platform.business_order o ON o.id=p.business_order_id
+                WHERE p.id=?""", id));
     }
 
     Map<String, Object> operation(UUID id) {
@@ -451,10 +460,10 @@ public class PaymentRepository {
     }
 
     UUID createOperation(UUID payment) {
-        return transaction(() -> jdbc.queryForObject(
-                "SELECT id FROM platform.provider_operation WHERE payment_id=? AND operation_type='CREATE_CHECKOUT'",
-                UUID.class,
-                payment));
+        return transaction(() -> jdbc.queryForObject("""
+                SELECT id
+                FROM platform.provider_operation
+                WHERE payment_id=? AND operation_type='CREATE_CHECKOUT'""", UUID.class, payment));
     }
 
     public List<UUID> prepared(int limit, String provider) {
@@ -525,28 +534,30 @@ public class PaymentRepository {
             checkBinding(c, provider);
             var p = refundTarget
                     ? one("SELECT * FROM platform.refund WHERE id=?", op.get("refund_id"))
-                    : one(
-                            "SELECT p.*,o.order_key FROM platform.payment p JOIN platform.business_order o ON o.id=p.business_order_id WHERE p.id=?",
-                            parent);
+                    : one("""
+                            SELECT p.*,o.order_key
+                            FROM platform.payment p
+                            JOIN platform.business_order o ON o.id=p.business_order_id
+                            WHERE p.id=?""", parent);
             if (!recovery && "CONFLICT".equals(p.get("resolution_status"))) throw error(ErrorCode.EVIDENCE_CONFLICT);
             if (!recovery
                     && "CREATE_CHECKOUT".equals(op.get("operation_type"))
                     && (p.get("payment_intent_id") != null || number(p, "captured_amount_minor") > 0)) {
-                jdbc.update(
-                        "UPDATE platform.provider_operation SET status='UNKNOWN',resolution='UNKNOWN',version=version+1 WHERE id=?",
-                        id);
-                jdbc.update(
-                        "UPDATE platform.recovery_task SET status='WAITING',reason='REMOTE_FACT_REQUIRES_QUERY',available_at=?,version=version+1 WHERE operation_id=?",
-                        Timestamp.from(now),
-                        id);
+                jdbc.update("""
+                        UPDATE platform.provider_operation
+                        SET status='UNKNOWN',resolution='UNKNOWN',version=version+1
+                        WHERE id=?""", id);
+                jdbc.update("""
+                        UPDATE platform.recovery_task
+                        SET status='WAITING',reason='REMOTE_FACT_REQUIRES_QUERY',available_at=?,version=version+1
+                        WHERE operation_id=?""", Timestamp.from(now), id);
                 return null;
             }
-            if (one(
-                            "SELECT id FROM platform.org_currency_enabled WHERE organization_id=? AND environment_id=? AND currency=? AND status='ACTIVE'",
-                            op.get("organization_id"),
-                            op.get("environment_id"),
-                            op.get("currency"))
-                    == null) throw error(ErrorCode.CURRENCY_NOT_ENABLED);
+            if (one("""
+                            SELECT id
+                            FROM platform.org_currency_enabled
+                            WHERE organization_id=? AND environment_id=? AND currency=? AND status='ACTIVE'""", op.get("organization_id"), op.get("environment_id"), op.get("currency")) == null)
+                throw error(ErrorCode.CURRENCY_NOT_ENABLED);
             // A shared account row meters recovery batches across processes. Never sleep while holding locks.
             if (recovery && !reserveBatch(op, now)) return null;
             UUID token = UUID.randomUUID();
@@ -559,7 +570,19 @@ public class PaymentRepository {
             }
             Instant until = now.plus(recoveryPolicy.lease());
             jdbc.update(
-                    "UPDATE platform.provider_operation SET status='SENDING',lease_token=?,lease_owner='pr07',lease_until=?,attempt_count=attempt_count+1,first_send_at=?,retry_until=?,version=?,updated_at=? WHERE id=?",
+                    """
+                    UPDATE platform.provider_operation
+                    SET
+                        status='SENDING',
+                        lease_token=?,
+                        lease_owner='pr07',
+                        lease_until=?,
+                        attempt_count=attempt_count+1,
+                        first_send_at=?,
+                        retry_until=?,
+                        version=?,
+                        updated_at=?
+                    WHERE id=?""",
                     token,
                     Timestamp.from(until),
                     Timestamp.from(first),
@@ -567,12 +590,16 @@ public class PaymentRepository {
                     version,
                     Timestamp.from(now),
                     id);
-            jdbc.update(
-                    "UPDATE platform.recovery_task SET status='RUNNING',lease_token=?,lease_until=?,attempt_count=attempt_count+1,version=version+1,updated_at=? WHERE operation_id=?",
-                    token,
-                    Timestamp.from(until),
-                    Timestamp.from(now),
-                    id);
+            jdbc.update("""
+                    UPDATE platform.recovery_task
+                    SET
+                        status='RUNNING',
+                        lease_token=?,
+                        lease_until=?,
+                        attempt_count=attempt_count+1,
+                        version=version+1,
+                        updated_at=?
+                    WHERE operation_id=?""", token, Timestamp.from(until), Timestamp.from(now), id);
             // Original status determines whether the first command is known to be unsent.
             op.put("first_send_at", Timestamp.from(first));
             op.put("retry_until", horizon == null ? null : Timestamp.from(horizon));
@@ -582,26 +609,35 @@ public class PaymentRepository {
 
     private boolean reserveBatch(Map<String, Object> op, Instant now) {
         jdbc.update(
-                "INSERT INTO platform.recovery_account_limit(organization_id,environment_id,provider_account_id,next_batch_at) VALUES (?,?,?,?) ON CONFLICT DO NOTHING",
+                """
+                INSERT INTO platform.recovery_account_limit(organization_id,environment_id,provider_account_id,
+                    next_batch_at)
+                VALUES (?,?,?,?)
+                ON CONFLICT
+                DO NOTHING""",
                 op.get("organization_id"),
                 op.get("environment_id"),
                 op.get("provider_account_id"),
                 Timestamp.from(now));
-        var limit = one(
-                "SELECT next_batch_at FROM platform.recovery_account_limit WHERE organization_id=? AND environment_id=? AND provider_account_id=? FOR UPDATE",
-                op.get("organization_id"),
-                op.get("environment_id"),
-                op.get("provider_account_id"));
+        var limit = one("""
+                SELECT next_batch_at
+                FROM platform.recovery_account_limit
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=?
+                FOR
+                UPDATE""", op.get("organization_id"), op.get("environment_id"), op.get("provider_account_id"));
         Instant next = instant(limit, "next_batch_at");
         if (next.isAfter(now)) {
-            jdbc.update(
-                    "UPDATE platform.recovery_task SET available_at=greatest(available_at,?),version=version+1 WHERE operation_id=?",
-                    Timestamp.from(next),
-                    op.get("id"));
+            jdbc.update("""
+                    UPDATE platform.recovery_task
+                    SET available_at=greatest(available_at,?),version=version+1
+                    WHERE operation_id=?""", Timestamp.from(next), op.get("id"));
             return false;
         }
         jdbc.update(
-                "UPDATE platform.recovery_account_limit SET next_batch_at=? WHERE organization_id=? AND environment_id=? AND provider_account_id=?",
+                """
+                UPDATE platform.recovery_account_limit
+                SET next_batch_at=?
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=?""",
                 Timestamp.from(now.plus(recoveryPolicy.accountBatchInterval())),
                 op.get("organization_id"),
                 op.get("environment_id"),
@@ -614,12 +650,20 @@ public class PaymentRepository {
     }
 
     boolean owns(Claim claim) {
-        var row = one(
-                "SELECT o.id FROM platform.provider_operation o JOIN platform.recovery_task t ON t.operation_id=o.id WHERE o.id=? AND o.lease_token=? AND o.version=? AND o.status='SENDING' AND o.lease_until>? AND t.status='RUNNING' AND t.lease_token=o.lease_token AND t.lease_until=o.lease_until FOR UPDATE OF o",
-                claim.operationId(),
-                claim.token(),
-                claim.version(),
-                Timestamp.from(now()));
+        var row = one("""
+                SELECT o.id
+                FROM platform.provider_operation o
+                JOIN platform.recovery_task t ON t.operation_id=o.id
+                WHERE o.id=?
+                    AND o.lease_token=?
+                    AND o.version=?
+                    AND o.status='SENDING'
+                    AND o.lease_until>?
+                    AND t.status='RUNNING'
+                    AND t.lease_token=o.lease_token
+                    AND t.lease_until=o.lease_until
+                FOR
+                UPDATE OF o""", claim.operationId(), claim.token(), claim.version(), Timestamp.from(now()));
         return row != null;
     }
 
@@ -743,10 +787,15 @@ public class PaymentRepository {
                     markUnknown(claim.paymentId(), true);
                     completeOperation(claim, "UNKNOWN", "CONFLICT", null, null);
                 } else {
-                    jdbc.update(
-                            "UPDATE platform.payment SET payment_status='CANCELED',resolution_status='KNOWN',unresolved_since=null,version=version+1,updated_at=now() WHERE id=? AND version=?",
-                            claim.paymentId(),
-                            number(current, "version"));
+                    jdbc.update("""
+                            UPDATE platform.payment
+                            SET
+                                payment_status='CANCELED',
+                                resolution_status='KNOWN',
+                                unresolved_since=null,
+                                version=version+1,
+                                updated_at=now()
+                            WHERE id=? AND version=?""", claim.paymentId(), number(current, "version"));
                     completeOperation(claim, "ACKNOWLEDGED", "KNOWN", null, null);
                 }
                 return null;
@@ -775,7 +824,20 @@ public class PaymentRepository {
                 if ("SUCCEEDED".equals(p.get("payment_status")) || "CANCELED".equals(p.get("payment_status")))
                     state = str(p, "payment_status");
                 jdbc.update(
-                        "UPDATE platform.payment SET checkout_session_id=?,payment_intent_id=coalesce(payment_intent_id,?),hosted_url=?,payment_status=?,provider_status=?,resolution_status='KNOWN',unresolved_since=null,last_provider_confirmed_at=?,version=version+1,updated_at=now() WHERE id=? AND version=?",
+                        """
+                        UPDATE platform.payment
+                        SET
+                            checkout_session_id=?,
+                            payment_intent_id=coalesce(payment_intent_id,?),
+                            hosted_url=?,
+                            payment_status=?,
+                            provider_status=?,
+                            resolution_status='KNOWN',
+                            unresolved_since=null,
+                            last_provider_confirmed_at=?,
+                            version=version+1,
+                            updated_at=now()
+                        WHERE id=? AND version=?""",
                         fact.sessionId(),
                         fact.paymentIntentId(),
                         fact.hostedUrl(),
@@ -813,7 +875,17 @@ public class PaymentRepository {
         // owns() is the authorization linearization point while the payment/operation locks are held.
         // Re-reading the wall clock here could reject the operation after payment facts already changed.
         int updated = jdbc.update(
-                "UPDATE platform.provider_operation SET status=?,resolution=?,external_object_id=coalesce(?,external_object_id),last_provider_status=coalesce(?,last_provider_status),lease_until=null,version=version+1,updated_at=? WHERE id=? AND lease_token=? AND version=? AND status='SENDING'",
+                """
+                UPDATE platform.provider_operation
+                SET
+                    status=?,
+                    resolution=?,
+                    external_object_id=coalesce(?,external_object_id),
+                    last_provider_status=coalesce(?,last_provider_status),
+                    lease_until=null,
+                    version=version+1,
+                    updated_at=?
+                WHERE id=? AND lease_token=? AND version=? AND status='SENDING'""",
                 status,
                 resolution,
                 external,
@@ -834,12 +906,10 @@ public class PaymentRepository {
             boolean done = RefundRepository.terminal(str(refund, "refund_status"))
                     && "KNOWN".equals(refund.get("resolution_status"));
             Instant next = now().plus(recoveryPolicy.delay(operation, ((Number) op.get("attempt_count")).intValue()));
-            jdbc.update(
-                    "UPDATE platform.recovery_task SET status=?,available_at=?,lease_until=null,lease_token=null,version=version+1,updated_at=? WHERE operation_id=?",
-                    done ? "DONE" : "WAITING",
-                    Timestamp.from(next),
-                    Timestamp.from(now()),
-                    operation);
+            jdbc.update("""
+                    UPDATE platform.recovery_task
+                    SET status=?,available_at=?,lease_until=null,lease_token=null,version=version+1,updated_at=?
+                    WHERE operation_id=?""", done ? "DONE" : "WAITING", Timestamp.from(next), Timestamp.from(now()), operation);
             return;
         }
         var p = one("SELECT * FROM platform.payment WHERE id=?", op.get("payment_id"));
@@ -847,20 +917,23 @@ public class PaymentRepository {
                 || "CANCELED".equals(p.get("payment_status")) && "KNOWN".equals(p.get("resolution_status"))
                 || "CANCEL_PAYMENT".equals(op.get("operation_type")) && "RESOLVED".equals(op.get("status"));
         Instant next = now().plus(recoveryPolicy.delay(operation, ((Number) op.get("attempt_count")).intValue()));
-        jdbc.update(
-                "UPDATE platform.recovery_task SET status=?,available_at=?,lease_until=null,lease_token=null,version=version+1,updated_at=? WHERE operation_id=?",
-                done ? "DONE" : "WAITING",
-                Timestamp.from(next),
-                Timestamp.from(now()),
-                operation);
+        jdbc.update("""
+                UPDATE platform.recovery_task
+                SET status=?,available_at=?,lease_until=null,lease_token=null,version=version+1,updated_at=?
+                WHERE operation_id=?""", done ? "DONE" : "WAITING", Timestamp.from(next), Timestamp.from(now()), operation);
     }
 
     private void markUnknown(UUID payment, boolean conflict) {
-        jdbc.update(
-                "UPDATE platform.payment SET resolution_status=CASE WHEN resolution_status='CONFLICT' OR ? THEN 'CONFLICT' ELSE 'UNKNOWN' END,unresolved_since=coalesce(unresolved_since,?),payment_status=CASE WHEN payment_status='CREATED' THEN 'PROCESSING' ELSE payment_status END,version=version+1,updated_at=now() WHERE id=?",
-                conflict,
-                Timestamp.from(now()),
-                payment);
+        jdbc.update("""
+                UPDATE platform.payment
+                SET
+                    resolution_status=CASE WHEN resolution_status='CONFLICT' OR ? THEN 'CONFLICT' ELSE 'UNKNOWN'
+                        END,
+                    unresolved_since=coalesce(unresolved_since,?),
+                    payment_status=CASE WHEN payment_status='CREATED' THEN 'PROCESSING' ELSE payment_status END,
+                    version=version+1,
+                    updated_at=now()
+                WHERE id=?""", conflict, Timestamp.from(now()), payment);
         shares.reconcile(payment, "payment.resolution");
     }
 
@@ -875,10 +948,10 @@ public class PaymentRepository {
                     operation);
             // Query evidence never changes ownership or version while a sender owns the operation.
             if (applicable && facts.complete() && !facts.conflict())
-                jdbc.update(
-                        "UPDATE platform.provider_operation SET status='RESOLVED',resolution='KNOWN',last_query_at=?,version=version+1,updated_at=now() WHERE id=? AND status IN ('UNKNOWN','ACKNOWLEDGED')",
-                        Timestamp.from(clock.instant()),
-                        operation);
+                jdbc.update("""
+                        UPDATE platform.provider_operation
+                        SET status='RESOLVED',resolution='KNOWN',last_query_at=?,version=version+1,updated_at=now()
+                        WHERE id=? AND status IN ('UNKNOWN','ACKNOWLEDGED')""", Timestamp.from(clock.instant()), operation);
             return null;
         });
     }
@@ -945,7 +1018,10 @@ public class PaymentRepository {
         }
         for (var charge : facts.charges()) {
             var previousAttempt = one(
-                    "SELECT * FROM platform.payment_attempt WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_object_id=?",
+                    """
+                    SELECT *
+                    FROM platform.payment_attempt
+                    WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_object_id=?""",
                     p.get("organization_id"),
                     p.get("environment_id"),
                     p.get("provider_account_id"),
@@ -981,7 +1057,17 @@ public class PaymentRepository {
                 normalized.put("amount_captured_minor", charge.amountCapturedMinor());
                 normalized.put("currency", charge.currency().toUpperCase(Locale.ROOT));
                 int accepted = jdbc.update(
-                        "INSERT INTO platform.normalized_observation(organization_id,environment_id,provider_account_id,fact_key,fact_kind,object_id,payment_id,fact,first_source,last_source,first_confirmed_at,last_confirmed_at) VALUES (?,?,?,?,'CAPTURE',?,?,?::jsonb,?,?,?,?) ON CONFLICT(organization_id,environment_id,provider_account_id,fact_key) DO UPDATE SET last_confirmed_at=greatest(normalized_observation.last_confirmed_at,excluded.last_confirmed_at),last_source=CASE WHEN normalized_observation.last_source='QUERY' THEN 'QUERY' ELSE excluded.last_source END WHERE normalized_observation.fact=excluded.fact",
+                        """
+                        INSERT INTO platform.normalized_observation(organization_id,environment_id,provider_account_id,
+                            fact_key,fact_kind,object_id,payment_id,fact,first_source,last_source,first_confirmed_at,
+                            last_confirmed_at)
+                        VALUES (?,?,?,?,'CAPTURE',?,?,?::jsonb,?,?,?,?)
+                        ON CONFLICT(organization_id,environment_id,provider_account_id,fact_key)
+                        DO UPDATE SET
+                            last_confirmed_at=greatest(normalized_observation.last_confirmed_at,excluded.last_confirmed_at),
+                            last_source=CASE WHEN normalized_observation.last_source='QUERY' THEN 'QUERY' ELSE
+                                excluded.last_source END
+                        WHERE normalized_observation.fact=excluded.fact""",
                         p.get("organization_id"),
                         p.get("environment_id"),
                         p.get("provider_account_id"),
@@ -999,8 +1085,32 @@ public class PaymentRepository {
                 }
             }
             int written = jdbc.update(
-                    "INSERT INTO platform.payment_attempt(id," + SCOPE
-                            + ",payment_id,provider_object_id,provider_status,payment_intent_id,captured,amount_minor,amount_captured_minor,balance_transaction_id,failure_code,provider_created_at,fetched_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT (organization_id,environment_id,provider_account_id,provider_object_id) DO UPDATE SET provider_status=CASE WHEN payment_attempt.captured THEN payment_attempt.provider_status ELSE excluded.provider_status END,captured=payment_attempt.captured OR excluded.captured,amount_captured_minor=CASE WHEN payment_attempt.captured THEN payment_attempt.amount_captured_minor ELSE greatest(payment_attempt.amount_captured_minor,excluded.amount_captured_minor) END,balance_transaction_id=coalesce(excluded.balance_transaction_id,payment_attempt.balance_transaction_id),fetched_at=greatest(payment_attempt.fetched_at,excluded.fetched_at),version=payment_attempt.version+CASE WHEN (NOT payment_attempt.captured AND (payment_attempt.provider_status,payment_attempt.captured,payment_attempt.amount_captured_minor) IS DISTINCT FROM (excluded.provider_status,excluded.captured,excluded.amount_captured_minor)) OR (excluded.balance_transaction_id IS NOT NULL AND payment_attempt.balance_transaction_id IS DISTINCT FROM excluded.balance_transaction_id) THEN 1 ELSE 0 END,updated_at=now() WHERE payment_attempt.payment_id=excluded.payment_id AND payment_attempt.currency=excluded.currency AND payment_attempt.payment_intent_id=excluded.payment_intent_id AND payment_attempt.amount_minor=excluded.amount_minor",
+                    "INSERT INTO platform.payment_attempt(id," + SCOPE + """
+                                    ,payment_id,provider_object_id,provider_status,payment_intent_id,captured,amount_minor,
+                                        amount_captured_minor,balance_transaction_id,failure_code,provider_created_at,fetched_at)
+                                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                                    ON CONFLICT (organization_id,environment_id,provider_account_id,provider_object_id)
+                                    DO UPDATE SET
+                                        provider_status=CASE WHEN payment_attempt.captured THEN payment_attempt.provider_status ELSE
+                                            excluded.provider_status END,
+                                        captured=payment_attempt.captured OR excluded.captured,
+                                        amount_captured_minor=CASE WHEN payment_attempt.captured THEN
+                                            payment_attempt.amount_captured_minor ELSE greatest(payment_attempt.amount_captured_minor,
+                                            excluded.amount_captured_minor) END,
+                                        balance_transaction_id=coalesce(excluded.balance_transaction_id,
+                                            payment_attempt.balance_transaction_id),
+                                        fetched_at=greatest(payment_attempt.fetched_at,excluded.fetched_at),
+                                        version=payment_attempt.version+CASE WHEN (NOT payment_attempt.captured AND
+                                            (payment_attempt.provider_status,payment_attempt.captured,
+                                            payment_attempt.amount_captured_minor) IS DISTINCT FROM (excluded.provider_status,
+                                            excluded.captured,excluded.amount_captured_minor)) OR (excluded.balance_transaction_id IS
+                                            NOT NULL AND payment_attempt.balance_transaction_id IS DISTINCT FROM
+                                            excluded.balance_transaction_id) THEN 1 ELSE 0 END,
+                                        updated_at=now()
+                                    WHERE payment_attempt.payment_id=excluded.payment_id
+                                        AND payment_attempt.currency=excluded.currency
+                                        AND payment_attempt.payment_intent_id=excluded.payment_intent_id
+                                        AND payment_attempt.amount_minor=excluded.amount_minor""",
                     PaymentIds.newId(),
                     p.get("organization_id"),
                     p.get("environment_id"),
@@ -1020,10 +1130,10 @@ public class PaymentRepository {
                     Timestamp.from(facts.confirmedAt()));
             if (written == 0) conflict = true;
         }
-        long captured = jdbc.queryForObject(
-                "SELECT coalesce(sum(amount_captured_minor),0) FROM platform.payment_attempt WHERE payment_id=? AND captured AND provider_status='succeeded'",
-                Long.class,
-                payment);
+        long captured = jdbc.queryForObject("""
+                SELECT coalesce(sum(amount_captured_minor),0)
+                FROM platform.payment_attempt
+                WHERE payment_id=? AND captured AND provider_status='succeeded'""", Long.class, payment);
         String state = str(p, "payment_status"),
                 providerStatus = str(p, "provider_status"),
                 financial = str(p, "financial_status");
@@ -1067,7 +1177,23 @@ public class PaymentRepository {
         String resolution =
                 conflict ? "CONFLICT" : stale ? str(p, "resolution_status") : facts.complete() ? "KNOWN" : "UNKNOWN";
         jdbc.update(
-                "UPDATE platform.payment SET payment_status=?,provider_status=?,resolution_status=?,unresolved_since=CASE WHEN ?='KNOWN' THEN NULL ELSE coalesce(unresolved_since,?) END,financial_status=?,captured_amount_minor=greatest(captured_amount_minor,?),checkout_session_id=coalesce(checkout_session_id,?),payment_intent_id=coalesce(payment_intent_id,?),latest_charge_id=coalesce(?,latest_charge_id),hosted_url=CASE WHEN ? THEN ? ELSE hosted_url END,last_provider_confirmed_at=CASE WHEN ? THEN ? ELSE last_provider_confirmed_at END,version=version+1,updated_at=now() WHERE id=? AND version=?",
+                """
+                UPDATE platform.payment
+                SET
+                    payment_status=?,
+                    provider_status=?,
+                    resolution_status=?,
+                    unresolved_since=CASE WHEN ?='KNOWN' THEN NULL ELSE coalesce(unresolved_since,?) END,
+                    financial_status=?,
+                    captured_amount_minor=greatest(captured_amount_minor,?),
+                    checkout_session_id=coalesce(checkout_session_id,?),
+                    payment_intent_id=coalesce(payment_intent_id,?),
+                    latest_charge_id=coalesce(?,latest_charge_id),
+                    hosted_url=CASE WHEN ? THEN ? ELSE hosted_url END,
+                    last_provider_confirmed_at=CASE WHEN ? THEN ? ELSE last_provider_confirmed_at END,
+                    version=version+1,
+                    updated_at=now()
+                WHERE id=? AND version=?""",
                 state,
                 providerStatus,
                 resolution,
@@ -1114,10 +1240,15 @@ public class PaymentRepository {
             boolean captured = number(p, "captured_amount_minor") > 0;
             boolean conflict = "CONFLICT".equals(p.get("resolution_status")) || facts.conflict();
             if (canceled && applicable && !captured && !conflict && facts.complete())
-                jdbc.update(
-                        "UPDATE platform.payment SET payment_status='CANCELED',resolution_status='KNOWN',unresolved_since=null,version=version+1,updated_at=now() WHERE id=? AND version=?",
-                        claim.paymentId(),
-                        number(p, "version"));
+                jdbc.update("""
+                        UPDATE platform.payment
+                        SET
+                            payment_status='CANCELED',
+                            resolution_status='KNOWN',
+                            unresolved_since=null,
+                            version=version+1,
+                            updated_at=now()
+                        WHERE id=? AND version=?""", claim.paymentId(), number(p, "version"));
             if (canceled && captured) markUnknown(claim.paymentId(), true);
             boolean resolved = applicable && facts.complete() && !conflict && (captured || canceled);
             completeOperation(
@@ -1138,19 +1269,30 @@ public class PaymentRepository {
             if ("CONFLICT".equals(payment.get("resolution_status"))
                     || payment.get("payment_intent_id") != null
                     || number(payment, "captured_amount_minor") > 0) return false;
-            var create = one(
-                    "SELECT * FROM platform.provider_operation WHERE payment_id=? AND operation_type='CREATE_CHECKOUT' FOR UPDATE",
-                    claim.paymentId());
+            var create = one("""
+                    SELECT *
+                    FROM platform.provider_operation
+                    WHERE payment_id=? AND operation_type='CREATE_CHECKOUT'
+                    FOR
+                    UPDATE""", claim.paymentId());
             if (!"PREPARED".equals(create.get("status"))) return false;
-            jdbc.update(
-                    "UPDATE platform.provider_operation SET status='RESOLVED',version=version+1,updated_at=now() WHERE id=? AND status='PREPARED'",
-                    create.get("id"));
-            jdbc.update(
-                    "UPDATE platform.recovery_task SET status='DONE',version=version+1 WHERE operation_id=?",
-                    create.get("id"));
-            jdbc.update(
-                    "UPDATE platform.payment SET payment_status='CANCELED',resolution_status='KNOWN',unresolved_since=null,version=version+1,updated_at=now() WHERE id=?",
-                    claim.paymentId());
+            jdbc.update("""
+                    UPDATE platform.provider_operation
+                    SET status='RESOLVED',version=version+1,updated_at=now()
+                    WHERE id=? AND status='PREPARED'""", create.get("id"));
+            jdbc.update("""
+                    UPDATE platform.recovery_task
+                    SET status='DONE',version=version+1
+                    WHERE operation_id=?""", create.get("id"));
+            jdbc.update("""
+                    UPDATE platform.payment
+                    SET
+                        payment_status='CANCELED',
+                        resolution_status='KNOWN',
+                        unresolved_since=null,
+                        version=version+1,
+                        updated_at=now()
+                    WHERE id=?""", claim.paymentId());
             completeOperation(claim, "RESOLVED", "KNOWN", null, null);
             return true;
         });
@@ -1187,15 +1329,17 @@ public class PaymentRepository {
     }
 
     void checkProviderScope(ProviderScope scope, String provider) {
-        var row = one(
-                "SELECT id,currency FROM platform.payment WHERE organization_id=? AND environment_id=? AND provider_account_id=? LIMIT 1",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId());
-        var app = one(
-                "SELECT id FROM platform.application WHERE organization_id=? AND environment_id=? AND status='ACTIVE' ORDER BY id LIMIT 1",
-                scope.organizationId(),
-                scope.environmentId());
+        var row = one("""
+                SELECT id,currency
+                FROM platform.payment
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=?
+                LIMIT 1""", scope.organizationId(), scope.environmentId(), scope.providerAccountId());
+        var app = one("""
+                SELECT id
+                FROM platform.application
+                WHERE organization_id=? AND environment_id=? AND status='ACTIVE'
+                ORDER BY id
+                LIMIT 1""", scope.organizationId(), scope.environmentId());
         if (app == null) throw error(ErrorCode.SERVICE_UNAVAILABLE);
         checkBinding(
                 new TenantContext(
@@ -1216,10 +1360,14 @@ public class PaymentRepository {
         String external = str(claim.operation(), "external_object_id");
         if (external != null) anchors.add(external);
         anchors.addAll(transaction(() -> jdbc.queryForList(
-                "SELECT DISTINCT external_object_id FROM platform.provider_observation WHERE operation_id=? AND refund_id=? AND call_type IN ('CREATE_REFUND','QUERY_REFUND') AND classification IN ('SUCCESS','AUTH_REQUIRED') AND external_object_id IS NOT NULL",
-                String.class,
-                claim.operationId(),
-                claim.operation().get("refund_id"))));
+                """
+                SELECT DISTINCT external_object_id
+                FROM platform.provider_observation
+                WHERE operation_id=?
+                    AND refund_id=?
+                    AND call_type IN ('CREATE_REFUND','QUERY_REFUND')
+                    AND classification IN ('SUCCESS','AUTH_REQUIRED')
+                    AND external_object_id IS NOT NULL""", String.class, claim.operationId(), claim.operation().get("refund_id"))));
         return anchors.size() > 1
                 ? "CONFLICTING_REFUND_ANCHORS"
                 : anchors.isEmpty() ? null : anchors.iterator().next();
@@ -1296,24 +1444,38 @@ public class PaymentRepository {
     /** Caller must retain the business/operation locks after a successful owns() check in this transaction. */
     void escalateOwned(Claim claim, String reason) {
         boolean refund = claim.operation().get("refund_id") != null;
-        if (refund)
-            jdbc.update(
-                    "UPDATE platform.refund SET resolution_status=CASE WHEN resolution_status='CONFLICT' THEN 'CONFLICT' ELSE 'UNKNOWN' END,unresolved_since=coalesce(unresolved_since,?),version=version+1 WHERE id=?",
-                    Timestamp.from(now()),
-                    claim.operation().get("refund_id"));
+        if (refund) jdbc.update("""
+                    UPDATE platform.refund
+                    SET
+                        resolution_status=CASE WHEN resolution_status='CONFLICT' THEN 'CONFLICT' ELSE 'UNKNOWN' END,
+                        unresolved_since=coalesce(unresolved_since,?),
+                        version=version+1
+                    WHERE id=?""", Timestamp.from(now()), claim.operation().get("refund_id"));
         else markUnknown(claim.paymentId(), "CONFLICT".equals(claim.payment().get("resolution_status")));
-        jdbc.update(
-                "UPDATE platform.provider_operation SET status='ESCALATED',resolution=coalesce((SELECT resolution_status FROM platform.payment WHERE id=provider_operation.payment_id),(SELECT resolution_status FROM platform.refund WHERE id=provider_operation.refund_id)),escalation_reason=?,escalated_at=coalesce(escalated_at,?),lease_until=null,version=version+1,updated_at=? WHERE id=?",
-                reason,
-                Timestamp.from(now()),
-                Timestamp.from(now()),
-                claim.operationId());
-        jdbc.update(
-                "UPDATE platform.recovery_task SET status='ESCALATED',reason=?,escalated_at=coalesce(escalated_at,?),lease_until=null,lease_token=null,version=version+1,updated_at=? WHERE operation_id=?",
-                reason,
-                Timestamp.from(now()),
-                Timestamp.from(now()),
-                claim.operationId());
+        jdbc.update("""
+                UPDATE platform.provider_operation
+                SET
+                    status='ESCALATED',
+                    resolution=coalesce((SELECT resolution_status FROM platform.payment WHERE
+                        id=provider_operation.payment_id),(SELECT resolution_status FROM platform.refund WHERE
+                        id=provider_operation.refund_id)),
+                    escalation_reason=?,
+                    escalated_at=coalesce(escalated_at,?),
+                    lease_until=null,
+                    version=version+1,
+                    updated_at=?
+                WHERE id=?""", reason, Timestamp.from(now()), Timestamp.from(now()), claim.operationId());
+        jdbc.update("""
+                UPDATE platform.recovery_task
+                SET
+                    status='ESCALATED',
+                    reason=?,
+                    escalated_at=coalesce(escalated_at,?),
+                    lease_until=null,
+                    lease_token=null,
+                    version=version+1,
+                    updated_at=?
+                WHERE operation_id=?""", reason, Timestamp.from(now()), Timestamp.from(now()), claim.operationId());
         org.slf4j.LoggerFactory.getLogger(PaymentRepository.class)
                 .warn(
                         "Payment recovery escalated operation={} payment={} reason={}",
@@ -1331,14 +1493,14 @@ public class PaymentRepository {
     }
 
     private void alertAgeOwned(Claim claim) {
-        jdbc.update(
-                "UPDATE platform.provider_operation SET age_alert_at=coalesce(age_alert_at,?) WHERE id=?",
-                Timestamp.from(now()),
-                claim.operationId());
-        jdbc.update(
-                "UPDATE platform.recovery_task SET age_alert_at=coalesce(age_alert_at,?) WHERE operation_id=?",
-                Timestamp.from(now()),
-                claim.operationId());
+        jdbc.update("""
+                UPDATE platform.provider_operation
+                SET age_alert_at=coalesce(age_alert_at,?)
+                WHERE id=?""", Timestamp.from(now()), claim.operationId());
+        jdbc.update("""
+                UPDATE platform.recovery_task
+                SET age_alert_at=coalesce(age_alert_at,?)
+                WHERE operation_id=?""", Timestamp.from(now()), claim.operationId());
     }
 
     int wakeL2(int limit, String provider) {
@@ -1382,19 +1544,25 @@ public class PaymentRepository {
                 if (!"ESCALATED".equals(op.get("status"))
                         && (instant(op, "lease_until") == null
                                 || !instant(op, "lease_until").isAfter(now())))
-                    jdbc.update(
-                            "UPDATE platform.recovery_task SET status='WAITING',available_at=least(available_at,?),version=version+1 WHERE operation_id=? AND status<>'ESCALATED'",
-                            Timestamp.from(now()),
-                            id);
+                    jdbc.update("""
+                            UPDATE platform.recovery_task
+                            SET status='WAITING',available_at=least(available_at,?),version=version+1
+                            WHERE operation_id=? AND status<>'ESCALATED'""", Timestamp.from(now()), id);
                 return null;
             });
         return ids.size();
     }
 
     private Map<String, Object> recoverySummary(UUID payment) {
-        var rows = jdbc.queryForList(
-                "SELECT t.*,o.last_query_at,o.status operation_status FROM platform.recovery_task t JOIN platform.provider_operation o ON o.id=t.operation_id WHERE t.payment_id=? ORDER BY CASE t.status WHEN 'ESCALATED' THEN 0 WHEN 'RUNNING' THEN 1 WHEN 'WAITING' THEN 2 WHEN 'READY' THEN 2 ELSE 3 END,t.available_at",
-                payment);
+        var rows = jdbc.queryForList("""
+                SELECT t.*,o.last_query_at,o.status operation_status
+                FROM platform.recovery_task t
+                JOIN platform.provider_operation o ON o.id=t.operation_id
+                WHERE t.payment_id=?
+                ORDER BY
+                    CASE t.status WHEN 'ESCALATED' THEN 0 WHEN 'RUNNING' THEN 1 WHEN 'WAITING' THEN 2 WHEN 'READY'
+                        THEN 2 ELSE 3 END,
+                    t.available_at""", payment);
         var result = new LinkedHashMap<String, Object>();
         String status = "IDLE";
         Instant next = null, last = null;
@@ -1453,9 +1621,11 @@ public class PaymentRepository {
         refs.put("paymentIntentId", p.get("payment_intent_id"));
         refs.put("latestChargeId", p.get("latest_charge_id"));
         var attempts = new ArrayList<Map<String, Object>>();
-        for (var a : jdbc.queryForList(
-                "SELECT * FROM platform.payment_attempt WHERE payment_id=? ORDER BY provider_created_at,id",
-                p.get("id"))) {
+        for (var a : jdbc.queryForList("""
+                SELECT *
+                FROM platform.payment_attempt
+                WHERE payment_id=?
+                ORDER BY provider_created_at,id""", p.get("id"))) {
             var view = new LinkedHashMap<String, Object>();
             view.put("attemptId", PaymentIds.format("att", uuid(a, "id")));
             view.put("providerObjectType", "CHARGE");

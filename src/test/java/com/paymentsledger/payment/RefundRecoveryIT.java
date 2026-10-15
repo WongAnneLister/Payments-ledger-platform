@@ -28,16 +28,15 @@ class RefundRecoveryIT extends PaymentCoreFixture {
                 .paymentId();
         admin.update("UPDATE platform.provider_operation SET status='RESOLVED' WHERE payment_id=?", paymentId);
         admin.update("UPDATE platform.recovery_task SET status='DONE' WHERE payment_id=?", paymentId);
-        admin.update(
-                "UPDATE platform.payment SET captured_amount_minor=1000,payment_status='SUCCEEDED',latest_charge_id='ch_refund' WHERE id=?",
-                paymentId);
-        admin.update(
-                "INSERT INTO platform.payment_attempt(organization_id,environment_id,application_id,provider_account_id,currency,payment_id,provider_object_id,provider_status,payment_intent_id,captured,amount_minor,amount_captured_minor,fetched_at) VALUES (?,?,?,?,'USD',?,'ch_refund','succeeded','pi_refund',true,1000,1000,now())",
-                id(1),
-                id(2),
-                id(3),
-                id(4),
-                paymentId);
+        admin.update("""
+                UPDATE platform.payment
+                SET captured_amount_minor=1000,payment_status='SUCCEEDED',latest_charge_id='ch_refund'
+                WHERE id=?""", paymentId);
+        admin.update("""
+                INSERT INTO platform.payment_attempt(organization_id,environment_id,application_id,
+                    provider_account_id,currency,payment_id,provider_object_id,provider_status,payment_intent_id,
+                    captured,amount_minor,amount_captured_minor,fetched_at)
+                VALUES (?,?,?,?,'USD',?,'ch_refund','succeeded','pi_refund',true,1000,1000,now())""", id(1), id(2), id(3), id(4), paymentId);
         refunds = new RefundRepository(jdbc, tx, new ObjectMapper().findAndRegisterModules(), fake.clock(), repository);
         RefundPort port = new RefundPort() {
             public ProviderCallResult<RefundFact> createRefund(CreateRefundCommand c) {
@@ -246,11 +245,10 @@ class RefundRecoveryIT extends PaymentCoreFixture {
         assertThat(queries).isEqualTo(1);
         assertThat(creates).isZero();
         assertThat(refunds.read(refundContext, external)).containsEntry("refundStatus", "SUCCEEDED");
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.provider_operation WHERE refund_id=? AND operation_type='QUERY_REFUND'",
-                        Long.class,
-                        external))
-                .isEqualTo(1);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.provider_operation
+                        WHERE refund_id=? AND operation_type='QUERY_REFUND'""", Long.class, external)).isEqualTo(1);
     }
 
     @Test

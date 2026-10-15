@@ -73,25 +73,21 @@ class LedgerServiceIT {
     void seed() {
         admin = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword()));
         admin.execute("TRUNCATE platform.organization, platform.currency_config CASCADE");
-        admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2),('JPY',0)");
+        admin.update("""
+                INSERT INTO platform.currency_config(code,minor_unit_exponent)
+                VALUES ('USD',2),('JPY',0)""");
         for (int org : new int[] {1, 2}) {
             admin.update("INSERT INTO platform.organization(id,code) VALUES (?,?)", id(org), "ledger-org-" + org);
-            admin.update(
-                    "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'fixture',false)",
-                    id(10 + org),
-                    id(org));
-            admin.update(
-                    "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE',?,false)",
-                    id(20 + org),
-                    id(org),
-                    id(10 + org),
-                    "ledger-provider-" + org);
-            admin.update(
-                    "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD'),(?,?,'JPY')",
-                    id(org),
-                    id(10 + org),
-                    id(org),
-                    id(10 + org));
+            admin.update("""
+                    INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                    VALUES (?,?,'fixture',false)""", id(10 + org), id(org));
+            admin.update("""
+                    INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                        provider_account_ref,livemode)
+                    VALUES (?,?,?,'FAKE',?,false)""", id(20 + org), id(org), id(10 + org), "ledger-provider-" + org);
+            admin.update("""
+                    INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                    VALUES (?,?,'USD'),(?,?,'JPY')""", id(org), id(10 + org), id(org), id(10 + org));
         }
         account(101, "PSP_FUNDS", "PROVIDER", id(21), "USD", 1);
         account(102, "PSP_FEE_EXPENSE", "PROVIDER", id(21), "USD", 1);
@@ -289,9 +285,10 @@ class LedgerServiceIT {
     @Test
     void independentRebuildDetectsProjectionDriftWithoutRepairingHistory() {
         posting.post(scope, charge("fixture:drift"));
-        admin.update(
-                "UPDATE platform.balance_projection SET balance_minor=balance_minor+1 WHERE ledger_account_id=?",
-                id(101));
+        admin.update("""
+                UPDATE platform.balance_projection
+                SET balance_minor=balance_minor+1
+                WHERE ledger_account_id=?""", id(101));
         var report = rebuild.rebuild(scope.moneyScope(), BalanceRebuildService.Mode.OPENING_JOURNAL, null);
         assertThat(report.matches()).isFalse();
         assertThat(report.accounts().stream()

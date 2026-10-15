@@ -28,13 +28,10 @@ class MerchantDeliveryIT extends NotificationFixture {
         new org.springframework.jdbc.core.JdbcTemplate(ds).execute("DROP SCHEMA IF EXISTS merchant_fixture CASCADE");
         try (var merchant =
                 new SimulatedMerchantServer(new InetSocketAddress("127.0.0.1", 0), ds, SECRET, fake.clock())) {
-            admin.update(
-                    "INSERT INTO platform.merchant_notification_target(organization_id,environment_id,application_id,url,key_ref,version) VALUES (?,?,?,?,?,1)",
-                    id(1),
-                    id(2),
-                    id(3),
-                    merchant.uri().toString(),
-                    "fixture");
+            admin.update("""
+                    INSERT INTO platform.merchant_notification_target(organization_id,environment_id,application_id,url,
+                        key_ref,version)
+                    VALUES (?,?,?,?,?,1)""", id(1), id(2), id(3), merchant.uri().toString(), "fixture");
             var event = success();
             inbox().accept(event.bytes());
             var transport = new HttpMerchantTransport(

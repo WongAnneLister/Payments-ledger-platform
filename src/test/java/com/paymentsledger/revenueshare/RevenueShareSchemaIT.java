@@ -49,10 +49,10 @@ class RevenueShareSchemaIT {
                 .isEqualTo(before);
         jdbc.queryForObject("SELECT platform.ensure_share_accounts((SELECT id FROM platform.payment))", Object.class);
         jdbc.queryForObject("SELECT platform.ensure_share_accounts((SELECT id FROM platform.payment))", Object.class);
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.ledger_account WHERE source_domain='INTERNAL' AND provider_account_id IS NULL",
-                        Long.class))
-                .isEqualTo(2);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.ledger_account
+                        WHERE source_domain='INTERNAL' AND provider_account_id IS NULL""", Long.class)).isEqualTo(2);
         for (String table : new String[] {"share_adjustment", "ledger_account"})
             for (String permission : new String[] {"UPDATE", "DELETE"})
                 assertThat(jdbc.queryForObject(
@@ -64,19 +64,43 @@ class RevenueShareSchemaIT {
         assertThat(jdbc.queryForObject(
                         "SELECT has_table_privilege(current_user,'platform.ledger_account','INSERT')", Boolean.class))
                 .isFalse();
-        assertThatThrownBy(
-                        () -> jdbc.update(
-                                "INSERT INTO platform.share_allocation(organization_id,environment_id,application_id,provider_account_id,currency,payment_id,partner_ref,policy_version,rate_bps,effective_minor,cap_minor) SELECT organization_id,environment_id,application_id,provider_account_id,currency,id,'partner','1',2000,1,1 FROM platform.payment"))
-                .isInstanceOf(org.springframework.dao.DataAccessException.class);
-        assertThatThrownBy(
-                        () -> jdbc.update(
-                                "INSERT INTO platform.share_allocation(organization_id,environment_id,application_id,provider_account_id,currency,payment_id,partner_ref,policy_version,rate_bps) SELECT organization_id,environment_id,application_id,provider_account_id,currency,id,'wrong','1',2000 FROM platform.payment"))
-                .isInstanceOf(org.springframework.dao.DataAccessException.class);
+        assertThatThrownBy(() -> jdbc.update("""
+                                INSERT INTO platform.share_allocation(organization_id,environment_id,application_id,
+                                    provider_account_id,currency,payment_id,partner_ref,policy_version,rate_bps,effective_minor,
+                                    cap_minor)
+                                SELECT
+                                    organization_id,
+                                    environment_id,
+                                    application_id,
+                                    provider_account_id,
+                                    currency,
+                                    id,
+                                    'partner',
+                                    '1',
+                                    2000,
+                                    1,
+                                    1
+                                FROM platform.payment""")).isInstanceOf(org.springframework.dao.DataAccessException.class);
+        assertThatThrownBy(() -> jdbc.update("""
+                                INSERT INTO platform.share_allocation(organization_id,environment_id,application_id,
+                                    provider_account_id,currency,payment_id,partner_ref,policy_version,rate_bps)
+                                SELECT
+                                    organization_id,
+                                    environment_id,
+                                    application_id,
+                                    provider_account_id,
+                                    currency,
+                                    id,
+                                    'wrong',
+                                    '1',
+                                    2000
+                                FROM platform.payment""")).isInstanceOf(org.springframework.dao.DataAccessException.class);
         assertThat(jdbc.queryForObject("SELECT count(*) FROM platform.share_allocation", Long.class))
                 .isZero();
-        for (String name : admin.queryForList(
-                "SELECT oid::regprocedure::text FROM pg_proc WHERE pronamespace='platform'::regnamespace AND proname LIKE 'pr12_%'",
-                String.class))
+        for (String name : admin.queryForList("""
+                SELECT oid::regprocedure::text
+                FROM pg_proc
+                WHERE pronamespace='platform'::regnamespace AND proname LIKE 'pr12_%'""", String.class))
             assertThat(jdbc.queryForObject(
                             "SELECT has_function_privilege(current_user,?,'EXECUTE')", Boolean.class, name))
                     .isFalse();

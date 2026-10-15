@@ -24,11 +24,10 @@ class Pr20RecoveryQueryIT extends Pr20RecoveryFixture {
             var effects = fake.controls().effects(scope);
             long journals = count("journal");
             UUID run = rescanAndRecoverSources();
-            assertThat(jdbc.queryForObject(
-                            "SELECT status FROM platform.recovery_task WHERE reconciliation_run_id=? AND task_type='RECONCILIATION_SOURCE'",
-                            String.class,
-                            run))
-                    .isEqualTo("DONE");
+            assertThat(jdbc.queryForObject("""
+                            SELECT status
+                            FROM platform.recovery_task
+                            WHERE reconciliation_run_id=? AND task_type='RECONCILIATION_SOURCE'""", String.class, run)).isEqualTo("DONE");
             assertThat(count("payment")).isEqualTo(1);
             assertThat(count("journal")).isEqualTo(journals);
             assertThat(fake.controls().effects(scope)).isEqualTo(effects);

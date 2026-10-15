@@ -95,7 +95,11 @@ public class BalanceRebuildService {
         String snapshot = jdbc.queryForObject("SELECT pg_current_snapshot()::text", String.class);
         var purposes = new LinkedHashMap<UUID, String>();
         jdbc.query(
-                "SELECT id,account_purpose FROM platform.ledger_account WHERE organization_id=? AND environment_id=? AND currency=? ORDER BY id",
+                """
+                SELECT id,account_purpose
+                FROM platform.ledger_account
+                WHERE organization_id=? AND environment_id=? AND currency=?
+                ORDER BY id""",
                 (org.springframework.jdbc.core.RowCallbackHandler)
                         rs -> purposes.put(rs.getObject("id", UUID.class), rs.getString("account_purpose")),
                 scope.organizationId(),
@@ -141,7 +145,10 @@ public class BalanceRebuildService {
                 arguments.toArray());
         var projected = new HashMap<UUID, BigInteger>();
         jdbc.query(
-                "SELECT ledger_account_id,balance_minor FROM platform.balance_projection WHERE organization_id=? AND environment_id=? AND currency=?",
+                """
+                SELECT ledger_account_id,balance_minor
+                FROM platform.balance_projection
+                WHERE organization_id=? AND environment_id=? AND currency=?""",
                 (org.springframework.jdbc.core.RowCallbackHandler) rs -> projected.put(
                         rs.getObject("ledger_account_id", UUID.class), BigInteger.valueOf(rs.getLong("balance_minor"))),
                 scope.organizationId(),

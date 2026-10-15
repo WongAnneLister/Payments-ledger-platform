@@ -27,16 +27,18 @@ class WebhookProcessingIT extends PaymentCoreFixture {
         UUID p = repository
                 .prepare(context, "key-pr08-" + order, command(order), "FAKE")
                 .paymentId();
-        admin.update(
-                "UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref='acct_test' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='STRIPE',provider_account_ref='acct_test'
+                WHERE id=?""", id(4));
         return p;
     }
 
     void stripe() {
-        admin.update(
-                "UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref='acct_test' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='STRIPE',provider_account_ref='acct_test'
+                WHERE id=?""", id(4));
     }
 
     byte[] raw(String event, String type, String body) {
@@ -233,10 +235,12 @@ class WebhookProcessingIT extends PaymentCoreFixture {
         receive(raw("evt_pi", "payment_intent.succeeded", pi(p)));
         run();
         receive(raw("evt_charge", "charge.succeeded", charge(10000)));
-        admin.execute(
-                "CREATE FUNCTION platform.test_webhook_crash() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.status='DONE' THEN RAISE EXCEPTION 'injected crash'; END IF; RETURN NEW; END $$");
-        admin.execute(
-                "CREATE TRIGGER test_webhook_crash BEFORE UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.test_webhook_crash()");
+        admin.execute("""
+                CREATE FUNCTION platform.test_webhook_crash() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF
+                    NEW.status='DONE' THEN RAISE EXCEPTION 'injected crash'; END IF; RETURN NEW; END $$""");
+        admin.execute("""
+                CREATE TRIGGER test_webhook_crash BEFORE
+                UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.test_webhook_crash()""");
         try {
             processor.processDue(100);
             assertThat(count("payment_attempt")).isZero();
@@ -274,9 +278,10 @@ class WebhookProcessingIT extends PaymentCoreFixture {
         run();
         receive(raw("evt_charge", "charge.succeeded", charge(10000)));
         run();
-        admin.update(
-                "UPDATE platform.provider_account SET provider='FAKE',provider_account_ref='fixture' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='FAKE',provider_account_ref='fixture'
+                WHERE id=?""", id(4));
         executor.execute(intent.operationId());
         new OperationRecoveryCoordinator(repository, executor).recoverDue(25);
         assertThat(jdbc.queryForObject("SELECT checkout_session_id FROM platform.payment WHERE id=?", String.class, p))
@@ -321,10 +326,10 @@ class WebhookProcessingIT extends PaymentCoreFixture {
                 charge(0).replace("succeeded", "failed").replace("\"captured\":true", "\"captured\":false")));
         run();
         assertThat(state(p)).isEqualTo("SUCCEEDED");
-        assertThat(jdbc.queryForObject(
-                        "SELECT provider_status FROM platform.payment_attempt WHERE provider_object_id='ch_test'",
-                        String.class))
-                .isEqualTo("succeeded");
+        assertThat(jdbc.queryForObject("""
+                        SELECT provider_status
+                        FROM platform.payment_attempt
+                        WHERE provider_object_id='ch_test'""", String.class)).isEqualTo("succeeded");
     }
 
     @Test
@@ -406,9 +411,10 @@ class WebhookProcessingIT extends PaymentCoreFixture {
         run();
         receive(raw("evt_charge", "charge.succeeded", charge(10000)));
         run();
-        admin.update(
-                "UPDATE platform.provider_account SET provider='FAKE',provider_account_ref='fixture' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='FAKE',provider_account_ref='fixture'
+                WHERE id=?""", id(4));
         executor.executeClaim(claim);
         assertThat(jdbc.queryForObject("SELECT checkout_session_id FROM platform.payment WHERE id=?", String.class, p))
                 .isNull();
@@ -492,9 +498,10 @@ class WebhookProcessingIT extends PaymentCoreFixture {
         run();
         receive(older);
         run();
-        assertThat(jdbc.queryForMap(
-                        "SELECT checkout_session_id,payment_intent_id,payment_status FROM platform.payment WHERE id=?",
-                        p))
+        assertThat(jdbc.queryForMap("""
+                        SELECT checkout_session_id,payment_intent_id,payment_status
+                        FROM platform.payment
+                        WHERE id=?""", p))
                 .containsEntry("checkout_session_id", "cs_old")
                 .containsEntry("payment_intent_id", "pi_test")
                 .containsEntry("payment_status", "REQUIRES_ACTION");

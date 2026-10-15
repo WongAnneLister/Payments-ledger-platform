@@ -75,10 +75,10 @@ public final class DeliveryRepository {
                 }
                 int attempt = ((Number) row.get("attempt_count")).intValue();
                 if (attempt >= maxAttempts) {
-                    jdbc.update(
-                            "UPDATE platform.delivery_task SET status='DEAD',last_reason='ATTEMPTS_EXHAUSTED',lease_until=null,completed_at=? WHERE id=?",
-                            now(),
-                            id);
+                    jdbc.update("""
+                            UPDATE platform.delivery_task
+                            SET status='DEAD',last_reason='ATTEMPTS_EXHAUSTED',lease_until=null,completed_at=?
+                            WHERE id=?""", now(), id);
                     continue;
                 }
                 var token = UUID.randomUUID();

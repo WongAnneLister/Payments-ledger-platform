@@ -35,9 +35,9 @@ class RequestIdFilterTest {
     @Test
     void regeneratesSecretLikeAndCardIdsWithoutEchoingThem() {
         for (String value : java.util.List.of(
-                "sk_test_" + "redactionfixture",
+                "sk_test_redactionfixture",
                 "pi_fixture_secret_hidden",
-                "whsec_" + "fixture",
+                "whsec_fixture",
                 "4242".repeat(4),
                 "tok_fixture",
                 "pm_fixture",

@@ -21,7 +21,9 @@ class FinancialSchemaIT {
     @BeforeAll
     static void migrate() {
         admin = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword()));
-        admin.execute("ALTER DEFAULT PRIVILEGES IN SCHEMA platform GRANT SELECT,INSERT ON TABLES TO payments_app");
+        admin.execute("""
+                ALTER DEFAULT PRIVILEGES IN SCHEMA platform GRANT
+                SELECT,INSERT ON TABLES TO payments_app""");
         Flyway.configure()
                 .dataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword())
                 .schemas("platform")
@@ -50,23 +52,19 @@ class FinancialSchemaIT {
         assertThat(admin.queryForObject(
                         "SELECT has_table_privilege('payments_app','platform.ledger_account','INSERT')", Boolean.class))
                 .isFalse();
-        assertThat(admin.queryForObject(
-                        "SELECT has_table_privilege('payments_app','platform.psp_availability_projection','SELECT')",
-                        Boolean.class))
-                .isTrue();
+        assertThat(admin.queryForObject("""
+                        SELECT has_table_privilege('payments_app','platform.psp_availability_projection','SELECT')""", Boolean.class)).isTrue();
         for (String privilege : List.of("INSERT", "UPDATE", "DELETE"))
-            assertThat(admin.queryForObject(
-                            "SELECT has_table_privilege('payments_app','platform.psp_availability_projection',?)",
-                            Boolean.class,
-                            privilege))
-                    .isFalse();
+            assertThat(admin.queryForObject("""
+                            SELECT has_table_privilege('payments_app','platform.psp_availability_projection',?)""", Boolean.class, privilege)).isFalse();
     }
 
     @Test
     void financialTriggerFunctionsCannotBeAttachedToTempTables() {
-        var functions = admin.queryForList(
-                "SELECT oid::regprocedure::text AS name FROM pg_proc WHERE pronamespace='platform'::regnamespace AND proname LIKE 'pr10_%'",
-                String.class);
+        var functions = admin.queryForList("""
+                SELECT oid::regprocedure::text AS name
+                FROM pg_proc
+                WHERE pronamespace='platform'::regnamespace AND proname LIKE 'pr10_%'""", String.class);
         assertThat(functions).isNotEmpty();
         for (String function : functions)
             assertThat(admin.queryForObject(
