@@ -1103,7 +1103,7 @@ class OpsApiIT {
                                     WHERE usename='payments_app'
                                         AND wait_event_type='Lock'
                                         AND query LIKE '%platform.recovery_task%'
-                                        AND query LIKE '%FOR UPDATE%'""", Long.class) > 0;
+                                        AND query ~ 'FOR\\s+UPDATE'""", Long.class) > 0;
                     if (waiting) break;
                     Thread.sleep(10);
                 }
