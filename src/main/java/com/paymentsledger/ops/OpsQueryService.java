@@ -88,12 +88,9 @@ public class OpsQueryService {
                         case "postedFrom" -> " AND x.sealed_at>=?";
                         case "postedTo" -> " AND x.sealed_at<?";
                         case "businessOrderId" ->
-                            " AND EXISTS(SELECT 1 FROM platform.balance_transaction bt JOIN"
-                                    + " platform.payment p ON p.id=bt.payment_id WHERE bt.journal_id=x.id AND"
-                                    + " p.business_order_id=?)";
+                            " AND EXISTS(SELECT 1 FROM platform.balance_transaction bt JOIN platform.payment p ON p.id=bt.payment_id WHERE bt.journal_id=x.id AND p.business_order_id=?)";
                         default ->
-                            " AND EXISTS(SELECT 1 FROM platform.balance_transaction bt WHERE"
-                                    + " bt.journal_id=x.id AND bt.bt_id=?)";
+                            " AND EXISTS(SELECT 1 FROM platform.balance_transaction bt WHERE bt.journal_id=x.id AND bt.bt_id=?)";
                     };
                     args.add(
                             field.startsWith("posted")
@@ -179,10 +176,10 @@ public class OpsQueryService {
     private ObjectNode payment(OpsContext c, UUID id) {
         var r = scoped(c, "payment", id);
         ObjectNode out = json.valueToTree(payments.read(readContext(c, r), id));
-        var control = one(
-                "SELECT captured_minor,refunded_minor,reserved_minor,control_state FROM"
-                        + " platform.refund_control WHERE payment_id=?",
-                id);
+        var control = one("""
+                SELECT captured_minor,refunded_minor,reserved_minor,control_state
+                FROM platform.refund_control
+                WHERE payment_id=?""", id);
         long refunded = control == null ? 0 : number(control, "refunded_minor"),
                 reserved = control == null ? 0 : number(control, "reserved_minor");
         out.put("refundedAmountMinor", refunded)
@@ -261,22 +258,19 @@ public class OpsQueryService {
                 .put("inTransitPrincipalMinor", number(r, "transit_minor"))
                 .put("confirmedBankPrincipalMinor", number(r, "bank_confirmed_minor"))
                 .put("returnedPrincipalMinor", number(r, "returned_minor"))
-                .put(
-                        "bankFeeMinor",
-                        jdbc.queryForObject(
-                                "SELECT coalesce(sum(fee_minor),0)::bigint FROM platform.payout_bank_match WHERE"
-                                        + " payout_id=?",
-                                Long.class,
-                                id))
+                .put("bankFeeMinor", jdbc.queryForObject("""
+                                SELECT coalesce(sum(fee_minor),0)::bigint
+                                FROM platform.payout_bank_match
+                                WHERE payout_id=?""", Long.class, id))
                 .put("evidenceSource", "SIMULATED_BANK_EVIDENCE")
                 .put("shortReceiptState", shortReceipt(c, r, id));
         for (String role : List.of("OUT", "RETURN")) {
-            var rows = jdbc.queryForList(
-                    "SELECT bt_id FROM platform.payout_bt_link WHERE payout_id=? AND role=? ORDER BY"
-                            + " bt_id LIMIT 1",
-                    String.class,
-                    id,
-                    role);
+            var rows = jdbc.queryForList("""
+                    SELECT bt_id
+                    FROM platform.payout_bt_link
+                    WHERE payout_id=? AND role=?
+                    ORDER BY bt_id
+                    LIMIT 1""", String.class, id, role);
             if (rows.isEmpty())
                 out.putNull(role.equals("OUT") ? "deductionBalanceTransactionId" : "failureBalanceTransactionId");
             else
@@ -307,10 +301,10 @@ public class OpsQueryService {
         initializeTrace(out);
         var lines = out.putArray("lines");
         var rows = jdbc.queryForList(
-                "SELECT * FROM platform.share_allocation WHERE payment_id=? AND organization_id=? AND"
-                        + " environment_id=?"
-                        + (partner ? " AND partner_ref=?" : "")
-                        + " ORDER BY updated_at DESC,id DESC LIMIT 101",
+                """
+                SELECT *
+                FROM platform.share_allocation
+                WHERE payment_id=? AND organization_id=? AND environment_id=?""" + (partner ? " AND partner_ref=?" : "") + " ORDER BY updated_at DESC,id DESC LIMIT 101",
                 partner
                         ? new Object[] {
                             id,
@@ -320,10 +314,10 @@ public class OpsQueryService {
                         }
                         : new Object[] {id, c.organizationId(), c.environmentId()});
         if (partner && rows.isEmpty()) throw notFound();
-        var control = one(
-                "SELECT captured_minor,refunded_minor,reserved_minor,control_state FROM"
-                        + " platform.refund_control WHERE payment_id=?",
-                id);
+        var control = one("""
+                SELECT captured_minor,refunded_minor,reserved_minor,control_state
+                FROM platform.refund_control
+                WHERE payment_id=?""", id);
         boolean blocked = jdbc.queryForObject(
                 "SELECT EXISTS(SELECT 1 FROM platform.dispute WHERE payment_id=? AND blocking)", Boolean.class, id);
         long base = blocked || control != null && !control.get("control_state").equals("NORMAL")
@@ -342,11 +336,12 @@ public class OpsQueryService {
                     .put("eligibleBaseMinor", base)
                     .put("capMinor", number(a, "cap_minor"))
                     .put("netAccruedMinor", number(a, "effective_minor"));
-            var sums = jdbc.queryForMap(
-                    "SELECT coalesce(sum(delta_minor) FILTER(WHERE delta_minor>0),0)::bigint"
-                            + " accrued,coalesce(-sum(delta_minor) FILTER(WHERE delta_minor<0),0)::bigint"
-                            + " reversed FROM platform.share_adjustment WHERE allocation_id=?",
-                    a.get("id"));
+            var sums = jdbc.queryForMap("""
+                    SELECT
+                        coalesce(sum(delta_minor) FILTER(WHERE delta_minor>0),0)::bigint accrued,
+                        coalesce(-sum(delta_minor) FILTER(WHERE delta_minor<0),0)::bigint reversed
+                    FROM platform.share_adjustment
+                    WHERE allocation_id=?""", a.get("id"));
             line.put("accruedMinor", number(sums, "accrued")).put("reversedMinor", number(sums, "reversed"));
             set(line, "blockedReason", blocked ? "OPEN_DISPUTE" : base == 0 ? "NO_POSTING_EVIDENCE" : null);
             lines.add(line);
@@ -367,11 +362,12 @@ public class OpsQueryService {
         if (r.get("sealed_at") == null) throw notFound();
         var out = journalSummary(c, r);
         var entries = out.putArray("entries");
-        for (var e : jdbc.queryForList(
-                "SELECT e.id,e.ledger_account_id,a.account_purpose,e.side,e.amount_minor,e.currency"
-                        + " FROM platform.journal_entry e JOIN platform.ledger_account a ON"
-                        + " a.id=e.ledger_account_id WHERE e.journal_id=? ORDER BY e.line_no",
-                id)) {
+        for (var e : jdbc.queryForList("""
+                SELECT e.id,e.ledger_account_id,a.account_purpose,e.side,e.amount_minor,e.currency
+                FROM platform.journal_entry e
+                JOIN platform.ledger_account a ON a.id=e.ledger_account_id
+                WHERE e.journal_id=?
+                ORDER BY e.line_no""", id)) {
             var entry = project(e, "ledger_account_id", "account_purpose", "amount_minor", "currency");
             entry.put("entryId", e.get("id").toString())
                     .put("direction", e.get("side").toString());
@@ -381,10 +377,12 @@ public class OpsQueryService {
         var reversed = out.putArray("reversedByJournalIds");
         jdbc.queryForList("SELECT id FROM platform.journal WHERE reversal_of_journal_id=? ORDER BY id", UUID.class, id)
                 .forEach(i -> reversed.add(i.toString()));
-        var bt = jdbc.queryForList(
-                "SELECT bt_id FROM platform.balance_transaction WHERE journal_id=? ORDER BY bt_id LIMIT" + " 1",
-                String.class,
-                id);
+        var bt = jdbc.queryForList("""
+                SELECT bt_id
+                FROM platform.balance_transaction
+                WHERE journal_id=?
+                ORDER BY bt_id
+                LIMIT 1""", String.class, id);
         set(out, "sourceBalanceTransactionId", bt.isEmpty() ? null : bt.getFirst());
         return out;
     }
@@ -396,11 +394,12 @@ public class OpsQueryService {
                 .put("status", "POSTED")
                 .put("currency", r.get("currency").toString());
         set(out, "postedAt", r.get("sealed_at"));
-        var totals = jdbc.queryForMap(
-                "SELECT coalesce(sum(amount_minor) FILTER(WHERE side='DEBIT'),0)::bigint"
-                        + " debit,coalesce(sum(amount_minor) FILTER(WHERE side='CREDIT'),0)::bigint credit"
-                        + " FROM platform.journal_entry WHERE journal_id=?",
-                r.get("id"));
+        var totals = jdbc.queryForMap("""
+                SELECT
+                    coalesce(sum(amount_minor) FILTER(WHERE side='DEBIT'),0)::bigint debit,
+                    coalesce(sum(amount_minor) FILTER(WHERE side='CREDIT'),0)::bigint credit
+                FROM platform.journal_entry
+                WHERE journal_id=?""", r.get("id"));
         out.put("totalDebitMinor", number(totals, "debit")).put("totalCreditMinor", number(totals, "credit"));
         out.put(
                 "financialEventKey",
@@ -414,14 +413,17 @@ public class OpsQueryService {
     private ObjectNode run(OpsContext c, UUID id) {
         var r = scoped(c, "reconciliation_run", id);
         var out = json.createObjectNode().put("runId", id.toString());
-        var request = one("SELECT run_type,business_date FROM platform.ops_reconciliation_request WHERE run_id=?", id);
+        var request = one("""
+                SELECT run_type,business_date
+                FROM platform.ops_reconciliation_request
+                WHERE run_id=?""", id);
         out.put(
                 "runType",
                 request == null ? "NIGHTLY_ALL" : request.get("run_type").toString());
-        var cursor = one(
-                "SELECT next_cursor,accepted_pages,api_version,import_version,replay_after_bt FROM"
-                        + " platform.reconciliation_cursor WHERE run_id=?",
-                id);
+        var cursor = one("""
+                SELECT next_cursor,accepted_pages,api_version,import_version,replay_after_bt
+                FROM platform.reconciliation_cursor
+                WHERE run_id=?""", id);
         var window = one("SELECT state,last_error FROM platform.import_window WHERE id=?", r.get("import_window_id"));
         boolean complete = r.get("state").equals("COMPLETE");
         out.put(
@@ -441,34 +443,36 @@ public class OpsQueryService {
         set(out, "providerCursor", cursor.get("next_cursor"));
         out.put("allPagesFetched", window.get("state").equals("COMPLETE"));
         set(out, "inputHighWatermark", r.get("until_at"));
-        var external = one(
-                "SELECT evidence_version FROM platform.reconciliation_evidence WHERE run_id=? AND"
-                        + " evidence_kind IN ('PERIOD_REPORT','QUIESCENT_SNAPSHOT','INDEPENDENT_FIXTURE')"
-                        + " ORDER BY created_at DESC,id DESC LIMIT 1",
-                id);
+        var external = one("""
+                SELECT evidence_version
+                FROM platform.reconciliation_evidence
+                WHERE run_id=? AND evidence_kind IN ('PERIOD_REPORT','QUIESCENT_SNAPSHOT','INDEPENDENT_FIXTURE')
+                ORDER BY created_at DESC,id DESC
+                LIMIT 1""", id);
         set(out, "externalEvidenceVersion", external == null ? null : external.get("evidence_version"));
         var evidence = out.putArray("evidence");
-        for (var item : jdbc.queryForList(
-                "SELECT id,evidence_kind,source,evidence_version,digest,created_at FROM"
-                        + " platform.reconciliation_evidence WHERE run_id=? ORDER BY created_at,id",
-                id)) {
+        for (var item : jdbc.queryForList("""
+                SELECT id,evidence_kind,source,evidence_version,digest,created_at
+                FROM platform.reconciliation_evidence
+                WHERE run_id=?
+                ORDER BY created_at,id""", id)) {
             var summary = project(item, "id", "source", "digest", "created_at");
             summary.put("kind", item.get("evidence_kind").toString())
                     .put("version", item.get("evidence_version").toString())
                     .put("evidenceRef", "reconciliation-evidence:" + item.get("id"));
             evidence.add(summary);
         }
-        var residual = one(
-                "SELECT residual FROM platform.reconciliation_check WHERE run_id=? AND check_number=5"
-                        + " AND outcome<>'INCOMPLETE'",
-                id);
+        var residual = one("""
+                SELECT residual
+                FROM platform.reconciliation_check
+                WHERE run_id=? AND check_number=5 AND outcome<>'INCOMPLETE'""", id);
         set(out, "residualMinor", residual == null ? null : residual.get("residual"));
         var checks = json.createArrayNode();
-        for (var check : jdbc.queryForList(
-                "SELECT"
-                        + " check_number,name,outcome,residual,reason,owner,input_versions,completeness,snapshot"
-                        + " FROM platform.reconciliation_check WHERE run_id=? ORDER BY check_number",
-                id)) {
+        for (var check : jdbc.queryForList("""
+                SELECT check_number,name,outcome,residual,reason,owner,input_versions,completeness,snapshot
+                FROM platform.reconciliation_check
+                WHERE run_id=?
+                ORDER BY check_number""", id)) {
             var item = project(check, "check_number", "name", "outcome", "residual", "reason", "owner", "snapshot");
             item.set("inputVersions", tree(check.get("input_versions")));
             item.set("completeness", tree(check.get("completeness")));
@@ -481,13 +485,10 @@ public class OpsQueryService {
             incomplete |= check.path("outcome").asText().equals("INCOMPLETE");
         }
         out.put("checkResult", failed ? "FAIL" : incomplete ? "INCOMPLETE" : "PASS");
-        out.put(
-                        "matchedCount",
-                        jdbc.queryForObject(
-                                "SELECT count(*) FROM platform.reconciliation_check WHERE run_id=? AND"
-                                        + " outcome='PASS'",
-                                Long.class,
-                                id))
+        out.put("matchedCount", jdbc.queryForObject("""
+                                SELECT count(*)
+                                FROM platform.reconciliation_check
+                                WHERE run_id=? AND outcome='PASS'""", Long.class, id))
                 .put(
                         "unresolvedCount",
                         jdbc.queryForObject(
@@ -508,10 +509,12 @@ public class OpsQueryService {
     }
 
     private ObjectNode exception(OpsContext c, Map<String, Object> r) {
-        var action = one(
-                "SELECT status,evidence_refs,resolution_journal_id FROM platform.ops_exception_action"
-                        + " WHERE exception_id=? ORDER BY action_order DESC LIMIT 1",
-                r.get("id"));
+        var action = one("""
+                SELECT status,evidence_refs,resolution_journal_id
+                FROM platform.ops_exception_action
+                WHERE exception_id=?
+                ORDER BY action_order DESC
+                LIMIT 1""", r.get("id"));
         var out = json.createObjectNode()
                 .put("exceptionId", r.get("id").toString())
                 .put("type", exceptionType(r.get("reason").toString()))
@@ -582,15 +585,16 @@ public class OpsQueryService {
             predicates += " AND (a.provider_account_id=? OR a.provider_account_id IS NULL)";
             arguments.add(uuid(q.get("providerAccountId")));
         }
-        var rows = jdbc.queryForList(
-                "SELECT a.*,p.balance_minor FROM platform.ledger_account a LEFT JOIN"
-                        + " platform.balance_projection p ON p.ledger_account_id=a.id JOIN"
-                        + " platform.org_currency_enabled ce ON ce.organization_id=a.organization_id AND"
-                        + " ce.environment_id=a.environment_id AND ce.currency=a.currency AND"
-                        + " ce.status='ACTIVE' WHERE a.organization_id=? AND a.environment_id=?"
-                        + predicates
-                        + " ORDER BY a.currency,a.id LIMIT 1001",
-                arguments.toArray());
+        var rows = jdbc.queryForList("""
+                SELECT a.*,p.balance_minor
+                FROM platform.ledger_account a
+                LEFT
+                JOIN platform.balance_projection p ON p.ledger_account_id=a.id
+                JOIN platform.org_currency_enabled ce ON ce.organization_id=a.organization_id
+                    AND ce.environment_id=a.environment_id
+                    AND ce.currency=a.currency
+                    AND ce.status='ACTIVE'
+                WHERE a.organization_id=? AND a.environment_id=?""" + predicates + " ORDER BY a.currency,a.id LIMIT 1001", arguments.toArray());
         if (rows.size() > 1000)
             throw new ApiException(
                     ErrorCode.VALIDATION_ERROR,
@@ -608,9 +612,11 @@ public class OpsQueryService {
             line.put("ledgerAccountId", r.get("id").toString());
             BigInteger rebuilt = BigInteger.ZERO;
             for (var e : jdbc.queryForList(
-                    "SELECT e.side,e.amount_minor FROM platform.journal_entry e JOIN platform.journal j"
-                            + " ON j.id=e.journal_id WHERE e.ledger_account_id=? AND j.sealed_at IS NOT NULL"
-                            + (cutoff != null ? " AND j.sealed_at<=?" : ""),
+                    """
+                    SELECT e.side,e.amount_minor
+                    FROM platform.journal_entry e
+                    JOIN platform.journal j ON j.id=e.journal_id
+                    WHERE e.ledger_account_id=? AND j.sealed_at IS NOT NULL""" + (cutoff != null ? " AND j.sealed_at<=?" : ""),
                     cutoff != null ? new Object[] {r.get("id"), Timestamp.from(cutoff)} : new Object[] {r.get("id")})) {
                 BigInteger amount = BigInteger.valueOf(number(e, "amount_minor"));
                 rebuilt = rebuilt.add(e.get("side").equals("DEBIT") ? amount : amount.negate());
@@ -642,12 +648,31 @@ public class OpsQueryService {
                 out,
                 "balanceTransactions",
                 jdbc.queryForList(
-                        "SELECT"
-                                + " id,bt_id,provider_status,business_type,amount_minor,fee_minor,net_minor,currency,balance_domain,source_object_id,source_object_type,provider_created_at,available_on,fetched_at,api_version,raw_digest,journal_id"
-                                + " FROM platform.balance_transaction WHERE "
-                                + field
-                                + "=? AND organization_id=? AND environment_id=? AND provider_account_id=? AND"
-                                + " currency=? ORDER BY provider_created_at DESC,id DESC LIMIT 101",
+                        """
+                        SELECT
+                            id,
+                            bt_id,
+                            provider_status,
+                            business_type,
+                            amount_minor,
+                            fee_minor,
+                            net_minor,
+                            currency,
+                            balance_domain,
+                            source_object_id,
+                            source_object_type,
+                            provider_created_at,
+                            available_on,
+                            fetched_at,
+                            api_version,
+                            raw_digest,
+                            journal_id
+                        FROM platform.balance_transaction
+                        WHERE
+                        """ + field + """
+                                        =? AND organization_id=? AND environment_id=? AND provider_account_id=? AND currency=?
+                                        ORDER BY provider_created_at DESC,id DESC
+                                        LIMIT 101""",
                         id,
                         c.organizationId(),
                         c.environmentId(),
@@ -680,28 +705,36 @@ public class OpsQueryService {
                     out,
                     "operations",
                     jdbc.queryForList(
-                            "SELECT * FROM platform.recovery_task WHERE "
-                                    + field
-                                    + "=? AND organization_id=? AND environment_id=? ORDER BY created_at DESC,id"
-                                    + " DESC LIMIT 101",
+                            "SELECT * FROM platform.recovery_task WHERE " + field + """
+                                            =? AND organization_id=? AND environment_id=?
+                                            ORDER BY created_at DESC,id DESC
+                                            LIMIT 101""",
                             id,
                             c.organizationId(),
                             c.environmentId()))) operations.add(task(t));
         var banks = out.putArray("bankEvidence");
         if (field.equals("payout_id"))
             for (var line : boundedTrace(
-                    out,
-                    "bankEvidence",
-                    jdbc.queryForList(
-                            "SELECT"
-                                    + " l.id,l.statement_id,l.kind,l.booked_at,l.principal_minor,l.fee_minor,m.journal_id,s.fixture_id,s.digest,s.complete,s.coverage_from,s.coverage_until"
-                                    + " FROM platform.payout_bank_match m JOIN platform.bank_statement_line l ON"
-                                    + " l.id=m.line_id JOIN platform.bank_statement s ON s.id=l.statement_id"
-                                    + " WHERE m.payout_id=? AND m.organization_id=? AND m.environment_id=? ORDER"
-                                    + " BY l.booked_at DESC,l.id DESC LIMIT 101",
-                            id,
-                            c.organizationId(),
-                            c.environmentId())))
+                    out, "bankEvidence", jdbc.queryForList("""
+                            SELECT
+                                l.id,
+                                l.statement_id,
+                                l.kind,
+                                l.booked_at,
+                                l.principal_minor,
+                                l.fee_minor,
+                                m.journal_id,
+                                s.fixture_id,
+                                s.digest,
+                                s.complete,
+                                s.coverage_from,
+                                s.coverage_until
+                            FROM platform.payout_bank_match m
+                            JOIN platform.bank_statement_line l ON l.id=m.line_id
+                            JOIN platform.bank_statement s ON s.id=l.statement_id
+                            WHERE m.payout_id=? AND m.organization_id=? AND m.environment_id=?
+                            ORDER BY l.booked_at DESC,l.id DESC
+                            LIMIT 101""", id, c.organizationId(), c.environmentId())))
                 banks.add(project(
                         line,
                         "id",
@@ -727,16 +760,19 @@ public class OpsQueryService {
                 out,
                 "exceptions",
                 jdbc.queryForList(
-                        "SELECT e.* FROM platform.reconciliation_exception e WHERE e.organization_id=? AND"
-                                + " e.environment_id=? AND e.provider_account_id=? AND e.currency=? AND"
-                                + " (e.source_ref=? OR EXISTS(SELECT 1 FROM platform.balance_transaction b"
-                                + " WHERE b."
-                                + field
-                                + "=? AND b.organization_id=e.organization_id AND"
-                                + " b.environment_id=e.environment_id AND"
-                                + " b.provider_account_id=e.provider_account_id AND b.currency=e.currency AND"
-                                + " (e.source_ref=b.bt_id OR e.source_ref=b.id::text))) ORDER BY e.created_at"
-                                + " DESC,e.id DESC LIMIT 101",
+                        """
+                        SELECT e.*
+                        FROM platform.reconciliation_exception e
+                        WHERE e.organization_id=?
+                            AND e.environment_id=?
+                            AND e.provider_account_id=?
+                            AND e.currency=?
+                            AND (e.source_ref=? OR EXISTS(SELECT 1 FROM platform.balance_transaction b WHERE b.""" + field + """
+                                        =? AND b.organization_id=e.organization_id AND b.environment_id=e.environment_id AND
+                                            b.provider_account_id=e.provider_account_id AND b.currency=e.currency AND (e.source_ref=b.bt_id
+                                            OR e.source_ref=b.id::text)))
+                                        ORDER BY e.created_at DESC,e.id DESC
+                                        LIMIT 101""",
                         c.organizationId(),
                         c.environmentId(),
                         resource.get("provider_account_id"),
@@ -749,14 +785,25 @@ public class OpsQueryService {
                     out,
                     "providerObservations",
                     jdbc.queryForList(
-                            "SELECT"
-                                    + " id,operation_id,call_type,classification,external_object_id,created_at,fetched_at,evidence->>'providerRequestId' AS provider_request_id,evidence->>'apiVersion'"
-                                    + " AS api_version,evidence->>'rawDigest' AS"
-                                    + " raw_digest,evidence->>'httpStatus' AS http_status FROM"
-                                    + " platform.provider_observation WHERE "
-                                    + field
-                                    + "=? AND organization_id=? AND environment_id=? AND provider_account_id=?"
-                                    + " AND currency=? ORDER BY created_at DESC,id DESC LIMIT 101",
+                            """
+                            SELECT
+                                id,
+                                operation_id,
+                                call_type,
+                                classification,
+                                external_object_id,
+                                created_at,
+                                fetched_at,
+                                evidence->>'providerRequestId' AS provider_request_id,
+                                evidence->>'apiVersion' AS api_version,
+                                evidence->>'rawDigest' AS raw_digest,
+                                evidence->>'httpStatus' AS http_status
+                            FROM platform.provider_observation
+                            WHERE
+                            """ + field + """
+                                            =? AND organization_id=? AND environment_id=? AND provider_account_id=? AND currency=?
+                                            ORDER BY created_at DESC,id DESC
+                                            LIMIT 101""",
                             id,
                             c.organizationId(),
                             c.environmentId(),
@@ -798,20 +845,34 @@ public class OpsQueryService {
                     out,
                     "bankEvidence",
                     jdbc.queryForList(
-                            "SELECT"
-                                    + " l.id,l.statement_id,l.kind,l.booked_at,l.principal_minor,l.fee_minor,m.journal_id,s.fixture_id,s.digest,s.complete,s.coverage_from,s.coverage_until"
-                                    + " FROM platform.balance_transaction b JOIN platform.payout_membership"
-                                    + " member ON member.bt_id=b.bt_id JOIN platform.payout p ON"
-                                    + " p.id=member.payout_id AND p.organization_id=b.organization_id AND"
-                                    + " p.environment_id=b.environment_id AND"
-                                    + " p.provider_account_id=b.provider_account_id AND p.currency=b.currency"
-                                    + " JOIN platform.payout_bank_match m ON m.payout_id=p.id JOIN"
-                                    + " platform.bank_statement_line l ON l.id=m.line_id JOIN"
-                                    + " platform.bank_statement s ON s.id=l.statement_id WHERE b."
-                                    + field
-                                    + "=? AND b.organization_id=? AND b.environment_id=? AND"
-                                    + " b.provider_account_id=? AND b.currency=? ORDER BY l.booked_at DESC,l.id"
-                                    + " DESC LIMIT 101",
+                            """
+                            SELECT
+                                l.id,
+                                l.statement_id,
+                                l.kind,
+                                l.booked_at,
+                                l.principal_minor,
+                                l.fee_minor,
+                                m.journal_id,
+                                s.fixture_id,
+                                s.digest,
+                                s.complete,
+                                s.coverage_from,
+                                s.coverage_until
+                            FROM platform.balance_transaction b
+                            JOIN platform.payout_membership member ON member.bt_id=b.bt_id
+                            JOIN platform.payout p ON p.id=member.payout_id
+                                AND p.organization_id=b.organization_id
+                                AND p.environment_id=b.environment_id
+                                AND p.provider_account_id=b.provider_account_id
+                                AND p.currency=b.currency
+                            JOIN platform.payout_bank_match m ON m.payout_id=p.id
+                            JOIN platform.bank_statement_line l ON l.id=m.line_id
+                            JOIN platform.bank_statement s ON s.id=l.statement_id
+                            WHERE b.""" + field + """
+                                            =? AND b.organization_id=? AND b.environment_id=? AND b.provider_account_id=? AND b.currency=?
+                                            ORDER BY l.booked_at DESC,l.id DESC
+                                            LIMIT 101""",
                             id,
                             c.organizationId(),
                             c.environmentId(),
@@ -856,25 +917,25 @@ public class OpsQueryService {
         var arguments = new ArrayList<Object>(List.of(c.organizationId(), c.environmentId(), id, type, id));
         String ownerRelation = "";
         if (field.equals("payment_id")) {
-            ownerRelation = " OR EXISTS(SELECT 1 FROM platform.share_adjustment a JOIN platform.share_allocation s ON"
-                    + " s.id=a.allocation_id WHERE a.journal_id=j.id AND s.payment_id=?)";
+            ownerRelation =
+                    " OR EXISTS(SELECT 1 FROM platform.share_adjustment a JOIN platform.share_allocation s ON s.id=a.allocation_id WHERE a.journal_id=j.id AND s.payment_id=?)";
             arguments.add(id);
         } else if (field.equals("payout_id")) {
-            ownerRelation = " OR EXISTS(SELECT 1 FROM platform.payout_bank_match m WHERE m.journal_id=j.id AND"
-                    + " m.payout_id=?)";
+            ownerRelation =
+                    " OR EXISTS(SELECT 1 FROM platform.payout_bank_match m WHERE m.journal_id=j.id AND m.payout_id=?)";
             arguments.add(id);
         }
         var rows = jdbc.queryForList(
-                "SELECT j.* FROM platform.journal j WHERE j.organization_id=? AND j.environment_id=?"
-                        + " AND j.sealed_at IS NOT NULL AND (EXISTS(SELECT 1 FROM"
-                        + " platform.balance_transaction b WHERE b.journal_id=j.id AND b."
-                        + field
-                        + "=?) OR EXISTS(SELECT 1 FROM platform.ops_adjustment a WHERE"
-                        + " a.organization_id=j.organization_id AND a.environment_id=j.environment_id AND"
-                        + " a.currency=j.currency AND a.status='APPROVED' AND a.posted_journal_id=j.id AND"
-                        + " a.target_type=? AND a.target_id=?)"
-                        + ownerRelation
-                        + ") ORDER BY j.sealed_at DESC,j.id DESC LIMIT 101",
+                """
+                SELECT j.*
+                FROM platform.journal j
+                WHERE j.organization_id=?
+                    AND j.environment_id=?
+                    AND j.sealed_at IS NOT NULL
+                    AND (EXISTS(SELECT 1 FROM platform.balance_transaction b WHERE b.journal_id=j.id AND b.""" + field + """
+                                =?) OR EXISTS(SELECT 1 FROM platform.ops_adjustment a WHERE a.organization_id=j.organization_id AND
+                                    a.environment_id=j.environment_id AND a.currency=j.currency AND a.status='APPROVED' AND
+                                    a.posted_journal_id=j.id AND a.target_type=? AND a.target_id=?)""" + ownerRelation + ") ORDER BY j.sealed_at DESC,j.id DESC LIMIT 101",
                 arguments.toArray());
         var out = json.createArrayNode();
         for (var row : boundedTrace(detail, "journals", rows)) out.add(journalSummary(c, row));
@@ -913,14 +974,11 @@ public class OpsQueryService {
     }
 
     private void enabled(OpsContext c, String currency) {
-        if (jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.org_currency_enabled WHERE organization_id=? AND"
-                                + " environment_id=? AND currency=? AND status='ACTIVE'",
-                        Long.class,
-                        c.organizationId(),
-                        c.environmentId(),
-                        currency)
-                != 1) throw notFound();
+        if (jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.org_currency_enabled
+                        WHERE organization_id=? AND environment_id=? AND currency=? AND status='ACTIVE'""", Long.class, c.organizationId(), c.environmentId(), currency) != 1)
+            throw notFound();
     }
 
     private ObjectNode project(Map<String, Object> r, String... fields) {

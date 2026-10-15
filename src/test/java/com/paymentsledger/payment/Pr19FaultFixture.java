@@ -54,8 +54,10 @@ abstract class Pr19FaultFixture extends Pr18Fixture {
                         "operationKeys",
                         Map.of(
                                 "localOperations",
-                                jdbc.queryForList(
-                                        "SELECT id,operation_key,request_fingerprint,first_send_at,retry_until FROM platform.provider_operation ORDER BY id"),
+                                jdbc.queryForList("""
+                                        SELECT id,operation_key,request_fingerprint,first_send_at,retry_until
+                                        FROM platform.provider_operation
+                                        ORDER BY id"""),
                                 "providerCallKeys",
                                 fake.controls().calls(scope),
                                 "fixture",
@@ -98,8 +100,10 @@ abstract class Pr19FaultFixture extends Pr18Fixture {
             merchant = null;
         }
         super.reset(seed);
-        admin.execute(
-                "CREATE TABLE IF NOT EXISTS platform.pr19_status_transition(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),resource_id uuid NOT NULL,resource_type text NOT NULL,old_status text,new_status text NOT NULL,observed_at timestamptz NOT NULL DEFAULT now())");
+        admin.execute("""
+                CREATE TABLE IF NOT EXISTS platform.pr19_status_transition(id uuid PRIMARY KEY DEFAULT
+                    gen_random_uuid(),resource_id uuid NOT NULL,resource_type text NOT NULL,old_status text,
+                    new_status text NOT NULL,observed_at timestamptz NOT NULL DEFAULT now())""");
         admin.execute("TRUNCATE platform.pr19_status_transition");
         admin.execute("GRANT SELECT,INSERT ON platform.pr19_status_transition TO payments_app");
         admin.execute("""
@@ -130,8 +134,8 @@ abstract class Pr19FaultFixture extends Pr18Fixture {
         } catch (Exception failure) {
             throw new IllegalStateException(failure);
         }
-        merchantJdbc.execute(
-                "TRUNCATE merchant_fixture.inbox,merchant_fixture.fulfillment,merchant_fixture.refund_effect");
+        merchantJdbc.execute("""
+                TRUNCATE merchant_fixture.inbox,merchant_fixture.fulfillment,merchant_fixture.refund_effect""");
     }
 
     @AfterEach
@@ -173,8 +177,10 @@ abstract class Pr19FaultFixture extends Pr18Fixture {
 
     void deliverNativeSucceededTwice() throws Exception {
         var client = HttpClient.newHttpClient();
-        for (var row : jdbc.queryForList(
-                "SELECT * FROM platform.outbox_event WHERE event_type='payment.succeeded' AND origin='NATIVE'")) {
+        for (var row : jdbc.queryForList("""
+                SELECT *
+                FROM platform.outbox_event
+                WHERE event_type='payment.succeeded' AND origin='NATIVE'""")) {
             var event = event(row);
             assertThat(new FulfillmentEligibility.Database(jdbc).evaluate(event).eligible())
                     .isTrue();
@@ -218,31 +224,36 @@ abstract class Pr19FaultFixture extends Pr18Fixture {
     }
 
     long sourceJournals(String source) {
-        return jdbc.queryForObject(
-                "SELECT count(*) FROM platform.journal j JOIN platform.financial_event f ON f.id=j.financial_event_id WHERE f.source_domain='PROVIDER' AND f.source_ref=?",
-                Long.class,
-                source);
+        return jdbc.queryForObject("""
+                SELECT count(*)
+                FROM platform.journal j
+                JOIN platform.financial_event f ON f.id=j.financial_event_id
+                WHERE f.source_domain='PROVIDER' AND f.source_ref=?""", Long.class, source);
     }
 
     void verifyMoney() {
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM (SELECT journal_id FROM platform.journal_entry GROUP BY journal_id HAVING sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END)<>0) bad",
-                        Long.class))
-                .as("balanced journals")
-                .isZero();
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM (SELECT financial_event_id FROM platform.journal WHERE financial_event_id IS NOT NULL GROUP BY financial_event_id HAVING count(*)>1) bad",
-                        Long.class))
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM (SELECT journal_id FROM platform.journal_entry GROUP BY journal_id HAVING sum(CASE WHEN
+                            side='DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END)<>0) bad""", Long.class)).as("balanced journals").isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM (SELECT financial_event_id FROM platform.journal WHERE financial_event_id IS NOT NULL GROUP BY
+                            financial_event_id HAVING count(*)>1) bad""", Long.class))
                 .as("canonical financial event unique")
                 .isZero();
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.refund_control WHERE control_state='NORMAL' AND refunded_minor+reserved_minor>captured_minor",
-                        Long.class))
-                .as("R+H <= C")
-                .isZero();
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.share_allocation a JOIN platform.payment p ON p.id=a.payment_id LEFT JOIN platform.refund_control r ON r.payment_id=p.id WHERE a.effective_minor>floor(greatest(p.captured_amount_minor-coalesce(r.refunded_minor,0)-coalesce(r.reserved_minor,0),0)::numeric*a.rate_bps/10000)",
-                        Long.class))
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.refund_control
+                        WHERE control_state='NORMAL' AND refunded_minor+reserved_minor>captured_minor""", Long.class)).as("R+H <= C").isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.share_allocation a
+                        JOIN platform.payment p ON p.id=a.payment_id
+                        LEFT
+                        JOIN platform.refund_control r ON r.payment_id=p.id
+                        WHERE a.effective_minor>floor(greatest(p.captured_amount_minor-coalesce(r.refunded_minor,
+                            0)-coalesce(r.reserved_minor,0),0)::numeric*a.rate_bps/10000)""", Long.class))
                 .as("share cumulative ceiling")
                 .isZero();
         assertThat(new BalanceRebuildService(jdbc, fake.clock())

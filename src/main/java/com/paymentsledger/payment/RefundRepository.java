@@ -126,23 +126,25 @@ public class RefundRepository {
         PaymentRequests.idempotencyKey(key);
         return tx.execute(status -> {
             lockKey(scopeKey(c) + ":CREATE_REFUND:" + key);
-            var prior = one(
-                    "SELECT * FROM platform.api_idempotency_record WHERE organization_id=? AND environment_id=? AND application_id=? AND request_type='CREATE_REFUND' AND idempotency_key=?",
-                    c.organizationId(),
-                    c.environmentId(),
-                    c.applicationId(),
-                    key);
+            var prior = one("""
+                    SELECT *
+                    FROM platform.api_idempotency_record
+                    WHERE organization_id=?
+                        AND environment_id=?
+                        AND application_id=?
+                        AND request_type='CREATE_REFUND'
+                        AND idempotency_key=?""", c.organizationId(), c.environmentId(), c.applicationId(), key);
             if (prior != null) return replay(prior, request.fingerprint());
             TenantAccessGuard.requireCurrency(c, request.currency());
             operations.checkBinding(c, provider);
             if (request.clientRefundKey() != null) {
                 lockKey(scopeKey(c) + ":CLIENT_REFUND:" + request.clientRefundKey());
-                var existing = one(
-                        "SELECT r.id refund_id,r.request_fingerprint,o.id operation_id FROM platform.refund r JOIN platform.provider_operation o ON o.refund_id=r.id WHERE r.organization_id=? AND r.environment_id=? AND r.application_id=? AND r.client_refund_key=?",
-                        c.organizationId(),
-                        c.environmentId(),
-                        c.applicationId(),
-                        request.clientRefundKey());
+                var existing =
+                        one("""
+                        SELECT r.id refund_id,r.request_fingerprint,o.id operation_id
+                        FROM platform.refund r
+                        JOIN platform.provider_operation o ON o.refund_id=r.id
+                        WHERE r.organization_id=? AND r.environment_id=? AND r.application_id=? AND r.client_refund_key=?""", c.organizationId(), c.environmentId(), c.applicationId(), request.clientRefundKey());
                 if (existing != null) {
                     var replay = replay(existing, request.fingerprint());
                     insertApi(c, request, key, replay.refundId(), replay.operationId());
@@ -150,7 +152,12 @@ public class RefundRepository {
                 }
             }
             var payment = one(
-                    "SELECT * FROM platform.payment WHERE id=? AND organization_id=? AND environment_id=? AND application_id=? AND provider_account_id=? FOR UPDATE",
+                    """
+                    SELECT *
+                    FROM platform.payment
+                    WHERE id=? AND organization_id=? AND environment_id=? AND application_id=? AND provider_account_id=?
+                    FOR
+                    UPDATE""",
                     request.paymentId(),
                     c.organizationId(),
                     c.environmentId(),
@@ -174,10 +181,10 @@ public class RefundRepository {
                             - number(control, "refunded_minor")
                             - number(control, "reserved_minor")) throw error(ErrorCode.REFUND_LIMIT_EXCEEDED);
             UUID refund = PaymentIds.newId(), operation = UUID.randomUUID();
-            jdbc.update(
-                    "UPDATE platform.refund_control SET reserved_minor=reserved_minor+?,version=version+1,updated_at=now() WHERE payment_id=?",
-                    request.amountMinor(),
-                    request.paymentId());
+            jdbc.update("""
+                    UPDATE platform.refund_control
+                    SET reserved_minor=reserved_minor+?,version=version+1,updated_at=now()
+                    WHERE payment_id=?""", request.amountMinor(), request.paymentId());
             jdbc.update(
                     "INSERT INTO platform.refund(id," + SCOPE
                             + ",payment_id,amount_minor,client_refund_key,request_fingerprint,source,reason,note,provider_charge_id) VALUES (?,?,?,?,?,?,?,?,?,?,'LOCAL',?,?,?)",
@@ -237,37 +244,41 @@ public class RefundRepository {
         if (scope.livemode() || auditKey == null || auditKey.isBlank() || auditKey.length() > 255)
             throw error(ErrorCode.VALIDATION_ERROR);
         tx.execute(status -> {
-            var payment = one(
-                    "SELECT * FROM platform.payment WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? FOR UPDATE",
-                    paymentId,
-                    scope.organizationId(),
-                    scope.environmentId(),
-                    scope.providerAccountId());
+            var payment = one("""
+                    SELECT *
+                    FROM platform.payment
+                    WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=?
+                    FOR
+                    UPDATE""", paymentId, scope.organizationId(), scope.environmentId(), scope.providerAccountId());
             if (payment == null) throw error(ErrorCode.NOT_FOUND);
             var control = control(payment);
-            var prior = one(
-                    "SELECT observation_id FROM platform.refund_control_audit WHERE payment_id=? AND audit_key=?",
-                    paymentId,
-                    auditKey);
+            var prior = one("""
+                    SELECT observation_id
+                    FROM platform.refund_control_audit
+                    WHERE payment_id=? AND audit_key=?""", paymentId, auditKey);
             if (prior != null) {
                 if (!observationId.equals(prior.get("observation_id"))) throw error(ErrorCode.IDEMPOTENCY_CONFLICT);
                 return null;
             }
             var observation = one(
-                    "SELECT id FROM platform.refund_source_observation WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? AND payment_id=?",
+                    """
+                    SELECT id
+                    FROM platform.refund_source_observation
+                    WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=? AND payment_id=?""",
                     observationId,
                     scope.organizationId(),
                     scope.environmentId(),
                     scope.providerAccountId(),
                     paymentId);
-            long unsettled = jdbc.queryForObject(
-                    "SELECT count(*) FROM platform.refund WHERE payment_id=? AND (resolution_status<>'KNOWN' OR refund_status NOT IN ('SUCCEEDED','FAILED','CANCELED'))",
-                    Long.class,
-                    paymentId);
-            long succeeded = jdbc.queryForObject(
-                    "SELECT coalesce(sum(amount_minor),0) FROM platform.refund WHERE payment_id=? AND refund_status='SUCCEEDED'",
-                    Long.class,
-                    paymentId);
+            long unsettled = jdbc.queryForObject("""
+                    SELECT count(*)
+                    FROM platform.refund
+                    WHERE payment_id=?
+                        AND (resolution_status<>'KNOWN' OR refund_status NOT IN ('SUCCEEDED','FAILED','CANCELED'))""", Long.class, paymentId);
+            long succeeded = jdbc.queryForObject("""
+                    SELECT coalesce(sum(amount_minor),0)
+                    FROM platform.refund
+                    WHERE payment_id=? AND refund_status='SUCCEEDED'""", Long.class, paymentId);
             // Historical facts may be associated after their charge arrives. Only compatible evidence is resolved:
             // nonterminal observations may advance, but terminal facts and supplied BT identities cannot change.
             long unmatched = jdbc.queryForObject(
@@ -322,7 +333,10 @@ public class RefundRepository {
                     "version",
                     expectedVersion + 1);
             jdbc.update(
-                    "INSERT INTO platform.refund_control_audit(organization_id,environment_id,provider_account_id,payment_id,observation_id,audit_key,before_state,after_state) VALUES (?,?,?,?,?,?,?::jsonb,?::jsonb)",
+                    """
+                    INSERT INTO platform.refund_control_audit(organization_id,environment_id,provider_account_id,
+                        payment_id,observation_id,audit_key,before_state,after_state)
+                    VALUES (?,?,?,?,?,?,?::jsonb,?::jsonb)""",
                     scope.organizationId(),
                     scope.environmentId(),
                     scope.providerAccountId(),
@@ -331,9 +345,10 @@ public class RefundRepository {
                     auditKey,
                     operations.encode(before),
                     operations.encode(after));
-            jdbc.update(
-                    "UPDATE platform.refund_control SET control_state='NORMAL',version=version+1,updated_at=now() WHERE payment_id=?",
-                    paymentId);
+            jdbc.update("""
+                    UPDATE platform.refund_control
+                    SET control_state='NORMAL',version=version+1,updated_at=now()
+                    WHERE payment_id=?""", paymentId);
             shares.reconcile(paymentId, "refund.unfreeze:" + auditKey);
             return null;
         });
@@ -379,31 +394,31 @@ public class RefundRepository {
                 payment.get("currency"),
                 payment.get("id"),
                 payment.get("captured_amount_minor"));
-        jdbc.update(
-                "UPDATE platform.refund_control SET captured_minor=greatest(captured_minor,?),updated_at=now() WHERE payment_id=?",
-                payment.get("captured_amount_minor"),
-                payment.get("id"));
+        jdbc.update("""
+                UPDATE platform.refund_control
+                SET captured_minor=greatest(captured_minor,?),updated_at=now()
+                WHERE payment_id=?""", payment.get("captured_amount_minor"), payment.get("id"));
         return one("SELECT * FROM platform.refund_control WHERE payment_id=? FOR UPDATE", payment.get("id"));
     }
 
     public Map<String, Object> lookup(ProviderScope scope, String providerRefundId) {
         if (scope.livemode()) throw error(ErrorCode.FORBIDDEN);
-        return one(
-                "SELECT * FROM platform.refund WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_refund_id=?",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId(),
-                providerRefundId);
+        return one("""
+                SELECT *
+                FROM platform.refund
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_refund_id=?""", scope.organizationId(), scope.environmentId(), scope.providerAccountId(), providerRefundId);
     }
 
     public UUID paymentForCharge(ProviderScope scope, String chargeId) {
         if (scope.livemode()) throw error(ErrorCode.FORBIDDEN);
-        var row = one(
-                "SELECT payment_id FROM platform.payment_attempt WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND provider_object_id=? AND captured",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId(),
-                chargeId);
+        var row = one("""
+                SELECT payment_id
+                FROM platform.payment_attempt
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND provider_account_id=?
+                    AND provider_object_id=?
+                    AND captured""", scope.organizationId(), scope.environmentId(), scope.providerAccountId(), chargeId);
         return row == null ? null : uuid(row, "payment_id");
     }
     /** Caller authenticates provider scope; null local id never guesses an ambiguous reservation by amount. */
@@ -429,12 +444,10 @@ public class RefundRepository {
         if (bound != null && localRefundId == null) localRefundId = uuid(bound, "id");
         var local = localRefundId == null
                 ? null
-                : one(
-                        "SELECT * FROM platform.refund WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=?",
-                        localRefundId,
-                        scope.organizationId(),
-                        scope.environmentId(),
-                        scope.providerAccountId());
+                : one("""
+                        SELECT *
+                        FROM platform.refund
+                        WHERE id=? AND organization_id=? AND environment_id=? AND provider_account_id=?""", localRefundId, scope.organizationId(), scope.environmentId(), scope.providerAccountId());
         if (local != null) paymentId = uuid(local, "payment_id");
         if (paymentId == null) {
             observe(scope, fact, evidence, null, null);
@@ -450,22 +463,24 @@ public class RefundRepository {
         if (bound != null && local == null) local = bound;
         if (bound != null && local != null && !bound.get("id").equals(local.get("id"))) {
             observe(scope, fact, evidence, uuid(local, "id"), paymentId);
-            jdbc.update(
-                    "UPDATE platform.refund_control SET control_state='EXTERNAL_CONFLICT',version=version+1 WHERE payment_id=?",
-                    paymentId);
-            jdbc.update(
-                    "UPDATE platform.refund SET resolution_status='CONFLICT',unresolved_since=coalesce(unresolved_since,?),version=version+1 WHERE id=?",
-                    Timestamp.from(operations.now()),
-                    local.get("id"));
+            jdbc.update("""
+                    UPDATE platform.refund_control
+                    SET control_state='EXTERNAL_CONFLICT',version=version+1
+                    WHERE payment_id=?""", paymentId);
+            jdbc.update("""
+                    UPDATE platform.refund
+                    SET resolution_status='CONFLICT',unresolved_since=coalesce(unresolved_since,?),version=version+1
+                    WHERE id=?""", Timestamp.from(operations.now()), local.get("id"));
             return uuid(local, "id");
         }
         if (local != null) local = one("SELECT * FROM platform.refund WHERE id=? FOR UPDATE", local.get("id"));
         boolean external = local == null;
         if (external) {
             // Preserve genuine external facts even when R + H exceeds C. Freeze before changing amounts.
-            jdbc.update(
-                    "UPDATE platform.refund_control SET control_state='EXTERNAL_CONFLICT',version=version+1,updated_at=now() WHERE payment_id=?",
-                    paymentId);
+            jdbc.update("""
+                    UPDATE platform.refund_control
+                    SET control_state='EXTERNAL_CONFLICT',version=version+1,updated_at=now()
+                    WHERE payment_id=?""", paymentId);
             if (!fact.currency().equalsIgnoreCase(str(payment, "currency"))) {
                 observe(scope, fact, evidence, null, null);
                 return null;
@@ -514,13 +529,18 @@ public class RefundRepository {
                 .contains(Objects.toString(fact.status(), ""));
         if (terminal(before) && terminal(state) && !before.equals(state)) conflict = true;
         if (conflict || "CONFLICT".equals(local.get("resolution_status"))) {
-            jdbc.update(
-                    "UPDATE platform.refund_control SET control_state='EXTERNAL_CONFLICT',version=version+1 WHERE payment_id=?",
-                    paymentId);
-            jdbc.update(
-                    "UPDATE platform.refund SET resolution_status='CONFLICT',unresolved_since=coalesce(unresolved_since,?),version=version+1,updated_at=now() WHERE id=?",
-                    Timestamp.from(operations.now()),
-                    refundId);
+            jdbc.update("""
+                    UPDATE platform.refund_control
+                    SET control_state='EXTERNAL_CONFLICT',version=version+1
+                    WHERE payment_id=?""", paymentId);
+            jdbc.update("""
+                    UPDATE platform.refund
+                    SET
+                        resolution_status='CONFLICT',
+                        unresolved_since=coalesce(unresolved_since,?),
+                        version=version+1,
+                        updated_at=now()
+                    WHERE id=?""", Timestamp.from(operations.now()), refundId);
             return refundId;
         }
         if (terminal(before)) {
@@ -529,16 +549,33 @@ public class RefundRepository {
         }
         if (!terminal(before) && terminal(state)) {
             long held = "LOCAL".equals(local.get("source")) ? number(local, "amount_minor") : 0;
-            jdbc.update(
-                    "UPDATE platform.refund_control SET reserved_minor=reserved_minor-?,refunded_minor=refunded_minor+?,version=version+1,updated_at=now() WHERE payment_id=?",
-                    held,
-                    "SUCCEEDED".equals(state) ? number(local, "amount_minor") : 0,
-                    paymentId);
+            jdbc.update("""
+                    UPDATE platform.refund_control
+                    SET
+                        reserved_minor=reserved_minor-?,
+                        refunded_minor=refunded_minor+?,
+                        version=version+1,
+                        updated_at=now()
+                    WHERE payment_id=?""", held, "SUCCEEDED".equals(state) ? number(local, "amount_minor") : 0, paymentId);
         }
         // Older pending evidence can add BT references but must not regress a terminal state or provider status.
         String providerStatus = terminal(before) ? str(local, "provider_status") : fact.status();
         jdbc.update(
-                "UPDATE platform.refund SET refund_status=?,resolution_status=?,provider_status=?,provider_refund_id=coalesce(provider_refund_id,?),balance_transaction_id=coalesce(balance_transaction_id,?),failure_balance_transaction_id=coalesce(failure_balance_transaction_id,?),failure_reason=coalesce(failure_reason,?),last_provider_confirmed_at=?,unresolved_since=CASE WHEN ? THEN NULL ELSE coalesce(unresolved_since,?) END,version=version+1,updated_at=now() WHERE id=?",
+                """
+                UPDATE platform.refund
+                SET
+                    refund_status=?,
+                    resolution_status=?,
+                    provider_status=?,
+                    provider_refund_id=coalesce(provider_refund_id,?),
+                    balance_transaction_id=coalesce(balance_transaction_id,?),
+                    failure_balance_transaction_id=coalesce(failure_balance_transaction_id,?),
+                    failure_reason=coalesce(failure_reason,?),
+                    last_provider_confirmed_at=?,
+                    unresolved_since=CASE WHEN ? THEN NULL ELSE coalesce(unresolved_since,?) END,
+                    version=version+1,
+                    updated_at=now()
+                WHERE id=?""",
                 state,
                 recognized ? "KNOWN" : "UNKNOWN",
                 providerStatus,
@@ -551,10 +588,10 @@ public class RefundRepository {
                 Timestamp.from(operations.now()),
                 refundId);
         // A webhook/query may converge business facts, but cannot steal an active sender's operation lease.
-        jdbc.update(
-                "UPDATE platform.recovery_task SET status='WAITING',available_at=least(available_at,?),version=version+1 WHERE refund_id=? AND status<>'RUNNING' AND status<>'ESCALATED'",
-                Timestamp.from(operations.now()),
-                refundId);
+        jdbc.update("""
+                UPDATE platform.recovery_task
+                SET status='WAITING',available_at=least(available_at,?),version=version+1
+                WHERE refund_id=? AND status<>'RUNNING' AND status<>'ESCALATED'""", Timestamp.from(operations.now()), refundId);
         return refundId;
     }
 
@@ -592,7 +629,10 @@ public class RefundRepository {
 
     private void observe(ProviderScope scope, RefundFact fact, ProviderEvidence evidence, UUID refund, UUID payment) {
         jdbc.update(
-                "INSERT INTO platform.refund_source_observation(organization_id,environment_id,provider_account_id,provider_refund_id,refund_id,payment_id,fact,evidence) VALUES (?,?,?,?,?,?,?::jsonb,?::jsonb)",
+                """
+                INSERT INTO platform.refund_source_observation(organization_id,environment_id,provider_account_id,
+                    provider_refund_id,refund_id,payment_id,fact,evidence)
+                VALUES (?,?,?,?,?,?,?::jsonb,?::jsonb)""",
                 scope.organizationId(),
                 scope.environmentId(),
                 scope.providerAccountId(),
@@ -621,7 +661,10 @@ public class RefundRepository {
             fact.put("refundId", providerRefundId);
             fact.put("classification", result.classification().name());
             jdbc.update(
-                    "INSERT INTO platform.refund_source_observation(organization_id,environment_id,provider_account_id,provider_refund_id,fact,evidence) VALUES (?,?,?,?,?::jsonb,?::jsonb)",
+                    """
+                    INSERT INTO platform.refund_source_observation(organization_id,environment_id,provider_account_id,
+                        provider_refund_id,fact,evidence)
+                    VALUES (?,?,?,?,?::jsonb,?::jsonb)""",
                     scope.organizationId(),
                     scope.environmentId(),
                     scope.providerAccountId(),
@@ -653,13 +696,18 @@ public class RefundRepository {
             UUID id = uuid(claim.operation(), "refund_id");
             lock(id);
             if (!operations.owns(claim)) return null;
-            jdbc.update(
-                    "UPDATE platform.refund_control SET control_state='EXTERNAL_CONFLICT',version=version+1,updated_at=now() WHERE payment_id=?",
-                    claim.paymentId());
-            jdbc.update(
-                    "UPDATE platform.refund SET resolution_status='CONFLICT',unresolved_since=coalesce(unresolved_since,?),version=version+1,updated_at=now() WHERE id=?",
-                    Timestamp.from(operations.now()),
-                    id);
+            jdbc.update("""
+                    UPDATE platform.refund_control
+                    SET control_state='EXTERNAL_CONFLICT',version=version+1,updated_at=now()
+                    WHERE payment_id=?""", claim.paymentId());
+            jdbc.update("""
+                    UPDATE platform.refund
+                    SET
+                        resolution_status='CONFLICT',
+                        unresolved_since=coalesce(unresolved_since,?),
+                        version=version+1,
+                        updated_at=now()
+                    WHERE id=?""", Timestamp.from(operations.now()), id);
             // Ownership was checked under the retained operation lock. Do not recheck wall-clock expiry after changing
             // business state.
             shares.reconcile(claim.paymentId(), "refund.anchor-conflict");
@@ -695,18 +743,21 @@ public class RefundRepository {
                     && result.classification() == ProviderCallClassification.DEFINITIVE_REJECT
                     && current.get("provider_refund_id") == null
                     && !terminal(str(current, "refund_status"))) {
-                jdbc.update(
-                        "UPDATE platform.refund_control SET reserved_minor=reserved_minor-?,version=version+1 WHERE payment_id=?",
-                        current.get("amount_minor"),
-                        current.get("payment_id"));
-                jdbc.update(
-                        "UPDATE platform.refund SET refund_status='FAILED',resolution_status='KNOWN',version=version+1,updated_at=now() WHERE id=?",
-                        id);
-            } else if (!terminal(str(current, "refund_status")))
-                jdbc.update(
-                        "UPDATE platform.refund SET resolution_status=CASE WHEN resolution_status='CONFLICT' THEN 'CONFLICT' ELSE 'UNKNOWN' END,unresolved_since=coalesce(unresolved_since,?),version=version+1 WHERE id=?",
-                        Timestamp.from(operations.now()),
-                        id);
+                jdbc.update("""
+                        UPDATE platform.refund_control
+                        SET reserved_minor=reserved_minor-?,version=version+1
+                        WHERE payment_id=?""", current.get("amount_minor"), current.get("payment_id"));
+                jdbc.update("""
+                        UPDATE platform.refund
+                        SET refund_status='FAILED',resolution_status='KNOWN',version=version+1,updated_at=now()
+                        WHERE id=?""", id);
+            } else if (!terminal(str(current, "refund_status"))) jdbc.update("""
+                        UPDATE platform.refund
+                        SET
+                            resolution_status=CASE WHEN resolution_status='CONFLICT' THEN 'CONFLICT' ELSE 'UNKNOWN' END,
+                            unresolved_since=coalesce(unresolved_since,?),
+                            version=version+1
+                        WHERE id=?""", Timestamp.from(operations.now()), id);
             if (result.payload() == null
                     || (result.classification() != ProviderCallClassification.SUCCESS
                             && result.classification() != ProviderCallClassification.AUTH_REQUIRED))
@@ -753,9 +804,10 @@ public class RefundRepository {
                         str(current, "provider_status"));
                 return false;
             }
-            jdbc.update(
-                    "UPDATE platform.refund SET refund_status='SUBMITTED',version=version+1,updated_at=now() WHERE id=? AND refund_status='RESERVED'",
-                    id);
+            jdbc.update("""
+                    UPDATE platform.refund
+                    SET refund_status='SUBMITTED',version=version+1,updated_at=now()
+                    WHERE id=? AND refund_status='RESERVED'""", id);
             return true;
         });
     }
@@ -769,12 +821,10 @@ public class RefundRepository {
         TenantAccessGuard.requireScope(c, "refunds:read");
         return tx.execute(status -> {
             var r = one(
-                    "SELECT * FROM platform.refund WHERE id=? AND organization_id=? AND environment_id=? AND application_id=? AND provider_account_id=?",
-                    id,
-                    c.organizationId(),
-                    c.environmentId(),
-                    c.applicationId(),
-                    c.allowedProviderAccountId());
+                    """
+                    SELECT *
+                    FROM platform.refund
+                    WHERE id=? AND organization_id=? AND environment_id=? AND application_id=? AND provider_account_id=?""", id, c.organizationId(), c.environmentId(), c.applicationId(), c.allowedProviderAccountId());
             if (r == null || !c.allowedCurrencies().contains(r.get("currency"))) throw error(ErrorCode.NOT_FOUND);
             var control = one("SELECT * FROM platform.refund_control WHERE payment_id=?", r.get("payment_id"));
             var result = new LinkedHashMap<String, Object>();
@@ -804,7 +854,13 @@ public class RefundRepository {
                                             - number(control, "refunded_minor")
                                             - number(control, "reserved_minor"))));
             var bts = jdbc.queryForList(
-                    "SELECT * FROM platform.balance_transaction WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND (refund_id=? OR bt_id IN (?,?))",
+                    """
+                    SELECT *
+                    FROM platform.balance_transaction
+                    WHERE organization_id=?
+                        AND environment_id=?
+                        AND provider_account_id=?
+                        AND (refund_id=? OR bt_id IN (?,?))""",
                     r.get("organization_id"),
                     r.get("environment_id"),
                     r.get("provider_account_id"),
@@ -815,10 +871,8 @@ public class RefundRepository {
                     bts.stream().filter(b -> "POSTED".equals(b.get("state"))).count();
             boolean conflict = bts.stream()
                     .anyMatch(b -> "QUARANTINED".equals(b.get("state"))
-                            || Boolean.TRUE.equals(jdbc.queryForObject(
-                                    "SELECT EXISTS(SELECT 1 FROM platform.bt_evidence_conflict WHERE balance_transaction_id=?)",
-                                    Boolean.class,
-                                    b.get("id"))));
+                            || Boolean.TRUE.equals(jdbc.queryForObject("""
+                                    SELECT EXISTS(SELECT 1 FROM platform.bt_evidence_conflict WHERE balance_transaction_id=?)""", Boolean.class, b.get("id"))));
             boolean referencedMissing = (r.get("balance_transaction_id") != null
                             && bts.stream()
                                     .noneMatch(

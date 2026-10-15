@@ -44,7 +44,13 @@ public final class PayoutService {
         return tx.execute(status -> {
             trusted(scope, fact.currency());
             jdbc.update(
-                    "INSERT INTO platform.payout(organization_id,environment_id,provider_account_id,livemode,provider_payout_id,currency,amount_minor,automatic,arrival_date,provider_status,failure_code,last_observed_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(organization_id,environment_id,provider_account_id,livemode,provider_payout_id) DO NOTHING",
+                    """
+                    INSERT INTO platform.payout(organization_id,environment_id,provider_account_id,livemode,
+                        provider_payout_id,currency,amount_minor,automatic,arrival_date,provider_status,failure_code,
+                        last_observed_at)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+                    ON CONFLICT(organization_id,environment_id,provider_account_id,livemode,provider_payout_id)
+                    DO NOTHING""",
                     scope.organizationId(),
                     scope.environmentId(),
                     scope.providerAccountId(),
@@ -60,7 +66,9 @@ public final class PayoutService {
             var p = lock(scope, fact.payoutId());
             UUID id = uuid(p, "id");
             jdbc.update(
-                    "INSERT INTO platform.payout_observation(payout_id,fact,evidence) VALUES (?,?::jsonb,?::jsonb)",
+                    """
+                    INSERT INTO platform.payout_observation(payout_id,fact,evidence)
+                    VALUES (?,?::jsonb,?::jsonb)""",
                     id,
                     mapper.valueToTree(fact).toString(),
                     safeEvidence(evidence).toString());
@@ -79,12 +87,10 @@ public final class PayoutService {
             if (!stale && terminal) conflict(id, "PAYOUT_TERMINAL_STATE_CONFLICT", mapper.valueToTree(fact));
             if (!stale && !identity && !terminal && known)
                 jdbc.update(
-                        "UPDATE platform.payout SET provider_status=?,arrival_date=?,failure_code=?,last_observed_at=?,updated_at=now() WHERE id=?",
-                        next,
-                        stamp(fact.arrivalDate()),
-                        fact.failureCode(),
-                        stamp(evidence.requestedAt()),
-                        id);
+                        """
+                        UPDATE platform.payout
+                        SET provider_status=?,arrival_date=?,failure_code=?,last_observed_at=?,updated_at=now()
+                        WHERE id=?""", next, stamp(fact.arrivalDate()), fact.failureCode(), stamp(evidence.requestedAt()), id);
             return id;
         });
     }
@@ -127,12 +133,8 @@ public final class PayoutService {
             conflict(id, "PAYOUT_BT_FACT_CONFLICT", mapper.valueToTree(fact));
             return quarantine(btRowId, "PAYOUT_BT_FACT_CONFLICT");
         }
-        if (!Boolean.TRUE.equals(jdbc.queryForObject(
-                "SELECT EXISTS(SELECT 1 FROM platform.payout_bt_link WHERE payout_id=? AND bt_id=? AND role=?)",
-                Boolean.class,
-                id,
-                fact.btId(),
-                role))) {
+        if (!Boolean.TRUE.equals(jdbc.queryForObject("""
+                SELECT EXISTS(SELECT 1 FROM platform.payout_bt_link WHERE payout_id=? AND bt_id=? AND role=?)""", Boolean.class, id, fact.btId(), role))) {
             conflict(id, "PAYOUT_BT_LINK_CONFLICT", mapper.valueToTree(fact));
             return quarantine(btRowId, "PAYOUT_BT_LINK_CONFLICT");
         }
@@ -171,12 +173,15 @@ public final class PayoutService {
                         immutable,
                         lines,
                         null));
+        jdbc.update("""
+                UPDATE platform.balance_transaction
+                SET state='POSTED',journal_id=?,reason=NULL,version=version+1,updated_at=now()
+                WHERE id=?""", journal, btRowId);
         jdbc.update(
-                "UPDATE platform.balance_transaction SET state='POSTED',journal_id=?,reason=NULL,version=version+1,updated_at=now() WHERE id=?",
-                journal,
-                btRowId);
-        jdbc.update(
-                "INSERT INTO platform.payout_fact(payout_id,balance_transaction_id,journal_id,kind,principal_minor,transit_delta,returned_delta,suspense_delta,fee_minor,organization_id,environment_id,currency) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                """
+                INSERT INTO platform.payout_fact(payout_id,balance_transaction_id,journal_id,kind,principal_minor,
+                    transit_delta,returned_delta,suspense_delta,fee_minor,organization_id,environment_id,currency)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
                 id,
                 btRowId,
                 journal,
@@ -190,7 +195,16 @@ public final class PayoutService {
                 scope.environmentId(),
                 p.get("currency"));
         jdbc.update(
-                "UPDATE platform.payout SET outgoing_minor=?,transit_minor=?,returned_minor=?,suspense_minor=?,psp_fee_minor=?,updated_at=now() WHERE id=?",
+                """
+                UPDATE platform.payout
+                SET
+                    outgoing_minor=?,
+                    transit_minor=?,
+                    returned_minor=?,
+                    suspense_minor=?,
+                    psp_fee_minor=?,
+                    updated_at=now()
+                WHERE id=?""",
                 Math.addExact(number(p, "outgoing_minor"), out ? principal : 0),
                 Math.addExact(number(p, "transit_minor"), transit),
                 Math.addExact(number(p, "returned_minor"), allocated),
@@ -233,22 +247,23 @@ public final class PayoutService {
     }
 
     private void link(UUID id, String bt, String role) {
-        if (bt != null && !bt.isBlank())
-            jdbc.update(
-                    "INSERT INTO platform.payout_bt_link(payout_id,bt_id,role) VALUES (?,?,?) ON CONFLICT DO NOTHING",
-                    id,
-                    bt,
-                    role);
+        if (bt != null && !bt.isBlank()) jdbc.update("""
+                    INSERT INTO platform.payout_bt_link(payout_id,bt_id,role)
+                    VALUES (?,?,?)
+                    ON CONFLICT
+                    DO NOTHING""", id, bt, role);
     }
 
     private void conflict(UUID id, String reason, JsonNode evidence) {
-        jdbc.update(
-                "UPDATE platform.payout SET conflict=true,bank_match_state='CONFLICT',updated_at=now() WHERE id=?", id);
-        jdbc.update(
-                "INSERT INTO platform.payout_case(payout_id,reason,evidence) VALUES (?,?,?::jsonb) ON CONFLICT(payout_id,reason) DO NOTHING",
-                id,
-                reason,
-                evidence.toString());
+        jdbc.update("""
+                UPDATE platform.payout
+                SET conflict=true,bank_match_state='CONFLICT',updated_at=now()
+                WHERE id=?""", id);
+        jdbc.update("""
+                INSERT INTO platform.payout_case(payout_id,reason,evidence)
+                VALUES (?,?,?::jsonb)
+                ON CONFLICT(payout_id,reason)
+                DO NOTHING""", id, reason, evidence.toString());
     }
 
     private String pending(UUID id, String reason) {
@@ -260,18 +275,22 @@ public final class PayoutService {
     }
 
     private String mark(UUID id, String state, String reason) {
-        jdbc.update(
-                "UPDATE platform.balance_transaction SET state=?,reason=?,version=version+1,updated_at=now() WHERE id=?",
-                state,
-                reason,
-                id);
+        jdbc.update("""
+                UPDATE platform.balance_transaction
+                SET state=?,reason=?,version=version+1,updated_at=now()
+                WHERE id=?""", state, reason, id);
         return state;
     }
 
     private void trusted(ProviderScope scope, String currency) {
         if (scope.livemode()
                 || !Boolean.TRUE.equals(jdbc.queryForObject(
-                        "SELECT EXISTS(SELECT 1 FROM platform.provider_account p JOIN platform.environment_config e ON e.organization_id=p.organization_id AND e.id=p.environment_id JOIN platform.org_currency_enabled c ON c.organization_id=p.organization_id AND c.environment_id=p.environment_id WHERE p.organization_id=? AND p.environment_id=? AND p.id=? AND NOT p.livemode AND NOT e.livemode AND p.status='ACTIVE' AND c.currency=?)",
+                        """
+                        SELECT EXISTS(SELECT 1 FROM platform.provider_account p JOIN platform.environment_config e ON
+                            e.organization_id=p.organization_id AND e.id=p.environment_id JOIN platform.org_currency_enabled
+                            c ON c.organization_id=p.organization_id AND c.environment_id=p.environment_id WHERE
+                            p.organization_id=? AND p.environment_id=? AND p.id=? AND NOT p.livemode AND NOT e.livemode AND
+                            p.status='ACTIVE' AND c.currency=?)""",
                         Boolean.class,
                         scope.organizationId(),
                         scope.environmentId(),
@@ -282,8 +301,14 @@ public final class PayoutService {
 
     private Map<String, Object> find(ProviderScope scope, String id, boolean lock) {
         return one(
-                "SELECT * FROM platform.payout WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND provider_payout_id=?"
-                        + (lock ? " FOR UPDATE" : ""),
+                """
+                SELECT *
+                FROM platform.payout
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND provider_account_id=?
+                    AND livemode=?
+                    AND provider_payout_id=?""" + (lock ? " FOR UPDATE" : ""),
                 scope.organizationId(),
                 scope.environmentId(),
                 scope.providerAccountId(),
@@ -294,7 +319,16 @@ public final class PayoutService {
     private Map<String, UUID> accounts(Map<String, Object> p) {
         var result = new HashMap<String, UUID>();
         for (var a : jdbc.queryForList(
-                "SELECT id,account_purpose FROM platform.ledger_account WHERE organization_id=? AND environment_id=? AND currency=? AND source_domain='PROVIDER' AND provider_account_id=? AND balance_domain='PAYMENTS' AND account_purpose IN('PSP_FUNDS','PSP_FEE_EXPENSE','BANK_PAYOUT_IN_TRANSIT','SUSPENSE')",
+                """
+                SELECT id,account_purpose
+                FROM platform.ledger_account
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND currency=?
+                    AND source_domain='PROVIDER'
+                    AND provider_account_id=?
+                    AND balance_domain='PAYMENTS'
+                    AND account_purpose IN('PSP_FUNDS','PSP_FEE_EXPENSE','BANK_PAYOUT_IN_TRANSIT','SUSPENSE')""",
                 p.get("organization_id"),
                 p.get("environment_id"),
                 p.get("currency"),

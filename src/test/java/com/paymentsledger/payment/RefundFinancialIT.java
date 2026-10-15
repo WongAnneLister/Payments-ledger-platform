@@ -37,15 +37,17 @@ class RefundFinancialIT extends PaymentCoreFixture {
                 .attemptPayment(scope, session(payment), FakeControls.AttemptOutcome.SUCCEED)
                 .latestChargeId();
         service.get(context, paymentId);
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode,business_zone) VALUES (?,?,?,false,'ZERO','UTC')",
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode,business_zone)
+                VALUES (?,?,?,false,'ZERO','UTC')""", id(1), id(2), id(4));
         for (String purpose : List.of("PSP_FUNDS", "PSP_FEE_EXPENSE", "SALES_REVENUE", "SALES_RETURNS", "SUSPENSE")) {
             boolean external = !purpose.startsWith("SALES_");
             admin.update(
-                    "INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,source_domain,provider_account_id,balance_domain) VALUES (?,?,'USD',?,?,?,?)",
+                    """
+                    INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,
+                        source_domain,provider_account_id,balance_domain)
+                    VALUES (?,?,'USD',?,?,?,?)""",
                     id(1),
                     id(2),
                     purpose,
@@ -108,17 +110,24 @@ class RefundFinancialIT extends PaymentCoreFixture {
     }
 
     long balance(String purpose) {
-        return jdbc.queryForObject(
-                "SELECT coalesce(sum(b.balance_minor),0) FROM platform.balance_projection b JOIN platform.ledger_account a ON a.id=b.ledger_account_id WHERE a.account_purpose=?",
-                Long.class,
-                purpose);
+        return jdbc.queryForObject("""
+                SELECT coalesce(sum(b.balance_minor),0)
+                FROM platform.balance_projection b
+                JOIN platform.ledger_account a ON a.id=b.ledger_account_id
+                WHERE a.account_purpose=?""", Long.class, purpose);
     }
 
     void assertProjection() {
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.ledger_account a LEFT JOIN platform.balance_projection p ON p.ledger_account_id=a.id LEFT JOIN (SELECT ledger_account_id,sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END) rebuilt FROM platform.journal_entry GROUP BY ledger_account_id) e ON e.ledger_account_id=a.id WHERE coalesce(p.balance_minor,0)<>coalesce(e.rebuilt,0)",
-                        Long.class))
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.ledger_account a
+                        LEFT
+                        JOIN platform.balance_projection p ON p.ledger_account_id=a.id
+                        LEFT
+                        JOIN (SELECT ledger_account_id,sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE
+                            -amount_minor::numeric END) rebuilt FROM platform.journal_entry GROUP BY ledger_account_id) e ON
+                            e.ledger_account_id=a.id
+                        WHERE coalesce(p.balance_minor,0)<>coalesce(e.rebuilt,0)""", Long.class)).isZero();
     }
 
     @Test

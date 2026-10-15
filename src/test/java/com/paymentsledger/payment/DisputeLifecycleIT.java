@@ -68,15 +68,17 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
                                 "a".repeat(64)),
                         fake.clock().instant(),
                         null);
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode,business_zone) VALUES (?,?,?,false,'ZERO','UTC')",
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode,business_zone)
+                VALUES (?,?,?,false,'ZERO','UTC')""", id(1), id(2), id(4));
         for (String p : List.of("PSP_FUNDS", "PSP_FEE_EXPENSE", "SALES_REVENUE", "SALES_RETURNS", "SUSPENSE")) {
             boolean external = !p.startsWith("SALES_");
             admin.update(
-                    "INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,source_domain,provider_account_id,balance_domain) VALUES (?,?,'USD',?,?,?,?)",
+                    """
+                    INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,
+                        source_domain,provider_account_id,balance_domain)
+                    VALUES (?,?,'USD',?,?,?,?)""",
                     id(1),
                     id(2),
                     p,
@@ -143,24 +145,31 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
     }
 
     long effective() {
-        return jdbc.queryForObject(
-                "SELECT coalesce(sum(effective_minor),0) FROM platform.share_allocation WHERE payment_id=?",
-                Long.class,
-                paymentId);
+        return jdbc.queryForObject("""
+                SELECT coalesce(sum(effective_minor),0)
+                FROM platform.share_allocation
+                WHERE payment_id=?""", Long.class, paymentId);
     }
 
     long balance(String purpose) {
-        return jdbc.queryForObject(
-                "SELECT coalesce(sum(b.balance_minor),0) FROM platform.balance_projection b JOIN platform.ledger_account a ON a.id=b.ledger_account_id WHERE a.account_purpose=?",
-                Long.class,
-                purpose);
+        return jdbc.queryForObject("""
+                SELECT coalesce(sum(b.balance_minor),0)
+                FROM platform.balance_projection b
+                JOIN platform.ledger_account a ON a.id=b.ledger_account_id
+                WHERE a.account_purpose=?""", Long.class, purpose);
     }
 
     void coverage() {
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.ledger_account a LEFT JOIN platform.balance_projection p ON p.ledger_account_id=a.id LEFT JOIN (SELECT ledger_account_id,sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END) n FROM platform.journal_entry GROUP BY ledger_account_id) e ON e.ledger_account_id=a.id WHERE coalesce(p.balance_minor,0)<>coalesce(e.n,0)",
-                        Long.class))
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.ledger_account a
+                        LEFT
+                        JOIN platform.balance_projection p ON p.ledger_account_id=a.id
+                        LEFT
+                        JOIN (SELECT ledger_account_id,sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE
+                            -amount_minor::numeric END) n FROM platform.journal_entry GROUP BY ledger_account_id) e ON
+                            e.ledger_account_id=a.id
+                        WHERE coalesce(p.balance_minor,0)<>coalesce(e.n,0)""", Long.class)).isZero();
         assertThat(balance("PARTNER_SHARE_EXPENSE")).isEqualTo(effective());
         assertThat(balance("PARTNER_PAYABLE")).isEqualTo(-effective());
     }
@@ -169,9 +178,10 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
     WebhookProcessor processor;
 
     void webhook(String eventId, String disputeId, String status, List<String> bts) throws Exception {
-        admin.update(
-                "UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref='acct_test' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='STRIPE',provider_account_ref='acct_test'
+                WHERE id=?""", id(4));
         if (inbox == null) {
             inbox = new WebhookInboxRepository(jdbc, tx, json, fake.clock());
             processor = new WebhookProcessor(
@@ -239,9 +249,10 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
         process();
         assertThat(effective()).isZero();
         assertThat(balance("PSP_FUNDS")).isEqualTo(psp);
-        admin.update(
-                "UPDATE platform.provider_account SET provider='FAKE',provider_account_ref='fixture' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='FAKE',provider_account_ref='fixture'
+                WHERE id=?""", id(4));
         assertThatThrownBy(() -> reserve("blocked-warning", 100))
                 .isInstanceOfSatisfying(
                         ApiException.class, e -> assertThat(e.errorCode()).isEqualTo(ErrorCode.REFUND_BLOCKED));
@@ -519,10 +530,12 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
     void shareJournalFailureRollsBackDisputeAndEvidence() {
         capture();
         long journals = count("journal");
-        admin.execute(
-                "CREATE FUNCTION platform.pr13_fail_share() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected dispute share failure'; END $$");
-        admin.execute(
-                "CREATE TRIGGER pr13_fail_share BEFORE INSERT ON platform.share_adjustment FOR EACH ROW EXECUTE FUNCTION platform.pr13_fail_share()");
+        admin.execute("""
+                CREATE FUNCTION platform.pr13_fail_share() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
+                    EXCEPTION 'injected dispute share failure'; END $$""");
+        admin.execute("""
+                CREATE TRIGGER pr13_fail_share BEFORE INSERT ON platform.share_adjustment FOR EACH ROW EXECUTE
+                    FUNCTION platform.pr13_fail_share()""");
         try {
             assertThatThrownBy(() -> observe("du_rollback", "needs_response"))
                     .hasStackTraceContaining("injected dispute share failure");
@@ -546,10 +559,13 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
         var current = inbox.claimDue(1).getFirst();
         processor.process(old);
         assertThat(count("dispute")).isZero();
-        admin.execute(
-                "CREATE FUNCTION platform.pr13_fail_ack() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.status='DONE' THEN RAISE EXCEPTION 'injected dispute ack failure'; END IF; RETURN NEW; END $$");
-        admin.execute(
-                "CREATE TRIGGER pr13_fail_ack BEFORE UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.pr13_fail_ack()");
+        admin.execute("""
+                CREATE FUNCTION platform.pr13_fail_ack() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF
+                    NEW.status='DONE' THEN RAISE EXCEPTION 'injected dispute ack failure'; END IF; RETURN NEW; END
+                    $$""");
+        admin.execute("""
+                CREATE TRIGGER pr13_fail_ack BEFORE
+                UPDATE ON platform.webhook_inbox FOR EACH ROW EXECUTE FUNCTION platform.pr13_fail_ack()""");
         try {
             assertThatThrownBy(() -> processor.process(current))
                     .hasStackTraceContaining("injected dispute ack failure");
@@ -656,10 +672,12 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
         observe("du_money_rollback", "needs_response", "txn_money_rollback");
         ingest(movement("txn_money_rollback", "du_money_rollback", -3000, 1500));
         long journals = count("journal");
-        admin.execute(
-                "CREATE FUNCTION platform.pr13_fail_money() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected dispute money failure'; END $$");
-        admin.execute(
-                "CREATE TRIGGER pr13_fail_money BEFORE INSERT ON platform.dispute_financial_fact FOR EACH ROW EXECUTE FUNCTION platform.pr13_fail_money()");
+        admin.execute("""
+                CREATE FUNCTION platform.pr13_fail_money() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
+                    EXCEPTION 'injected dispute money failure'; END $$""");
+        admin.execute("""
+                CREATE TRIGGER pr13_fail_money BEFORE INSERT ON platform.dispute_financial_fact FOR EACH ROW EXECUTE
+                    FUNCTION platform.pr13_fail_money()""");
         try {
             assertThatThrownBy(() -> replay.replay(scope, "txn_money_rollback"))
                     .hasStackTraceContaining("injected dispute money failure");
@@ -689,8 +707,11 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
         assertThat(balance("DISPUTE_RECEIVABLE")).isEqualTo(1000);
         assertThat(balance("DISPUTE_LOSS")).isEqualTo(2000);
         post("txn_split_return", "du_split", 3500, 0);
-        var allocation = jdbc.queryForMap(
-                "SELECT f.receivable_delta,f.loss_delta,f.suspense_minor FROM platform.dispute_financial_fact f JOIN platform.balance_transaction b ON b.id=f.balance_transaction_id WHERE b.bt_id='txn_split_return'");
+        var allocation = jdbc.queryForMap("""
+                SELECT f.receivable_delta,f.loss_delta,f.suspense_minor
+                FROM platform.dispute_financial_fact f
+                JOIN platform.balance_transaction b ON b.id=f.balance_transaction_id
+                WHERE b.bt_id='txn_split_return'""");
         assertThat(allocation)
                 .containsEntry("receivable_delta", -1000L)
                 .containsEntry("loss_delta", -2000L)
@@ -722,12 +743,10 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
     void capturePrelocksShareAndProviderAccountsInOneGlobalOrder() throws Exception {
         int ordinal = 0;
         for (String purpose : List.of("PARTNER_SHARE_EXPENSE", "PARTNER_PAYABLE"))
-            admin.update(
-                    "INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain) VALUES (?, ?,?,'USD',?,'INTERNAL')",
-                    new UUID(0, 200 + ordinal++),
-                    id(1),
-                    id(2),
-                    purpose);
+            admin.update("""
+                    INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                        source_domain)
+                    VALUES (?, ?,?,'USD',?,'INTERNAL')""", new UUID(0, 200 + ordinal++), id(1), id(2), purpose);
         shares.reconcile(paymentId, "precreate");
         fake.clock().advance(Duration.ofSeconds(2));
         importer.runWindow(
@@ -742,8 +761,12 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
         try (var blocker = admin.getDataSource().getConnection()) {
             blocker.setAutoCommit(false);
             try (var statement = blocker.createStatement()) {
-                statement.execute(
-                        "SELECT id FROM platform.ledger_account WHERE account_purpose='PARTNER_SHARE_EXPENSE' FOR UPDATE");
+                statement.execute("""
+                        SELECT id
+                        FROM platform.ledger_account
+                        WHERE account_purpose='PARTNER_SHARE_EXPENSE'
+                        FOR
+                        UPDATE""");
             }
             var pending = worker.submit(() -> new org.springframework.transaction.support.TransactionTemplate(tx)
                     .execute(status -> {
@@ -756,10 +779,12 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
                         .until(() -> backend.get() != 0
                                 && Boolean.TRUE.equals(admin.queryForObject(
                                         "SELECT cardinality(pg_blocking_pids(?))>0", Boolean.class, backend.get())));
-                assertThatCode(
-                                () -> admin.queryForList(
-                                        "SELECT id FROM platform.ledger_account WHERE account_purpose='PSP_FUNDS' FOR UPDATE NOWAIT"))
-                        .doesNotThrowAnyException();
+                assertThatCode(() -> admin.queryForList("""
+                                        SELECT id
+                                        FROM platform.ledger_account
+                                        WHERE account_purpose='PSP_FUNDS'
+                                        FOR
+                                        UPDATE NOWAIT""")).doesNotThrowAnyException();
             } finally {
                 blocker.rollback();
                 assertThat(pending.get(10, TimeUnit.SECONDS)).isEqualTo("POSTED");
@@ -778,9 +803,10 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
         post("txn_reopen_debit", "du_reopen_money", -1000, 0);
         post("txn_reopen_return", "du_reopen_money", 1000, 0);
         assertThat(effective()).isEqualTo(2000);
-        assertThatThrownBy(() -> jdbc.update(
-                        "UPDATE platform.balance_transaction SET dispute_id=NULL WHERE bt_id='txn_reopen_debit'"))
-                .isInstanceOf(org.springframework.dao.DataAccessException.class);
+        assertThatThrownBy(() -> jdbc.update("""
+                        UPDATE platform.balance_transaction
+                        SET dispute_id=NULL
+                        WHERE bt_id='txn_reopen_debit'""")).isInstanceOf(org.springframework.dao.DataAccessException.class);
         post("txn_new_debit", "du_reopen_money", -2000, 0);
         assertThat(effective()).isZero();
         assertThat(money("du_reopen_money", "outstanding_receivable_minor")).isEqualTo(2000);

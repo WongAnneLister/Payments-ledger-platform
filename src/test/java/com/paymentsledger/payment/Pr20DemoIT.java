@@ -82,14 +82,19 @@ class Pr20DemoIT extends Pr20RecoveryFixture {
             matcher.match(scope, payoutId, bankLine, 5700);
             checkpoint("A6 simulated bank receipt", 0, 1200, 5700, 0);
             assertThat(reconcile(0, "full")).isEqualTo("PASS");
-            var totals = jdbc.queryForMap(
-                    "SELECT sum(CASE WHEN side='DEBIT' THEN amount_minor ELSE 0 END) debit_turnover,sum(CASE WHEN side='CREDIT' THEN amount_minor ELSE 0 END) credit_turnover FROM platform.journal_entry");
+            var totals = jdbc.queryForMap("""
+                    SELECT
+                        sum(CASE WHEN side='DEBIT' THEN amount_minor ELSE 0 END) debit_turnover,
+                        sum(CASE WHEN side='CREDIT' THEN amount_minor ELSE 0 END) credit_turnover
+                    FROM platform.journal_entry""");
             assertThat(((Number) totals.get("debit_turnover")).longValue()).isEqualTo(28200);
             assertThat(((Number) totals.get("credit_turnover")).longValue()).isEqualTo(28200);
-            long debit = jdbc.queryForObject(
-                    "SELECT coalesce(sum(greatest(balance_minor,0)),0) FROM platform.balance_projection", Long.class);
-            long credit = jdbc.queryForObject(
-                    "SELECT coalesce(sum(greatest(-balance_minor,0)),0) FROM platform.balance_projection", Long.class);
+            long debit = jdbc.queryForObject("""
+                    SELECT coalesce(sum(greatest(balance_minor,0)),0)
+                    FROM platform.balance_projection""", Long.class);
+            long credit = jdbc.queryForObject("""
+                    SELECT coalesce(sum(greatest(-balance_minor,0)),0)
+                    FROM platform.balance_projection""", Long.class);
             assertThat(debit).isEqualTo(11200);
             assertThat(credit).isEqualTo(11200);
             report.put(

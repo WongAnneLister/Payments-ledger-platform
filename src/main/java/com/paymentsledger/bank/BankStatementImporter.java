@@ -50,7 +50,13 @@ public class BankStatementImporter {
                         fixture = data.path("fixtureId").textValue(),
                         currency = data.path("currency").textValue();
                 int inserted = jdbc.update(
-                        "INSERT INTO platform.bank_statement(id,organization_id,environment_id,provider_account_id,livemode,currency,bank_account_ref,fixture_id,coverage_from,coverage_until,complete,evidence_type,payload,digest) VALUES (?,?,?,?,?,?,?,?,?,?,?,'SIMULATED_BANK_EVIDENCE',?::jsonb,?) ON CONFLICT(organization_id,environment_id,provider_account_id,livemode,bank_account_ref,fixture_id) DO NOTHING",
+                        """
+                        INSERT INTO platform.bank_statement(id,organization_id,environment_id,provider_account_id,livemode,
+                            currency,bank_account_ref,fixture_id,coverage_from,coverage_until,complete,evidence_type,
+                            payload,digest)
+                        VALUES (?,?,?,?,?,?,?,?,?,?,?,'SIMULATED_BANK_EVIDENCE',?::jsonb,?)
+                        ON CONFLICT(organization_id,environment_id,provider_account_id,livemode,bank_account_ref,fixture_id)
+                        DO NOTHING""",
                         id,
                         scope.organizationId(),
                         scope.environmentId(),
@@ -65,7 +71,15 @@ public class BankStatementImporter {
                         data.toString(),
                         digest);
                 var existing = jdbc.queryForMap(
-                        "SELECT id,digest FROM platform.bank_statement WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND livemode=? AND bank_account_ref=? AND fixture_id=?",
+                        """
+                        SELECT id,digest
+                        FROM platform.bank_statement
+                        WHERE organization_id=?
+                            AND environment_id=?
+                            AND provider_account_id=?
+                            AND livemode=?
+                            AND bank_account_ref=?
+                            AND fixture_id=?""",
                         scope.organizationId(),
                         scope.environmentId(),
                         scope.providerAccountId(),
@@ -83,7 +97,11 @@ public class BankStatementImporter {
                                             .map(x -> "\"" + x + "\"")
                                             .toList()) + "}";
                     jdbc.update(
-                            "INSERT INTO platform.bank_statement_line(statement_id,organization_id,environment_id,provider_account_id,livemode,currency,bank_account_ref,external_line_id,kind,booked_at,principal_minor,fee_minor,payout_references) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?::text[])",
+                            """
+                            INSERT INTO platform.bank_statement_line(statement_id,organization_id,environment_id,
+                                provider_account_id,livemode,currency,bank_account_ref,external_line_id,kind,booked_at,
+                                principal_minor,fee_minor,payout_references)
+                            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?::text[])""",
                             id,
                             scope.organizationId(),
                             scope.environmentId(),
@@ -172,12 +190,22 @@ public class BankStatementImporter {
         if (s == null
                 || s.livemode()
                 || jdbc.queryForObject(
-                                "SELECT count(*) FROM platform.provider_account p JOIN platform.environment_config e ON e.id=p.environment_id AND e.organization_id=p.organization_id JOIN platform.organization o ON o.id=p.organization_id JOIN platform.org_currency_enabled c ON c.organization_id=p.organization_id AND c.environment_id=p.environment_id WHERE p.id=? AND p.organization_id=? AND p.environment_id=? AND NOT p.livemode AND NOT e.livemode AND p.status='ACTIVE' AND e.status='ACTIVE' AND o.status='ACTIVE' AND c.currency=?",
-                                Long.class,
-                                s.providerAccountId(),
-                                s.organizationId(),
-                                s.environmentId(),
-                                currency)
+                                """
+                                SELECT count(*)
+                                FROM platform.provider_account p
+                                JOIN platform.environment_config e ON e.id=p.environment_id AND e.organization_id=p.organization_id
+                                JOIN platform.organization o ON o.id=p.organization_id
+                                JOIN platform.org_currency_enabled c ON c.organization_id=p.organization_id
+                                    AND c.environment_id=p.environment_id
+                                WHERE p.id=?
+                                    AND p.organization_id=?
+                                    AND p.environment_id=?
+                                    AND NOT p.livemode
+                                    AND NOT e.livemode
+                                    AND p.status='ACTIVE'
+                                    AND e.status='ACTIVE'
+                                    AND o.status='ACTIVE'
+                                    AND c.currency=?""", Long.class, s.providerAccountId(), s.organizationId(), s.environmentId(), currency)
                         != 1) throw new IllegalArgumentException("Trusted enabled test scope required");
     }
 

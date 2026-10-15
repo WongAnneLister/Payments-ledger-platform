@@ -75,50 +75,36 @@ class PaymentRealContractIT {
         String secret = Base64.getUrlEncoder().withoutPadding().encodeToString(java.security.SecureRandom.getSeed(32));
         var admin = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword()));
         admin.update("INSERT INTO platform.organization(id,code) VALUES (?,'pr06-real-contract')", org);
-        admin.update(
-                "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'test',false)",
-                env,
-                org);
-        admin.update(
-                "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES (?,?,?,'contract')",
-                app,
-                org,
-                env);
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'STRIPE',?,false)",
-                account,
-                org,
-                env,
-                System.getenv("STRIPE_ACCOUNT_ID"));
+        admin.update("""
+                INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                VALUES (?,?,'test',false)""", env, org);
+        admin.update("""
+                INSERT INTO platform.application(id,organization_id,environment_id,code)
+                VALUES (?,?,?,'contract')""", app, org, env);
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'STRIPE',?,false)""", account, org, env, System.getenv("STRIPE_ACCOUNT_ID"));
         admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2)");
-        admin.update(
-                "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD')",
-                org,
-                env);
-        admin.update(
-                "INSERT INTO platform.application_credential(id,key_id,organization_id,environment_id,application_id,provider_account_id,secret_hash,not_before,expires_at,granted_scopes) VALUES (?,'contract',?,?,?,?,?,now()-interval '1 minute',now()+interval '1 hour',ARRAY['payments:read','payments:write'])",
-                credential,
-                org,
-                env,
-                app,
-                account,
-                new BCryptPasswordEncoder(10).encode(secret));
-        admin.update(
-                "INSERT INTO platform.credential_currency(credential_id,organization_id,environment_id,currency) VALUES (?,?,?,'USD')",
-                credential,
-                org,
-                env);
-        admin.update(
-                "INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,policy_version,partner_ref,share_basis_points) VALUES (?,?,?,'pr06-contract',1,'test-partner',1000)",
-                policy,
-                org,
-                env);
-        admin.update(
-                "INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,currency,amount_minor,share_policy_id) VALUES (?,?,?,'pr06-contract',1,'USD',100,?)",
-                price,
-                org,
-                env,
-                policy);
+        admin.update("""
+                INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                VALUES (?,?,'USD')""", org, env);
+        admin.update("""
+                INSERT INTO platform.application_credential(id,key_id,organization_id,environment_id,application_id,
+                    provider_account_id,secret_hash,not_before,expires_at,granted_scopes)
+                VALUES (?,'contract',?,?,?,?,?,now()-interval '1 minute',now()+interval '1 hour',
+                    ARRAY['payments:read','payments:write'])""", credential, org, env, app, account, new BCryptPasswordEncoder(10).encode(secret));
+        admin.update("""
+                INSERT INTO platform.credential_currency(credential_id,organization_id,environment_id,currency)
+                VALUES (?,?,?,'USD')""", credential, org, env);
+        admin.update("""
+                INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,
+                    policy_version,partner_ref,share_basis_points)
+                VALUES (?,?,?,'pr06-contract',1,'test-partner',1000)""", policy, org, env);
+        admin.update("""
+                INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,
+                    currency,amount_minor,share_policy_id)
+                VALUES (?,?,?,'pr06-contract',1,'USD',100,?)""", price, org, env, policy);
         String run = UUID.randomUUID().toString();
         Path directory = Path.of("target/pr06-real", run);
         Files.createDirectories(directory);

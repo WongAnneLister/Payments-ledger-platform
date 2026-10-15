@@ -67,15 +67,13 @@ class StripeWebhookHttpIT {
         admin = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword()));
         admin.execute("TRUNCATE platform.organization CASCADE");
         admin.update("INSERT INTO platform.organization(id,code) VALUES (?,'pr08')", id(1));
-        admin.update(
-                "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'test',false)",
-                id(2),
-                id(1));
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'STRIPE','acct_pr08fixture',false)",
-                id(3),
-                id(1),
-                id(2));
+        admin.update("""
+                INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                VALUES (?,?,'test',false)""", id(2), id(1));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'STRIPE','acct_pr08fixture',false)""", id(3), id(1), id(2));
     }
 
     byte[] body(String event) {
@@ -182,7 +180,10 @@ class StripeWebhookHttpIT {
 
     @Test
     void trustedEndpointBindingMustMatchPersistedStripeAccount() {
-        admin.update("UPDATE platform.provider_account SET provider_account_ref='acct_changed' WHERE id=?", id(3));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider_account_ref='acct_changed'
+                WHERE id=?""", id(3));
         byte[] raw = body("evt_binding");
         assertThat(send(raw, signature(raw, Instant.now().getEpochSecond())).getStatusCode())
                 .isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
@@ -231,28 +232,25 @@ class StripeWebhookHttpIT {
 
     @Test
     void signedHttpFactsReachPaymentThroughTheAsynchronousProcessor() throws Exception {
-        admin.update(
-                "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES (?,?,?,'signed-app')",
-                id(4),
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2) ON CONFLICT(code) DO NOTHING");
-        admin.update(
-                "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD')",
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,policy_version,partner_ref,share_basis_points) VALUES (?,?,?,'demo',1,'partner',1000)",
-                id(5),
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,currency,amount_minor,share_policy_id) VALUES (?,?,?,'demo',1,'USD',100,?)",
-                id(6),
-                id(1),
-                id(2),
-                id(5));
+        admin.update("""
+                INSERT INTO platform.application(id,organization_id,environment_id,code)
+                VALUES (?,?,?,'signed-app')""", id(4), id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.currency_config(code,minor_unit_exponent)
+                VALUES ('USD',2)
+                ON CONFLICT(code)
+                DO NOTHING""");
+        admin.update("""
+                INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                VALUES (?,?,'USD')""", id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.share_policy_fixture(id,organization_id,environment_id,product_ref,
+                    policy_version,partner_ref,share_basis_points)
+                VALUES (?,?,?,'demo',1,'partner',1000)""", id(5), id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.price_fixture(id,organization_id,environment_id,product_ref,price_version,
+                    currency,amount_minor,share_policy_id)
+                VALUES (?,?,?,'demo',1,'USD',100,?)""", id(6), id(1), id(2), id(5));
         var tenant = new com.paymentsledger.identity.TenantContext(
                 id(1), id(2), id(4), id(3), Set.of("USD"), false, Set.of("payments:read", "payments:write"));
         var command = new com.paymentsledger.payment.PaymentRequests.Create(

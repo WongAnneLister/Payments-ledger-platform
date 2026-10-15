@@ -30,9 +30,10 @@ class NotificationKafkaIT extends NotificationFixture {
             producer.send(new ProducerRecord<>(
                             topic, claim.event().businessKey(), claim.event().bytes()))
                     .get(15, TimeUnit.SECONDS);
-            admin.update(
-                    "UPDATE platform.outbox_event SET lease_until=now()-interval '1 second' WHERE id=?",
-                    claim.event().id());
+            admin.update("""
+                    UPDATE platform.outbox_event
+                    SET lease_until=now()-interval '1 second'
+                    WHERE id=?""", claim.event().id());
             var replay = outbox().claim(Duration.ofSeconds(30));
             assertThat(replay.event().bytes()).isEqualTo(claim.event().bytes());
             producer.send(new ProducerRecord<>(
@@ -137,10 +138,12 @@ class NotificationKafkaIT extends NotificationFixture {
                                 throw error;
                             }
                         });
-        admin.execute(
-                "CREATE OR REPLACE FUNCTION platform.kafka_delivery_failure() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected database failure'; END $$");
-        admin.execute(
-                "CREATE TRIGGER kafka_delivery_failure BEFORE INSERT ON platform.delivery_task FOR EACH ROW EXECUTE FUNCTION platform.kafka_delivery_failure()");
+        admin.execute("""
+                CREATE OR REPLACE FUNCTION platform.kafka_delivery_failure() RETURNS trigger LANGUAGE plpgsql AS $$
+                    BEGIN RAISE EXCEPTION 'injected database failure'; END $$""");
+        admin.execute("""
+                CREATE TRIGGER kafka_delivery_failure BEFORE INSERT ON platform.delivery_task FOR EACH ROW EXECUTE
+                    FUNCTION platform.kafka_delivery_failure()""");
         try (var producer = producer();
                 var observer = consumer(topic, group)) {
             producer.send(new ProducerRecord<>(topic, event.businessKey(), event.bytes()))
@@ -195,13 +198,10 @@ class NotificationKafkaIT extends NotificationFixture {
                             new java.net.InetSocketAddress("127.0.0.1", 0), ds, secret, fake.clock());
                     var producer = producer();
                     var consumer = consumer(topic, "refund-group-" + UUID.randomUUID())) {
-                admin.update(
-                        "INSERT INTO platform.merchant_notification_target(organization_id,environment_id,application_id,url,key_ref,version) VALUES (?,?,?,?,?,1)",
-                        id(1),
-                        id(2),
-                        id(3),
-                        merchant.uri().toString(),
-                        "refund-fixture");
+                admin.update("""
+                        INSERT INTO platform.merchant_notification_target(organization_id,environment_id,application_id,url,
+                            key_ref,version)
+                        VALUES (?,?,?,?,?,1)""", id(1), id(2), id(3), merchant.uri().toString(), "refund-fixture");
                 for (int duplicate = 0; duplicate < 2; duplicate++)
                     producer.send(new ProducerRecord<>(topic, event.businessKey(), event.bytes()))
                             .get(15, TimeUnit.SECONDS);

@@ -20,9 +20,10 @@ class WebhookAssociationIT extends PaymentCoreFixture {
 
     @BeforeEach
     void webhookFixture() {
-        admin.update(
-                "UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref='acct_fixture' WHERE id=?",
-                id(4));
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='STRIPE',provider_account_ref='acct_fixture'
+                WHERE id=?""", id(4));
         repository = boundRepository(id(4), "acct_fixture");
         inbox = new WebhookInboxRepository(jdbc, tx, json, fake.clock());
         processor = new WebhookProcessor(inbox, repository, json, fake.clock());
@@ -147,9 +148,10 @@ class WebhookAssociationIT extends PaymentCoreFixture {
         }
         fake.clock().advance(Duration.ofMinutes(6));
         processor.processDue(25);
-        assertThat(jdbc.queryForMap(
-                        "SELECT payment_status,financial_status,captured_amount_minor FROM platform.payment WHERE id=?",
-                        payment))
+        assertThat(jdbc.queryForMap("""
+                        SELECT payment_status,financial_status,captured_amount_minor
+                        FROM platform.payment
+                        WHERE id=?""", payment))
                 .containsEntry("payment_status", "SUCCEEDED")
                 .containsEntry("financial_status", "PENDING_EVIDENCE")
                 .containsEntry("captured_amount_minor", 10000L);
@@ -192,11 +194,10 @@ class WebhookAssociationIT extends PaymentCoreFixture {
 
     @Test
     void metadataCannotBindAnEventToAnotherProviderAccount() throws Exception {
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'STRIPE','acct_other',false)",
-                id(40),
-                id(1),
-                id(2));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'STRIPE','acct_other',false)""", id(40), id(1), id(2));
         var other = new com.paymentsledger.identity.TenantContext(
                 id(1), id(2), id(3), id(40), Set.of("USD"), false, Set.of("payments:read", "payments:write"));
         UUID payment = boundRepository(id(40), "acct_other")

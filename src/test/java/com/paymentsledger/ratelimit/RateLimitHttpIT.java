@@ -80,40 +80,26 @@ class RateLimitHttpIT {
         jdbc.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2)");
         for (int org : new int[] {1, 2}) {
             jdbc.update("INSERT INTO platform.organization(id,code) VALUES (?,?)", id(org), "org" + org);
-            jdbc.update(
-                    "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'test',false)",
-                    id(10 + org),
-                    id(org));
-            jdbc.update(
-                    "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE',?,false)",
-                    id(20 + org),
-                    id(org),
-                    id(10 + org),
-                    "rate_limit_account_" + org);
-            jdbc.update(
-                    "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD')",
-                    id(org),
-                    id(10 + org));
-            jdbc.update(
-                    "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES (?,?,?,?)",
-                    id(30 + org),
-                    id(org),
-                    id(10 + org),
-                    "app" + org);
-            jdbc.update(
-                    "INSERT INTO platform.application_credential(id,key_id,organization_id,environment_id,application_id,provider_account_id,secret_hash,not_before,expires_at,granted_scopes) VALUES (?,?,?,?,?,?,?,now()-interval '1 day',now()+interval '1 day',ARRAY['payments:read'])",
-                    id(40 + org),
-                    "key" + org,
-                    id(org),
-                    id(10 + org),
-                    id(30 + org),
-                    id(20 + org),
-                    HASH);
-            jdbc.update(
-                    "INSERT INTO platform.credential_currency(credential_id,organization_id,environment_id,currency) VALUES (?,?,?,'USD')",
-                    id(40 + org),
-                    id(org),
-                    id(10 + org));
+            jdbc.update("""
+                    INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                    VALUES (?,?,'test',false)""", id(10 + org), id(org));
+            jdbc.update("""
+                    INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                        provider_account_ref,livemode)
+                    VALUES (?,?,?,'FAKE',?,false)""", id(20 + org), id(org), id(10 + org), "rate_limit_account_" + org);
+            jdbc.update("""
+                    INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                    VALUES (?,?,'USD')""", id(org), id(10 + org));
+            jdbc.update("""
+                    INSERT INTO platform.application(id,organization_id,environment_id,code)
+                    VALUES (?,?,?,?)""", id(30 + org), id(org), id(10 + org), "app" + org);
+            jdbc.update("""
+                    INSERT INTO platform.application_credential(id,key_id,organization_id,environment_id,application_id,
+                        provider_account_id,secret_hash,not_before,expires_at,granted_scopes)
+                    VALUES (?,?,?,?,?,?,?,now()-interval '1 day',now()+interval '1 day',ARRAY['payments:read'])""", id(40 + org), "key" + org, id(org), id(10 + org), id(30 + org), id(20 + org), HASH);
+            jdbc.update("""
+                    INSERT INTO platform.credential_currency(credential_id,organization_id,environment_id,currency)
+                    VALUES (?,?,?,'USD')""", id(40 + org), id(org), id(10 + org));
         }
         if (REDIS.isRunning())
             redis.execute((org.springframework.data.redis.core.RedisCallback<Void>) c -> {

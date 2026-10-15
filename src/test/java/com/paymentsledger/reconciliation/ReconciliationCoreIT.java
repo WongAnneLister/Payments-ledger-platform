@@ -53,34 +53,27 @@ class ReconciliationCoreIT {
         tx = new DataSourceTransactionManager(ds);
         admin.execute("TRUNCATE platform.organization,platform.currency_config CASCADE");
         admin.update("INSERT INTO platform.organization(id,code) VALUES (?,'reconcile')", id(1));
-        admin.update(
-                "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'test',false)",
-                id(2),
-                id(1));
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE','reconcile',false)",
-                id(4),
-                id(1),
-                id(2));
+        admin.update("""
+                INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                VALUES (?,?,'test',false)""", id(2), id(1));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'FAKE','reconcile',false)""", id(4), id(1), id(2));
         admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('USD',2)");
-        admin.update(
-                "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD')",
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode) VALUES (?,?,?,false,'ZERO')",
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                VALUES (?,?,'USD')""", id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode)
+                VALUES (?,?,?,false,'ZERO')""", id(1), id(2), id(4));
         int n = 20;
         for (String purpose : List.of("PSP_FUNDS", "PSP_FEE_EXPENSE", "SUSPENSE"))
-            admin.update(
-                    "INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain,provider_account_id,balance_domain) VALUES (?,?,?,'USD',?,'PROVIDER',?,'PAYMENTS')",
-                    id(n++),
-                    id(1),
-                    id(2),
-                    purpose,
-                    id(4));
+            admin.update("""
+                    INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                        source_domain,provider_account_id,balance_domain)
+                    VALUES (?,?,?,'USD',?,'PROVIDER',?,'PAYMENTS')""", id(n++), id(1), id(2), purpose, id(4));
         var mapper = new ObjectMapper().findAndRegisterModules();
         BalanceTransactionPort provider = new BalanceTransactionPort() {
             public ProviderCallResult<BalanceTransactionPage> listBalanceTransactions(ListBalanceTransactionsQuery q) {
@@ -165,11 +158,10 @@ class ReconciliationCoreIT {
     }
 
     String check(UUID run, int number) {
-        return jdbc.queryForObject(
-                "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=?",
-                String.class,
-                run,
-                number);
+        return jdbc.queryForObject("""
+                SELECT outcome
+                FROM platform.reconciliation_check
+                WHERE run_id=? AND check_number=?""", String.class, run, number);
     }
 
     @Test
@@ -184,11 +176,10 @@ class ReconciliationCoreIT {
         assertThat(jdbc.queryForObject(
                         "SELECT count(*) FROM platform.reconciliation_check WHERE run_id=?", Long.class, run))
                 .isEqualTo(7);
-        assertThat(jdbc.queryForObject(
-                        "SELECT residual FROM platform.reconciliation_check WHERE run_id=? AND check_number=5",
-                        Long.class,
-                        run))
-                .isEqualTo(100);
+        assertThat(jdbc.queryForObject("""
+                        SELECT residual
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=5""", Long.class, run)).isEqualTo(100);
         assertThatThrownBy(() ->
                         jdbc.update("UPDATE platform.reconciliation_check SET outcome='PASS' WHERE run_id=?", run))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
@@ -231,9 +222,10 @@ class ReconciliationCoreIT {
         replay.replay(scope, "projection");
         admin.execute("ALTER TABLE platform.balance_projection DISABLE TRIGGER USER");
         try {
-            admin.update(
-                    "UPDATE platform.balance_projection SET balance_minor=balance_minor+1 WHERE ledger_account_id=?",
-                    id(20));
+            admin.update("""
+                    UPDATE platform.balance_projection
+                    SET balance_minor=balance_minor+1
+                    WHERE ledger_account_id=?""", id(20));
         } finally {
             admin.execute("ALTER TABLE platform.balance_projection ENABLE TRIGGER USER");
         }
@@ -251,9 +243,11 @@ class ReconciliationCoreIT {
         replay.replay(scope, "page_b");
         admin.execute("ALTER TABLE platform.import_page DISABLE TRIGGER USER");
         try {
-            admin.update(
-                    "DELETE FROM platform.import_page WHERE request_cursor='' AND window_id=(SELECT import_window_id FROM platform.reconciliation_run WHERE id=?)",
-                    run);
+            admin.update("""
+                    DELETE
+                    FROM platform.import_page
+                    WHERE request_cursor=''
+                        AND window_id=(SELECT import_window_id FROM platform.reconciliation_run WHERE id=?)""", run);
         } finally {
             admin.execute("ALTER TABLE platform.import_page ENABLE TRIGGER USER");
         }
@@ -287,11 +281,10 @@ class ReconciliationCoreIT {
         advance(run, 1);
         replay.replay(scope, "fee");
         finish(run, evidence(963, scope, until));
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.reconciliation_exception WHERE run_id=? AND reason='UNMODELED_FEE'",
-                        Long.class,
-                        run))
-                .isEqualTo(1);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.reconciliation_exception
+                        WHERE run_id=? AND reason='UNMODELED_FEE'""", Long.class, run)).isEqualTo(1);
         assertThat(jdbc.queryForObject(
                         "SELECT balance_minor FROM platform.balance_projection WHERE ledger_account_id=?",
                         Long.class,
@@ -304,13 +297,11 @@ class ReconciliationCoreIT {
 
     @Test
     void feeModelMismatchPreservesActualFeeAndVersionedResidual() throws Exception {
-        admin.update(
-                "INSERT INTO platform.fee_model(organization_id,environment_id,provider_account_id,livemode,currency,balance_domain,business_type,model_version,effective_from,effective_until,basis_points,flat_minor,rounding) VALUES (?,?,?,false,'USD','PAYMENTS','adjustment','fee-v1',?,?,0,30,'HALF_UP')",
-                id(1),
-                id(2),
-                id(4),
-                java.sql.Timestamp.from(from),
-                java.sql.Timestamp.from(until));
+        admin.update("""
+                INSERT INTO platform.fee_model(organization_id,environment_id,provider_account_id,livemode,currency,
+                    balance_domain,business_type,model_version,effective_from,effective_until,basis_points,
+                    flat_minor,rounding)
+                VALUES (?,?,?,false,'USD','PAYMENTS','adjustment','fee-v1',?,?,0,30,'HALF_UP')""", id(1), id(2), id(4), java.sql.Timestamp.from(from), java.sql.Timestamp.from(until));
         UUID run = run();
         var fact = new BalanceTransactionFact(
                 "fee_mismatch",
@@ -334,21 +325,18 @@ class ReconciliationCoreIT {
         advance(run, 1);
         replay.replay(scope, "fee_mismatch");
         finish(run, evidence(963, scope, until));
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.reconciliation_exception WHERE run_id=? AND reason='FEE_MODEL_MISMATCH'",
-                        Long.class,
-                        run))
-                .isEqualTo(1);
-        assertThat(jdbc.queryForObject(
-                        "SELECT residual FROM platform.reconciliation_exception WHERE run_id=? AND reason='FEE_MODEL_MISMATCH'",
-                        Long.class,
-                        run))
-                .isEqualTo(7);
-        assertThat(jdbc.queryForObject(
-                        "SELECT input_versions->>'feeModel' FROM platform.reconciliation_exception WHERE run_id=? AND reason='FEE_MODEL_MISMATCH'",
-                        String.class,
-                        run))
-                .isEqualTo("fee-v1");
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.reconciliation_exception
+                        WHERE run_id=? AND reason='FEE_MODEL_MISMATCH'""", Long.class, run)).isEqualTo(1);
+        assertThat(jdbc.queryForObject("""
+                        SELECT residual
+                        FROM platform.reconciliation_exception
+                        WHERE run_id=? AND reason='FEE_MODEL_MISMATCH'""", Long.class, run)).isEqualTo(7);
+        assertThat(jdbc.queryForObject("""
+                        SELECT input_versions->>'feeModel'
+                        FROM platform.reconciliation_exception
+                        WHERE run_id=? AND reason='FEE_MODEL_MISMATCH'""", String.class, run)).isEqualTo("fee-v1");
         assertThat(jdbc.queryForObject(
                         "SELECT fee_minor FROM platform.balance_transaction WHERE bt_id='fee_mismatch'", Long.class))
                 .isEqualTo(37);
@@ -361,11 +349,10 @@ class ReconciliationCoreIT {
         advance(run, 1);
         admin.execute("ALTER TABLE platform.financial_event DISABLE TRIGGER USER");
         try {
-            admin.update(
-                    "INSERT INTO platform.financial_event(organization_id,environment_id,currency,provider_account_id,event_key,event_type,source_domain,source_ref,facts) VALUES (?,?,'USD',?,'orphan-event','fixture','PROVIDER','orphan','{}')",
-                    id(1),
-                    id(2),
-                    id(4));
+            admin.update("""
+                    INSERT INTO platform.financial_event(organization_id,environment_id,currency,provider_account_id,
+                        event_key,event_type,source_domain,source_ref,facts)
+                    VALUES (?,?,'USD',?,'orphan-event','fixture','PROVIDER','orphan','{}')""", id(1), id(2), id(4));
         } finally {
             admin.execute("ALTER TABLE platform.financial_event ENABLE TRIGGER USER");
         }
@@ -392,15 +379,13 @@ class ReconciliationCoreIT {
     @Test
     void openingJournalAndHistoricalBtAreNotCountedTwice() throws Exception {
         Instant cutoff = from.plusSeconds(10);
-        admin.update(
-                "UPDATE platform.ingestion_policy SET opening_mode='VERIFIED_CUTOFF',cutoff_at=?,evidence_ref='opening-fixture',evidence_digest=?",
-                java.sql.Timestamp.from(cutoff),
-                "a".repeat(64));
-        admin.update(
-                "INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain) VALUES (?,?,?,'USD','OPENING_EQUITY','INTERNAL')",
-                id(30),
-                id(1),
-                id(2));
+        admin.update("""
+                UPDATE platform.ingestion_policy
+                SET opening_mode='VERIFIED_CUTOFF',cutoff_at=?,evidence_ref='opening-fixture',evidence_digest=?""", java.sql.Timestamp.from(cutoff), "a".repeat(64));
+        admin.update("""
+                INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                    source_domain)
+                VALUES (?,?,?,'USD','OPENING_EQUITY','INTERNAL')""", id(30), id(1), id(2));
         var mapper = new ObjectMapper();
         new LedgerPostingService(jdbc, mapper)
                 .post(
@@ -531,38 +516,28 @@ class ReconciliationCoreIT {
     }
 
     void paymentFixture() {
-        admin.update(
-                "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES (?,?,?,'fixture')",
-                id(80),
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot) VALUES (?,?,?,?,?,'USD','fixture','fixture','fixture',1,1,1000,1000,'{}','{\"partner_ref\":\"partner\",\"share_basis_points\":1000,\"policy_version\":\"fixture\"}')",
-                id(81),
-                id(1),
-                id(2),
-                id(80),
-                id(4));
-        admin.update(
-                "INSERT INTO platform.payment(id,organization_id,environment_id,application_id,provider_account_id,currency,business_order_id,amount_minor,expires_at,payment_status,captured_amount_minor) VALUES (?,?,?,?,?,'USD',?,1000,now(),'SUCCEEDED',1000)",
-                id(82),
-                id(1),
-                id(2),
-                id(80),
-                id(4),
-                id(81));
+        admin.update("""
+                INSERT INTO platform.application(id,organization_id,environment_id,code)
+                VALUES (?,?,?,'fixture')""", id(80), id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,
+                    unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot)
+                VALUES (?,?,?,?,?,'USD','fixture','fixture','fixture',1,1,1000,1000,'{}',
+                    '{\"partner_ref\":\"partner\",\"share_basis_points\":1000,\"policy_version\":\"fixture\"}')""", id(81), id(1), id(2), id(80), id(4));
+        admin.update("""
+                INSERT INTO platform.payment(id,organization_id,environment_id,application_id,provider_account_id,
+                    currency,business_order_id,amount_minor,expires_at,payment_status,captured_amount_minor)
+                VALUES (?,?,?,?,?,'USD',?,1000,now(),'SUCCEEDED',1000)""", id(82), id(1), id(2), id(80), id(4), id(81));
     }
 
     @Test
     void reservationControlWithoutBackingRefundFailsReconstruction() throws Exception {
         paymentFixture();
-        admin.update(
-                "INSERT INTO platform.refund_control(payment_id,organization_id,environment_id,application_id,provider_account_id,currency,captured_minor,reserved_minor) VALUES (?,?,?,?,?,'USD',1000,100)",
-                id(82),
-                id(1),
-                id(2),
-                id(80),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.refund_control(payment_id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,captured_minor,reserved_minor)
+                VALUES (?,?,?,?,?,'USD',1000,100)""", id(82), id(1), id(2), id(80), id(4));
         UUID run = run();
         page(false, null, 0);
         advance(run, 1);
@@ -573,19 +548,16 @@ class ReconciliationCoreIT {
     @Test
     void effectiveShareWithoutJournalHistoryFailsCoverageAndCap() throws Exception {
         paymentFixture();
-        admin.update(
-                "INSERT INTO platform.share_allocation(id,organization_id,environment_id,application_id,provider_account_id,currency,payment_id,partner_ref,policy_version,rate_bps) VALUES (?,?,?,?,?,'USD',?,'partner','fixture',1000)",
-                id(90),
-                id(1),
-                id(2),
-                id(80),
-                id(4),
-                id(82));
+        admin.update("""
+                INSERT INTO platform.share_allocation(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,payment_id,partner_ref,policy_version,rate_bps)
+                VALUES (?,?,?,?,?,'USD',?,'partner','fixture',1000)""", id(90), id(1), id(2), id(80), id(4), id(82));
         admin.execute("ALTER TABLE platform.share_allocation DISABLE TRIGGER USER");
         try {
-            admin.update(
-                    "UPDATE platform.share_allocation SET effective_minor=150,cap_minor=150,generation=1 WHERE id=?",
-                    id(90));
+            admin.update("""
+                    UPDATE platform.share_allocation
+                    SET effective_minor=150,cap_minor=150,generation=1
+                    WHERE id=?""", id(90));
         } finally {
             admin.execute("ALTER TABLE platform.share_allocation ENABLE TRIGGER USER");
         }
@@ -598,12 +570,10 @@ class ReconciliationCoreIT {
 
     @Test
     void payoutCountersWithoutAuthoritativeFinancialHistoryFail() throws Exception {
-        admin.update(
-                "INSERT INTO platform.payout(id,organization_id,environment_id,provider_account_id,livemode,provider_payout_id,currency,amount_minor,automatic,last_observed_at) VALUES (?,?,?,?,false,'po_fixture','USD',1000,true,now())",
-                id(95),
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.payout(id,organization_id,environment_id,provider_account_id,livemode,
+                    provider_payout_id,currency,amount_minor,automatic,last_observed_at)
+                VALUES (?,?,?,?,false,'po_fixture','USD',1000,true,now())""", id(95), id(1), id(2), id(4));
         admin.execute("ALTER TABLE platform.payout DISABLE TRIGGER USER");
         try {
             admin.update("UPDATE platform.payout SET outgoing_minor=1000,transit_minor=1000 WHERE id=?", id(95));
@@ -624,29 +594,31 @@ class ReconciliationCoreIT {
         page(false, "source_bt", 1000);
         advance(run, 1);
         replay.replay(scope, "source_bt");
-        admin.update(
-                "INSERT INTO platform.payment_attempt(id,organization_id,environment_id,application_id,provider_account_id,currency,payment_id,provider_object_id,provider_status,payment_intent_id,captured,amount_minor,amount_captured_minor,balance_transaction_id,fetched_at) VALUES (?,?,?,?,?,'USD',?,'ch_source','succeeded','pi_source',true,1000,999,'source_bt',now())",
-                id(98),
-                id(1),
-                id(2),
-                id(80),
-                id(4),
-                id(82));
+        admin.update("""
+                INSERT INTO platform.payment_attempt(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,payment_id,provider_object_id,provider_status,payment_intent_id,
+                    captured,amount_minor,amount_captured_minor,balance_transaction_id,fetched_at)
+                VALUES (?,?,?,?,?,'USD',?,'ch_source','succeeded','pi_source',true,1000,999,'source_bt',now())""", id(98), id(1), id(2), id(80), id(4), id(82));
         admin.execute("ALTER TABLE platform.balance_transaction DISABLE TRIGGER USER");
         try {
-            admin.update(
-                    "UPDATE platform.balance_transaction SET business_type='charge',source_object_type='charge',source_object_id='ch_source',payment_id=?,reason=null WHERE bt_id='source_bt'",
-                    id(82));
+            admin.update("""
+                    UPDATE platform.balance_transaction
+                    SET
+                        business_type='charge',
+                        source_object_type='charge',
+                        source_object_id='ch_source',
+                        payment_id=?,
+                        reason=null
+                    WHERE bt_id='source_bt'""", id(82));
         } finally {
             admin.execute("ALTER TABLE platform.balance_transaction ENABLE TRIGGER USER");
         }
         finish(run, evidence(1000, scope, until));
         assertThat(check(run, 4)).isEqualTo("FAIL");
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.reconciliation_exception WHERE run_id=? AND reason='SOURCE_OBJECT_MISMATCH'",
-                        Long.class,
-                        run))
-                .isEqualTo(1);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.reconciliation_exception
+                        WHERE run_id=? AND reason='SOURCE_OBJECT_MISMATCH'""", Long.class, run)).isEqualTo(1);
     }
 
     PayoutService configurePayoutChecks() {
@@ -722,32 +694,31 @@ class ReconciliationCoreIT {
                 .put("feeMinor", 10);
         line.putArray("payoutReferences").add("po_test");
         new BankStatementImporter(jdbc, tx, mapper).importStatement(scope, fixture);
-        UUID lineId = jdbc.queryForObject(
-                "SELECT id FROM platform.bank_statement_line WHERE external_line_id='partial_line'", UUID.class);
+        UUID lineId = jdbc.queryForObject("""
+                SELECT id
+                FROM platform.bank_statement_line
+                WHERE external_line_id='partial_line'""", UUID.class);
         new BankMatcher(jdbc, tx, mapper, new LedgerPostingService(jdbc, mapper), payouts)
                 .match(scope, payout, lineId, 2900);
         finish(run, evidence(-5712, scope, until));
-        assertThat(jdbc.queryForObject(
-                        "SELECT input_versions->'bankStatements'->0->>'fixture_id' FROM platform.reconciliation_check WHERE run_id=? AND check_number=6",
-                        String.class,
-                        run))
-                .isEqualTo("partial");
-        assertThat(jdbc.queryForObject(
-                        "SELECT input_versions->'bankStatements'->0->>'digest' FROM platform.reconciliation_check WHERE run_id=? AND check_number=6",
-                        String.class,
-                        run))
+        assertThat(jdbc.queryForObject("""
+                        SELECT input_versions->'bankStatements'->0->>'fixture_id'
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=6""", String.class, run)).isEqualTo("partial");
+        assertThat(jdbc.queryForObject("""
+                        SELECT input_versions->'bankStatements'->0->>'digest'
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=6""", String.class, run))
                 .isEqualTo(jdbc.queryForObject(
                         "SELECT digest FROM platform.bank_statement WHERE fixture_id='partial'", String.class));
-        assertThat(jdbc.queryForObject(
-                        "SELECT input_versions->'bankLines'->0->>'id' FROM platform.reconciliation_check WHERE run_id=? AND check_number=6",
-                        String.class,
-                        run))
-                .isEqualTo(lineId.toString());
-        assertThat(jdbc.queryForObject(
-                        "SELECT input_versions->'bankLines'->0->>'allocated_minor' FROM platform.reconciliation_check WHERE run_id=? AND check_number=6",
-                        Long.class,
-                        run))
-                .isEqualTo(2900);
+        assertThat(jdbc.queryForObject("""
+                        SELECT input_versions->'bankLines'->0->>'id'
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=6""", String.class, run)).isEqualTo(lineId.toString());
+        assertThat(jdbc.queryForObject("""
+                        SELECT input_versions->'bankLines'->0->>'allocated_minor'
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=6""", Long.class, run)).isEqualTo(2900);
         return run;
     }
 
@@ -767,10 +738,10 @@ class ReconciliationCoreIT {
         finish(second, evidence(-5712, scope, until));
         assertThat(check(second, 6)).isEqualTo("FAIL");
         assertThat(first).isNotEqualTo(second);
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.reconciliation_check WHERE check_number=6 AND outcome='FAIL'",
-                        Long.class))
-                .isEqualTo(2);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.reconciliation_check
+                        WHERE check_number=6 AND outcome='FAIL'""", Long.class)).isEqualTo(2);
         assertThat(jdbc.queryForObject("SELECT count(*) FROM platform.payout_fact", Long.class))
                 .isEqualTo(1);
     }
@@ -901,15 +872,14 @@ class ReconciliationCoreIT {
         };
         new FinancialImportService(jdbc, tx, new ObjectMapper().findAndRegisterModules(), port, clock)
                 .refreshPending(scope, "available");
-        assertThat(jdbc.queryForObject(
-                        "SELECT input_versions->'balanceTransactions'->0->>'provider_status' FROM platform.reconciliation_check WHERE run_id=? AND check_number=5",
-                        String.class,
-                        first))
-                .isEqualTo("pending");
-        assertThat(jdbc.queryForObject(
-                        "SELECT provider_status FROM platform.balance_transaction WHERE bt_id='available'",
-                        String.class))
-                .isEqualTo("available");
+        assertThat(jdbc.queryForObject("""
+                        SELECT input_versions->'balanceTransactions'->0->>'provider_status'
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=5""", String.class, first)).isEqualTo("pending");
+        assertThat(jdbc.queryForObject("""
+                        SELECT provider_status
+                        FROM platform.balance_transaction
+                        WHERE bt_id='available'""", String.class)).isEqualTo("available");
         assertThat(jdbc.queryForObject(
                         "SELECT balance_minor FROM platform.balance_projection WHERE ledger_account_id=?",
                         Long.class,
@@ -922,27 +892,22 @@ class ReconciliationCoreIT {
     @Test
     void historicalRefundDebitWithLaterFailedStatusIsIncompleteRatherThanFalseMismatch() throws Exception {
         paymentFixture();
-        admin.update(
-                "INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain) VALUES (?,?,?,'USD','SALES_RETURNS','INTERNAL')",
-                id(23),
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.refund(id,organization_id,environment_id,application_id,provider_account_id,currency,payment_id,amount_minor,request_fingerprint,source,provider_charge_id,provider_refund_id,balance_transaction_id,failure_balance_transaction_id,refund_status,last_provider_confirmed_at) VALUES (?,?,?,?,?,'USD',?,100,'fixture','EXTERNAL','ch_refund','re_cutoff','refund_debit','refund_return','FAILED',?)",
-                id(99),
-                id(1),
-                id(2),
-                id(80),
-                id(4),
-                id(82),
-                java.sql.Timestamp.from(until.plusSeconds(60)));
-        admin.update(
-                "INSERT INTO platform.fee_model(organization_id,environment_id,provider_account_id,livemode,currency,balance_domain,business_type,model_version,effective_from,effective_until,basis_points,flat_minor,rounding) VALUES (?,?,?,false,'USD','PAYMENTS','refund','fee-zero',?,?,0,0,'DOWN')",
-                id(1),
-                id(2),
-                id(4),
-                java.sql.Timestamp.from(from),
-                java.sql.Timestamp.from(until));
+        admin.update("""
+                INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                    source_domain)
+                VALUES (?,?,?,'USD','SALES_RETURNS','INTERNAL')""", id(23), id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.refund(id,organization_id,environment_id,application_id,provider_account_id,
+                    currency,payment_id,amount_minor,request_fingerprint,source,provider_charge_id,
+                    provider_refund_id,balance_transaction_id,failure_balance_transaction_id,refund_status,
+                    last_provider_confirmed_at)
+                VALUES (?,?,?,?,?,'USD',?,100,'fixture','EXTERNAL','ch_refund','re_cutoff','refund_debit',
+                    'refund_return','FAILED',?)""", id(99), id(1), id(2), id(80), id(4), id(82), java.sql.Timestamp.from(until.plusSeconds(60)));
+        admin.update("""
+                INSERT INTO platform.fee_model(organization_id,environment_id,provider_account_id,livemode,currency,
+                    balance_domain,business_type,model_version,effective_from,effective_until,basis_points,
+                    flat_minor,rounding)
+                VALUES (?,?,?,false,'USD','PAYMENTS','refund','fee-zero',?,?,0,0,'DOWN')""", id(1), id(2), id(4), java.sql.Timestamp.from(from), java.sql.Timestamp.from(until));
         UUID run = run();
         payoutPage(List.of(new BalanceTransactionFact(
                 "refund_debit",
@@ -968,11 +933,10 @@ class ReconciliationCoreIT {
                 .isEqualTo("POSTED");
         finish(run, evidence(-100, scope, until));
         assertThat(check(run, 4)).isEqualTo("INCOMPLETE");
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.reconciliation_exception WHERE run_id=? AND reason='SOURCE_OBJECT_MISMATCH'",
-                        Long.class,
-                        run))
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.reconciliation_exception
+                        WHERE run_id=? AND reason='SOURCE_OBJECT_MISMATCH'""", Long.class, run)).isZero();
     }
 
     @Test
@@ -990,8 +954,13 @@ class ReconciliationCoreIT {
         replay.replay(scope, "txn_return");
         admin.execute("ALTER TABLE platform.journal_entry DISABLE TRIGGER USER");
         try {
-            admin.update(
-                    "UPDATE platform.journal_entry e SET amount_minor=amount_minor+1 FROM platform.ledger_account a WHERE a.id=e.ledger_account_id AND a.account_purpose IN('PSP_FUNDS','PSP_FEE_EXPENSE') AND e.journal_id=(SELECT journal_id FROM platform.balance_transaction WHERE bt_id='txn_out')");
+            admin.update("""
+                    UPDATE platform.journal_entry e
+                    SET amount_minor=amount_minor+1
+                    FROM platform.ledger_account a
+                    WHERE a.id=e.ledger_account_id
+                        AND a.account_purpose IN('PSP_FUNDS','PSP_FEE_EXPENSE')
+                        AND e.journal_id=(SELECT journal_id FROM platform.balance_transaction WHERE bt_id='txn_out')""");
         } finally {
             admin.execute("ALTER TABLE platform.journal_entry ENABLE TRIGGER USER");
         }
@@ -1048,17 +1017,17 @@ class ReconciliationCoreIT {
                         .getMethod("query", ProviderScope.class, UUID.class)
                         .invoke(service, new ProviderScope(id(1), id(2), id(77), false), run))
                 .hasCauseInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> admin.update(
-                        "UPDATE platform.reconciliation_evidence SET evidence_version='forged' WHERE run_id=?", run))
+        assertThatThrownBy(() -> admin.update("""
+                        UPDATE platform.reconciliation_evidence
+                        SET evidence_version='forged'
+                        WHERE run_id=?""", run))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
         assertThatThrownBy(() -> admin.update("DELETE FROM platform.reconciliation_check WHERE run_id=?", run))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
-        assertThatThrownBy(() -> jdbc.update(
-                        "INSERT INTO platform.reconciliation_cursor(run_id,organization_id,environment_id,provider_account_id,livemode,currency) VALUES (?,?,?,?,false,'USD')",
-                        UUID.randomUUID(),
-                        id(1),
-                        id(2),
-                        id(77)))
+        assertThatThrownBy(() -> jdbc.update("""
+                        INSERT INTO platform.reconciliation_cursor(run_id,organization_id,environment_id,
+                            provider_account_id,livemode,currency)
+                        VALUES (?,?,?,?,false,'USD')""", UUID.randomUUID(), id(1), id(2), id(77)))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
         for (String function : List.of("pr15_run_guard()", "pr15_cursor_guard()", "pr15_child_guard()"))
             assertThat(admin.queryForObject(
@@ -1076,18 +1045,19 @@ class ReconciliationCoreIT {
         replay.replay(scope, "mapping");
         admin.execute("ALTER TABLE platform.journal_entry DISABLE TRIGGER USER");
         try {
-            admin.update(
-                    "UPDATE platform.journal_entry SET amount_minor=101 WHERE journal_id=(SELECT journal_id FROM platform.balance_transaction WHERE bt_id='mapping')");
+            admin.update("""
+                    UPDATE platform.journal_entry
+                    SET amount_minor=101
+                    WHERE journal_id=(SELECT journal_id FROM platform.balance_transaction WHERE bt_id='mapping')""");
         } finally {
             admin.execute("ALTER TABLE platform.journal_entry ENABLE TRIGGER USER");
         }
         admin.execute("ALTER TABLE platform.balance_projection DISABLE TRIGGER USER");
         try {
-            admin.update(
-                    "UPDATE platform.balance_projection SET balance_minor=CASE WHEN ledger_account_id=? THEN 101 ELSE -101 END WHERE ledger_account_id IN (?,?)",
-                    id(20),
-                    id(20),
-                    id(22));
+            admin.update("""
+                    UPDATE platform.balance_projection
+                    SET balance_minor=CASE WHEN ledger_account_id=? THEN 101 ELSE -101 END
+                    WHERE ledger_account_id IN (?,?)""", id(20), id(20), id(22));
         } finally {
             admin.execute("ALTER TABLE platform.balance_projection ENABLE TRIGGER USER");
         }
@@ -1137,10 +1107,15 @@ class ReconciliationCoreIT {
         UUID run = run();
         page(false, null, 0);
         advance(run, 1);
-        admin.execute(
-                "CREATE FUNCTION platform.pr15_test_pause() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,platform AS $$ BEGIN IF NEW.check_number=1 THEN PERFORM pg_advisory_xact_lock(15154); END IF; RETURN NEW; END $$");
-        admin.execute(
-                "CREATE TRIGGER zz_pr15_test_pause BEFORE INSERT ON platform.reconciliation_check FOR EACH ROW EXECUTE FUNCTION platform.pr15_test_pause()");
+        admin.execute("""
+                CREATE FUNCTION platform.pr15_test_pause() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER
+                SET
+                    search_path=pg_catalog,
+                    platform AS $$ BEGIN IF NEW.check_number=1 THEN PERFORM pg_advisory_xact_lock(15154); END IF;
+                        RETURN NEW; END $$""");
+        admin.execute("""
+                CREATE TRIGGER zz_pr15_test_pause BEFORE INSERT ON platform.reconciliation_check FOR EACH ROW
+                    EXECUTE FUNCTION platform.pr15_test_pause()""");
         try (var gate = admin.getDataSource().getConnection();
                 var statement = gate.createStatement();
                 var pool = Executors.newFixedThreadPool(2)) {
@@ -1151,24 +1126,20 @@ class ReconciliationCoreIT {
                     return null;
                 });
                 assertThat(awaitBlocked("advisory")).isTrue();
-                var inserting = pool.submit(() -> jdbc.update(
-                        "INSERT INTO platform.reconciliation_evidence(run_id,organization_id,environment_id,provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload) VALUES (?,?,?,?,false,'USD','INDEPENDENT_FIXTURE','racing-fixture','race-v1',?,'{}')",
-                        run,
-                        id(1),
-                        id(2),
-                        id(4),
-                        "d".repeat(64)));
+                var inserting = pool.submit(() -> jdbc.update("""
+                        INSERT INTO platform.reconciliation_evidence(run_id,organization_id,environment_id,
+                            provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload)
+                        VALUES (?,?,?,?,false,'USD','INDEPENDENT_FIXTURE','racing-fixture','race-v1',?,'{}')""", run, id(1), id(2), id(4), "d".repeat(64)));
                 assertThat(awaitBlocked("transactionid")).isTrue();
                 statement.execute("SELECT pg_advisory_unlock(15154)");
                 closing.get(10, TimeUnit.SECONDS);
                 assertThatThrownBy(() -> inserting.get(10, TimeUnit.SECONDS))
                         .isInstanceOf(ExecutionException.class)
                         .hasCauseInstanceOf(org.springframework.dao.DataAccessException.class);
-                assertThat(jdbc.queryForObject(
-                                "SELECT count(*) FROM platform.reconciliation_evidence WHERE run_id=? AND source='racing-fixture'",
-                                Long.class,
-                                run))
-                        .isZero();
+                assertThat(jdbc.queryForObject("""
+                                SELECT count(*)
+                                FROM platform.reconciliation_evidence
+                                WHERE run_id=? AND source='racing-fixture'""", Long.class, run)).isZero();
             } finally {
                 statement.execute("SELECT pg_advisory_unlock(15154)");
             }
@@ -1179,12 +1150,16 @@ class ReconciliationCoreIT {
     }
 
     void feeModel(String type, String direction) {
-        assertThat(admin.queryForObject(
-                        "SELECT count(*) FROM information_schema.columns WHERE table_schema='platform' AND table_name='fee_model' AND column_name='fee_direction'",
-                        Long.class))
-                .isEqualTo(1);
+        assertThat(admin.queryForObject("""
+                        SELECT count(*)
+                        FROM information_schema.columns
+                        WHERE table_schema='platform' AND table_name='fee_model' AND column_name='fee_direction'""", Long.class)).isEqualTo(1);
         admin.update(
-                "INSERT INTO platform.fee_model(organization_id,environment_id,provider_account_id,livemode,currency,balance_domain,business_type,model_version,effective_from,effective_until,basis_points,flat_minor,rounding,fee_direction) VALUES (?,?,?,false,'USD','PAYMENTS',?,?,?, ?,0,12,'DOWN',?)",
+                """
+                INSERT INTO platform.fee_model(organization_id,environment_id,provider_account_id,livemode,currency,
+                    balance_domain,business_type,model_version,effective_from,effective_until,basis_points,
+                    flat_minor,rounding,fee_direction)
+                VALUES (?,?,?,false,'USD','PAYMENTS',?,?,?, ?,0,12,'DOWN',?)""",
                 id(1),
                 id(2),
                 id(4),
@@ -1208,11 +1183,10 @@ class ReconciliationCoreIT {
         advance(run, 1);
         replay.replay(scope, "txn_out");
         finish(run, evidence(-5712, scope, until));
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.reconciliation_exception WHERE run_id=? AND reason='FEE_MODEL_MISMATCH'",
-                        Long.class,
-                        run))
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.reconciliation_exception
+                        WHERE run_id=? AND reason='FEE_MODEL_MISMATCH'""", Long.class, run)).isZero();
         assertThat(check(run, 4)).isEqualTo("PASS");
     }
 
@@ -1232,11 +1206,10 @@ class ReconciliationCoreIT {
         replay.replay(scope, "txn_out");
         replay.replay(scope, "txn_return");
         finish(run, evidence(0, scope, until));
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.reconciliation_exception WHERE run_id=? AND reason='FEE_MODEL_MISMATCH'",
-                        Long.class,
-                        run))
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.reconciliation_exception
+                        WHERE run_id=? AND reason='FEE_MODEL_MISMATCH'""", Long.class, run)).isZero();
         assertThat(check(run, 4)).isEqualTo("PASS");
     }
 
@@ -1299,37 +1272,36 @@ class ReconciliationCoreIT {
 
     @Test
     void definiteFailuresCannotHideUnclassifiedInputsInOverallCompleteness() throws Exception {
-        admin.update(
-                "INSERT INTO platform.fee_model(organization_id,environment_id,provider_account_id,livemode,currency,balance_domain,business_type,model_version,effective_from,effective_until,basis_points,flat_minor,rounding) VALUES (?,?,?,false,'USD','PAYMENTS','adjustment','zero-v1',?,?,0,0,'DOWN')",
-                id(1),
-                id(2),
-                id(4),
-                java.sql.Timestamp.from(from),
-                java.sql.Timestamp.from(until));
+        admin.update("""
+                INSERT INTO platform.fee_model(organization_id,environment_id,provider_account_id,livemode,currency,
+                    balance_domain,business_type,model_version,effective_from,effective_until,basis_points,
+                    flat_minor,rounding)
+                VALUES (?,?,?,false,'USD','PAYMENTS','adjustment','zero-v1',?,?,0,0,'DOWN')""", id(1), id(2), id(4), java.sql.Timestamp.from(from), java.sql.Timestamp.from(until));
         UUID run = run();
         page(false, "unclassified_mapping", 100);
         advance(run, 1);
         replay.replay(scope, "unclassified_mapping");
         admin.execute("ALTER TABLE platform.journal_entry DISABLE TRIGGER USER");
         try {
-            admin.update(
-                    "UPDATE platform.journal_entry SET amount_minor=101 WHERE journal_id=(SELECT journal_id FROM platform.balance_transaction WHERE bt_id='unclassified_mapping')");
+            admin.update("""
+                    UPDATE platform.journal_entry
+                    SET amount_minor=101
+                    WHERE journal_id=(SELECT journal_id FROM platform.balance_transaction WHERE
+                        bt_id='unclassified_mapping')""");
         } finally {
             admin.execute("ALTER TABLE platform.journal_entry ENABLE TRIGGER USER");
         }
         finish(run, evidence(100, scope, until));
         assertThat(check(run, 4)).isEqualTo("FAIL");
         assertThat(check(run, 5)).isEqualTo("FAIL");
-        assertThat(jdbc.queryForObject(
-                        "SELECT completeness->>'unclassified' FROM platform.reconciliation_check WHERE run_id=? AND check_number=4",
-                        Long.class,
-                        run))
-                .isEqualTo(1);
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.reconciliation_check WHERE run_id=? AND outcome='INCOMPLETE'",
-                        Long.class,
-                        run))
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT completeness->>'unclassified'
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=4""", Long.class, run)).isEqualTo(1);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND outcome='INCOMPLETE'""", Long.class, run)).isZero();
         assertThat(jdbc.queryForObject("SELECT state FROM platform.reconciliation_run WHERE id=?", String.class, run))
                 .isEqualTo("INCOMPLETE");
     }
@@ -1337,10 +1309,9 @@ class ReconciliationCoreIT {
     @Test
     void accountWidePagesRetainCoverageWithoutLeakingOtherMoneyScopes() throws Exception {
         admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES ('EUR',2)");
-        admin.update(
-                "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'EUR')",
-                id(1),
-                id(2));
+        admin.update("""
+                INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                VALUES (?,?,'EUR')""", id(1), id(2));
         feeModel("payout", "EXPENSE");
         var payouts = configurePayoutChecks();
         payouts.accept(
@@ -1383,16 +1354,14 @@ class ReconciliationCoreIT {
         advance(run, 1);
         assertThat(replay.replay(scope, "txn_out")).isEqualTo("POSTED");
         finish(run, evidence(-5712, scope, until));
-        assertThat(jdbc.queryForObject(
-                        "SELECT jsonb_array_length(input_versions->'pages'->0->'btIds') FROM platform.reconciliation_check WHERE run_id=? AND check_number=4",
-                        Long.class,
-                        run))
-                .isEqualTo(3);
-        assertThat(jdbc.queryForObject(
-                        "SELECT completeness->>'pagesComplete' FROM platform.reconciliation_check WHERE run_id=? AND check_number=4",
-                        Boolean.class,
-                        run))
-                .isTrue();
+        assertThat(jdbc.queryForObject("""
+                        SELECT jsonb_array_length(input_versions->'pages'->0->'btIds')
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=4""", Long.class, run)).isEqualTo(3);
+        assertThat(jdbc.queryForObject("""
+                        SELECT completeness->>'pagesComplete'
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=4""", Boolean.class, run)).isTrue();
         assertThat(check(run, 5)).isEqualTo("PASS");
         assertThat(check(run, 4)).isEqualTo("PASS");
     }

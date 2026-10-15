@@ -31,15 +31,17 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
 
     @BeforeEach
     void setupReconciliation() throws Exception {
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode) VALUES (?,?,?,false,'ZERO')",
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode)
+                VALUES (?,?,?,false,'ZERO')""", id(1), id(2), id(4));
         for (String purpose : List.of("PSP_FUNDS", "PSP_FEE_EXPENSE", "SALES_REVENUE", "SUSPENSE")) {
             boolean external = !purpose.equals("SALES_REVENUE");
             admin.update(
-                    "INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,source_domain,provider_account_id,balance_domain) VALUES (?,?,'USD',?,?,?,?)",
+                    """
+                    INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,
+                        source_domain,provider_account_id,balance_domain)
+                    VALUES (?,?,'USD',?,?,?,?)""",
                     id(1),
                     id(2),
                     purpose,
@@ -122,9 +124,11 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
     }
 
     long psp() {
-        return jdbc.queryForObject(
-                "SELECT coalesce(sum(p.balance_minor),0) FROM platform.balance_projection p JOIN platform.ledger_account a ON a.id=p.ledger_account_id WHERE a.account_purpose='PSP_FUNDS'",
-                Long.class);
+        return jdbc.queryForObject("""
+                SELECT coalesce(sum(p.balance_minor),0)
+                FROM platform.balance_projection p
+                JOIN platform.ledger_account a ON a.id=p.ledger_account_id
+                WHERE a.account_purpose='PSP_FUNDS'""", Long.class);
     }
 
     NotificationEvent event() {
@@ -177,10 +181,10 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
         assertThat(count("outbox_event")).isZero();
         assertThat(count("journal")).isZero();
         assertThat(count("reconciliation_source_observation")).isPositive();
-        assertThat(jdbc.queryForObject(
-                        "SELECT reason FROM platform.recovery_task WHERE task_type='RECONCILIATION_SOURCE'",
-                        String.class))
-                .isEqualTo("NO_TRUSTED_ORDER");
+        assertThat(jdbc.queryForObject("""
+                        SELECT reason
+                        FROM platform.recovery_task
+                        WHERE task_type='RECONCILIATION_SOURCE'""", String.class)).isEqualTo("NO_TRUSTED_ORDER");
     }
 
     @Test
@@ -200,17 +204,20 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
         drain();
         assertThat(count("payment")).isZero();
         assertThat(count("journal")).isZero();
-        assertThat(jdbc.queryForObject(
-                        "SELECT reason FROM platform.recovery_task WHERE task_type='RECONCILIATION_SOURCE'",
-                        String.class))
-                .isEqualTo("SOURCE_EVIDENCE_CONFLICT");
+        assertThat(jdbc.queryForObject("""
+                        SELECT reason
+                        FROM platform.recovery_task
+                        WHERE task_type='RECONCILIATION_SOURCE'""", String.class)).isEqualTo("SOURCE_EVIDENCE_CONFLICT");
     }
 
     @Test
     void expiredOrDisabledOrderEligibilityNeverTriggersHistoricalFulfillment() throws Exception {
         UUID order = order("disabled");
         binding(order);
-        admin.update("UPDATE platform.order_fulfillment_eligibility SET eligible=false WHERE order_id=?", order);
+        admin.update("""
+                UPDATE platform.order_fulfillment_eligibility
+                SET eligible=false
+                WHERE order_id=?""", order);
         drain();
         assertThat(count("payment")).isZero();
         assertThat(count("outbox_event")).isZero();
@@ -219,14 +226,11 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
     @Test
     void runtimeCannotFabricateTrustedOrderBinding() throws Exception {
         UUID order = order("forged");
-        assertThatThrownBy(() -> jdbc.update(
-                        "INSERT INTO platform.order_provider_binding(organization_id,environment_id,application_id,provider_account_id,livemode,currency,order_id,payment_intent_id,amount_minor,proof_kind,proof_ref,proof_digest) VALUES (?,?,?,?,false,'USD',?,'pi_forged',10000,'SERVER_ORDER_FIXTURE','forged',?)",
-                        id(1),
-                        id(2),
-                        id(3),
-                        id(4),
-                        order,
-                        "a".repeat(64)))
+        assertThatThrownBy(() -> jdbc.update("""
+                        INSERT INTO platform.order_provider_binding(organization_id,environment_id,application_id,
+                            provider_account_id,livemode,currency,order_id,payment_intent_id,amount_minor,proof_kind,
+                            proof_ref,proof_digest)
+                        VALUES (?,?,?,?,false,'USD',?,'pi_forged',10000,'SERVER_ORDER_FIXTURE','forged',?)""", id(1), id(2), id(3), id(4), order, "a".repeat(64)))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
     }
 
@@ -237,9 +241,10 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
         var claims = (List<?>) invoke(recovery, "claim", scope, run, 1);
         assertThat(claims).hasSize(1);
         Object first = claims.getFirst();
-        admin.update(
-                "UPDATE platform.recovery_task SET lease_until=? WHERE task_type='RECONCILIATION_SOURCE'",
-                Timestamp.from(clock.instant().minusSeconds(1)));
+        admin.update("""
+                UPDATE platform.recovery_task
+                SET lease_until=?
+                WHERE task_type='RECONCILIATION_SOURCE'""", Timestamp.from(clock.instant().minusSeconds(1)));
         var newer = (List<?>) invoke(recovery, "claim", scope, run, 1);
         assertThat(newer).hasSize(1);
         assertThat(invoke(recovery, "recover", first)).isEqualTo("STALE_CLAIM");
@@ -251,10 +256,12 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
     @Test
     void injectedProvenanceFailureRollsBackPaymentAndNotification() throws Exception {
         binding(order("rollback"));
-        admin.execute(
-                "CREATE FUNCTION platform.pr15_test_fail() RETURNS trigger LANGUAGE plpgsql AS $$BEGIN RAISE EXCEPTION 'injected'; END $$");
-        admin.execute(
-                "CREATE TRIGGER pr15_test_fail BEFORE INSERT ON platform.reconciliation_payment_provenance FOR EACH ROW EXECUTE FUNCTION platform.pr15_test_fail()");
+        admin.execute("""
+                CREATE FUNCTION platform.pr15_test_fail() RETURNS trigger LANGUAGE plpgsql AS $$BEGIN RAISE
+                    EXCEPTION 'injected'; END $$""");
+        admin.execute("""
+                CREATE TRIGGER pr15_test_fail BEFORE INSERT ON platform.reconciliation_payment_provenance FOR EACH
+                    ROW EXECUTE FUNCTION platform.pr15_test_fail()""");
         try {
             assertThatThrownBy(() -> drain()).isInstanceOf(Exception.class);
             assertThat(count("payment")).isZero();
@@ -275,11 +282,10 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
                 .attemptPayment(
                         scope, session(pay), com.paymentsledger.provider.fake.FakeControls.AttemptOutcome.SUCCEED);
         service.get(context, payment);
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.order_provider_binding WHERE payment_intent_id=(SELECT payment_intent_id FROM platform.payment WHERE id=?)",
-                        Long.class,
-                        payment))
-                .isEqualTo(1);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.order_provider_binding
+                        WHERE payment_intent_id=(SELECT payment_intent_id FROM platform.payment WHERE id=?)""", Long.class, payment)).isEqualTo(1);
     }
 
     @Test
@@ -288,13 +294,14 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
         reads.unavailable = true;
         drain();
         assertThat(count("payment")).isZero();
-        assertThat(jdbc.queryForObject(
-                        "SELECT status FROM platform.recovery_task WHERE task_type='RECONCILIATION_SOURCE'",
-                        String.class))
-                .isEqualTo("WAITING");
-        admin.update(
-                "UPDATE platform.recovery_task SET available_at=? WHERE task_type='RECONCILIATION_SOURCE'",
-                Timestamp.from(clock.instant().minusSeconds(1)));
+        assertThat(jdbc.queryForObject("""
+                        SELECT status
+                        FROM platform.recovery_task
+                        WHERE task_type='RECONCILIATION_SOURCE'""", String.class)).isEqualTo("WAITING");
+        admin.update("""
+                UPDATE platform.recovery_task
+                SET available_at=?
+                WHERE task_type='RECONCILIATION_SOURCE'""", Timestamp.from(clock.instant().minusSeconds(1)));
         reads.unavailable = false;
         drain();
         assertThat(count("payment")).isEqualTo(1);
@@ -308,10 +315,10 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
         reads.readVersion = "different-provider-api";
         drain();
         assertThat(count("payment")).isZero();
-        assertThat(jdbc.queryForObject(
-                        "SELECT reason FROM platform.recovery_task WHERE task_type='RECONCILIATION_SOURCE'",
-                        String.class))
-                .isEqualTo("SOURCE_EVIDENCE_CONFLICT");
+        assertThat(jdbc.queryForObject("""
+                        SELECT reason
+                        FROM platform.recovery_task
+                        WHERE task_type='RECONCILIATION_SOURCE'""", String.class)).isEqualTo("SOURCE_EVIDENCE_CONFLICT");
     }
 
     @Test
@@ -349,10 +356,10 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
                 .isEqualTo(8);
         invoke(worker, "drain");
         invoke(worker, "drain");
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.reconciliation_check WHERE check_number=5 AND outcome='INCOMPLETE'",
-                        Long.class))
-                .isEqualTo(8);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.reconciliation_check
+                        WHERE check_number=5 AND outcome='INCOMPLETE'""", Long.class)).isEqualTo(8);
         assertThat(count("business_order")).isZero();
         assertThat(count("outbox_event")).isZero();
     }
@@ -364,16 +371,18 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
         drain();
         invoke(engine, "finish", run, null);
         long exceptions = count("reconciliation_exception");
-        admin.update(
-                "UPDATE platform.recovery_task SET available_at=? WHERE task_type='RECONCILIATION_SOURCE'",
-                Timestamp.from(clock.instant().minusSeconds(1)));
+        admin.update("""
+                UPDATE platform.recovery_task
+                SET available_at=?
+                WHERE task_type='RECONCILIATION_SOURCE'""", Timestamp.from(clock.instant().minusSeconds(1)));
         assertThatCode(() -> drain()).doesNotThrowAnyException();
         assertThat(count("reconciliation_exception")).isEqualTo(exceptions);
         assertThat(count("reconciliation_source_observation")).isEqualTo(2);
         reads.unavailable = false;
-        admin.update(
-                "UPDATE platform.recovery_task SET available_at=? WHERE task_type='RECONCILIATION_SOURCE'",
-                Timestamp.from(clock.instant().minusSeconds(1)));
+        admin.update("""
+                UPDATE platform.recovery_task
+                SET available_at=?
+                WHERE task_type='RECONCILIATION_SOURCE'""", Timestamp.from(clock.instant().minusSeconds(1)));
         drain();
         assertThat(count("payment")).isEqualTo(1);
         assertThat(psp()).isEqualTo(9700);
@@ -394,16 +403,14 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
     void forgedRecoveryRunCannotCrossProviderScopeOnPaymentInsert() throws Exception {
         UUID order = order("wrong-run");
         binding(order);
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE','other-provider',false)",
-                id(77),
-                id(1),
-                id(2));
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode) VALUES (?,?,?,false,'ZERO')",
-                id(1),
-                id(2),
-                id(77));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'FAKE','other-provider',false)""", id(77), id(1), id(2));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode)
+                VALUES (?,?,?,false,'ZERO')""", id(1), id(2), id(77));
         UUID wrongRun = (UUID) invoke(
                 engine,
                 "createDay",
@@ -414,16 +421,11 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
         UUID bt = jdbc.queryForObject(
                 "SELECT id FROM platform.balance_transaction WHERE bt_id='txn_recovered'", UUID.class);
         assertThatThrownBy(() -> jdbc.update(
-                        "INSERT INTO platform.payment(id,organization_id,environment_id,application_id,provider_account_id,currency,business_order_id,amount_minor,expires_at,origin,reconciliation_run_id,reconciliation_source_bt_id,reconciliation_evidence_digest) VALUES (?,?,?,?,?,'USD',?,10000,now(),'RECONCILIATION',?,?,?)",
-                        UUID.randomUUID(),
-                        id(1),
-                        id(2),
-                        id(3),
-                        id(4),
-                        order,
-                        wrongRun,
-                        bt,
-                        "b".repeat(64)))
+                        """
+                        INSERT INTO platform.payment(id,organization_id,environment_id,application_id,provider_account_id,
+                            currency,business_order_id,amount_minor,expires_at,origin,reconciliation_run_id,
+                            reconciliation_source_bt_id,reconciliation_evidence_digest)
+                        VALUES (?,?,?,?,?,'USD',?,10000,now(),'RECONCILIATION',?,?,?)""", UUID.randomUUID(), id(1), id(2), id(3), id(4), order, wrongRun, bt, "b".repeat(64)))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
         assertThat(count("payment")).isZero();
         assertThat(count("outbox_event")).isZero();
@@ -467,15 +469,14 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
                         ZoneId.class)
                 .newInstance(engine, recovery, replay, jdbc, report, clock, scope, "USD", ZoneOffset.UTC);
         invoke(worker, "drain");
-        assertThat(jdbc.queryForObject(
-                        "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=5",
-                        String.class,
-                        run))
-                .isEqualTo("PASS");
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.reconciliation_evidence WHERE evidence_kind='PROVIDER_REPORT_READ'",
-                        Long.class))
-                .isEqualTo(1);
+        assertThat(jdbc.queryForObject("""
+                        SELECT outcome
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=5""", String.class, run)).isEqualTo("PASS");
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.reconciliation_evidence
+                        WHERE evidence_kind='PROVIDER_REPORT_READ'""", Long.class)).isEqualTo(1);
     }
 
     @Test
@@ -519,11 +520,10 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
                 .isNull();
         worker.drain();
         assertThat(calls).containsExactly(1, 1);
-        assertThat(jdbc.queryForObject(
-                        "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=5",
-                        String.class,
-                        run))
-                .isEqualTo("PASS");
+        assertThat(jdbc.queryForObject("""
+                        SELECT outcome
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=5""", String.class, run)).isEqualTo("PASS");
     }
 
     @Test
@@ -542,11 +542,11 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
         worker.nightly();
         worker.drain();
         worker.drain();
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.import_window w JOIN platform.reconciliation_run r ON r.import_window_id=w.id WHERE r.id<>? AND w.version>0",
-                        Long.class,
-                        run))
-                .isEqualTo(7);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.import_window w
+                        JOIN platform.reconciliation_run r ON r.import_window_id=w.id
+                        WHERE r.id<>? AND w.version>0""", Long.class, run)).isEqualTo(7);
     }
 
     @Test
@@ -573,8 +573,20 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
     }
 
     void conflictingBt() {
-        jdbc.update(
-                "INSERT INTO platform.bt_evidence_conflict(organization_id,environment_id,provider_account_id,livemode,balance_transaction_id,observation_id,existing_fact,incoming_fact) SELECT organization_id,environment_id,provider_account_id,livemode,id,first_observation_id,immutable_fact,'{\"amountMinor\":9999}'::jsonb FROM platform.balance_transaction WHERE bt_id='txn_recovered'");
+        jdbc.update("""
+                INSERT INTO platform.bt_evidence_conflict(organization_id,environment_id,provider_account_id,
+                    livemode,balance_transaction_id,observation_id,existing_fact,incoming_fact)
+                SELECT
+                    organization_id,
+                    environment_id,
+                    provider_account_id,
+                    livemode,
+                    id,
+                    first_observation_id,
+                    immutable_fact,
+                    '{\"amountMinor\":9999}'::jsonb
+                FROM platform.balance_transaction
+                WHERE bt_id='txn_recovered'""");
     }
 
     @Test
@@ -585,10 +597,10 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
         assertThat(count("payment")).isZero();
         assertThat(count("outbox_event")).isZero();
         assertThat(count("journal")).isZero();
-        assertThat(jdbc.queryForObject(
-                        "SELECT reason FROM platform.recovery_task WHERE task_type='RECONCILIATION_SOURCE'",
-                        String.class))
-                .isEqualTo("SOURCE_EVIDENCE_CONFLICT");
+        assertThat(jdbc.queryForObject("""
+                        SELECT reason
+                        FROM platform.recovery_task
+                        WHERE task_type='RECONCILIATION_SOURCE'""", String.class)).isEqualTo("SOURCE_EVIDENCE_CONFLICT");
     }
 
     @Test
@@ -638,10 +650,10 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
                         "SELECT finished_at FROM platform.reconciliation_run WHERE id=?", Timestamp.class, batch))
                 .isNull();
         worker.drain();
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.balance_transaction WHERE bt_id LIKE 'adj_%' AND state='POSTED'",
-                        Long.class))
-                .isEqualTo(30);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.balance_transaction
+                        WHERE bt_id LIKE 'adj_%' AND state='POSTED'""", Long.class)).isEqualTo(30);
         assertThat(jdbc.queryForObject(
                         "SELECT finished_at FROM platform.reconciliation_run WHERE id=?", Timestamp.class, batch))
                 .isNotNull();
@@ -712,11 +724,10 @@ class ReconciliationRecoveryIT extends PaymentCoreFixture {
                 .isNull();
         worker.drain();
         assertThat(calls).containsExactly(1, 2);
-        assertThat(jdbc.queryForObject(
-                        "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=5",
-                        String.class,
-                        run))
-                .isEqualTo("PASS");
+        assertThat(jdbc.queryForObject("""
+                        SELECT outcome
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=5""", String.class, run)).isEqualTo("PASS");
         assertThat(count("journal")).isEqualTo(1);
     }
 

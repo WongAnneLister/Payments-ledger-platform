@@ -98,13 +98,10 @@ public class IdentityRepository {
         } catch (RuntimeException failure) {
             return false;
         }
-        return jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.provider_account WHERE id=? AND organization_id=? AND environment_id=? AND status='ACTIVE' AND NOT livemode",
-                        Long.class,
-                        id,
-                        context.organizationId(),
-                        context.environmentId())
-                == 1;
+        return jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.provider_account
+                        WHERE id=? AND organization_id=? AND environment_id=? AND status='ACTIVE' AND NOT livemode""", Long.class, id, context.organizationId(), context.environmentId()) == 1;
     }
 
     public record ApplicationView(UUID id, String code) {}
@@ -175,9 +172,9 @@ public class IdentityRepository {
     }
 
     public void assertTestOnly() {
-        Boolean live = jdbc.queryForObject(
-                "SELECT EXISTS(SELECT 1 FROM platform.environment_config WHERE livemode) OR EXISTS(SELECT 1 FROM platform.provider_account WHERE livemode)",
-                Boolean.class);
+        Boolean live = jdbc.queryForObject("""
+                SELECT EXISTS(SELECT 1 FROM platform.environment_config WHERE livemode) OR EXISTS(SELECT 1 FROM
+                    platform.provider_account WHERE livemode)""", Boolean.class);
         if (!Boolean.FALSE.equals(live))
             throw new IllegalStateException("Live configuration is forbidden in this test-only platform");
     }

@@ -20,9 +20,10 @@ class NotificationPipelineIT extends NotificationFixture {
         assertThat(first).isNotNull();
         assertThat(TransactionSynchronizationManager.isActualTransactionActive())
                 .isFalse();
-        admin.update(
-                "UPDATE platform.outbox_event SET lease_until=now()-interval '1 second' WHERE id=?",
-                first.event().id());
+        admin.update("""
+                UPDATE platform.outbox_event
+                SET lease_until=now()-interval '1 second'
+                WHERE id=?""", first.event().id());
         var second = repo.claim(Duration.ofSeconds(30));
         assertThat(second.event().id()).isEqualTo(first.event().id());
         assertThat(second.event().payload()).isEqualTo(first.event().payload());
@@ -52,10 +53,12 @@ class NotificationPipelineIT extends NotificationFixture {
     void consumerFailureRollsBackInboxAndNeverAcknowledgesThenRetryWorks() {
         var event = success();
         var ack = new AtomicInteger();
-        admin.execute(
-                "CREATE OR REPLACE FUNCTION platform.fail_delivery() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected'; END $$");
-        admin.execute(
-                "CREATE TRIGGER fail_delivery BEFORE INSERT ON platform.delivery_task FOR EACH ROW EXECUTE FUNCTION platform.fail_delivery()");
+        admin.execute("""
+                CREATE OR REPLACE FUNCTION platform.fail_delivery() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
+                    RAISE EXCEPTION 'injected'; END $$""");
+        admin.execute("""
+                CREATE TRIGGER fail_delivery BEFORE INSERT ON platform.delivery_task FOR EACH ROW EXECUTE FUNCTION
+                    platform.fail_delivery()""");
         try {
             assertThatThrownBy(() -> inbox().consume(event.bytes(), ack::incrementAndGet))
                     .isInstanceOf(RuntimeException.class);
@@ -93,8 +96,9 @@ class NotificationPipelineIT extends NotificationFixture {
         due();
         var claim = repo.claim(Duration.ofSeconds(30));
         assertThat(claim).isNotNull();
-        admin.update(
-                "UPDATE platform.merchant_notification_target SET url='https://other.example/notifications',version=2");
+        admin.update("""
+                UPDATE platform.merchant_notification_target
+                SET url='https://other.example/notifications',version=2""");
         assertThat(repo.recheck(claim)).isFalse();
         assertThat(state()).isEqualTo("HELD");
         due();
@@ -111,7 +115,9 @@ class NotificationPipelineIT extends NotificationFixture {
         admin.update("UPDATE platform.order_fulfillment_eligibility SET eligible=false");
         assertThat(delivery().claim(Duration.ofSeconds(30))).isNull();
         assertThat(state()).isEqualTo("HELD");
-        admin.update("UPDATE platform.order_fulfillment_eligibility SET eligible=true,origin='RECONCILIATION'");
+        admin.update("""
+                UPDATE platform.order_fulfillment_eligibility
+                SET eligible=true,origin='RECONCILIATION'""");
         due();
         assertThat(delivery().claim(Duration.ofSeconds(30))).isNull();
     }
@@ -216,8 +222,9 @@ class NotificationPipelineIT extends NotificationFixture {
         var event = success();
         target();
         inbox().accept(event.bytes());
-        admin.update(
-                "UPDATE platform.merchant_notification_target SET url='https://other.example/notifications',version=2");
+        admin.update("""
+                UPDATE platform.merchant_notification_target
+                SET url='https://other.example/notifications',version=2""");
         assertThat(delivery().claim(Duration.ofSeconds(30))).isNull();
         assertThat(state()).isEqualTo("HELD");
         assertThat(jdbc.queryForObject("SELECT target_url FROM platform.delivery_task", String.class))
@@ -239,9 +246,10 @@ class NotificationPipelineIT extends NotificationFixture {
         fake.clock().advance(Duration.ofSeconds(6));
         publisher.drain(1);
         assertThat(publishDelay()).isEqualTo(10);
-        admin.update(
-                "UPDATE platform.outbox_event SET attempt_count=30,available_at=now()-interval '1 minute' WHERE id=?",
-                event.id());
+        admin.update("""
+                UPDATE platform.outbox_event
+                SET attempt_count=30,available_at=now()-interval '1 minute'
+                WHERE id=?""", event.id());
         publisher.drain(1);
         assertThat(publishDelay()).isEqualTo(3600);
         assertThat(jdbc.queryForObject("SELECT status FROM platform.outbox_event WHERE id=?", String.class, event.id()))
@@ -254,10 +262,11 @@ class NotificationPipelineIT extends NotificationFixture {
         admin.update("DELETE FROM platform.order_fulfillment_eligibility WHERE order_id=?", event.orderId());
         assertThat(count("order_fulfillment_eligibility")).isZero();
         assertThatThrownBy(() -> new TransactionTemplate(tx).executeWithoutResult(s -> {
-                    jdbc.execute(
-                            "CREATE TEMP TABLE spoof_order (LIKE platform.business_order INCLUDING DEFAULTS) ON COMMIT DROP");
-                    jdbc.execute(
-                            "CREATE TRIGGER spoof_policy AFTER INSERT ON spoof_order FOR EACH ROW EXECUTE FUNCTION platform.pr09_native_order_policy()");
+                    jdbc.execute("""
+                            CREATE TEMP TABLE spoof_order (LIKE platform.business_order INCLUDING DEFAULTS) ON COMMIT DROP""");
+                    jdbc.execute("""
+                            CREATE TRIGGER spoof_policy AFTER INSERT ON spoof_order FOR EACH ROW EXECUTE FUNCTION
+                                platform.pr09_native_order_policy()""");
                     jdbc.update(
                             "INSERT INTO spoof_order SELECT * FROM platform.business_order WHERE id=?",
                             event.orderId());
@@ -308,9 +317,10 @@ class NotificationPipelineIT extends NotificationFixture {
 
     long publishDelay() {
         return jdbc.queryForObject(
-                "SELECT extract(epoch FROM (available_at-?::timestamptz))::bigint FROM platform.outbox_event WHERE status='READY'",
-                Long.class,
-                java.sql.Timestamp.from(fake.clock().instant()));
+                """
+                SELECT extract(epoch FROM (available_at-?::timestamptz))::bigint
+                FROM platform.outbox_event
+                WHERE status='READY'""", Long.class, java.sql.Timestamp.from(fake.clock().instant()));
     }
 
     String state() {

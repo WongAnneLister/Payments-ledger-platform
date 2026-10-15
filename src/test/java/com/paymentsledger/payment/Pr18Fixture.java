@@ -73,15 +73,17 @@ abstract class Pr18Fixture extends PaymentCoreFixture {
         admin.update(
                 "UPDATE platform.share_policy_fixture SET valid_from=?,share_basis_points=2000",
                 java.sql.Timestamp.from(from));
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode,business_zone) VALUES (?,?,?,false,'ZERO','UTC')",
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode,business_zone)
+                VALUES (?,?,?,false,'ZERO','UTC')""", id(1), id(2), id(4));
         for (String purpose : List.of("PSP_FUNDS", "PSP_FEE_EXPENSE", "SALES_REVENUE", "SALES_RETURNS", "SUSPENSE")) {
             boolean external = !purpose.startsWith("SALES_");
             admin.update(
-                    "INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,source_domain,provider_account_id,balance_domain) VALUES (?,?,'USD',?,?,?,?)",
+                    """
+                    INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,
+                        source_domain,provider_account_id,balance_domain)
+                    VALUES (?,?,'USD',?,?,?,?)""",
                     id(1),
                     id(2),
                     purpose,
@@ -289,10 +291,10 @@ abstract class Pr18Fixture extends PaymentCoreFixture {
                         IndependentBalanceEvidence.Kind.INDEPENDENT_FIXTURE,
                         false);
         reconciliation.finish(run, independent);
-        String result = jdbc.queryForObject(
-                "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=5",
-                String.class,
-                run);
+        String result = jdbc.queryForObject("""
+                SELECT outcome
+                FROM platform.reconciliation_check
+                WHERE run_id=? AND check_number=5""", String.class, run);
         reconciliationOutcomes.add(Map.of(
                 "runId",
                 run.toString(),
@@ -303,27 +305,28 @@ abstract class Pr18Fixture extends PaymentCoreFixture {
                 "I05",
                 result,
                 "I06",
-                jdbc.queryForObject(
-                        "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=6",
-                        String.class,
-                        run),
+                jdbc.queryForObject("""
+                        SELECT outcome
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=6""", String.class, run),
                 "cutoff",
                 until.toString()));
         if (evidenceKind.equals("full"))
-            assertThat(jdbc.queryForObject(
-                            "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=6",
-                            String.class,
-                            run))
+            assertThat(jdbc.queryForObject("""
+                            SELECT outcome
+                            FROM platform.reconciliation_check
+                            WHERE run_id=? AND check_number=6""", String.class, run))
                     .as("I06 payout and bank independent evidence")
                     .isEqualTo("PASS");
         return result;
     }
 
     long balance(String purpose) {
-        return jdbc.queryForObject(
-                "SELECT coalesce(sum(b.balance_minor),0) FROM platform.balance_projection b JOIN platform.ledger_account a ON a.id=b.ledger_account_id WHERE a.account_purpose=?",
-                Long.class,
-                purpose);
+        return jdbc.queryForObject("""
+                SELECT coalesce(sum(b.balance_minor),0)
+                FROM platform.balance_projection b
+                JOIN platform.ledger_account a ON a.id=b.ledger_account_id
+                WHERE a.account_purpose=?""", Long.class, purpose);
     }
 
     Map<String, Object> snapshot() {

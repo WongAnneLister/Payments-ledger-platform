@@ -198,23 +198,25 @@ abstract class Pr19ProcessFixture extends Pr19FaultFixture {
     }
 
     void invariants() {
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM (SELECT journal_id FROM platform.journal_entry GROUP BY journal_id HAVING sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END)<>0) x",
-                        Long.class))
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM (SELECT journal_id FROM platform.journal_entry GROUP BY journal_id HAVING sum(CASE WHEN
+                            side='DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END)<>0) x""", Long.class)).isZero();
         assertThat(count("journal")).isEqualTo(count("financial_event"));
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.financial_event e LEFT JOIN platform.journal j ON j.financial_event_id=e.id WHERE j.id IS NULL",
-                        Long.class))
-                .isZero();
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.refund_control WHERE control_state='NORMAL' AND refunded_minor+reserved_minor>captured_minor",
-                        Long.class))
-                .isZero();
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.bank_statement_line WHERE allocated_minor>principal_minor OR fee_allocated_minor>fee_minor",
-                        Long.class))
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.financial_event e
+                        LEFT
+                        JOIN platform.journal j ON j.financial_event_id=e.id
+                        WHERE j.id IS NULL""", Long.class)).isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.refund_control
+                        WHERE control_state='NORMAL' AND refunded_minor+reserved_minor>captured_minor""", Long.class)).isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.bank_statement_line
+                        WHERE allocated_minor>principal_minor OR fee_allocated_minor>fee_minor""", Long.class)).isZero();
         assertThat(new BalanceRebuildService(jdbc, fake.clock())
                         .rebuild(
                                 new LedgerScope(id(1), id(2), "USD", null),

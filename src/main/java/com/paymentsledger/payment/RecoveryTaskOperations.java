@@ -66,11 +66,10 @@ public class RecoveryTaskOperations {
                             && Set.of("CREATE_CHECKOUT", "CREATE_REFUND").contains(op.get("operation_type")))
                 throw conflict();
         }
-        jdbc.update(
-                "UPDATE platform.recovery_task SET"
-                        + " status='READY',available_at=?,updated_at=now(),version=version+1 WHERE id=?",
-                Timestamp.from(clock.instant()),
-                id);
+        jdbc.update("""
+                UPDATE platform.recovery_task
+                SET status='READY',available_at=?,updated_at=now(),version=version+1
+                WHERE id=?""", Timestamp.from(clock.instant()), id);
         return Map.of(
                 "taskId",
                 id.toString(),

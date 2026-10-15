@@ -170,8 +170,9 @@ class PaymentFinancialIngestionIT extends PaymentCoreFixture {
                 BEGIN IF NEW.financial_status='POSTED' THEN RAISE EXCEPTION 'injected financial status failure'; END IF;
                 RETURN NEW; END $$
                 """);
-        admin.execute(
-                "CREATE TRIGGER pr10_test_fail_financial BEFORE UPDATE ON platform.payment FOR EACH ROW EXECUTE FUNCTION platform.pr10_test_fail_financial()");
+        admin.execute("""
+                CREATE TRIGGER pr10_test_fail_financial BEFORE
+                UPDATE ON platform.payment FOR EACH ROW EXECUTE FUNCTION platform.pr10_test_fail_financial()""");
         try {
             assertThatThrownBy(() -> replay.replay(scope, fact.btId())).isInstanceOf(RuntimeException.class);
             assertThat(count("journal")).isZero();
@@ -195,9 +196,10 @@ class PaymentFinancialIngestionIT extends PaymentCoreFixture {
         expose(fact);
         service.get(context, payment(resource));
         importFact(fact);
-        admin.update(
-                "UPDATE platform.provider_account SET provider='STRIPE',provider_account_ref='acct_pr10_fixture' WHERE id=?",
-                scope.providerAccountId());
+        admin.update("""
+                UPDATE platform.provider_account
+                SET provider='STRIPE',provider_account_ref='acct_pr10_fixture'
+                WHERE id=?""", scope.providerAccountId());
         var inbox = new WebhookInboxRepository(jdbc, tx, json, fake.clock());
         var processor = new WebhookProcessor(inbox, repository, json, fake.clock());
         var object = json.createObjectNode()
@@ -317,7 +319,10 @@ class PaymentFinancialIngestionIT extends PaymentCoreFixture {
         Instant boundary = fake.clock().instant().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
         UUID oldWindow = importer.createWindow(
                 scope, boundary.minus(Duration.ofDays(10)), boundary.minus(Duration.ofDays(9)), "BACKFILL");
-        admin.update("UPDATE platform.import_cursor SET api_version='obsolete-contract' WHERE window_id=?", oldWindow);
+        admin.update("""
+                UPDATE platform.import_cursor
+                SET api_version='obsolete-contract'
+                WHERE window_id=?""", oldWindow);
         UUID newerWindow = importer.createWindow(
                 scope, boundary.minus(Duration.ofDays(2)), boundary.minus(Duration.ofDays(1)), "BACKFILL");
         var worker = new FinancialIngestionWorker(jdbc, importer, replay, scope, fake.clock());
@@ -330,9 +335,9 @@ class PaymentFinancialIngestionIT extends PaymentCoreFixture {
         assertThat(jdbc.queryForObject(
                         "SELECT state FROM platform.import_window WHERE id=?", String.class, newerWindow))
                 .isEqualTo("COMPLETE");
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.import_window WHERE purpose='OVERLAP' AND state='COMPLETE'",
-                        Long.class))
-                .isEqualTo(1);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.import_window
+                        WHERE purpose='OVERLAP' AND state='COMPLETE'""", Long.class)).isEqualTo(1);
     }
 }

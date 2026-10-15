@@ -25,16 +25,15 @@ class RefundCoreIT extends PaymentCoreFixture {
                 Set.of("refunds:read", "refunds:write"));
         var intent = repository.prepare(context, "payment-original", command("refund-order"), "FAKE");
         captured = intent.paymentId();
-        admin.update(
-                "UPDATE platform.payment SET captured_amount_minor=1000,payment_status='SUCCEEDED',latest_charge_id='ch_refund' WHERE id=?",
-                captured);
-        admin.update(
-                "INSERT INTO platform.payment_attempt(organization_id,environment_id,application_id,provider_account_id,currency,payment_id,provider_object_id,provider_status,payment_intent_id,captured,amount_minor,amount_captured_minor,fetched_at) VALUES (?,?,?,?,'USD',?,'ch_refund','succeeded','pi_refund',true,1000,1000,now())",
-                id(1),
-                id(2),
-                id(3),
-                id(4),
-                captured);
+        admin.update("""
+                UPDATE platform.payment
+                SET captured_amount_minor=1000,payment_status='SUCCEEDED',latest_charge_id='ch_refund'
+                WHERE id=?""", captured);
+        admin.update("""
+                INSERT INTO platform.payment_attempt(organization_id,environment_id,application_id,
+                    provider_account_id,currency,payment_id,provider_object_id,provider_status,payment_intent_id,
+                    captured,amount_minor,amount_captured_minor,fetched_at)
+                VALUES (?,?,?,?,'USD',?,'ch_refund','succeeded','pi_refund',true,1000,1000,now())""", id(1), id(2), id(3), id(4), captured);
     }
 
     @Test
@@ -66,9 +65,10 @@ class RefundCoreIT extends PaymentCoreFixture {
                         "SELECT reserved_minor FROM platform.refund_control WHERE payment_id=?", Long.class, captured))
                 .isEqualTo(600);
         assertThat(count("refund")).isEqualTo(1);
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.provider_operation WHERE operation_target='REFUND'", Long.class))
-                .isEqualTo(1);
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.provider_operation
+                        WHERE operation_target='REFUND'""", Long.class)).isEqualTo(1);
     }
 
     int reserveAtBarrier(CyclicBarrier barrier, String key) throws Exception {
@@ -109,9 +109,10 @@ class RefundCoreIT extends PaymentCoreFixture {
         assertThat(r.read(refundContext, first.refundId()))
                 .containsEntry("refundStatus", "SUCCEEDED")
                 .containsEntry("financialStatus", "PENDING_EVIDENCE");
-        assertThat(jdbc.queryForMap(
-                        "SELECT reserved_minor,refunded_minor FROM platform.refund_control WHERE payment_id=?",
-                        captured))
+        assertThat(jdbc.queryForMap("""
+                        SELECT reserved_minor,refunded_minor
+                        FROM platform.refund_control
+                        WHERE payment_id=?""", captured))
                 .containsEntry("reserved_minor", 0L)
                 .containsEntry("refunded_minor", 600L);
         assertThat(jdbc.queryForObject(
@@ -125,9 +126,10 @@ class RefundCoreIT extends PaymentCoreFixture {
         r.prepare(refundContext, "refund-key-a", request(600, null), "FAKE");
         UUID external = r.accept(scope, fact("re_dashboard", "succeeded", 600), evidence(), null);
         assertThat(external).isNotNull();
-        assertThat(jdbc.queryForMap(
-                        "SELECT control_state,reserved_minor,refunded_minor FROM platform.refund_control WHERE payment_id=?",
-                        captured))
+        assertThat(jdbc.queryForMap("""
+                        SELECT control_state,reserved_minor,refunded_minor
+                        FROM platform.refund_control
+                        WHERE payment_id=?""", captured))
                 .containsEntry("control_state", "EXTERNAL_CONFLICT")
                 .containsEntry("reserved_minor", 600L)
                 .containsEntry("refunded_minor", 600L);
@@ -231,17 +233,14 @@ class RefundCoreIT extends PaymentCoreFixture {
     void sourceObservationCannotClaimAnotherProviderScopePayment() {
         var r = refunds();
         r.prepare(refundContext, "refund-key-a", request(600, null), "FAKE");
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'FAKE','different-scope',false)",
-                id(44),
-                id(1),
-                id(2));
-        assertThatThrownBy(() -> jdbc.update(
-                        "INSERT INTO platform.refund_source_observation(organization_id,environment_id,provider_account_id,provider_refund_id,payment_id,fact,evidence) VALUES (?,?,?,'re_forged',?,'{}','{}')",
-                        id(1),
-                        id(2),
-                        id(44),
-                        captured))
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'FAKE','different-scope',false)""", id(44), id(1), id(2));
+        assertThatThrownBy(() -> jdbc.update("""
+                        INSERT INTO platform.refund_source_observation(organization_id,environment_id,provider_account_id,
+                            provider_refund_id,payment_id,fact,evidence)
+                        VALUES (?,?,?,'re_forged',?,'{}','{}')""", id(1), id(2), id(44), captured))
                 .isInstanceOf(org.springframework.dao.DataAccessException.class);
     }
 
@@ -251,13 +250,11 @@ class RefundCoreIT extends PaymentCoreFixture {
         admin.update("DELETE FROM platform.payment_attempt WHERE payment_id=?", captured);
         assertThat(r.accept(scope, fact("re_delayed", "succeeded", 300), evidence(), null))
                 .isNull();
-        admin.update(
-                "INSERT INTO platform.payment_attempt(organization_id,environment_id,application_id,provider_account_id,currency,payment_id,provider_object_id,provider_status,payment_intent_id,captured,amount_minor,amount_captured_minor,fetched_at) VALUES (?,?,?,?,'USD',?,'ch_refund','succeeded','pi_refund',true,1000,1000,now())",
-                id(1),
-                id(2),
-                id(3),
-                id(4),
-                captured);
+        admin.update("""
+                INSERT INTO platform.payment_attempt(organization_id,environment_id,application_id,
+                    provider_account_id,currency,payment_id,provider_object_id,provider_status,payment_intent_id,
+                    captured,amount_minor,amount_captured_minor,fetched_at)
+                VALUES (?,?,?,?,'USD',?,'ch_refund','succeeded','pi_refund',true,1000,1000,now())""", id(1), id(2), id(3), id(4), captured);
         UUID refund = r.accept(scope, fact("re_delayed", "succeeded", 300), evidence(), null);
         UUID observation = jdbc.queryForObject(
                 "SELECT id FROM platform.refund_source_observation WHERE refund_id=? LIMIT 1", UUID.class, refund);
@@ -278,9 +275,10 @@ class RefundCoreIT extends PaymentCoreFixture {
         var canceled = r.prepare(refundContext, "refund-cancel-key", request(600, null), "FAKE");
         r.accept(scope, fact("re_canceled", "canceled", 600), evidence(), canceled.refundId());
         r.accept(scope, fact("re_canceled", "canceled", 600), evidence(), canceled.refundId());
-        assertThat(jdbc.queryForMap(
-                        "SELECT reserved_minor,refunded_minor FROM platform.refund_control WHERE payment_id=?",
-                        captured))
+        assertThat(jdbc.queryForMap("""
+                        SELECT reserved_minor,refunded_minor
+                        FROM platform.refund_control
+                        WHERE payment_id=?""", captured))
                 .containsEntry("reserved_minor", 0L)
                 .containsEntry("refunded_minor", 0L);
         assertThat(jdbc.queryForObject(
@@ -298,13 +296,14 @@ class RefundCoreIT extends PaymentCoreFixture {
         assertThat(jdbc.queryForObject(
                         "SELECT count(*) FROM platform.outbox_event WHERE event_type='refund.succeeded'", Long.class))
                 .isEqualTo(2);
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(DISTINCT business_key) FROM platform.outbox_event WHERE event_type='refund.succeeded'",
-                        Long.class))
-                .isEqualTo(2);
-        assertThat(jdbc.queryForMap(
-                        "SELECT reserved_minor,refunded_minor FROM platform.refund_control WHERE payment_id=?",
-                        captured))
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(DISTINCT business_key)
+                        FROM platform.outbox_event
+                        WHERE event_type='refund.succeeded'""", Long.class)).isEqualTo(2);
+        assertThat(jdbc.queryForMap("""
+                        SELECT reserved_minor,refunded_minor
+                        FROM platform.refund_control
+                        WHERE payment_id=?""", captured))
                 .containsEntry("reserved_minor", 0L)
                 .containsEntry("refunded_minor", 800L);
     }
@@ -375,13 +374,11 @@ class RefundCoreIT extends PaymentCoreFixture {
                         evidence(),
                         null))
                 .isNull();
-        admin.update(
-                "INSERT INTO platform.payment_attempt(organization_id,environment_id,application_id,provider_account_id,currency,payment_id,provider_object_id,provider_status,payment_intent_id,captured,amount_minor,amount_captured_minor,fetched_at) VALUES (?,?,?,?,'USD',?,'ch_refund','succeeded','pi_refund',true,1000,1000,now())",
-                id(1),
-                id(2),
-                id(3),
-                id(4),
-                captured);
+        admin.update("""
+                INSERT INTO platform.payment_attempt(organization_id,environment_id,application_id,
+                    provider_account_id,currency,payment_id,provider_object_id,provider_status,payment_intent_id,
+                    captured,amount_minor,amount_captured_minor,fetched_at)
+                VALUES (?,?,?,?,'USD',?,'ch_refund','succeeded','pi_refund',true,1000,1000,now())""", id(1), id(2), id(3), id(4), captured);
         return r.accept(
                 scope,
                 new RefundFact(

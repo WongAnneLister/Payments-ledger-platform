@@ -37,11 +37,15 @@ public final class DisputeRecoveryWorker {
             fixedDelayString = "${platform.dispute.poll-ms:300000}",
             initialDelayString = "${platform.dispute.poll-ms:300000}")
     public void tick() {
-        var rows = jdbc.queryForList(
-                "SELECT id,provider_dispute_id FROM platform.dispute WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND (blocking OR payment_id IS NULL) ORDER BY last_query_attempt_at NULLS FIRST,id LIMIT 25",
-                scope.organizationId(),
-                scope.environmentId(),
-                scope.providerAccountId());
+        var rows = jdbc.queryForList("""
+                SELECT id,provider_dispute_id
+                FROM platform.dispute
+                WHERE organization_id=?
+                    AND environment_id=?
+                    AND provider_account_id=?
+                    AND (blocking OR payment_id IS NULL)
+                ORDER BY last_query_attempt_at NULLS FIRST,id
+                LIMIT 25""", scope.organizationId(), scope.environmentId(), scope.providerAccountId());
         for (var row : rows)
             try {
                 jdbc.update(

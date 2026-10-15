@@ -81,15 +81,10 @@ public class OpsCommandService {
                         "SELECT pg_advisory_xact_lock(hashtextextended(?,16))",
                         Object.class,
                         c.organizationId() + ":" + c.environmentId() + ":" + action + ":" + key);
-                var prior = one(
-                        "SELECT actor_id,target,request_fingerprint,result FROM platform.ops_command"
-                                + " WHERE organization_id=? AND environment_id=? AND action=? AND target=?"
-                                + " AND idempotency_key=?",
-                        c.organizationId(),
-                        c.environmentId(),
-                        action,
-                        namespace,
-                        key);
+                var prior = one("""
+                        SELECT actor_id,target,request_fingerprint,result
+                        FROM platform.ops_command
+                        WHERE organization_id=? AND environment_id=? AND action=? AND target=? AND idempotency_key=?""", c.organizationId(), c.environmentId(), action, namespace, key);
                 if (prior != null) {
                     if (!fingerprint.equals(prior.get("request_fingerprint")))
                         throw new ApiException(
@@ -132,9 +127,10 @@ public class OpsCommandService {
                                                 result)
                                         .toString());
                 jdbc.update(
-                        "INSERT INTO"
-                                + " platform.ops_command(organization_id,environment_id,actor_id,action,target,idempotency_key,request_fingerprint,result)"
-                                + " VALUES (?,?,?,?,?,?,?,?::jsonb)",
+                        """
+                        INSERT INTO platform.ops_command(organization_id,environment_id,actor_id,action,target,
+                            idempotency_key,request_fingerprint,result)
+                        VALUES (?,?,?,?,?,?,?,?::jsonb)""",
                         c.organizationId(),
                         c.environmentId(),
                         c.identityId(),
@@ -164,12 +160,10 @@ public class OpsCommandService {
         ZoneId zone;
         try {
             zone = ZoneId.of(jdbc.queryForObject(
-                    "SELECT business_zone FROM platform.ingestion_policy WHERE organization_id=? AND"
-                            + " environment_id=? AND provider_account_id=?",
-                    String.class,
-                    c.organizationId(),
-                    c.environmentId(),
-                    scope.providerAccountId()));
+                    """
+                    SELECT business_zone
+                    FROM platform.ingestion_policy
+                    WHERE organization_id=? AND environment_id=? AND provider_account_id=?""", String.class, c.organizationId(), c.environmentId(), scope.providerAccountId()));
         } catch (RuntimeException e) {
             throw invalid();
         }
@@ -177,14 +171,9 @@ public class OpsCommandService {
         if (until.isAfter(clock.instant())) throw invalid();
         UUID run = reconciliation.createBackfill(
                 scope, currency, day.minusDays(lookback).atStartOfDay(zone).toInstant(), until, zone);
-        jdbc.update(
-                "INSERT INTO"
-                        + " platform.ops_reconciliation_request(run_id,run_type,lookback_days,business_date)"
-                        + " VALUES (?,?,?,?)",
-                run,
-                text(body, "runType"),
-                lookback,
-                day);
+        jdbc.update("""
+                INSERT INTO platform.ops_reconciliation_request(run_id,run_type,lookback_days,business_date)
+                VALUES (?,?,?,?)""", run, text(body, "runType"), lookback, day);
         return json.createObjectNode()
                 .put("runId", run.toString())
                 .put("runType", text(body, "runType"))
@@ -214,25 +203,19 @@ public class OpsCommandService {
                 || !digest.equals(OpsAuditService.digest(canonical(source).toString()))) throw invalid();
         ProviderScope scope = provider(c, b);
         jdbc.queryForObject("SELECT pg_advisory_xact_lock(hashtextextended(?,17))", Object.class, scope + ":" + digest);
-        var duplicate = one(
-                "SELECT statement_id,fixture_id FROM platform.ops_bank_import WHERE organization_id=?"
-                        + " AND environment_id=? AND provider_account_id=? AND content_digest=?",
-                c.organizationId(),
-                c.environmentId(),
-                scope.providerAccountId(),
-                digest);
+        var duplicate = one("""
+                SELECT statement_id,fixture_id
+                FROM platform.ops_bank_import
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND content_digest=?""", c.organizationId(), c.environmentId(), scope.providerAccountId(), digest);
         if (duplicate != null)
             return bankResult(
                     (UUID) duplicate.get("statement_id"),
                     duplicate.get("fixture_id").toString(),
                     true);
-        var previous = one(
-                "SELECT content_digest FROM platform.ops_bank_import WHERE organization_id=? AND"
-                        + " environment_id=? AND provider_account_id=? AND fixture_id=?",
-                c.organizationId(),
-                c.environmentId(),
-                scope.providerAccountId(),
-                fixture);
+        var previous = one("""
+                SELECT content_digest
+                FROM platform.ops_bank_import
+                WHERE organization_id=? AND environment_id=? AND provider_account_id=? AND fixture_id=?""", c.organizationId(), c.environmentId(), scope.providerAccountId(), fixture);
         if (previous != null)
             throw new ApiException(ErrorCode.IMPORT_DUPLICATE_CONFLICT, "Fixture identity has different content");
         String currency = null;
@@ -312,21 +295,16 @@ public class OpsCommandService {
                     "Bank fixture evidence conflicts or is invalid");
         }
         jdbc.update(
-                "INSERT INTO"
-                        + " platform.ops_bank_import(organization_id,environment_id,provider_account_id,content_digest,statement_id,fixture_id,schema_version)"
-                        + " VALUES (?,?,?,?,?,?,?)",
-                c.organizationId(),
-                c.environmentId(),
-                scope.providerAccountId(),
-                digest,
-                statement,
-                fixture,
-                "1");
+                """
+                INSERT INTO platform.ops_bank_import(organization_id,environment_id,provider_account_id,
+                    content_digest,statement_id,fixture_id,schema_version)
+                VALUES (?,?,?,?,?,?,?)""", c.organizationId(), c.environmentId(), scope.providerAccountId(), digest, statement, fixture, "1");
         // Only unambiguous stored scoped payout references are eligible for the existing matcher.
-        for (var line : jdbc.queryForList(
-                "SELECT id,principal_minor,kind,payout_references FROM platform.bank_statement_line"
-                        + " WHERE statement_id=? ORDER BY external_line_id",
-                statement)) {
+        for (var line : jdbc.queryForList("""
+                SELECT id,principal_minor,kind,payout_references
+                FROM platform.bank_statement_line
+                WHERE statement_id=?
+                ORDER BY external_line_id""", statement)) {
             String ref;
             try {
                 ref = ((String[]) ((java.sql.Array) line.get("payout_references")).getArray())[0];
@@ -334,14 +312,16 @@ public class OpsCommandService {
                 throw invalid();
             }
             var candidates = jdbc.queryForList(
-                    "SELECT id,transit_minor,bank_confirmed_minor,arrival_date FROM platform.payout WHERE"
-                            + " organization_id=? AND environment_id=? AND provider_account_id=? AND NOT"
-                            + " livemode AND currency=? AND provider_payout_id=? AND NOT conflict",
-                    c.organizationId(),
-                    c.environmentId(),
-                    scope.providerAccountId(),
-                    currency,
-                    ref);
+                    """
+                    SELECT id,transit_minor,bank_confirmed_minor,arrival_date
+                    FROM platform.payout
+                    WHERE organization_id=?
+                        AND environment_id=?
+                        AND provider_account_id=?
+                        AND NOT livemode
+                        AND currency=?
+                        AND provider_payout_id=?
+                        AND NOT conflict""", c.organizationId(), c.environmentId(), scope.providerAccountId(), currency, ref);
             if (candidates.size() != 1 || candidates.getFirst().get("arrival_date") == null) continue;
             var payout = candidates.getFirst();
             long available = ((Number)
@@ -364,24 +344,21 @@ public class OpsCommandService {
                                 "SELECT count(*) FROM platform.bank_statement_line WHERE statement_id=?",
                                 Long.class,
                                 id))
-                .put(
-                        "matchedCount",
-                        jdbc.queryForObject(
-                                "SELECT count(*) FROM platform.payout_bank_match m JOIN"
-                                        + " platform.bank_statement_line l ON l.id=m.line_id WHERE l.statement_id=?",
-                                Long.class,
-                                id))
-                .put(
-                        "conflictCount",
-                        jdbc.queryForObject(
-                                "SELECT count(DISTINCT p.id) FROM platform.bank_statement_line l JOIN"
-                                        + " platform.bank_statement s ON s.id=l.statement_id JOIN platform.payout p ON"
-                                        + " p.organization_id=s.organization_id AND p.environment_id=s.environment_id"
-                                        + " AND p.provider_account_id=s.provider_account_id AND p.currency=s.currency"
-                                        + " AND p.provider_payout_id=ANY(l.payout_references) WHERE s.id=? AND"
-                                        + " p.conflict",
-                                Long.class,
-                                id))
+                .put("matchedCount", jdbc.queryForObject("""
+                                SELECT count(*)
+                                FROM platform.payout_bank_match m
+                                JOIN platform.bank_statement_line l ON l.id=m.line_id
+                                WHERE l.statement_id=?""", Long.class, id))
+                .put("conflictCount", jdbc.queryForObject("""
+                                SELECT count(DISTINCT p.id)
+                                FROM platform.bank_statement_line l
+                                JOIN platform.bank_statement s ON s.id=l.statement_id
+                                JOIN platform.payout p ON p.organization_id=s.organization_id
+                                    AND p.environment_id=s.environment_id
+                                    AND p.provider_account_id=s.provider_account_id
+                                    AND p.currency=s.currency
+                                    AND p.provider_payout_id=ANY(l.payout_references)
+                                WHERE s.id=? AND p.conflict""", Long.class, id))
                 .put("evidenceSource", "SIMULATED_BANK_EVIDENCE");
     }
 
@@ -403,16 +380,15 @@ public class OpsCommandService {
         if (journal != null) {
             var j = scoped(c, "journal", journal, false);
             if (!row.get("currency").equals(j.get("currency"))
-                    || jdbc.queryForObject(
-                                    "SELECT count(*) FROM platform.ops_adjustment WHERE posted_journal_id=? AND"
-                                            + " status='APPROVED' AND organization_id=? AND environment_id=? AND"
-                                            + " target_type='EXCEPTION' AND target_id=?",
-                                    Long.class,
-                                    journal,
-                                    c.organizationId(),
-                                    c.environmentId(),
-                                    id)
-                            != 1)
+                    || jdbc.queryForObject("""
+                                    SELECT count(*)
+                                    FROM platform.ops_adjustment
+                                    WHERE posted_journal_id=?
+                                        AND status='APPROVED'
+                                        AND organization_id=?
+                                        AND environment_id=?
+                                        AND target_type='EXCEPTION'
+                                        AND target_id=?""", Long.class, journal, c.organizationId(), c.environmentId(), id) != 1)
                 throw new ApiException(
                         ErrorCode.ADJUSTMENT_EVIDENCE_REQUIRED, "A scoped approved adjustment journal is required");
         }
@@ -420,9 +396,10 @@ public class OpsCommandService {
             throw new ApiException(ErrorCode.ADJUSTMENT_EVIDENCE_REQUIRED, "Resolution requires verified evidence");
         UUID actionId = UUID.randomUUID();
         jdbc.update(
-                "INSERT INTO"
-                        + " platform.ops_exception_action(id,exception_id,organization_id,environment_id,actor_id,status,evidence_refs,resolution_journal_id,reason_digest)"
-                        + " VALUES (?,?,?,?,?,?,?::jsonb,?,?)",
+                """
+                INSERT INTO platform.ops_exception_action(id,exception_id,organization_id,environment_id,actor_id,
+                    status,evidence_refs,resolution_journal_id,reason_digest)
+                VALUES (?,?,?,?,?,?,?::jsonb,?,?)""",
                 actionId,
                 id,
                 c.organizationId(),
@@ -472,40 +449,33 @@ public class OpsCommandService {
             UUID evidenceId = uuid(parts[1]);
             boolean related = switch (parts[0]) {
                 case "journal" ->
-                    jdbc.queryForObject(
-                                    "SELECT count(*) FROM platform.ops_adjustment WHERE posted_journal_id=? AND"
-                                            + " target_type='EXCEPTION' AND target_id=? AND status='APPROVED' AND"
-                                            + " organization_id=? AND environment_id=?",
-                                    Long.class,
-                                    evidenceId,
-                                    exceptionId,
-                                    c.organizationId(),
-                                    c.environmentId())
+                    jdbc.queryForObject("""
+                                    SELECT count(*)
+                                    FROM platform.ops_adjustment
+                                    WHERE posted_journal_id=?
+                                        AND target_type='EXCEPTION'
+                                        AND target_id=?
+                                        AND status='APPROVED'
+                                        AND organization_id=?
+                                        AND environment_id=?""", Long.class, evidenceId, exceptionId, c.organizationId(), c.environmentId())
                             == 1;
                 case "reconciliation-evidence" ->
                     jdbc.queryForObject(
-                                    "SELECT count(*) FROM platform.reconciliation_evidence WHERE id=? AND"
-                                            + " run_id=?",
+                                    "SELECT count(*) FROM platform.reconciliation_evidence WHERE id=? AND run_id=?",
                                     Long.class,
                                     evidenceId,
                                     finding.get("run_id"))
                             == 1;
                 case "source-observation" ->
-                    jdbc.queryForObject(
-                                    "SELECT count(*) FROM platform.reconciliation_source_observation o JOIN"
-                                            + " platform.balance_transaction b ON b.id=o.source_bt_id WHERE o.id=?"
-                                            + " AND o.run_id=? AND (?='' OR b.bt_id=?)",
-                                    Long.class,
-                                    evidenceId,
-                                    finding.get("run_id"),
-                                    source,
-                                    source)
-                            == 1;
+                    jdbc.queryForObject("""
+                                    SELECT count(*)
+                                    FROM platform.reconciliation_source_observation o
+                                    JOIN platform.balance_transaction b ON b.id=o.source_bt_id
+                                    WHERE o.id=? AND o.run_id=? AND (?='' OR b.bt_id=?)""", Long.class, evidenceId, finding.get("run_id"), source, source) == 1;
                 case "balance-transaction" ->
                     !source.isEmpty()
                             && jdbc.queryForObject(
-                                            "SELECT count(*) FROM platform.balance_transaction WHERE id=? AND"
-                                                    + " bt_id=?",
+                                            "SELECT count(*) FROM platform.balance_transaction WHERE id=? AND bt_id=?",
                                             Long.class,
                                             evidenceId,
                                             source)
@@ -513,8 +483,10 @@ public class OpsCommandService {
                 case "provider-observation" ->
                     !metadata.path("sourceId").asText().isBlank()
                             && jdbc.queryForObject(
-                                            "SELECT count(*) FROM platform.provider_observation WHERE id=? AND"
-                                                    + " external_object_id=? AND fact->>'sourceObjectType'=?",
+                                            """
+                                            SELECT count(*)
+                                            FROM platform.provider_observation
+                                            WHERE id=? AND external_object_id=? AND fact->>'sourceObjectType'=?""",
                                             Long.class,
                                             evidenceId,
                                             metadata.path("sourceId").asText(),
@@ -533,13 +505,18 @@ public class OpsCommandService {
         if (source.isEmpty()) return false;
         String selector = kind.equals("bank-line") ? "l.id=?" : "l.statement_id=?";
         return jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.bank_statement_line l JOIN platform.bank_statement s ON"
-                                + " s.id=l.statement_id JOIN platform.balance_transaction b ON"
-                                + " b.organization_id=s.organization_id AND b.environment_id=s.environment_id AND"
-                                + " b.provider_account_id=s.provider_account_id AND b.currency=s.currency WHERE "
+                        """
+                        SELECT count(*)
+                        FROM platform.bank_statement_line l
+                        JOIN platform.bank_statement s ON s.id=l.statement_id
+                        JOIN platform.balance_transaction b ON b.organization_id=s.organization_id
+                            AND b.environment_id=s.environment_id
+                            AND b.provider_account_id=s.provider_account_id
+                            AND b.currency=s.currency
+                        WHERE
+                        """
                                 + selector
-                                + " AND b.bt_id=? AND b.source_object_type='payout' AND"
-                                + " b.source_object_id=ANY(l.payout_references)",
+                                + " AND b.bt_id=? AND b.source_object_type='payout' AND b.source_object_id=ANY(l.payout_references)",
                         Long.class,
                         evidenceId,
                         source)
@@ -568,9 +545,10 @@ public class OpsCommandService {
         entries(c, entries, currency, provider);
         UUID id = UUID.randomUUID();
         jdbc.update(
-                "INSERT INTO"
-                        + " platform.ops_adjustment(id,organization_id,environment_id,provider_account_id,currency,target_type,target_id,created_by,entries,evidence_refs,reason_digest,reason_length)"
-                        + " VALUES (?,?,?,?,?,?,?,?,?::jsonb,?::jsonb,?,?)",
+                """
+                INSERT INTO platform.ops_adjustment(id,organization_id,environment_id,provider_account_id,currency,
+                    target_type,target_id,created_by,entries,evidence_refs,reason_digest,reason_length)
+                VALUES (?,?,?,?,?,?,?,?,?::jsonb,?::jsonb,?,?)""",
                 id,
                 c.organizationId(),
                 c.environmentId(),
@@ -622,9 +600,10 @@ public class OpsCommandService {
                             lines,
                             null));
         jdbc.update(
-                "UPDATE platform.ops_adjustment SET"
-                        + " status=?,approved_by=?,approved_at=?,posted_journal_id=? WHERE id=? AND"
-                        + " status='PENDING_APPROVAL'",
+                """
+                UPDATE platform.ops_adjustment
+                SET status=?,approved_by=?,approved_at=?,posted_journal_id=?
+                WHERE id=? AND status='PENDING_APPROVAL'""",
                 decision.equals("APPROVE") ? "APPROVED" : "REJECTED",
                 c.identityId(),
                 Timestamp.from(clock.instant()),
@@ -678,10 +657,12 @@ public class OpsCommandService {
         var row = scoped(c, table, target, false);
         var out = json.createObjectNode();
         if (action.equals("EXCEPTION_ACTION")) {
-            var latest = one(
-                    "SELECT status FROM platform.ops_exception_action WHERE exception_id=? ORDER BY"
-                            + " action_order DESC LIMIT 1",
-                    target);
+            var latest = one("""
+                    SELECT status
+                    FROM platform.ops_exception_action
+                    WHERE exception_id=?
+                    ORDER BY action_order DESC
+                    LIMIT 1""", target);
             out.put("exceptionId", target.toString());
             out.put("status", latest == null ? "OPEN" : latest.get("status").toString());
         } else if (action.equals("RETRY_TASK")) {
@@ -797,14 +778,18 @@ public class OpsCommandService {
             selector = " AND p.id=?";
             args.add(uuid(text(b, "providerAccountId")));
         }
-        var rows = jdbc.queryForList(
-                "SELECT p.id FROM platform.provider_account p JOIN platform.environment_config e ON"
-                        + " e.id=p.environment_id JOIN platform.organization o ON o.id=p.organization_id"
-                        + " WHERE p.organization_id=? AND p.environment_id=? AND p.status='ACTIVE' AND"
-                        + " e.status='ACTIVE' AND o.status='ACTIVE' AND NOT p.livemode AND NOT e.livemode"
-                        + selector
-                        + " ORDER BY p.id LIMIT 2",
-                args.toArray());
+        var rows = jdbc.queryForList("""
+                SELECT p.id
+                FROM platform.provider_account p
+                JOIN platform.environment_config e ON e.id=p.environment_id
+                JOIN platform.organization o ON o.id=p.organization_id
+                WHERE p.organization_id=?
+                    AND p.environment_id=?
+                    AND p.status='ACTIVE'
+                    AND e.status='ACTIVE'
+                    AND o.status='ACTIVE'
+                    AND NOT p.livemode
+                    AND NOT e.livemode""" + selector + " ORDER BY p.id LIMIT 2", args.toArray());
         if (rows.size() != 1)
             throw new ApiException(
                     rows.isEmpty() ? ErrorCode.NOT_FOUND : ErrorCode.VALIDATION_ERROR,
@@ -815,29 +800,28 @@ public class OpsCommandService {
 
     private void activeProvider(OpsContext c, UUID provider) {
         if (provider != null
-                && jdbc.queryForObject(
-                                "SELECT count(*) FROM platform.provider_account WHERE id=? AND organization_id=?"
-                                        + " AND environment_id=? AND status='ACTIVE' AND NOT livemode",
-                                Long.class,
-                                provider,
-                                c.organizationId(),
-                                c.environmentId())
-                        != 1) throw new ApiException(ErrorCode.NOT_FOUND, "Active provider not found in caller scope");
+                && jdbc.queryForObject("""
+                                SELECT count(*)
+                                FROM platform.provider_account
+                                WHERE id=? AND organization_id=? AND environment_id=? AND status='ACTIVE' AND NOT livemode""", Long.class, provider, c.organizationId(), c.environmentId()) != 1)
+            throw new ApiException(ErrorCode.NOT_FOUND, "Active provider not found in caller scope");
     }
 
     private void currency(OpsContext c, String currency) {
         if (currency == null || !currency.matches("[A-Z]{3}")) throw invalid();
-        if (jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.org_currency_enabled c JOIN platform.environment_config"
-                                + " e ON e.id=c.environment_id JOIN platform.organization o ON"
-                                + " o.id=c.organization_id WHERE c.organization_id=? AND c.environment_id=? AND"
-                                + " c.currency=? AND c.status='ACTIVE' AND e.status='ACTIVE' AND o.status='ACTIVE'"
-                                + " AND NOT e.livemode",
-                        Long.class,
-                        c.organizationId(),
-                        c.environmentId(),
-                        currency)
-                != 1) throw new ApiException(ErrorCode.CURRENCY_NOT_ENABLED, "Currency is not enabled");
+        if (jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.org_currency_enabled c
+                        JOIN platform.environment_config e ON e.id=c.environment_id
+                        JOIN platform.organization o ON o.id=c.organization_id
+                        WHERE c.organization_id=?
+                            AND c.environment_id=?
+                            AND c.currency=?
+                            AND c.status='ACTIVE'
+                            AND e.status='ACTIVE'
+                            AND o.status='ACTIVE'
+                            AND NOT e.livemode""", Long.class, c.organizationId(), c.environmentId(), currency) != 1)
+            throw new ApiException(ErrorCode.CURRENCY_NOT_ENABLED, "Currency is not enabled");
     }
 
     private Map<String, Object> scoped(OpsContext c, String table, UUID id, boolean lock) {

@@ -63,15 +63,17 @@ abstract class Pr20RecoveryFixture extends Pr20RecoveryBaseFixture {
         admin.update(
                 "UPDATE platform.share_policy_fixture SET valid_from=?,share_basis_points=2000",
                 java.sql.Timestamp.from(from));
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode,business_zone) VALUES (?,?,?,false,'ZERO','UTC')",
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode,business_zone)
+                VALUES (?,?,?,false,'ZERO','UTC')""", id(1), id(2), id(4));
         for (String purpose : List.of("PSP_FUNDS", "PSP_FEE_EXPENSE", "SALES_REVENUE", "SALES_RETURNS", "SUSPENSE")) {
             boolean external = !purpose.startsWith("SALES_");
             admin.update(
-                    "INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,source_domain,provider_account_id,balance_domain) VALUES (?,?,'USD',?,?,?,?)",
+                    """
+                    INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,
+                        source_domain,provider_account_id,balance_domain)
+                    VALUES (?,?,'USD',?,?,?,?)""",
                     id(1),
                     id(2),
                     purpose,
@@ -287,10 +289,10 @@ abstract class Pr20RecoveryFixture extends Pr20RecoveryBaseFixture {
                         IndependentBalanceEvidence.Kind.INDEPENDENT_FIXTURE,
                         false);
         reconciliation.finish(run, independent);
-        String result = jdbc.queryForObject(
-                "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=5",
-                String.class,
-                run);
+        String result = jdbc.queryForObject("""
+                SELECT outcome
+                FROM platform.reconciliation_check
+                WHERE run_id=? AND check_number=5""", String.class, run);
         reconciliationOutcomes.add(Map.of(
                 "runId",
                 run.toString(),
@@ -301,27 +303,28 @@ abstract class Pr20RecoveryFixture extends Pr20RecoveryBaseFixture {
                 "I05",
                 result,
                 "I06",
-                jdbc.queryForObject(
-                        "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=6",
-                        String.class,
-                        run),
+                jdbc.queryForObject("""
+                        SELECT outcome
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=6""", String.class, run),
                 "cutoff",
                 until.toString()));
         if (evidenceKind.equals("full"))
-            assertThat(jdbc.queryForObject(
-                            "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=6",
-                            String.class,
-                            run))
+            assertThat(jdbc.queryForObject("""
+                            SELECT outcome
+                            FROM platform.reconciliation_check
+                            WHERE run_id=? AND check_number=6""", String.class, run))
                     .as("I06 payout and bank independent evidence")
                     .isEqualTo("PASS");
         return result;
     }
 
     long balance(String purpose) {
-        return jdbc.queryForObject(
-                "SELECT coalesce(sum(b.balance_minor),0) FROM platform.balance_projection b JOIN platform.ledger_account a ON a.id=b.ledger_account_id WHERE a.account_purpose=?",
-                Long.class,
-                purpose);
+        return jdbc.queryForObject("""
+                SELECT coalesce(sum(b.balance_minor),0)
+                FROM platform.balance_projection b
+                JOIN platform.ledger_account a ON a.id=b.ledger_account_id
+                WHERE a.account_purpose=?""", Long.class, purpose);
     }
 
     Map<String, Object> snapshot() {
@@ -377,7 +380,11 @@ abstract class Pr20RecoveryFixture extends Pr20RecoveryBaseFixture {
     TrustedCheckout trustedCheckout(String key) {
         UUID order = UUID.randomUUID();
         admin.update(
-                "INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot) VALUES (?,?,?,?,?,'USD',?,?,'demo',1,1,10000,10000,'{}',?::jsonb)",
+                """
+                INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,
+                    unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot)
+                VALUES (?,?,?,?,?,'USD',?,?,'demo',1,1,10000,10000,'{}',?::jsonb)""",
                 order,
                 id(1),
                 id(2),
@@ -397,16 +404,11 @@ abstract class Pr20RecoveryFixture extends Pr20RecoveryBaseFixture {
                         Map.of(),
                         fake.clock().instant().plusSeconds(3600)))
                 .payload();
-        admin.update(
-                "INSERT INTO platform.order_provider_binding(organization_id,environment_id,application_id,provider_account_id,livemode,currency,order_id,payment_intent_id,amount_minor,proof_kind,proof_ref,proof_digest) VALUES (?,?,?,?,false,'USD',?,?,10000,'SERVER_ORDER_FIXTURE',?,?)",
-                id(1),
-                id(2),
-                id(3),
-                id(4),
-                order,
-                result.paymentIntentId(),
-                key,
-                "c".repeat(64));
+        admin.update("""
+                INSERT INTO platform.order_provider_binding(organization_id,environment_id,application_id,
+                    provider_account_id,livemode,currency,order_id,payment_intent_id,amount_minor,proof_kind,
+                    proof_ref,proof_digest)
+                VALUES (?,?,?,?,false,'USD',?,?,10000,'SERVER_ORDER_FIXTURE',?,?)""", id(1), id(2), id(3), id(4), order, result.paymentIntentId(), key, "c".repeat(64));
         return new TrustedCheckout(order, result.sessionId(), result.paymentIntentId());
     }
 
@@ -437,12 +439,17 @@ abstract class Pr20RecoveryFixture extends Pr20RecoveryBaseFixture {
     Map<String, Object> independentAudit() {
         var rebuilt = independentlyRebuild();
         assertThat(rebuilt.matches()).isTrue();
-        long trial = jdbc.queryForObject(
-                "SELECT count(*) FROM (SELECT j.id FROM platform.journal j LEFT JOIN platform.journal_entry e ON e.journal_id=j.id GROUP BY j.id,j.sealed_at HAVING j.sealed_at IS NULL OR count(e.id)<2 OR coalesce(sum(CASE WHEN e.side='DEBIT' THEN e.amount_minor::numeric ELSE -e.amount_minor::numeric END),0)<>0) x",
-                Long.class);
-        long missing = jdbc.queryForObject(
-                "SELECT count(*) FROM platform.financial_event e FULL JOIN platform.journal j ON j.financial_event_id=e.id WHERE e.id IS NULL OR j.id IS NULL",
-                Long.class);
+        long trial = jdbc.queryForObject("""
+                SELECT count(*)
+                FROM (SELECT j.id FROM platform.journal j LEFT JOIN platform.journal_entry e ON e.journal_id=j.id
+                    GROUP BY j.id,j.sealed_at HAVING j.sealed_at IS NULL OR count(e.id)<2 OR coalesce(sum(CASE WHEN
+                    e.side='DEBIT' THEN e.amount_minor::numeric ELSE -e.amount_minor::numeric END),0)<>0) x""", Long.class);
+        long missing = jdbc.queryForObject("""
+                SELECT count(*)
+                FROM platform.financial_event e
+                FULL
+                JOIN platform.journal j ON j.financial_event_id=e.id
+                WHERE e.id IS NULL OR j.id IS NULL""", Long.class);
         assertThat(trial).isZero();
         assertThat(missing).isZero();
         return Map.of(

@@ -95,7 +95,10 @@ public class ReconciliationService {
                     window,
                     RULE_VERSION);
             jdbc.update(
-                    "INSERT INTO platform.reconciliation_cursor(run_id,organization_id,environment_id,provider_account_id,livemode,currency) VALUES (?,?,?,?,?,?)",
+                    """
+                    INSERT INTO platform.reconciliation_cursor(run_id,organization_id,environment_id,
+                        provider_account_id,livemode,currency)
+                    VALUES (?,?,?,?,?,?)""",
                     run,
                     scope.organizationId(),
                     scope.environmentId(),
@@ -188,7 +191,10 @@ public class ReconciliationService {
                         encode(failure.evidence()));
             }
             jdbc.update(
-                    "UPDATE platform.reconciliation_run SET state=?,snapshot=?,input_versions=?::jsonb,ledger_cutoff=transaction_timestamp(),finished_at=? WHERE id=?",
+                    """
+                    UPDATE platform.reconciliation_run
+                    SET state=?,snapshot=?,input_versions=?::jsonb,ledger_cutoff=transaction_timestamp(),finished_at=?
+                    WHERE id=?""",
                     evaluation.complete() ? "COMPLETE" : "INCOMPLETE",
                     snap,
                     encode(evaluation.versions()),
@@ -201,9 +207,11 @@ public class ReconciliationService {
     public ReconciliationReport query(ProviderScope scope, UUID runId) {
         var row = run(runId);
         if (!scope(row).equals(scope)) throw new IllegalArgumentException("Reconciliation run outside scope");
-        var checks = jdbc
-                .queryForList("SELECT * FROM platform.reconciliation_check WHERE run_id=? ORDER BY check_number", runId)
-                .stream()
+        var checks = jdbc.queryForList("""
+                        SELECT *
+                        FROM platform.reconciliation_check
+                        WHERE run_id=?
+                        ORDER BY check_number""", runId).stream()
                 .map(c -> new ReconciliationReport.Check(
                         ((Number) c.get("check_number")).intValue(),
                         c.get("name").toString(),

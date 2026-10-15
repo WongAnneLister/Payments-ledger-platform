@@ -91,49 +91,30 @@ class ObservabilityIT {
     void seed() {
         admin = new JdbcTemplate(new DriverManagerDataSource(DB.getJdbcUrl(), DB.getUsername(), DB.getPassword()));
         admin.execute("TRUNCATE platform.organization,platform.currency_config CASCADE");
-        admin.update("INSERT INTO platform.currency_config(code,minor_unit_exponent) VALUES" + " ('USD',2),('JPY',0)");
+        admin.update("""
+                INSERT INTO platform.currency_config(code,minor_unit_exponent)
+                VALUES ('USD',2),('JPY',0)""");
         for (int o : List.of(1, 2)) {
             admin.update("INSERT INTO platform.organization(id,code) VALUES (?,?)", id(o), "ops-" + o);
             for (int e : List.of(10 + o, 20 + o)) {
-                admin.update(
-                        "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES"
-                                + " (?,?,?,false)",
-                        id(e),
-                        id(o),
-                        "test-" + e);
-                admin.update(
-                        "INSERT INTO"
-                                + " platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode)"
-                                + " VALUES (?,?,?,'FAKE',?,false)",
-                        id(100 + e),
-                        id(o),
-                        id(e),
-                        "ops-" + e);
-                admin.update(
-                        "INSERT INTO"
-                                + " platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode)"
-                                + " VALUES (?,?,?,false,'ZERO')",
-                        id(o),
-                        id(e),
-                        id(100 + e));
-                admin.update(
-                        "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)"
-                                + " VALUES (?,?,'USD'),(?,?,'JPY')",
-                        id(o),
-                        id(e),
-                        id(o),
-                        id(e));
-                admin.update(
-                        "INSERT INTO"
-                                + " platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,source_domain)"
-                                + " VALUES"
-                                + " (?,?,?,'USD','BANK_CASH','SIMULATED_BANK'),(?,?,?,'USD','OPENING_EQUITY','INTERNAL')",
-                        id(200 + e),
-                        id(o),
-                        id(e),
-                        id(300 + e),
-                        id(o),
-                        id(e));
+                admin.update("""
+                        INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                        VALUES (?,?,?,false)""", id(e), id(o), "test-" + e);
+                admin.update("""
+                        INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                            provider_account_ref,livemode)
+                        VALUES (?,?,?,'FAKE',?,false)""", id(100 + e), id(o), id(e), "ops-" + e);
+                admin.update("""
+                        INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                            opening_mode)
+                        VALUES (?,?,?,false,'ZERO')""", id(o), id(e), id(100 + e));
+                admin.update("""
+                        INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                        VALUES (?,?,'USD'),(?,?,'JPY')""", id(o), id(e), id(o), id(e));
+                admin.update("""
+                        INSERT INTO platform.ledger_account(id,organization_id,environment_id,currency,account_purpose,
+                            source_domain)
+                        VALUES (?,?,?,'USD','BANK_CASH','SIMULATED_BANK'),(?,?,?,'USD','OPENING_EQUITY','INTERNAL')""", id(200 + e), id(o), id(e), id(300 + e), id(o), id(e));
             }
         }
         String[] roles = {
@@ -148,18 +129,14 @@ class ObservabilityIT {
         };
         for (int a = 1; a <= roles.length; a++) {
             int org = a == 7 ? 2 : 1, env = a == 8 ? 21 : 10 + org;
+            admin.update("""
+                    INSERT INTO platform.ops_identity(id,organization_id,subject,role,partner_id)
+                    VALUES (?,?,?,?,?)""", id(400 + a), id(org), "actor-" + a, roles[a - 1], a == 5 ? id(900) : null);
             admin.update(
-                    "INSERT INTO platform.ops_identity(id,organization_id,subject,role,partner_id) VALUES"
-                            + " (?,?,?,?,?)",
-                    id(400 + a),
-                    id(org),
-                    "actor-" + a,
-                    roles[a - 1],
-                    a == 5 ? id(900) : null);
-            admin.update(
-                    "INSERT INTO"
-                            + " platform.ops_credential(id,ops_identity_id,organization_id,environment_id,key_id,secret_hash,not_before,expires_at)"
-                            + " VALUES (?,?,?,?,'ops',?,?,?)",
+                    """
+                    INSERT INTO platform.ops_credential(id,ops_identity_id,organization_id,environment_id,key_id,
+                        secret_hash,not_before,expires_at)
+                    VALUES (?,?,?,?,'ops',?,?,?)""",
                     id(500 + a),
                     id(400 + a),
                     id(org),
@@ -201,13 +178,17 @@ class ObservabilityIT {
     UUID payment(
             int n, int org, int env, String currency, String resolution, String financial, int age, int unresolvedAge) {
         UUID app = id(700 + env);
+        admin.update("""
+                INSERT INTO platform.application(id,organization_id,environment_id,code)
+                VALUES (?,?,?,'obs')
+                ON CONFLICT
+                DO NOTHING""", app, id(org), id(env));
         admin.update(
-                "INSERT INTO platform.application(id,organization_id,environment_id,code) VALUES (?,?,?,'obs') ON CONFLICT DO NOTHING",
-                app,
-                id(org),
-                id(env));
-        admin.update(
-                "INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot,created_at) VALUES (?,?,?,?,?,?,?,'fixture','fixture',1,1,100,100,'{}'::jsonb,'{}'::jsonb,?)",
+                """
+                INSERT INTO platform.business_order(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,order_key,request_fingerprint,product_ref,price_version,quantity,
+                    unit_amount_minor,amount_minor,price_snapshot,share_policy_snapshot,created_at)
+                VALUES (?,?,?,?,?,?,?,'fixture','fixture',1,1,100,100,'{}'::jsonb,'{}'::jsonb,?)""",
                 id(n + 10000),
                 id(org),
                 id(env),
@@ -217,7 +198,11 @@ class ObservabilityIT {
                 "order-" + n,
                 Timestamp.from(NOW.minusSeconds(age)));
         admin.update(
-                "INSERT INTO platform.payment(id,organization_id,environment_id,application_id,provider_account_id,currency,business_order_id,amount_minor,resolution_status,financial_status,expires_at,created_at,unresolved_since) VALUES (?,?,?,?,?,?,?,100,?,?,?, ?,?)",
+                """
+                INSERT INTO platform.payment(id,organization_id,environment_id,application_id,provider_account_id,
+                    currency,business_order_id,amount_minor,resolution_status,financial_status,expires_at,
+                    created_at,unresolved_since)
+                VALUES (?,?,?,?,?,?,?,100,?,?,?, ?,?)""",
                 id(n),
                 id(org),
                 id(env),
@@ -247,7 +232,10 @@ class ObservabilityIT {
             String runState,
             String completeness) {
         admin.update(
-                "INSERT INTO platform.import_window(id,organization_id,environment_id,provider_account_id,livemode,created_gte,created_lt,purpose) VALUES (?,?,?, ?,false,?,?,'BACKFILL')",
+                """
+                INSERT INTO platform.import_window(id,organization_id,environment_id,provider_account_id,livemode,
+                    created_gte,created_lt,purpose)
+                VALUES (?,?,?, ?,false,?,?,'BACKFILL')""",
                 id(n + 20000),
                 id(1),
                 id(11),
@@ -255,7 +243,11 @@ class ObservabilityIT {
                 Timestamp.from(NOW.minusSeconds(86400)),
                 Timestamp.from(NOW));
         admin.update(
-                "INSERT INTO platform.reconciliation_run(id,organization_id,environment_id,provider_account_id,livemode,currency,business_date,business_zone,from_at,until_at,import_window_id,rule_version,created_at) VALUES (?,?,?,?,false,?,'2026-10-06','UTC',?,?,?,'fixture',?)",
+                """
+                INSERT INTO platform.reconciliation_run(id,organization_id,environment_id,provider_account_id,
+                    livemode,currency,business_date,business_zone,from_at,until_at,import_window_id,rule_version,
+                    created_at)
+                VALUES (?,?,?,?,false,?,'2026-10-06','UTC',?,?,?,'fixture',?)""",
                 id(n),
                 id(1),
                 id(11),
@@ -268,7 +260,12 @@ class ObservabilityIT {
         if (checks) {
             for (int c = 1; c <= 7; c++)
                 admin.update(
-                        "INSERT INTO platform.reconciliation_check(run_id,check_number,name,organization_id,environment_id,provider_account_id,livemode,currency,outcome,residual,reason,owner,input_versions,snapshot,completeness,created_at) VALUES (?,?,'fixture',?,?,?,false,?,?,?::numeric,'safe fixture','finance','{}'::jsonb,'snapshot',?::jsonb,?)",
+                        """
+                        INSERT INTO platform.reconciliation_check(run_id,check_number,name,organization_id,environment_id,
+                            provider_account_id,livemode,currency,outcome,residual,reason,owner,input_versions,snapshot,
+                            completeness,created_at)
+                        VALUES (?,?,'fixture',?,?,?,false,?,?,?::numeric,'safe fixture','finance','{}'::jsonb,'snapshot',
+                            ?::jsonb,?)""",
                         id(n),
                         c,
                         id(1),
@@ -316,12 +313,16 @@ class ObservabilityIT {
         payment(1002, 2, 12, "USD", "UNKNOWN", "PENDING_EVIDENCE", 86400, -1);
         payment(1003, 1, 21, "USD", "UNKNOWN", "PENDING_EVIDENCE", 86400, -1);
         payment(1004, 1, 11, "JPY", "UNKNOWN", "PENDING_EVIDENCE", 86400, -1);
+        admin.update("""
+                UPDATE platform.org_currency_enabled
+                SET status='DISABLED'
+                WHERE organization_id=? AND environment_id=? AND currency='JPY'""", id(1), id(11));
         admin.update(
-                "UPDATE platform.org_currency_enabled SET status='DISABLED' WHERE organization_id=? AND environment_id=? AND currency='JPY'",
-                id(1),
-                id(11));
-        admin.update(
-                "INSERT INTO platform.refund(id,organization_id,environment_id,application_id,provider_account_id,currency,payment_id,amount_minor,request_fingerprint,source,refund_status,provider_charge_id,created_at,unresolved_since) VALUES (?,?,?,?,?,'USD',?,10,'fixture','LOCAL','REQUIRES_ACTION','ch_fixture',?,?)",
+                """
+                INSERT INTO platform.refund(id,organization_id,environment_id,application_id,provider_account_id,
+                    currency,payment_id,amount_minor,request_fingerprint,source,refund_status,provider_charge_id,
+                    created_at,unresolved_since)
+                VALUES (?,?,?,?,?,'USD',?,10,'fixture','LOCAL','REQUIRES_ACTION','ch_fixture',?,?)""",
                 id(1101),
                 id(1),
                 id(11),
@@ -331,7 +332,12 @@ class ObservabilityIT {
                 Timestamp.from(NOW.minusSeconds(7200)),
                 Timestamp.from(NOW.minusSeconds(3601)));
         admin.update(
-                "INSERT INTO platform.webhook_inbox(id,organization_id,environment_id,provider_account_id,livemode,provider_account_ref,event_id,event_type,object_id,object_type,event_created_at,received_at,verified_at,api_version,raw_digest,object_snapshot,available_at) VALUES (?,?,?,?,false,'ops-11','evt_fixture','fixture','pi_fixture','payment_intent',?,?,?,'fixture',?,'{}'::jsonb,?)",
+                """
+                INSERT INTO platform.webhook_inbox(id,organization_id,environment_id,provider_account_id,livemode,
+                    provider_account_ref,event_id,event_type,object_id,object_type,event_created_at,received_at,
+                    verified_at,api_version,raw_digest,object_snapshot,available_at)
+                VALUES (?,?,?,?,false,'ops-11','evt_fixture','fixture','pi_fixture','payment_intent',?,?,?,
+                    'fixture',?,'{}'::jsonb,?)""",
                 id(1201),
                 id(1),
                 id(11),
@@ -342,7 +348,10 @@ class ObservabilityIT {
                 "a".repeat(64),
                 Timestamp.from(NOW));
         admin.update(
-                "INSERT INTO platform.payout(id,organization_id,environment_id,provider_account_id,livemode,provider_payout_id,currency,amount_minor,automatic,last_observed_at,created_at,bank_match_state) VALUES (?,?,?,?,false,'po_fixture','USD',100,true,?,?,'PARTIAL')",
+                """
+                INSERT INTO platform.payout(id,organization_id,environment_id,provider_account_id,livemode,
+                    provider_payout_id,currency,amount_minor,automatic,last_observed_at,created_at,bank_match_state)
+                VALUES (?,?,?,?,false,'po_fixture','USD',100,true,?,?,'PARTIAL')""",
                 id(1301),
                 id(1),
                 id(11),
@@ -365,16 +374,12 @@ class ObservabilityIT {
     @Test
     void postedUnknownSuspenseAndPendingEvidenceRemainObservableAndOutboxAgeUsesOccurrence() {
         payment(2301, 1, 11, "USD", "UNKNOWN", "PENDING_EVIDENCE", 100, -1);
-        admin.update(
-                "INSERT INTO platform.ledger_account(id,organization_id,environment_id,provider_account_id,currency,account_purpose,source_domain,balance_domain) VALUES (?,?,?,?,'USD','PSP_FUNDS','PROVIDER','PAYMENTS'),(?,?,?,?,'USD','SUSPENSE','PROVIDER','PAYMENTS')",
-                id(2302),
-                id(1),
-                id(11),
-                id(111),
-                id(2303),
-                id(1),
-                id(11),
-                id(111));
+        admin.update("""
+                INSERT INTO platform.ledger_account(id,organization_id,environment_id,provider_account_id,currency,
+                    account_purpose,source_domain,balance_domain)
+                VALUES
+                    (?,?,?,?,'USD','PSP_FUNDS','PROVIDER','PAYMENTS'),
+                    (?,?,?,?,'USD','SUSPENSE','PROVIDER','PAYMENTS')""", id(2302), id(1), id(11), id(111), id(2303), id(1), id(11), id(111));
         var journal = ledger.post(
                 new com.paymentsledger.ledger.LedgerScope(id(1), id(11), "USD", id(111)),
                 new com.paymentsledger.ledger.PostingCommand(
@@ -390,15 +395,18 @@ class ObservabilityIT {
                                         id(2303), com.paymentsledger.ledger.Side.CREDIT, 10)),
                         null));
         for (int n : List.of(2401, 2402)) {
+            admin.update("""
+                    INSERT INTO platform.provider_observation(id,organization_id,environment_id,provider_account_id,
+                        call_type,classification,evidence,observation_domain,livemode,fetched_at)
+                    VALUES (?,?,?,?,'LIST_BT','FACT','{}'::jsonb,'FINANCIAL',false,?)""", id(n + 10000), id(1), id(11), id(111), Timestamp.from(NOW.minusSeconds(100)));
             admin.update(
-                    "INSERT INTO platform.provider_observation(id,organization_id,environment_id,provider_account_id,call_type,classification,evidence,observation_domain,livemode,fetched_at) VALUES (?,?,?,?,'LIST_BT','FACT','{}'::jsonb,'FINANCIAL',false,?)",
-                    id(n + 10000),
-                    id(1),
-                    id(11),
-                    id(111),
-                    Timestamp.from(NOW.minusSeconds(100)));
-            admin.update(
-                    "INSERT INTO platform.balance_transaction(id,organization_id,environment_id,provider_account_id,livemode,bt_id,amount_minor,fee_minor,net_minor,currency,balance_domain,provider_created_at,provider_status,api_version,fetched_at,immutable_fact,fact,first_observation_id,state,reason,journal_id,created_at) VALUES (?,?,?,?,false,?,10,0,10,'USD','PAYMENTS',?,'available','fixture',?,'{}'::jsonb,'{}'::jsonb,?,?,?,?,?)",
+                    """
+                    INSERT INTO platform.balance_transaction(id,organization_id,environment_id,provider_account_id,
+                        livemode,bt_id,amount_minor,fee_minor,net_minor,currency,balance_domain,provider_created_at,
+                        provider_status,api_version,fetched_at,immutable_fact,fact,first_observation_id,state,reason,
+                        journal_id,created_at)
+                    VALUES (?,?,?,?,false,?,10,0,10,'USD','PAYMENTS',?,'available','fixture',?,'{}'::jsonb,'{}'::jsonb,
+                        ?,?,?,?,?)""",
                     id(n),
                     id(1),
                     id(11),
@@ -413,7 +421,12 @@ class ObservabilityIT {
                     Timestamp.from(NOW.minusSeconds(100)));
         }
         admin.update(
-                "INSERT INTO platform.outbox_event(id,organization_id,environment_id,application_id,provider_account_id,currency,payment_id,order_id,event_type,resource_version,business_key,origin,occurred_at,payload,payload_digest) VALUES (?,?,?,?,?,'USD',?,?,'payment.state_changed',1,'obs','NATIVE',?,'{}',encode(sha256(convert_to('{}','UTF8')),'hex'))",
+                """
+                INSERT INTO platform.outbox_event(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,payment_id,order_id,event_type,resource_version,business_key,
+                    origin,occurred_at,payload,payload_digest)
+                VALUES (?,?,?,?,?,'USD',?,?,'payment.state_changed',1,'obs','NATIVE',?,'{}',
+                    encode(sha256(convert_to('{}','UTF8')),'hex'))""",
                 id(2501),
                 id(1),
                 id(11),
@@ -527,28 +540,25 @@ class ObservabilityIT {
     void globalAndScopedObservationsExcludeLiveRowsInsertedAfterStartup() {
         payment(2801, 1, 11, "USD", "UNKNOWN", "PENDING_EVIDENCE", 100, -1);
         admin.update("INSERT INTO platform.organization(id,code) VALUES (?,'live-fixture')", id(3));
-        admin.update(
-                "INSERT INTO platform.environment_config(id,organization_id,code,livemode) VALUES (?,?,'live',true)",
-                id(13),
-                id(3));
-        admin.update(
-                "INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,provider_account_ref,livemode) VALUES (?,?,?,'STRIPE','live-fixture-ref',true)",
-                id(113),
-                id(3),
-                id(13));
-        admin.update(
-                "INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency) VALUES (?,?,'USD')",
-                id(3),
-                id(13));
+        admin.update("""
+                INSERT INTO platform.environment_config(id,organization_id,code,livemode)
+                VALUES (?,?,'live',true)""", id(13), id(3));
+        admin.update("""
+                INSERT INTO platform.provider_account(id,organization_id,environment_id,provider,
+                    provider_account_ref,livemode)
+                VALUES (?,?,?,'STRIPE','live-fixture-ref',true)""", id(113), id(3), id(13));
+        admin.update("""
+                INSERT INTO platform.org_currency_enabled(organization_id,environment_id,currency)
+                VALUES (?,?,'USD')""", id(3), id(13));
         payment(2802, 3, 13, "USD", "UNKNOWN", "PENDING_EVIDENCE", 86400, -1);
         var gauge =
                 registry.find("payments.observability.unknown_payment_count").gauge();
         assertThat(gauge.value()).isEqualTo(1);
         value(observe(1), "unknown_payment_count", "1", "count");
-        admin.update(
-                "UPDATE platform.org_currency_enabled SET status='DISABLED' WHERE organization_id=? AND environment_id=? AND currency='USD'",
-                id(1),
-                id(11));
+        admin.update("""
+                UPDATE platform.org_currency_enabled
+                SET status='DISABLED'
+                WHERE organization_id=? AND environment_id=? AND currency='USD'""", id(1), id(11));
         assertThat(gauge.value()).isEqualTo(0);
         value(observe(1), "unknown_payment_count", "0", "count");
     }
@@ -627,40 +637,24 @@ class ObservabilityIT {
     void realTraceProjectsAndEmitsOnlySafeKnownOperationProviderAndEventIds() throws Exception {
         payment(2901, 1, 11, "USD", "UNKNOWN", "PENDING_EVIDENCE", 100, -1);
         UUID operation = id(2902);
-        admin.update(
-                "INSERT INTO platform.provider_operation(id,organization_id,environment_id,application_id,provider_account_id,currency,operation_target,payment_id,operation_type,operation_key,request_fingerprint,command,expires_at) VALUES (?,?,?,?,?,'USD','PAYMENT',?,'CREATE_CHECKOUT','trace-fixture','fixture','{}'::jsonb,?)",
-                operation,
-                id(1),
-                id(11),
-                id(711),
-                id(111),
-                id(2901),
-                Timestamp.from(NOW.plusSeconds(3600)));
-        admin.update(
-                "INSERT INTO platform.recovery_task(id,organization_id,environment_id,application_id,provider_account_id,currency,payment_id,operation_id,available_at) VALUES (?,?,?,?,?,'USD',?,?,?)",
-                id(2903),
-                id(1),
-                id(11),
-                id(711),
-                id(111),
-                id(2901),
-                operation,
-                Timestamp.from(NOW));
-        String sensitive = "reqsk_test_" + "synthetic";
+        admin.update("""
+                INSERT INTO platform.provider_operation(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,operation_target,payment_id,operation_type,operation_key,
+                    request_fingerprint,command,expires_at)
+                VALUES (?,?,?,?,?,'USD','PAYMENT',?,'CREATE_CHECKOUT','trace-fixture','fixture','{}'::jsonb,?)""", operation, id(1), id(11), id(711), id(111), id(2901), Timestamp.from(NOW.plusSeconds(3600)));
+        admin.update("""
+                INSERT INTO platform.recovery_task(id,organization_id,environment_id,application_id,
+                    provider_account_id,currency,payment_id,operation_id,available_at)
+                VALUES (?,?,?,?,?,'USD',?,?,?)""", id(2903), id(1), id(11), id(711), id(111), id(2901), operation, Timestamp.from(NOW));
+        String sensitive = "reqsk_test_synthetic";
         for (int n : List.of(2904, 2905)) {
             var evidence = json.createObjectNode()
                     .put("providerRequestId", n == 2904 ? "req-provider-fixture" : sensitive)
                     .put("reason", sensitive);
-            admin.update(
-                    "INSERT INTO platform.provider_observation(id,organization_id,environment_id,application_id,provider_account_id,currency,operation_id,payment_id,call_type,classification,evidence) VALUES (?,?,?,?,?,'USD',?,?,'QUERY_PAYMENT','SUCCESS',?::jsonb)",
-                    id(n),
-                    id(1),
-                    id(11),
-                    id(711),
-                    id(111),
-                    operation,
-                    id(2901),
-                    evidence.toString());
+            admin.update("""
+                    INSERT INTO platform.provider_observation(id,organization_id,environment_id,application_id,
+                        provider_account_id,currency,operation_id,payment_id,call_type,classification,evidence)
+                    VALUES (?,?,?,?,?,'USD',?,?,'QUERY_PAYMENT','SUCCESS',?::jsonb)""", id(n), id(1), id(11), id(711), id(111), operation, id(2901), evidence.toString());
         }
         UUID journal = ledger.post(
                 new com.paymentsledger.ledger.LedgerScope(id(1), id(11), "USD", null),

@@ -98,7 +98,11 @@ class Pr20RecoveryIT extends Pr20RecoveryFixture {
             // Predeclared independent simulator fee contract, saved in the archive before any money facts.
             for (String businessType : List.of("charge", "refund", "payout"))
                 admin.update(
-                        "INSERT INTO platform.fee_model(organization_id,environment_id,provider_account_id,livemode,currency,balance_domain,business_type,model_version,effective_from,effective_until,basis_points,flat_minor,rounding,fee_direction) VALUES (?,?,?,false,'USD','PAYMENTS',?,'pr20-simulator-contract-v1',?,?,0,?,'DOWN','EXPENSE')",
+                        """
+                        INSERT INTO platform.fee_model(organization_id,environment_id,provider_account_id,livemode,currency,
+                            balance_domain,business_type,model_version,effective_from,effective_until,basis_points,
+                            flat_minor,rounding,fee_direction)
+                        VALUES (?,?,?,false,'USD','PAYMENTS',?,'pr20-simulator-contract-v1',?,?,0,?,'DOWN','EXPENSE')""",
                         id(1),
                         id(2),
                         id(4),
@@ -366,13 +370,8 @@ class Pr20RecoveryIT extends Pr20RecoveryFixture {
                     jdbc.queryForObject("SHOW transaction_read_only", String.class));
             assertThatThrownBy(() -> jdbc.update("UPDATE platform.payment SET version=version+1 WHERE id=?", paymentId))
                     .isInstanceOf(org.springframework.dao.DataAccessException.class);
-            check(
-                    "app cannot forge server binding",
-                    !jdbc.queryForObject(
-                            "SELECT has_table_privilege(current_user,'platform.order_provider_binding','INSERT')",
-                            Boolean.class),
-                    false,
-                    false);
+            check("app cannot forge server binding", !jdbc.queryForObject("""
+                            SELECT has_table_privilege(current_user,'platform.order_provider_binding','INSERT')""", Boolean.class), false, false);
             check(
                     "app cannot mutate journal",
                     !jdbc.queryForObject(
@@ -441,11 +440,10 @@ class Pr20RecoveryIT extends Pr20RecoveryFixture {
             UUID run = rescanAndRecoverSources();
             check(
                     "postbackup trusted payment backfilled",
-                    jdbc.queryForObject(
-                                    "SELECT count(*) FROM platform.payment WHERE business_order_id=? AND origin='RECONCILIATION'",
-                                    Long.class,
-                                    trusted.order())
-                            == 1,
+                    jdbc.queryForObject("""
+                                    SELECT count(*)
+                                    FROM platform.payment
+                                    WHERE business_order_id=? AND origin='RECONCILIATION'""", Long.class, trusted.order()) == 1,
                     1,
                     1);
             check(
@@ -572,9 +570,9 @@ class Pr20RecoveryIT extends Pr20RecoveryFixture {
                             "runId",
                             run.toString(),
                             "pages",
-                            json.readTree(jdbc.queryForObject(
-                                    "SELECT coalesce(jsonb_agg(to_jsonb(p)),'[]'::jsonb)::text FROM platform.import_page p",
-                                    String.class))));
+                            json.readTree(jdbc.queryForObject("""
+                                    SELECT coalesce(jsonb_agg(to_jsonb(p)),'[]'::jsonb)::text
+                                    FROM platform.import_page p""", String.class))));
             var inbox = new ConsumerInboxService(jdbc, tx, json, Clock.systemUTC());
             var seen = new ArrayList<UUID>();
             var publisher = new OutboxPublisher(
@@ -642,16 +640,17 @@ class Pr20RecoveryIT extends Pr20RecoveryFixture {
                     IndependentBalanceEvidence.Kind.INDEPENDENT_FIXTURE,
                     false);
             reconciliation.finish(run, independent);
-            var checks = jdbc.queryForList(
-                    "SELECT check_number,outcome,residual,reason,completeness FROM platform.reconciliation_check WHERE run_id=? ORDER BY check_number",
-                    run);
+            var checks = jdbc.queryForList("""
+                    SELECT check_number,outcome,residual,reason,completeness
+                    FROM platform.reconciliation_check
+                    WHERE run_id=?
+                    ORDER BY check_number""", run);
             report.put("reconciliationChecks", checks);
             for (int number : List.of(1, 3, 4, 5, 6, 7)) {
-                String outcome = jdbc.queryForObject(
-                        "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=?",
-                        String.class,
-                        run,
-                        number);
+                String outcome = jdbc.queryForObject("""
+                        SELECT outcome
+                        FROM platform.reconciliation_check
+                        WHERE run_id=? AND check_number=?""", String.class, run, number);
                 check("financial reconciliation check " + number, outcome.equals("PASS"), "PASS", outcome);
             }
             check(
@@ -684,10 +683,10 @@ class Pr20RecoveryIT extends Pr20RecoveryFixture {
                                     .toString(),
                             "matchState",
                             matcher.evidenceState(scope, payoutId)));
-            String operationalOutcome = jdbc.queryForObject(
-                    "SELECT outcome FROM platform.reconciliation_check WHERE run_id=? AND check_number=2",
-                    String.class,
-                    run);
+            String operationalOutcome = jdbc.queryForObject("""
+                    SELECT outcome
+                    FROM platform.reconciliation_check
+                    WHERE run_id=? AND check_number=2""", String.class, run);
             check(
                     "operational reconciliation retains expired UNKNOWN disposition",
                     "INCOMPLETE".equals(operationalOutcome),
@@ -716,14 +715,20 @@ class Pr20RecoveryIT extends Pr20RecoveryFixture {
                             "Review held merchant delivery tasks and configure an authenticated target before delivery",
                             "Preserve original archive, provider-state checksums, SQL snapshots and recovery provenance for review"));
             gate.record("MANUAL_LOSS_DISPOSITION", true);
-            boolean trustedEligible = jdbc.queryForObject(
-                            "SELECT count(*) FROM platform.payment p JOIN platform.business_order o ON o.id=p.business_order_id JOIN platform.order_fulfillment_eligibility e ON e.order_id=o.id WHERE p.id=? AND e.eligible AND e.policy_version=1 AND p.organization_id=? AND p.environment_id=? AND p.provider_account_id=? AND p.currency='USD' AND p.amount_minor=o.amount_minor",
-                            Long.class,
-                            eligible.paymentId(),
-                            id(1),
-                            id(2),
-                            id(4))
-                    == 1;
+            boolean trustedEligible =
+                    jdbc.queryForObject("""
+                            SELECT count(*)
+                            FROM platform.payment p
+                            JOIN platform.business_order o ON o.id=p.business_order_id
+                            JOIN platform.order_fulfillment_eligibility e ON e.order_id=o.id
+                            WHERE p.id=?
+                                AND e.eligible
+                                AND e.policy_version=1
+                                AND p.organization_id=?
+                                AND p.environment_id=?
+                                AND p.provider_account_id=?
+                                AND p.currency='USD'
+                                AND p.amount_minor=o.amount_minor""", Long.class, eligible.paymentId(), id(1), id(2), id(4)) == 1;
             check(
                     "released operation has trusted scoped order and original unused key",
                     trustedEligible && eligibleBefore.get("first_send_at") == null,

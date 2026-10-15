@@ -62,15 +62,17 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
                                 "a".repeat(64)),
                         fake.clock().instant(),
                         null);
-        admin.update(
-                "INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,opening_mode,business_zone) VALUES (?,?,?,false,'ZERO','UTC')",
-                id(1),
-                id(2),
-                id(4));
+        admin.update("""
+                INSERT INTO platform.ingestion_policy(organization_id,environment_id,provider_account_id,livemode,
+                    opening_mode,business_zone)
+                VALUES (?,?,?,false,'ZERO','UTC')""", id(1), id(2), id(4));
         for (String p : List.of("PSP_FUNDS", "PSP_FEE_EXPENSE", "SALES_REVENUE", "SALES_RETURNS", "SUSPENSE")) {
             boolean external = !p.startsWith("SALES_");
             admin.update(
-                    "INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,source_domain,provider_account_id,balance_domain) VALUES (?,?,'USD',?,?,?,?)",
+                    """
+                    INSERT INTO platform.ledger_account(organization_id,environment_id,currency,account_purpose,
+                        source_domain,provider_account_id,balance_domain)
+                    VALUES (?,?,'USD',?,?,?,?)""",
                     id(1),
                     id(2),
                     p,
@@ -124,24 +126,31 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
     }
 
     long effective() {
-        return jdbc.queryForObject(
-                "SELECT coalesce(sum(effective_minor),0) FROM platform.share_allocation WHERE payment_id=?",
-                Long.class,
-                paymentId);
+        return jdbc.queryForObject("""
+                SELECT coalesce(sum(effective_minor),0)
+                FROM platform.share_allocation
+                WHERE payment_id=?""", Long.class, paymentId);
     }
 
     long balance(String purpose) {
-        return jdbc.queryForObject(
-                "SELECT coalesce(sum(b.balance_minor),0) FROM platform.balance_projection b JOIN platform.ledger_account a ON a.id=b.ledger_account_id WHERE a.account_purpose=?",
-                Long.class,
-                purpose);
+        return jdbc.queryForObject("""
+                SELECT coalesce(sum(b.balance_minor),0)
+                FROM platform.balance_projection b
+                JOIN platform.ledger_account a ON a.id=b.ledger_account_id
+                WHERE a.account_purpose=?""", Long.class, purpose);
     }
 
     void coverage() {
-        assertThat(jdbc.queryForObject(
-                        "SELECT count(*) FROM platform.ledger_account a LEFT JOIN platform.balance_projection p ON p.ledger_account_id=a.id LEFT JOIN (SELECT ledger_account_id,sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE -amount_minor::numeric END) n FROM platform.journal_entry GROUP BY ledger_account_id) e ON e.ledger_account_id=a.id WHERE coalesce(p.balance_minor,0)<>coalesce(e.n,0)",
-                        Long.class))
-                .isZero();
+        assertThat(jdbc.queryForObject("""
+                        SELECT count(*)
+                        FROM platform.ledger_account a
+                        LEFT
+                        JOIN platform.balance_projection p ON p.ledger_account_id=a.id
+                        LEFT
+                        JOIN (SELECT ledger_account_id,sum(CASE WHEN side='DEBIT' THEN amount_minor::numeric ELSE
+                            -amount_minor::numeric END) n FROM platform.journal_entry GROUP BY ledger_account_id) e ON
+                            e.ledger_account_id=a.id
+                        WHERE coalesce(p.balance_minor,0)<>coalesce(e.n,0)""", Long.class)).isZero();
         assertThat(balance("PARTNER_SHARE_EXPENSE")).isEqualTo(effective());
         assertThat(balance("PARTNER_PAYABLE")).isEqualTo(-effective());
     }
@@ -169,7 +178,9 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
     @Test
     void successMovesHoldToRefundWithoutSecondReversalAndPolicySnapshotStaysFrozen() {
         capture();
-        admin.update("UPDATE platform.share_policy_fixture SET share_basis_points=9000,policy_version=2");
+        admin.update("""
+                UPDATE platform.share_policy_fixture
+                SET share_basis_points=9000,policy_version=2""");
         var r = reserve("success", 4000);
         assertThat(effective()).isEqualTo(1200);
         long journals = count("journal");
@@ -293,10 +304,12 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
     void allocationFailureRollsBackRefundHoldOperationAndJournal() {
         capture();
         long journals = count("journal"), operations = count("provider_operation");
-        admin.execute(
-                "CREATE FUNCTION platform.pr12_fail_adjustment() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected allocation failure'; END $$");
-        admin.execute(
-                "CREATE TRIGGER pr12_inject BEFORE INSERT ON platform.share_adjustment FOR EACH ROW EXECUTE FUNCTION platform.pr12_fail_adjustment()");
+        admin.execute("""
+                CREATE FUNCTION platform.pr12_fail_adjustment() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
+                    EXCEPTION 'injected allocation failure'; END $$""");
+        admin.execute("""
+                CREATE TRIGGER pr12_inject BEFORE INSERT ON platform.share_adjustment FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr12_fail_adjustment()""");
         try {
             assertThatThrownBy(() -> reserve("rollback", 4000))
                     .isInstanceOf(RuntimeException.class)
@@ -314,10 +327,12 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
 
     @Test
     void captureJournalAndFirstAllocationRollbackTogether() {
-        admin.execute(
-                "CREATE FUNCTION platform.pr12_fail_initial() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'injected first accrual failure'; END $$");
-        admin.execute(
-                "CREATE TRIGGER pr12_initial BEFORE INSERT ON platform.share_adjustment FOR EACH ROW EXECUTE FUNCTION platform.pr12_fail_initial()");
+        admin.execute("""
+                CREATE FUNCTION platform.pr12_fail_initial() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE
+                    EXCEPTION 'injected first accrual failure'; END $$""");
+        admin.execute("""
+                CREATE TRIGGER pr12_initial BEFORE INSERT ON platform.share_adjustment FOR EACH ROW EXECUTE FUNCTION
+                    platform.pr12_fail_initial()""");
         try {
             assertThatThrownBy(this::capture)
                     .isInstanceOf(RuntimeException.class)
@@ -501,7 +516,12 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
         try (var blocker = pool.getConnection()) {
             blocker.setAutoCommit(false);
             try (var statement = blocker.createStatement()) {
-                statement.execute("SELECT id FROM platform.balance_transaction WHERE bt_id='txn_A_first' FOR UPDATE");
+                statement.execute("""
+                        SELECT id
+                        FROM platform.balance_transaction
+                        WHERE bt_id='txn_A_first'
+                        FOR
+                        UPDATE""");
             }
             Future<?> pending = worker.submit(() -> new org.springframework.transaction.support.TransactionTemplate(tx)
                     .executeWithoutResult(status -> {
@@ -516,10 +536,12 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
                                 && Boolean.TRUE.equals(admin.queryForObject(
                                         "SELECT cardinality(pg_blocking_pids(?))>0", Boolean.class, backend.get())));
                 // While waiting on the first BT, the association writer must not own the second.
-                assertThatCode(
-                                () -> jdbc.queryForList(
-                                        "SELECT id FROM platform.balance_transaction WHERE bt_id='txn_z_second' FOR UPDATE NOWAIT"))
-                        .doesNotThrowAnyException();
+                assertThatCode(() -> jdbc.queryForList("""
+                                        SELECT id
+                                        FROM platform.balance_transaction
+                                        WHERE bt_id='txn_z_second'
+                                        FOR
+                                        UPDATE NOWAIT""")).doesNotThrowAnyException();
             } finally {
                 blocker.rollback();
                 pending.get(10, TimeUnit.SECONDS);

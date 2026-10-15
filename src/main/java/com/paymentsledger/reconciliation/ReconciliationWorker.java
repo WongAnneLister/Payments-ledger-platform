@@ -88,7 +88,18 @@ public final class ReconciliationWorker {
                 for (var claim : sources.claim(scope, run, 5)) sources.recover(claim);
             });
         var active = jdbc.queryForList(
-                "SELECT r.id FROM platform.reconciliation_run r JOIN platform.reconciliation_cursor c ON c.run_id=r.id WHERE r.organization_id=? AND r.environment_id=? AND r.provider_account_id=? AND r.livemode=? AND r.currency=? AND r.finished_at IS NULL ORDER BY c.updated_at,r.id LIMIT 5",
+                """
+                SELECT r.id
+                FROM platform.reconciliation_run r
+                JOIN platform.reconciliation_cursor c ON c.run_id=r.id
+                WHERE r.organization_id=?
+                    AND r.environment_id=?
+                    AND r.provider_account_id=?
+                    AND r.livemode=?
+                    AND r.currency=?
+                    AND r.finished_at IS NULL
+                ORDER BY c.updated_at,r.id
+                LIMIT 5""",
                 UUID.class,
                 scope.organizationId(),
                 scope.environmentId(),
@@ -124,11 +135,10 @@ public final class ReconciliationWorker {
         for (String btId : btIds) {
             replay.replay(scope, btId);
             // Replaying after a crash is idempotent; only advance the durable cursor after the existing owner commits.
-            jdbc.update(
-                    "UPDATE platform.reconciliation_cursor SET replay_after_bt=? WHERE run_id=? AND replay_after_bt<?",
-                    btId,
-                    runId,
-                    btId);
+            jdbc.update("""
+                    UPDATE platform.reconciliation_cursor
+                    SET replay_after_bt=?
+                    WHERE run_id=? AND replay_after_bt<?""", btId, runId, btId);
         }
         if (btIds.size() == 25) return;
         Long notQueued = jdbc.queryForObject(
@@ -159,9 +169,19 @@ public final class ReconciliationWorker {
         if (reports == null) return MISSING_REPORT;
         outside();
         ProviderCallResult<ReportFact> result;
-        var prior = jdbc.queryForList(
-                "SELECT payload->'report'->>'reportId' AS report_id FROM platform.reconciliation_evidence WHERE run_id=? AND evidence_kind='PROVIDER_REPORT_READ' AND payload->>'classification'='SUCCESS' AND payload->'evidence'->>'httpStatus'='200' AND payload->'report'->>'status' IN ('pending','queued','running') AND payload->'report'->'createdGte'=payload->'requestedFrom' AND payload->'report'->'createdLt'=payload->'requestedUntil' AND nullif(payload->'report'->>'reportId','') IS NOT NULL ORDER BY created_at DESC,id DESC LIMIT 1",
-                run.runId());
+        var prior = jdbc.queryForList("""
+                SELECT payload->'report'->>'reportId' AS report_id
+                FROM platform.reconciliation_evidence
+                WHERE run_id=?
+                    AND evidence_kind='PROVIDER_REPORT_READ'
+                    AND payload->>'classification'='SUCCESS'
+                    AND payload->'evidence'->>'httpStatus'='200'
+                    AND payload->'report'->>'status' IN ('pending','queued','running')
+                    AND payload->'report'->'createdGte'=payload->'requestedFrom'
+                    AND payload->'report'->'createdLt'=payload->'requestedUntil'
+                    AND nullif(payload->'report'->>'reportId','') IS NOT NULL
+                ORDER BY created_at DESC,id DESC
+                LIMIT 1""", run.runId());
         String reportId = prior.isEmpty() ? null : (String) prior.getFirst().get("report_id");
         try {
             result = reportId == null
@@ -254,7 +274,10 @@ public final class ReconciliationWorker {
                     ? result.evidence().apiVersion()
                     : "UNAVAILABLE";
             jdbc.update(
-                    "INSERT INTO platform.reconciliation_evidence(run_id,organization_id,environment_id,provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload) VALUES (?,?,?,?,?,?,'PROVIDER_REPORT_READ','REPORT_PORT',?,?,?::jsonb)",
+                    """
+                    INSERT INTO platform.reconciliation_evidence(run_id,organization_id,environment_id,
+                        provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload)
+                    VALUES (?,?,?,?,?,?,'PROVIDER_REPORT_READ','REPORT_PORT',?,?,?::jsonb)""",
                     run.runId(),
                     scope.organizationId(),
                     scope.environmentId(),
@@ -271,7 +294,11 @@ public final class ReconciliationWorker {
 
     private void recordUnavailable(ReconciliationReport run) {
         jdbc.update(
-                "INSERT INTO platform.reconciliation_evidence(run_id,organization_id,environment_id,provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload) VALUES (?,?,?,?,?,?,'PROVIDER_REPORT_READ','REPORT_PORT','UNAVAILABLE',?,'{\"classification\":\"READ_THROWN\"}')",
+                """
+                INSERT INTO platform.reconciliation_evidence(run_id,organization_id,environment_id,
+                    provider_account_id,livemode,currency,evidence_kind,source,evidence_version,digest,payload)
+                VALUES (?,?,?,?,?,?,'PROVIDER_REPORT_READ','REPORT_PORT','UNAVAILABLE',?,
+                    '{\"classification\":\"READ_THROWN\"}')""",
                 run.runId(),
                 scope.organizationId(),
                 scope.environmentId(),
