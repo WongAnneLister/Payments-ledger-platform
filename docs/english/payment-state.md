@@ -2,7 +2,7 @@
 
 [English index](README.md) · [Traced creation and recovery](architecture.md)
 
-Four fields answer four different questions. [PaymentRepository.java:344](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L344) calculates capture from preserved successful attempts and checks posted BT coverage separately; [line 365](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L365) calculates certainty; [line 510](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L510) exposes the dimensions separately.
+Four fields answer four different questions. [PaymentRepository.java:1133](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1133) calculates capture from preserved successful attempts and checks posted BT coverage separately; [line 1177](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1177) calculates certainty; [line 1604](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1604) exposes the dimensions separately.
 
 | Dimension | Field | Meaning |
 |---|---|---|
@@ -11,7 +11,7 @@ Four fields answer four different questions. [PaymentRepository.java:344](../../
 | Certainty | `resolution_status` | KNOWN, UNKNOWN, CONFLICT |
 | Accounting | `financial_status` | NOT_APPLICABLE, PENDING_EVIDENCE, PARTIALLY_POSTED, POSTED, CONFLICT |
 
-The diagram is a source-derived overview of evidence-driven transitions, not an exhaustive product-state certification. Session/query merging is implemented at [PaymentRepository.java:314](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L314), timeout marking at [line 290](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L290), and unsent cancellation at [line 387](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L387).
+The diagram is a source-derived overview of evidence-driven transitions, not an exhaustive product-state certification. Session/query merging is implemented at [PaymentRepository.java:981](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L981), timeout marking at [line 926](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L926), and unsent cancellation at [line 1264](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1264).
 
 ```mermaid
 stateDiagram-v2
@@ -47,7 +47,7 @@ flowchart LR
     Query -->|"contradictory evidence"| Conflict["CONFLICT"]
 ```
 
-[OperationRecoveryCoordinator.java:45](../../src/main/java/com/paymentsledger/payment/OperationRecoveryCoordinator.java#L45) prioritizes queries; [line 50](../../src/main/java/com/paymentsledger/payment/OperationRecoveryCoordinator.java#L50) requires a nonzero verified window for uncertain resend. A safe local retry is not a claim that the real Stripe idempotency window was measured.
+[OperationRecoveryCoordinator.java:110](../../src/main/java/com/paymentsledger/payment/OperationRecoveryCoordinator.java#L110) prioritizes queries; [line 131](../../src/main/java/com/paymentsledger/payment/OperationRecoveryCoordinator.java#L131) requires a nonzero verified window for uncertain resend. A safe local retry is not a claim that the real Stripe idempotency window was measured.
 
 The UI should display, for example, `SUCCEEDED / KNOWN / PENDING_EVIDENCE`: payment confirmed, accounting evidence still pending. Customer return URLs, HTTP success and payout `paid` status supply no substitute for BTs or bank confirmation. See [PR17 customer screenshots](../evidence/pr17/README.md).
 

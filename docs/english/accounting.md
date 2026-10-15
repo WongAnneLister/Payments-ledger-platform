@@ -2,7 +2,7 @@
 
 [English index](README.md) · [Frozen accounting examples](../ledger/posting-examples.md)
 
-The example below uses **synthetic USD minor units**: capture 10000, actual fee 300, refund 4000, partner rate 2000 basis points, payout 5700. These are fixture inputs and hand calculations, not measured revenue, fees or production volume. [BTJournalMapper.java:12](../../src/main/java/com/paymentsledger/financialingestion/BTJournalMapper.java#L12), [RevenueShareService.java:66](../../src/main/java/com/paymentsledger/revenueshare/RevenueShareService.java#L66), [PayoutService.java:42](../../src/main/java/com/paymentsledger/payout/PayoutService.java#L42) and [BankMatcher.java:46](../../src/main/java/com/paymentsledger/bank/BankMatcher.java#L46) implement the respective boundaries. Existing local tests are indexed in the [acceptance audit](acceptance-evidence-audit.md); PR20's six selected demo branches passed in the [archived local replay](../evidence/pr20/verified-all-result.json), with simulated bank evidence and persistent Fake provider state.
+The example below uses **synthetic USD minor units**: capture 10000, actual fee 300, refund 4000, partner rate 2000 basis points, payout 5700. These are fixture inputs and hand calculations, not measured revenue, fees or production volume. [BTJournalMapper.java:16](../../src/main/java/com/paymentsledger/financialingestion/BTJournalMapper.java#L16), [RevenueShareService.java:167](../../src/main/java/com/paymentsledger/revenueshare/RevenueShareService.java#L167), [PayoutService.java:98](../../src/main/java/com/paymentsledger/payout/PayoutService.java#L98) and [BankMatcher.java:135](../../src/main/java/com/paymentsledger/bank/BankMatcher.java#L135) implement the respective boundaries. Existing local tests are indexed in the [acceptance audit](acceptance-evidence-audit.md); PR20's six selected demo branches passed in the [archived local replay](../evidence/pr20/verified-all-result.json), with simulated bank evidence and persistent Fake provider state.
 
 ```mermaid
 flowchart LR
@@ -24,7 +24,7 @@ flowchart LR
 | Payout debit BT | BANK_PAYOUT_IN_TRANSIT 5700 | PSP_FUNDS 5700 | `paid` alone does not confirm bank cash |
 | Bank receipt fixture | BANK_CASH 5700 | BANK_PAYOUT_IN_TRANSIT 5700 | A bank connection was not exercised |
 
-The mapper uses signed provider facts directly. These copied lines are from [BTJournalMapper.java:13](../../src/main/java/com/paymentsledger/financialingestion/BTJournalMapper.java#L13):
+The mapper uses signed provider facts directly. These copied lines are from [BTJournalMapper.java:17](../../src/main/java/com/paymentsledger/financialingestion/BTJournalMapper.java#L17):
 
 ```java
         add(lines,accounts,"PSP_FUNDS",fact.netMinor());
@@ -42,11 +42,11 @@ Dispute accounting is also evidence-driven: an actual debit BT records receivabl
 |---|---|---|
 | I-01: balanced, sealed journals | [V3 final journal check](../../src/main/resources/db/migration/V3__immutable_ledger.sql#L140) and [construction guards](../../src/main/resources/db/migration/V3__immutable_ledger.sql#L121) | Scan all sealed entries and total debits/credits |
 | I-02: canonical event has one journal | Stable event identity and atomic [post_ledger](../../src/main/resources/db/migration/V3__immutable_ledger.sql#L187) | Check accepted event→journal and journal→accepted event coverage |
-| I-03: NORMAL refund capacity | [RefundRepository:49](../../src/main/java/com/paymentsledger/payment/RefundRepository.java#L49): locked payment/control, `0 <= R + H <= C` | Recompute capture, refunds, holds and unresolved aging |
-| I-04: share cap | [RevenueShareService:66](../../src/main/java/com/paymentsledger/revenueshare/RevenueShareService.java#L66): snapshotted policy, cumulative floor cap, atomic adjustments | Independent floor arithmetic and adjustment coverage |
+| I-03: NORMAL refund capacity | [RefundRepository:154](../../src/main/java/com/paymentsledger/payment/RefundRepository.java#L154): locked payment/control, `0 <= R + H <= C` | Recompute capture, refunds, holds and unresolved aging |
+| I-04: share cap | [RevenueShareService:167](../../src/main/java/com/paymentsledger/revenueshare/RevenueShareService.java#L167): snapshotted policy, cumulative floor cap, atomic adjustments | Independent floor arithmetic and adjustment coverage |
 | I-05: PSP conservation | One accepted BT, one accounting effect | Same scope/cutoff: opening + complete BTs, ledger and independent closing evidence |
-| I-06: payout conservation | [BankMatcher:26](../../src/main/java/com/paymentsledger/bank/BankMatcher.java#L26): locked principal allocations and bank-line capacity | Principal = transit + net confirmed bank principal + confirmed returns; fees separate, completeness required |
-| I-07: scope and rebuild | Scoped accounts, foreign keys and controlled posting | [BalanceRebuildService:49](../../src/main/java/com/paymentsledger/ledger/BalanceRebuildService.java#L49): independent entry scan versus projection; source-domain checks |
+| I-06: payout conservation | [BankMatcher:56](../../src/main/java/com/paymentsledger/bank/BankMatcher.java#L56): locked principal allocations and bank-line capacity | Principal = transit + net confirmed bank principal + confirmed returns; fees separate, completeness required |
+| I-07: scope and rebuild | Scoped accounts, foreign keys and controlled posting | [BalanceRebuildService:86](../../src/main/java/com/paymentsledger/ledger/BalanceRebuildService.java#L86): independent entry scan versus projection; source-domain checks |
 
 The [full invariant definitions](../ledger/invariants.md) explain why a unique key gives an upper bound on repeated posting but does not prove absence of missing events. Database commits enforce local constraints; they cannot prove Stripe/bank completeness. No end-to-end distributed exactly-once claim follows from this design.
 
