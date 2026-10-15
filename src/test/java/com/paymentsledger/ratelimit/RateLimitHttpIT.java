@@ -2,13 +2,15 @@ package com.paymentsledger.ratelimit;
 
 import static org.assertj.core.api.Assertions.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;
+import java.net.http.*;
+import java.time.Duration;
 import java.util.UUID;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,7 +19,12 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
-/** Full API role: authentication → account-scoped Redis bucket → RATE_LIMITED contract → fail-open. */
+/**
+ * Full API role: authentication → account-scoped Redis bucket → RATE_LIMITED contract → fail-open.
+ *
+ * <p>Uses the JDK client on purpose: TestRestTemplate's HttpClient 5 transparently retries a GET after
+ * 429 and sleeps for Retry-After, which hides the 429 and stalls the test for the whole refill time.
+ */
 @Testcontainers
 @ActiveProfiles("api")
 @SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,10 +39,13 @@ class RateLimitHttpIT {
         r.add("spring.datasource.url",DB::getJdbcUrl);r.add("spring.datasource.username",()->"payments_app");r.add("spring.datasource.password",()->"pr02_test_only");
         r.add("spring.flyway.url",DB::getJdbcUrl);r.add("spring.flyway.user",DB::getUsername);r.add("spring.flyway.password",DB::getPassword);
         r.add("spring.data.redis.host",REDIS::getHost);r.add("spring.data.redis.port",()->REDIS.getMappedPort(6379));
+        // Production keeps a tight timeout; a shared CI runner must not turn a slow reply into fail-open here.
+        r.add("spring.data.redis.timeout",()->"2s");
         r.add("platform.rate-limit.enabled",()->true);
         r.add("platform.rate-limit.read.capacity",()->READ_CAPACITY);r.add("platform.rate-limit.read.refill-per-second",()->0.001);
     }
-    @Autowired TestRestTemplate http;
+    @LocalServerPort int port;
+    final HttpClient http=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
     @Autowired StringRedisTemplate redis;
     final ObjectMapper json=new ObjectMapper();
     static UUID id(int n){return new UUID(7,n);}
@@ -55,33 +65,34 @@ class RateLimitHttpIT {
         }
         if(REDIS.isRunning())redis.execute((org.springframework.data.redis.core.RedisCallback<Void>)c->{c.serverCommands().flushAll();return null;});
     }
-    ResponseEntity<String> identity(Integer credential) {
-        var headers=new HttpHeaders();
-        if(credential!=null)headers.set(HttpHeaders.AUTHORIZATION,"Bearer app_"+id(credential)+"."+SECRET);
-        return http.exchange("/v1/identity",HttpMethod.GET,new HttpEntity<>(headers),String.class);
+    HttpResponse<String> get(String path,Integer credential) throws Exception {
+        var request=HttpRequest.newBuilder(URI.create("http://localhost:"+port+path)).timeout(Duration.ofSeconds(10)).GET();
+        if(credential!=null)request.header("Authorization","Bearer app_"+id(credential)+"."+SECRET);
+        return http.send(request.build(),HttpResponse.BodyHandlers.ofString());
     }
+    HttpResponse<String> identity(Integer credential) throws Exception {return get("/v1/identity",credential);}
 
     @Test @Order(1) void exhaustedAccountGets429WhileOtherAccountsAndUnauthenticatedCallsAreUnaffected() throws Exception {
-        for(int i=0;i<READ_CAPACITY;i++)assertThat(identity(41).getStatusCode()).isEqualTo(HttpStatus.OK);
+        for(int i=0;i<READ_CAPACITY;i++)assertThat(identity(41).statusCode()).isEqualTo(200);
         var limited=identity(41);
-        assertThat(limited.getStatusCode()).isEqualTo(HttpStatus.TOO_MANY_REQUESTS);
-        assertThat(Long.parseLong(limited.getHeaders().getFirst("Retry-After"))).isPositive();
-        assertThat(limited.getHeaders().getFirst("X-Request-Id")).isNotBlank();
-        var body=json.readTree(limited.getBody());
+        assertThat(limited.statusCode()).isEqualTo(429);
+        assertThat(Long.parseLong(limited.headers().firstValue("Retry-After").orElseThrow())).isPositive();
+        assertThat(limited.headers().firstValue("X-Request-Id").orElseThrow()).isNotBlank();
+        var body=json.readTree(limited.body());
         assertThat(body.path("code").asText()).isEqualTo("RATE_LIMITED");
         assertThat(body.path("retryable").asBoolean()).isTrue();
-        assertThat(body.path("requestId").asText()).isEqualTo(limited.getHeaders().getFirst("X-Request-Id"));
+        assertThat(body.path("requestId").asText()).isEqualTo(limited.headers().firstValue("X-Request-Id").orElseThrow());
 
-        assertThat(identity(42).getStatusCode()).as("another account scope has its own bucket").isEqualTo(HttpStatus.OK);
-        assertThat(identity(null).getStatusCode()).as("authentication still decides first").isEqualTo(HttpStatus.UNAUTHORIZED);
-        assertThat(http.getForEntity("/actuator/health",String.class).getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(identity(42).statusCode()).as("another account scope has its own bucket").isEqualTo(200);
+        assertThat(identity(null).statusCode()).as("authentication still decides first").isEqualTo(401);
+        assertThat(get("/actuator/health",null).statusCode()).isEqualTo(200);
     }
 
-    @Test @Order(2) void redisOutageFailsOpenAndKeepsTheInstanceHealthy() {
+    @Test @Order(2) void redisOutageFailsOpenAndKeepsTheInstanceHealthy() throws Exception {
         REDIS.stop();
-        for(int i=0;i<READ_CAPACITY+3;i++)assertThat(identity(41).getStatusCode()).isEqualTo(HttpStatus.OK);
-        var health=http.getForEntity("/actuator/health",String.class);
-        assertThat(health.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(health.getBody()).contains("UP");
+        for(int i=0;i<READ_CAPACITY+3;i++)assertThat(identity(41).statusCode()).isEqualTo(200);
+        var health=get("/actuator/health",null);
+        assertThat(health.statusCode()).isEqualTo(200);
+        assertThat(health.body()).contains("UP");
     }
 }
