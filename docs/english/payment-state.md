@@ -2,7 +2,7 @@
 
 [English index](README.md) · [Traced creation and recovery](architecture.md)
 
-Four fields answer four different questions. [PaymentStateMerger.java:50](../../src/main/java/com/paymentsledger/payment/PaymentStateMerger.java#L50) calculates capture from preserved successful attempts and checks posted BT coverage separately; [PaymentEvidenceRules.java:169](../../src/main/java/com/paymentsledger/payment/domain/PaymentEvidenceRules.java#L169) calculates certainty; [PaymentRepository.java:1345](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1345) exposes the dimensions separately.
+Four fields answer four different questions. [PaymentStateMerger.java:50](../../src/main/java/com/paymentsledger/payment/PaymentStateMerger.java#L50) calculates capture from preserved successful attempts and checks posted BT coverage separately; [PaymentEvidenceRules.java:169](../../src/main/java/com/paymentsledger/payment/domain/PaymentEvidenceRules.java#L169) calculates certainty; [PaymentReader.java:37](../../src/main/java/com/paymentsledger/payment/PaymentReader.java#L37) exposes the dimensions separately.
 
 | Dimension | Field | Meaning |
 |---|---|---|
@@ -11,7 +11,7 @@ Four fields answer four different questions. [PaymentStateMerger.java:50](../../
 | Certainty | `resolution_status` | KNOWN, UNKNOWN, CONFLICT |
 | Accounting | `financial_status` | NOT_APPLICABLE, PENDING_EVIDENCE, PARTIALLY_POSTED, POSTED, CONFLICT |
 
-The diagram is a source-derived overview of evidence-driven transitions, not an exhaustive product-state certification. Session/query merging is implemented at [PaymentStateMerger.java:36](../../src/main/java/com/paymentsledger/payment/PaymentStateMerger.java#L36), timeout marking at [PaymentRepository.java:910](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L910), and unsent cancellation at [line 1006](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L1006).
+The diagram is a source-derived overview of evidence-driven transitions, not an exhaustive product-state certification. Session/query merging is implemented at [PaymentStateMerger.java:36](../../src/main/java/com/paymentsledger/payment/PaymentStateMerger.java#L36), timeout marking at [PaymentRepository.java:669](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L669), and unsent cancellation at [line 765](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L765).
 
 ```mermaid
 stateDiagram-v2
