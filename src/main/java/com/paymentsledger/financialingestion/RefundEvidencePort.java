@@ -5,12 +5,29 @@ import java.util.*;
 
 /** PR11 supplies a trusted local refund lookup, under the already locked payment row. The flag verifies the association, not business refund success; a real debit may precede resolution. No provider I/O. */
 public interface RefundEvidencePort {
-    record Evidence(UUID paymentId,String refundId,String balanceTransactionId,long amountMinor,String currency,
-                    boolean evidenceVerified,String failureBalanceTransactionId,UUID localRefundId){
-        public Evidence(UUID paymentId,String refundId,String balanceTransactionId,long amountMinor,String currency,boolean evidenceVerified){
-            this(paymentId,refundId,balanceTransactionId,amountMinor,currency,evidenceVerified,null,null);
+    record Evidence(
+            UUID paymentId,
+            String refundId,
+            String balanceTransactionId,
+            long amountMinor,
+            String currency,
+            boolean evidenceVerified,
+            String failureBalanceTransactionId,
+            UUID localRefundId) {
+        public Evidence(
+                UUID paymentId,
+                String refundId,
+                String balanceTransactionId,
+                long amountMinor,
+                String currency,
+                boolean evidenceVerified) {
+            this(paymentId, refundId, balanceTransactionId, amountMinor, currency, evidenceVerified, null, null);
         }
     }
-    Optional<Evidence> find(ProviderScope scope,String refundId);
-    static RefundEvidencePort unavailable(){return (scope,id)->Optional.empty();}
+
+    Optional<Evidence> find(ProviderScope scope, String refundId);
+
+    static RefundEvidencePort unavailable() {
+        return (scope, id) -> Optional.empty();
+    }
 }

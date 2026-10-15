@@ -31,8 +31,7 @@ public final class Masking {
 
     private static final String REDACTED = "***REDACTED***";
 
-    private Masking() {
-    }
+    private Masking() {}
 
     public static boolean isForbiddenKey(String key) {
         return key != null && FORBIDDEN_KEYS.contains(key.toLowerCase());

@@ -34,8 +34,14 @@ class RequestIdFilterTest {
 
     @Test
     void regeneratesSecretLikeAndCardIdsWithoutEchoingThem() {
-        for (String value : java.util.List.of("sk_test_" + "redactionfixture", "pi_fixture_secret_hidden",
-                "whsec_" + "fixture", "4242".repeat(4), "tok_fixture", "pm_fixture", "pk_test_fixture")) {
+        for (String value : java.util.List.of(
+                "sk_test_" + "redactionfixture",
+                "pi_fixture_secret_hidden",
+                "whsec_" + "fixture",
+                "4242".repeat(4),
+                "tok_fixture",
+                "pm_fixture",
+                "pk_test_fixture")) {
             assertThat(RequestIdFilter.resolve(value).equals(value)).isFalse();
         }
         String uuid = "123e4567-e89b-12d3-a456-426614174000";
@@ -44,16 +50,17 @@ class RequestIdFilterTest {
 
     @Test
     void embeddedCredentialPrefixesAreRegeneratedWithoutEchoing() {
-        for(String key:java.util.List.of("sk_test_","sk_live_","pk_test_","pk_live_","rk_test_","rk_live_")) {
-            String value="req"+key+"synthetic";
+        for (String key : java.util.List.of("sk_test_", "sk_live_", "pk_test_", "pk_live_", "rk_test_", "rk_live_")) {
+            String value = "req" + key + "synthetic";
             assertThat(RequestIdFilter.resolve(value).equals(value)).isFalse();
         }
     }
 
     @Test
     void generatedIdsUseGuardSafeCanonicalUuidAndInboundCardLikeTypedIdsStillRegenerate() {
-        assertThat(RequestIdFilter.resolve(null)).matches("req_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
-        String typed=com.paymentsledger.payment.PaymentIds.format("pay",new java.util.UUID(16,2701));
+        assertThat(RequestIdFilter.resolve(null))
+                .matches("req_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
+        String typed = com.paymentsledger.payment.PaymentIds.format("pay", new java.util.UUID(16, 2701));
         assertThat(RequestIdFilter.resolve(typed).equals(typed)).isFalse();
     }
 

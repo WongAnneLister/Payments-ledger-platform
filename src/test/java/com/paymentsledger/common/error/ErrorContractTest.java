@@ -20,11 +20,11 @@ class ErrorContractTest {
         }
         // 仅这四个在契约中标记为可重试
         List<ErrorCode> retryable = java.util.Arrays.stream(ErrorCode.values())
-                .filter(ErrorCode::retryable).toList();
-        assertThat(retryable).containsExactlyInAnyOrder(
-                ErrorCode.RATE_LIMITED,
-                ErrorCode.PERSISTENCE_FAILED,
-                ErrorCode.SERVICE_UNAVAILABLE);
+                .filter(ErrorCode::retryable)
+                .toList();
+        assertThat(retryable)
+                .containsExactlyInAnyOrder(
+                        ErrorCode.RATE_LIMITED, ErrorCode.PERSISTENCE_FAILED, ErrorCode.SERVICE_UNAVAILABLE);
     }
 
     @Test

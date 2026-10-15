@@ -27,11 +27,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 class WorkerRoleHealthIT {
 
     @Container
-    private static final PostgreSQLContainer<?> POSTGRES =
-            new PostgreSQLContainer<>("postgres:16")
-                    .withDatabaseName("pr01_isolated_worker_role_check")
-                    .withUsername("pr01_app")
-                    .withPassword("pr01_app_pw");
+    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:16")
+            .withDatabaseName("pr01_isolated_worker_role_check")
+            .withUsername("pr01_app")
+            .withPassword("pr01_app_pw");
 
     @DynamicPropertySource
     static void datasourceProperties(DynamicPropertyRegistry registry) {
@@ -65,29 +64,32 @@ class WorkerRoleHealthIT {
 
     @Test
     void workerDoesNotExposeCustomerTestPage() {
-        assertThat(restTemplate.getForEntity("/payment-test.html", String.class).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(restTemplate.getForEntity("/payment-test.html", String.class).getStatusCode())
+                .isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     void workerDoesNotExposeNewPagesOrObservability() {
-        for (String path : java.util.List.of("/payment-result.html", "/ops-console.html", "/ui/core.mjs", "/ops/observability"))
-            assertThat(restTemplate.getForEntity(path, String.class).getStatusCode()).as(path).isEqualTo(HttpStatus.NOT_FOUND);
+        for (String path :
+                java.util.List.of("/payment-result.html", "/ops-console.html", "/ui/core.mjs", "/ops/observability"))
+            assertThat(restTemplate.getForEntity(path, String.class).getStatusCode())
+                    .as(path)
+                    .isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
     @DisplayName("health 不泄露依赖拓扑细节")
     void healthHidesComponentDetails() {
         ResponseEntity<String> response = restTemplate.getForEntity("/actuator/health", String.class);
-        assertThat(response.getBody())
-                .doesNotContain("\"components\"")
-                .doesNotContain("PostgreSQL");
-    }
-    @Test
-    void workerDoesNotExposeWebhookReceipt() {
-        var headers=new org.springframework.http.HttpHeaders();
-        headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
-        var response=restTemplate.postForEntity("/webhooks/stripe",new org.springframework.http.HttpEntity<>("{}",headers),String.class);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody()).doesNotContain("\"components\"").doesNotContain("PostgreSQL");
     }
 
+    @Test
+    void workerDoesNotExposeWebhookReceipt() {
+        var headers = new org.springframework.http.HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+        var response = restTemplate.postForEntity(
+                "/webhooks/stripe", new org.springframework.http.HttpEntity<>("{}", headers), String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
 }

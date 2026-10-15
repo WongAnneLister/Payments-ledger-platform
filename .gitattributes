@@ -1,0 +1,2 @@
+# Spotless enforces LF for Java sources; keep Windows checkouts consistent with CI.
+*.java text eol=lf

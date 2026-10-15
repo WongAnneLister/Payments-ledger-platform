@@ -7,7 +7,8 @@ public record ProviderCallResult<T>(ProviderCallClassification classification, T
     public ProviderCallResult {
         Objects.requireNonNull(classification, "classification");
         Objects.requireNonNull(evidence, "evidence");
-        if (payload != null && classification != ProviderCallClassification.SUCCESS
+        if (payload != null
+                && classification != ProviderCallClassification.SUCCESS
                 && classification != ProviderCallClassification.AUTH_REQUIRED) {
             throw new IllegalArgumentException("Only success or authentication-required results may contain facts");
         }

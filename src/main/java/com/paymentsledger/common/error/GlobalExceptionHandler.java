@@ -25,7 +25,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiError> handleApiException(ApiException ex) {
         ErrorCode code = ex.errorCode();
-        log.warn("api_error code={} status={} retryable={}", code, code.httpStatus().value(), code.retryable());
+        log.warn(
+                "api_error code={} status={} retryable={}",
+                code,
+                code.httpStatus().value(),
+                code.retryable());
         return ResponseEntity.status(code.httpStatus())
                 .body(ApiError.of(code, ex.getMessage(), RequestContext.currentRequestId(), ex.details()));
     }
@@ -59,8 +63,8 @@ public class GlobalExceptionHandler {
         boolean idempotency = "Idempotency-Key".equalsIgnoreCase(ex.getHeaderName());
         ErrorCode code = idempotency ? ErrorCode.IDEMPOTENCY_KEY_REQUIRED : ErrorCode.VALIDATION_ERROR;
         return ResponseEntity.status(code.httpStatus())
-                .body(ApiError.of(code, "Missing required header: " + ex.getHeaderName(),
-                        RequestContext.currentRequestId()));
+                .body(ApiError.of(
+                        code, "Missing required header: " + ex.getHeaderName(), RequestContext.currentRequestId()));
     }
 
     @ExceptionHandler({NoResourceFoundException.class, org.springframework.web.servlet.NoHandlerFoundException.class})
@@ -77,8 +81,10 @@ public class GlobalExceptionHandler {
                 .body(ApiError.of(code, "Invalid request parameter", RequestContext.currentRequestId()));
     }
 
-    @ExceptionHandler({org.springframework.dao.DataAccessException.class,
-            org.springframework.transaction.TransactionException.class})
+    @ExceptionHandler({
+        org.springframework.dao.DataAccessException.class,
+        org.springframework.transaction.TransactionException.class
+    })
     public ResponseEntity<ApiError> handlePersistenceUnavailable() {
         ErrorCode code = ErrorCode.SERVICE_UNAVAILABLE;
         return ResponseEntity.status(code.httpStatus())
@@ -89,7 +95,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleUnexpected(Exception ex) {
         String requestId = RequestContext.currentRequestId();
         // 异常细节只进日志，不进响应体。
-        log.error("unhandled_exception requestId={} type={}", requestId, ex.getClass().getName(), ex);
+        log.error(
+                "unhandled_exception requestId={} type={}",
+                requestId,
+                ex.getClass().getName(),
+                ex);
         ErrorCode code = ErrorCode.INTERNAL_ERROR;
         return ResponseEntity.status(code.httpStatus())
                 .body(ApiError.of(code, "Internal error; see server logs by requestId", requestId));

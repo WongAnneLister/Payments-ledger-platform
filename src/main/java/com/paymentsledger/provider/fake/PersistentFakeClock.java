@@ -7,16 +7,40 @@ import java.util.Objects;
 public final class PersistentFakeClock extends Clock {
     private final FakeStateStore store;
     private final ZoneId zone;
-    PersistentFakeClock(FakeStateStore store) { this(store,ZoneOffset.UTC); }
-    private PersistentFakeClock(FakeStateStore store, ZoneId zone) { this.store=store; this.zone=zone; }
-    @Override public ZoneId getZone() { return zone; }
-    @Override public Clock withZone(ZoneId zone) { return new PersistentFakeClock(store,Objects.requireNonNull(zone)); }
-    @Override public Instant instant() { return store.update(s -> Instant.parse(s.path("now").asText())); }
+
+    PersistentFakeClock(FakeStateStore store) {
+        this(store, ZoneOffset.UTC);
+    }
+
+    private PersistentFakeClock(FakeStateStore store, ZoneId zone) {
+        this.store = store;
+        this.zone = zone;
+    }
+
+    @Override
+    public ZoneId getZone() {
+        return zone;
+    }
+
+    @Override
+    public Clock withZone(ZoneId zone) {
+        return new PersistentFakeClock(store, Objects.requireNonNull(zone));
+    }
+
+    @Override
+    public Instant instant() {
+        return store.update(s -> Instant.parse(s.path("now").asText()));
+    }
+
     public Instant advance(Duration duration) {
-        if (duration == null || duration.isNegative()) throw new IllegalArgumentException("Clock cannot move backwards");
+        if (duration == null || duration.isNegative())
+            throw new IllegalArgumentException("Clock cannot move backwards");
         return store.update(s -> {
-            Instant next = Instant.parse(s.path("now").asText()).plus(duration).truncatedTo(java.time.temporal.ChronoUnit.MICROS);
-            s.put("now",next.toString()); return next;
+            Instant next = Instant.parse(s.path("now").asText())
+                    .plus(duration)
+                    .truncatedTo(java.time.temporal.ChronoUnit.MICROS);
+            s.put("now", next.toString());
+            return next;
         });
     }
 }
