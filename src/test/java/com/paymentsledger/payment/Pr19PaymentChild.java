@@ -15,10 +15,12 @@ import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.FakeStripeProvider;
 import com.paymentsledger.refund.RefundFinancialEvidence;
 import com.paymentsledger.revenueshare.RevenueShareService;
+import com.paymentsledger.testsupport.SqlTrace;
 import com.paymentsledger.webhook.*;
 import java.nio.file.Path;
 import java.time.*;
 import java.util.*;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.support.*;
@@ -30,6 +32,7 @@ public final class Pr19PaymentChild {
     private final List<String> trace = new ArrayList<>();
     private final List<Map<String, Object>> commitTrace = new ArrayList<>();
     private final List<Map<String, Object>> rollbackTrace = new ArrayList<>();
+    private final DataSource traced;
     private final JdbcTemplate jdbc;
     private final GatedTransactions tx;
     private final FakeStripeProvider fake;
@@ -56,28 +59,10 @@ public final class Pr19PaymentChild {
         pool.setMaximumPoolSize(1);
         pool.setConnectionTimeout(5000);
         pool.setAutoCommit(true);
-        jdbc = new JdbcTemplate(pool) {
-            void capture(String sql) {
-                // Normalize before matching: a line break inside "FOR UPDATE" must not hide a lock.
-                String flat = sql.replaceAll("\\s+", " ");
-                if (flat.contains("pg_advisory_xact_lock")
-                        || flat.contains("FOR UPDATE")
-                        || flat.contains("platform.lock_")
-                        || flat.contains("post_ledger")) trace.add(flat);
-            }
-
-            @Override
-            public List<Map<String, Object>> queryForList(String sql, Object... args) {
-                capture(sql);
-                return super.queryForList(sql, args);
-            }
-
-            @Override
-            public <T> T queryForObject(String sql, Class<T> type, Object... args) {
-                capture(sql);
-                return super.queryForObject(sql, type, args);
-            }
-        };
+        // Observe locks at the DataSource so every statement is seen, however it reached JDBC.
+        // GatedTransactions must use this same DataSource for JdbcTemplate to join its transactions.
+        traced = new SqlTrace(this::captureLock).wrap(pool);
+        jdbc = new JdbcTemplate(traced);
         jdbc.execute("SET lock_timeout='8s'");
         jdbc.execute("SET statement_timeout='15s'");
         if (!"payments_app".equals(jdbc.queryForObject("SELECT current_user", String.class)))
@@ -100,6 +85,13 @@ public final class Pr19PaymentChild {
         refunds = new RefundRepository(jdbc, tx, json, fake.clock(), repository, shares, disputes);
         payouts = new PayoutService(jdbc, tx, json, posting);
         matcher = new BankMatcher(new BankMatchRepository(jdbc), tx, json, posting);
+    }
+
+    private void captureLock(String sql) {
+        if (sql.contains("pg_advisory_xact_lock")
+                || sql.contains("FOR UPDATE")
+                || sql.contains("platform.lock_")
+                || sql.contains("post_ledger")) trace.add(sql);
     }
 
     public static void main(String[] args) {
@@ -322,7 +314,7 @@ public final class Pr19PaymentChild {
         }
 
         GatedTransactions() {
-            super(Pr19PaymentChild.this.pool);
+            super(Pr19PaymentChild.this.traced);
         }
 
         @Override

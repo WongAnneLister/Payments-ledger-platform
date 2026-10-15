@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.sql.DataSource;
@@ -42,6 +43,19 @@ public final class SqlTrace {
 
     private final Thread testThread = Thread.currentThread();
     private final Map<Thread, List<String>> events = new LinkedHashMap<>();
+    private final Consumer<String> onStatement;
+
+    public SqlTrace() {
+        this(sql -> {});
+    }
+
+    /**
+     * {@code onStatement} receives each executed statement's whitespace-normalized SQL as it runs, on the executing
+     * thread. Observing at the DataSource sees every statement, however the caller reached JDBC.
+     */
+    public SqlTrace(Consumer<String> onStatement) {
+        this.onStatement = onStatement;
+    }
 
     public synchronized void reset() {
         events.clear();
@@ -118,7 +132,12 @@ public final class SqlTrace {
             else if (name.equals("clearParameters")) parameters.clear();
             else if (EXECUTE.contains(name)) {
                 String sql = args != null && args.length > 0 && args[0] instanceof String s ? s : preparedSql;
-                record(sql.replaceAll("\\s+", " ").trim() + (parameters.isEmpty() ? "" : " " + parameters.values()));
+                String flat = sql.replaceAll("\\s+", " ").trim();
+                onStatement.accept(flat);
+                // Layout around commas and parentheses is not semantic: "(?, ?)" and "(?,?)" trace the same.
+                String sqlText =
+                        flat.replaceAll(" ?, ?", ",").replaceAll("\\( ", "(").replaceAll(" \\)", ")");
+                record(sqlText + (parameters.isEmpty() ? "" : " " + parameters.values()));
             }
             return invoke(statement, method, args);
         });
