@@ -10,6 +10,7 @@ import com.paymentsledger.common.error.ErrorCode;
 import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.payment.PaymentRepository.Claim;
 import com.paymentsledger.payment.domain.OperationLeaseRules;
+import com.paymentsledger.payment.domain.RefundLifecycle;
 import com.paymentsledger.payment.domain.StripeDeployment;
 import com.paymentsledger.payment.repository.OperationLeaseRepository;
 import java.sql.Timestamp;
@@ -167,7 +168,7 @@ final class OperationLeases {
         boolean done;
         if (op.refundId() != null) {
             var refund = leases.refundOutcome(op.refundId());
-            done = OperationLeaseRules.refundTaskDone(RefundRepository.terminal(refund.status()), refund.resolution());
+            done = OperationLeaseRules.refundTaskDone(RefundLifecycle.terminal(refund.status()), refund.resolution());
         } else {
             var payment = leases.paymentOutcome(op.paymentId());
             done = OperationLeaseRules.paymentTaskDone(op.status(), op.type(), payment.status(), payment.resolution());

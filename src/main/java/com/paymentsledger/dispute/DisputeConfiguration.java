@@ -5,7 +5,6 @@ import com.paymentsledger.common.error.*;
 import com.paymentsledger.ledger.LedgerPostingService;
 import com.paymentsledger.payment.RefundEligibilityPolicy;
 import com.paymentsledger.revenueshare.*;
-import java.util.UUID;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,7 +30,7 @@ public class DisputeConfiguration {
     @Bean
     RefundEligibilityPolicy disputeRefundEligibility(ObjectProvider<DisputeService> service) {
         return (scope, payment, control) -> {
-            if (service.getObject().blocks((UUID) payment.get("id")))
+            if (service.getObject().blocks(payment.id()))
                 throw new ApiException(ErrorCode.REFUND_BLOCKED, "Payment is blocked by dispute evidence");
         };
     }
