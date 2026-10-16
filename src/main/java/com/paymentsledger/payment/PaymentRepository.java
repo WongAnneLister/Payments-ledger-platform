@@ -6,11 +6,7 @@ import com.paymentsledger.identity.*;
 import com.paymentsledger.payment.domain.PaymentFacts;
 import com.paymentsledger.payment.domain.ProviderResultRules;
 import com.paymentsledger.payment.domain.StripeDeployment;
-import com.paymentsledger.payment.repository.OperationLeaseRepository;
-import com.paymentsledger.payment.repository.PaymentIntentRepository;
-import com.paymentsledger.payment.repository.PaymentRecordRepository;
-import com.paymentsledger.payment.repository.PaymentStateRepository;
-import com.paymentsledger.payment.repository.ProviderResultRepository;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.revenueshare.RevenueShareService;
@@ -18,7 +14,6 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.util.*;
 import java.util.function.Supplier;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.*;
@@ -46,33 +41,18 @@ public class PaymentRepository {
     }
 
     public PaymentRepository(
-            JdbcTemplate jdbc, PlatformTransactionManager transactions, ObjectMapper json, Clock clock) {
+            PaymentRepositories store, PlatformTransactionManager transactions, ObjectMapper json, Clock clock) {
         this.tx = new TransactionTemplate(transactions);
         this.tx.setIsolationLevel(org.springframework.transaction.TransactionDefinition.ISOLATION_READ_COMMITTED);
         this.json = json;
         this.clock = clock;
-        var records = new PaymentRecordRepository(jdbc);
-        this.intents = new PaymentIntentService(
-                new PaymentIntentRepository(jdbc), records, tx, json, clock, this::stripeDeployment);
+        var records = store.records();
+        this.intents = new PaymentIntentService(store.intents(), records, tx, json, clock, this::stripeDeployment);
         this.reader = new PaymentReader(intents, records, tx, clock);
         this.leases = new OperationLeases(
-                new OperationLeaseRepository(jdbc),
-                intents,
-                tx,
-                clock,
-                this::recoveryPolicy,
-                this::stripeDeployment,
-                this::markUnknown);
+                store.leases(), intents, tx, clock, this::recoveryPolicy, this::stripeDeployment, this::markUnknown);
         this.results = new ProviderResults(
-                new ProviderResultRepository(jdbc),
-                new PaymentStateRepository(jdbc),
-                leases,
-                intents,
-                tx,
-                json,
-                clock,
-                this::recoveryPolicy,
-                () -> shares);
+                store.results(), store.states(), leases, intents, tx, json, clock, this::recoveryPolicy, () -> shares);
     }
 
     /** The Stripe account this deployment is configured for; all null when Stripe is not configured. */
@@ -89,35 +69,35 @@ public class PaymentRepository {
     }
 
     public PaymentRepository(
-            JdbcTemplate jdbc,
+            PaymentRepositories store,
             PlatformTransactionManager transactions,
             ObjectMapper json,
             Clock clock,
             org.springframework.core.env.Environment environment) {
-        this(jdbc, transactions, json, clock);
+        this(store, transactions, json, clock);
         this.configuration = environment;
         this.recoveryPolicy = RecoveryPolicy.from(environment);
     }
 
     public PaymentRepository(
-            JdbcTemplate jdbc,
+            PaymentRepositories store,
             PlatformTransactionManager tx,
             ObjectMapper json,
             Clock clock,
             RevenueShareService shares) {
-        this(jdbc, tx, json, clock);
+        this(store, tx, json, clock);
         this.shares = shares;
     }
 
     @org.springframework.beans.factory.annotation.Autowired
     public PaymentRepository(
-            JdbcTemplate jdbc,
+            PaymentRepositories store,
             PlatformTransactionManager tx,
             ObjectMapper json,
             Clock clock,
             org.springframework.core.env.Environment env,
             RevenueShareService shares) {
-        this(jdbc, tx, json, clock, env);
+        this(store, tx, json, clock, env);
         this.shares = shares;
     }
 

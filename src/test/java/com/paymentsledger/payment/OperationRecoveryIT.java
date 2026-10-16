@@ -2,6 +2,7 @@ package com.paymentsledger.payment;
 
 import static org.assertj.core.api.Assertions.*;
 
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.*;
 import java.time.*;
@@ -411,7 +412,10 @@ class OperationRecoveryIT extends PaymentCoreFixture {
             }
         };
         var crossing = new PaymentRepository(
-                jdbc, tx, new com.fasterxml.jackson.databind.ObjectMapper().findAndRegisterModules(), clock);
+                new PaymentRepositories(jdbc),
+                tx,
+                new com.fasterxml.jackson.databind.ObjectMapper().findAndRegisterModules(),
+                clock);
         crossing.finishCreate(claim, accepted);
         assertThat(repository.operation(intent.operationId())).containsEntry("status", "RESOLVED");
         assertThat(jdbc.queryForObject("SELECT status FROM platform.recovery_task", String.class))
@@ -499,7 +503,10 @@ class OperationRecoveryIT extends PaymentCoreFixture {
             }
         };
         var crossing = new PaymentRepository(
-                jdbc, tx, new com.fasterxml.jackson.databind.ObjectMapper().findAndRegisterModules(), clock);
+                new PaymentRepositories(jdbc),
+                tx,
+                new com.fasterxml.jackson.databind.ObjectMapper().findAndRegisterModules(),
+                clock);
         crossing.finishRecoveryQuery(claim, query);
         assertThat(repository.operation(operation))
                 .containsEntry("status", "ESCALATED")

@@ -1,5 +1,6 @@
 package com.paymentsledger.payment.repository;
 
+import com.paymentsledger.financialingestion.FinancialSourceLocks;
 import com.paymentsledger.payment.domain.LocalRefund;
 import com.paymentsledger.payment.domain.RefundControlState;
 import com.paymentsledger.payment.domain.RefundablePayment;
@@ -98,6 +99,11 @@ public class RefundFactRepository {
                 FROM platform.refund
                 WHERE id=:id AND organization_id=:organizationId AND environment_id=:environmentId \
                 AND provider_account_id=:providerAccountId""", scope(scope).addValue("id", refundId), REFUND));
+    }
+
+    /** Locks the financial sources a refund fact names, in the order financial ingestion uses. */
+    public void lockFinancialSources(UUID paymentId, List<String> sources) {
+        FinancialSourceLocks.lock(jdbc.getJdbcTemplate(), paymentId, sources);
     }
 
     public RefundablePayment lockPayment(UUID paymentId) {

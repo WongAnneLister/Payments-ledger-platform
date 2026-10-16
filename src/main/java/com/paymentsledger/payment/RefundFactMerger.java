@@ -20,7 +20,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -39,7 +38,6 @@ final class RefundFactMerger {
     private final Function<Object, String> encoder;
     private final Supplier<RevenueShareService> shares;
     private final Supplier<DisputeService> disputes;
-    private final BiConsumer<UUID, List<String>> financialSourceLocks;
 
     RefundFactMerger(
             RefundFactRepository facts,
@@ -48,8 +46,7 @@ final class RefundFactMerger {
             Supplier<Instant> now,
             Function<Object, String> encoder,
             Supplier<RevenueShareService> shares,
-            Supplier<DisputeService> disputes,
-            BiConsumer<UUID, List<String>> financialSourceLocks) {
+            Supplier<DisputeService> disputes) {
         this.facts = facts;
         this.intents = intents;
         this.tx = tx;
@@ -57,7 +54,6 @@ final class RefundFactMerger {
         this.encoder = encoder;
         this.shares = shares;
         this.disputes = disputes;
-        this.financialSourceLocks = financialSourceLocks;
     }
 
     Map<String, Object> lookup(ProviderScope scope, String providerRefundId) {
@@ -120,7 +116,7 @@ final class RefundFactMerger {
         intents.lockControl(payment);
         if (shares.get().enabled()) {
             shares.get().lock(paymentId);
-            financialSourceLocks.accept(paymentId, List.of(fact.refundId()));
+            facts.lockFinancialSources(paymentId, List.of(fact.refundId()));
         }
         bound = facts.findByProviderId(scope, fact.refundId()).orElse(null);
         if (bound != null && local == null) local = bound;

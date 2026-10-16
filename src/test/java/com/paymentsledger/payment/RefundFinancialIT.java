@@ -7,6 +7,7 @@ import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.ledger.LedgerPostingService;
 import com.paymentsledger.notification.*;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.FakeControls;
@@ -55,7 +56,7 @@ class RefundFinancialIT extends PaymentCoreFixture {
                     external ? id(4) : null,
                     external ? "PAYMENTS" : null);
         }
-        refunds = new RefundRepository(jdbc, tx, json, fake.clock());
+        refunds = new RefundRepository(new PaymentRepositories(jdbc), tx, json, fake.clock());
         importer = new FinancialImportService(jdbc, tx, json, fake, fake.clock());
         replay = new FinancialReplayService(
                 jdbc, tx, json, new LedgerPostingService(jdbc, json), new RefundFinancialEvidence(refunds));

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.identity.TenantContext;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.ProviderModels.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -45,7 +46,8 @@ class RefundCoreIT extends PaymentCoreFixture {
     }
 
     RefundRepository refunds() {
-        return new RefundRepository(jdbc, tx, new ObjectMapper().findAndRegisterModules(), fake.clock());
+        return new RefundRepository(
+                new PaymentRepositories(jdbc), tx, new ObjectMapper().findAndRegisterModules(), fake.clock());
     }
 
     RefundRequests.Create request(long amount, String key) {

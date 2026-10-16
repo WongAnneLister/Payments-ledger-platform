@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.payment.domain.PaymentFacts;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.webhook.*;
@@ -453,18 +454,19 @@ class WebhookProcessingIT extends PaymentCoreFixture {
         receive(raw("evt_owner_b", "payment_intent.succeeded", pi(b)));
         var barrier = new CyclicBarrier(2);
         var reached = new java.util.concurrent.atomic.AtomicInteger();
-        var synchronizedRepository = new PaymentRepository(jdbc, tx, new ObjectMapper(), fake.clock()) {
-            @Override
-            public Map<String, Object> lockWebhookPayment(UUID payment) {
-                if (reached.incrementAndGet() <= 2)
-                    try {
-                        barrier.await(5, TimeUnit.SECONDS);
-                    } catch (Exception e) {
-                        throw new IllegalStateException(e);
+        var synchronizedRepository =
+                new PaymentRepository(new PaymentRepositories(jdbc), tx, new ObjectMapper(), fake.clock()) {
+                    @Override
+                    public Map<String, Object> lockWebhookPayment(UUID payment) {
+                        if (reached.incrementAndGet() <= 2)
+                            try {
+                                barrier.await(5, TimeUnit.SECONDS);
+                            } catch (Exception e) {
+                                throw new IllegalStateException(e);
+                            }
+                        return super.lockWebhookPayment(payment);
                     }
-                return super.lockWebhookPayment(payment);
-            }
-        };
+                };
         var worker = new WebhookProcessor(inbox, synchronizedRepository, new ObjectMapper(), fake.clock());
         var claims = inbox.claimDue(2);
         try (var pool = Executors.newFixedThreadPool(2)) {

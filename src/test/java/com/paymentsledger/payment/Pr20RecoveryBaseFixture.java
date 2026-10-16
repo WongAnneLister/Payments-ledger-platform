@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.common.error.*;
 import com.paymentsledger.identity.TenantContext;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.*;
@@ -88,7 +89,8 @@ abstract class Pr20RecoveryBaseFixture {
                     currency,amount_minor,share_policy_id)
                 VALUES (?,?,?,'demo',1,'USD',10000,?)""", id(6), id(1), id(2), id(5));
         fake = new FakeStripeProvider(directory, 42, Instant.now(), Duration.ofDays(1));
-        repository = new PaymentRepository(jdbc, tx, new ObjectMapper().findAndRegisterModules(), fake.clock());
+        repository = new PaymentRepository(
+                new PaymentRepositories(jdbc), tx, new ObjectMapper().findAndRegisterModules(), fake.clock());
         executor = new PaymentExecutor(repository, fake, fake, fake, "FAKE");
         service = new PaymentService(repository, executor);
     }

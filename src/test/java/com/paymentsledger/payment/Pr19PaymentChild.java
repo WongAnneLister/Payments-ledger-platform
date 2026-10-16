@@ -8,6 +8,7 @@ import com.paymentsledger.dispute.DisputeService;
 import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.ledger.LedgerPostingService;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.payout.PayoutService;
 import com.paymentsledger.pr19.Pr19ProcessHarness;
 import com.paymentsledger.provider.*;
@@ -79,10 +80,11 @@ public final class Pr19PaymentChild {
                 jdbc, tx, json, posting, true, p -> dispute[0] == null || !dispute[0].blocks(p));
         disputes = new DisputeService(jdbc, tx, json, posting, shares);
         dispute[0] = disputes;
-        repository = new PaymentRepository(jdbc, tx, json, fake.clock(), shares);
+        repository = new PaymentRepository(new PaymentRepositories(jdbc), tx, json, fake.clock(), shares);
         repository.recoveryPolicy(policy);
         executor = new PaymentExecutor(repository, fake, fake, fake, "FAKE");
-        refunds = new RefundRepository(jdbc, tx, json, fake.clock(), repository, shares, disputes);
+        refunds = new RefundRepository(
+                new PaymentRepositories(jdbc), tx, json, fake.clock(), repository, shares, disputes);
         payouts = new PayoutService(jdbc, tx, json, posting);
         matcher = new BankMatcher(new BankMatchRepository(jdbc), tx, json, posting);
     }

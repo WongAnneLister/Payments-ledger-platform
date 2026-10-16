@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.common.error.ApiException;
 import com.paymentsledger.common.error.ErrorCode;
 import com.paymentsledger.identity.TenantContext;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.ProviderCallClassification;
 import com.paymentsledger.provider.ProviderCallResult;
 import com.paymentsledger.provider.ProviderEvidence;
@@ -54,7 +55,12 @@ class RefundFactCharacterizationIT extends PaymentCoreFixture {
                     provider_account_id,currency,payment_id,provider_object_id,provider_status,payment_intent_id,
                     captured,amount_minor,amount_captured_minor,fetched_at)
                 VALUES (?,?,?,?,'USD',?,'ch_fact','succeeded','pi_fact',true,1000,1000,now())""", id(1), id(2), id(3), id(4), paymentId);
-        refunds = new RefundRepository(jdbc, tx, new ObjectMapper().findAndRegisterModules(), fake.clock(), repository);
+        refunds = new RefundRepository(
+                new PaymentRepositories(jdbc),
+                tx,
+                new ObjectMapper().findAndRegisterModules(),
+                fake.clock(),
+                repository);
     }
 
     Instant now() {

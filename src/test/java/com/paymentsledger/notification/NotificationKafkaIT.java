@@ -169,7 +169,8 @@ class NotificationKafkaIT extends NotificationFixture {
         String charge = jdbc.queryForObject(
                 "SELECT latest_charge_id FROM platform.payment WHERE id=?", String.class, payment.paymentId());
         var json = new com.fasterxml.jackson.databind.ObjectMapper().findAndRegisterModules();
-        var refunds = new com.paymentsledger.payment.RefundRepository(jdbc, tx, json, fake.clock());
+        var refunds = new com.paymentsledger.payment.RefundRepository(
+                new com.paymentsledger.payment.repository.PaymentRepositories(jdbc), tx, json, fake.clock());
         var fact = new com.paymentsledger.provider.ProviderModels.RefundFact(
                 "re_kafka",
                 charge,

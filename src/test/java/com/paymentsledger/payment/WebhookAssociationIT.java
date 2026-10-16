@@ -3,6 +3,7 @@ package com.paymentsledger.payment;
 import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.VerifiedWebhook;
 import com.paymentsledger.webhook.*;
@@ -35,7 +36,8 @@ class WebhookAssociationIT extends PaymentCoreFixture {
                 .withProperty("platform.stripe.organization-id", id(1).toString())
                 .withProperty("platform.stripe.environment-id", id(2).toString())
                 .withProperty("platform.stripe.provider-account-id", account.toString());
-        return new PaymentRepository(jdbc, tx, json.findAndRegisterModules(), fake.clock(), environment);
+        return new PaymentRepository(
+                new PaymentRepositories(jdbc), tx, json.findAndRegisterModules(), fake.clock(), environment);
     }
 
     UUID prepare(String order) {

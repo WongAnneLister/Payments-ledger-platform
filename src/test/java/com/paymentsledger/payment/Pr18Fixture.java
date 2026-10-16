@@ -10,6 +10,7 @@ import com.paymentsledger.dispute.*;
 import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.ledger.*;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.payout.PayoutService;
 import com.paymentsledger.pr18.*;
 import com.paymentsledger.provider.*;
@@ -106,12 +107,13 @@ abstract class Pr18Fixture extends PaymentCoreFixture {
         posting = new LedgerPostingService(jdbc, json);
         shares = new RevenueShareService(jdbc, tx, json, posting, true, p -> disputes == null || !disputes.blocks(p));
         disputes = new DisputeService(jdbc, tx, json, posting, shares);
-        repository = new PaymentRepository(jdbc, tx, json, fake.clock(), shares);
+        repository = new PaymentRepository(new PaymentRepositories(jdbc), tx, json, fake.clock(), shares);
         repository.recoveryPolicy(new RecoveryPolicy(
                 Duration.ofSeconds(30), Duration.ofHours(1), Duration.ofDays(1), 0, Duration.ofDays(7), Duration.ZERO));
         executor = new PaymentExecutor(repository, fake, fake, fake, "FAKE");
         service = new PaymentService(repository, executor);
-        refunds = new RefundRepository(jdbc, tx, json, fake.clock(), repository, shares, disputes);
+        refunds = new RefundRepository(
+                new PaymentRepositories(jdbc), tx, json, fake.clock(), repository, shares, disputes);
         payouts = new PayoutService(jdbc, tx, json, posting);
         banks = new BankStatementImporter(new BankStatementRepository(jdbc), tx);
         matcher = new BankMatcher(new BankMatchRepository(jdbc), tx, json, posting);

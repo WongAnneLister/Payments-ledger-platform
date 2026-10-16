@@ -8,6 +8,7 @@ import com.paymentsledger.dispute.*;
 import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.ledger.LedgerPostingService;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.FakeControls;
@@ -94,8 +95,9 @@ class DisputeLifecycleIT extends PaymentCoreFixture {
                 true,
                 id -> disputes == null || !disputes.blocks(id));
         disputes = new DisputeService(jdbc, tx, json, new LedgerPostingService(jdbc, json), shares);
-        repository = new PaymentRepository(jdbc, tx, json, fake.clock(), shares);
-        refunds = new RefundRepository(jdbc, tx, json, fake.clock(), repository, shares, disputes);
+        repository = new PaymentRepository(new PaymentRepositories(jdbc), tx, json, fake.clock(), shares);
+        refunds = new RefundRepository(
+                new PaymentRepositories(jdbc), tx, json, fake.clock(), repository, shares, disputes);
         importer = new FinancialImportService(jdbc, tx, json, fake, fake.clock(), shares);
         replay = new FinancialReplayService(
                 jdbc,

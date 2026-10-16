@@ -4,19 +4,15 @@ import static com.paymentsledger.payment.PaymentRepository.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.common.error.*;
-import com.paymentsledger.financialingestion.FinancialSourceLocks;
 import com.paymentsledger.identity.*;
 import com.paymentsledger.payment.PaymentRepository.Claim;
-import com.paymentsledger.payment.repository.RefundFactRepository;
-import com.paymentsledger.payment.repository.RefundIntentRepository;
-import com.paymentsledger.payment.repository.RefundRecordRepository;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.revenueshare.RevenueShareService;
 import java.time.*;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -39,12 +35,13 @@ public class RefundRepository {
     private final RefundWriteback writeback;
     private RefundEligibilityPolicy eligibility = RefundEligibilityPolicy.unrestricted();
 
-    public RefundRepository(JdbcTemplate jdbc, PlatformTransactionManager manager, ObjectMapper json, Clock clock) {
-        this(jdbc, manager, json, clock, new PaymentRepository(jdbc, manager, json, clock));
+    public RefundRepository(
+            PaymentRepositories store, PlatformTransactionManager manager, ObjectMapper json, Clock clock) {
+        this(store, manager, json, clock, new PaymentRepository(store, manager, json, clock));
     }
 
     public RefundRepository(
-            JdbcTemplate jdbc,
+            PaymentRepositories store,
             PlatformTransactionManager manager,
             ObjectMapper json,
             Clock clock,
@@ -52,7 +49,7 @@ public class RefundRepository {
         this.tx = new TransactionTemplate(manager);
         this.operations = operations;
         this.intents = new RefundIntentService(
-                new RefundIntentRepository(jdbc),
+                store.refundIntents(),
                 tx,
                 // A method reference, not the field: Spring proxies PaymentRepository and a proxy's fields are unset.
                 operations::now,
@@ -60,63 +57,61 @@ public class RefundRepository {
                 operations::encode,
                 () -> eligibility,
                 () -> shares);
-        this.reader = new RefundReader(new RefundRecordRepository(jdbc), tx);
-        var factRepository = new RefundFactRepository(jdbc);
+        this.reader = new RefundReader(store.refundRecords(), tx);
         this.facts = new RefundFactMerger(
-                factRepository,
-                new RefundIntentRepository(jdbc),
+                store.refundFacts(),
+                store.refundIntents(),
                 tx,
                 operations::now,
                 operations::encode,
                 () -> shares,
-                () -> disputes,
-                (payment, sources) -> FinancialSourceLocks.lock(jdbc, payment, sources));
-        this.writeback = new RefundWriteback(factRepository, facts, operations, () -> shares);
+                () -> disputes);
+        this.writeback = new RefundWriteback(store.refundFacts(), facts, operations, () -> shares);
     }
 
     public RefundRepository(
-            JdbcTemplate jdbc,
+            PaymentRepositories store,
             PlatformTransactionManager manager,
             ObjectMapper json,
             Clock clock,
             PaymentRepository operations,
             org.springframework.beans.factory.ObjectProvider<RefundEligibilityPolicy> policies) {
-        this(jdbc, manager, json, clock, operations);
+        this(store, manager, json, clock, operations);
         this.eligibility = policies.getIfAvailable(RefundEligibilityPolicy::unrestricted);
     }
 
     public RefundRepository(
-            JdbcTemplate jdbc,
+            PaymentRepositories store,
             PlatformTransactionManager tx,
             ObjectMapper json,
             Clock clock,
             PaymentRepository operations,
             RevenueShareService shares) {
-        this(jdbc, tx, json, clock, operations);
+        this(store, tx, json, clock, operations);
         this.shares = shares;
     }
 
     public RefundRepository(
-            JdbcTemplate jdbc,
+            PaymentRepositories store,
             PlatformTransactionManager tx,
             ObjectMapper json,
             Clock clock,
             PaymentRepository operations,
             org.springframework.beans.factory.ObjectProvider<RefundEligibilityPolicy> policies,
             RevenueShareService shares) {
-        this(jdbc, tx, json, clock, operations, policies);
+        this(store, tx, json, clock, operations, policies);
         this.shares = shares;
     }
 
     public RefundRepository(
-            JdbcTemplate jdbc,
+            PaymentRepositories store,
             PlatformTransactionManager tx,
             ObjectMapper json,
             Clock clock,
             PaymentRepository operations,
             RevenueShareService shares,
             com.paymentsledger.dispute.DisputeService disputes) {
-        this(jdbc, tx, json, clock, operations, shares);
+        this(store, tx, json, clock, operations, shares);
         this.disputes = disputes;
         this.eligibility = (tenant, payment, control) -> {
             if (disputes.blocks(payment.id())) throw error(ErrorCode.REFUND_BLOCKED);
@@ -125,7 +120,7 @@ public class RefundRepository {
 
     @Autowired
     public RefundRepository(
-            JdbcTemplate jdbc,
+            PaymentRepositories store,
             PlatformTransactionManager tx,
             ObjectMapper json,
             Clock clock,
@@ -133,7 +128,7 @@ public class RefundRepository {
             org.springframework.beans.factory.ObjectProvider<RefundEligibilityPolicy> policies,
             RevenueShareService shares,
             com.paymentsledger.dispute.DisputeService disputes) {
-        this(jdbc, tx, json, clock, operations, policies, shares);
+        this(store, tx, json, clock, operations, policies, shares);
         this.disputes = disputes;
     }
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.common.error.*;
 import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.payment.domain.PaymentFacts;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.*;
@@ -308,8 +309,12 @@ class PaymentCoreIT extends PaymentCoreFixture {
                 .withProperty("platform.stripe.organization-id", id(1).toString())
                 .withProperty("platform.stripe.environment-id", id(2).toString())
                 .withProperty("platform.stripe.provider-account-id", id(4).toString());
-        var bound =
-                new PaymentRepository(jdbc, tx, new ObjectMapper().findAndRegisterModules(), fake.clock(), environment);
+        var bound = new PaymentRepository(
+                new PaymentRepositories(jdbc),
+                tx,
+                new ObjectMapper().findAndRegisterModules(),
+                fake.clock(),
+                environment);
         assertThatThrownBy(() -> bound.prepare(context, "binding-key", command("order"), "STRIPE"))
                 .isInstanceOfSatisfying(
                         ApiException.class, e -> assertThat(e.errorCode()).isEqualTo(ErrorCode.SERVICE_UNAVAILABLE));

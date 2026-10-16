@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paymentsledger.notification.fixture.SimulatedMerchantServer;
 import com.paymentsledger.payment.*;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.pr19.*;
 import com.paymentsledger.provider.fake.*;
 import java.net.InetSocketAddress;
@@ -40,7 +41,7 @@ class Pr19KafkaFaultIT extends NotificationFixture {
         // makes the scenario fail before injection. Record a controlled clock ahead of setup.
         fake = new FakeStripeProvider(
                 directory.resolve("pr19-provider"), SEED, Instant.now().plusSeconds(120), Duration.ofDays(1));
-        repository = new PaymentRepository(jdbc, tx, json, fake.clock());
+        repository = new PaymentRepository(new PaymentRepositories(jdbc), tx, json, fake.clock());
         executor = new PaymentExecutor(repository, fake, fake, fake, "FAKE");
         service = new PaymentService(repository, executor);
         new JdbcTemplate(new DriverManagerDataSource(

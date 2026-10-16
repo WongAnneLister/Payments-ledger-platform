@@ -7,6 +7,7 @@ import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.ledger.LedgerPostingService;
 import com.paymentsledger.payment.*;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.ProviderModels.BalanceTransactionFact;
 import com.paymentsledger.provider.fake.FakeControls;
 import com.paymentsledger.refund.RefundFinancialEvidence;
@@ -88,7 +89,7 @@ class RevenueShareCoreIT extends RevenueShareCoreFixture {
                 fake.clock().instant().truncatedTo(ChronoUnit.SECONDS),
                 "BACKFILL");
         importer.runWindow(window, 10);
-        var refunds = new RefundRepository(jdbc, tx, json, fake.clock());
+        var refunds = new RefundRepository(new PaymentRepositories(jdbc), tx, json, fake.clock());
         var replay = new FinancialReplayService(
                 jdbc,
                 tx,
@@ -133,7 +134,7 @@ class RevenueShareCoreIT extends RevenueShareCoreFixture {
         paymentAndCapture(false);
         assertThat(effective()).isEqualTo(10000);
         assertThat(count("share_adjustment")).isEqualTo(2);
-        var refunds = new RefundRepository(jdbc, tx, json, fake.clock(), repository, shares);
+        var refunds = new RefundRepository(new PaymentRepositories(jdbc), tx, json, fake.clock(), repository, shares);
         var rc = new TenantContext(
                 id(1), id(2), id(3), id(4), Set.of("USD"), false, Set.of("refunds:read", "refunds:write"));
         for (int held = 1; held <= 3; held++) {

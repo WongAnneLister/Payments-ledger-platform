@@ -3,6 +3,7 @@ package com.paymentsledger.payment;
 import static org.assertj.core.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.FakeControls;
@@ -37,7 +38,7 @@ class RefundWebhookIT extends PaymentCoreFixture {
                 SET provider='STRIPE',provider_account_ref='acct_test'
                 WHERE id=?""", id(4));
         inbox = new WebhookInboxRepository(jdbc, tx, json, fake.clock());
-        var refunds = new RefundRepository(jdbc, tx, json, fake.clock());
+        var refunds = new RefundRepository(new PaymentRepositories(jdbc), tx, json, fake.clock());
         processor = new WebhookProcessor(
                 inbox, repository, json, fake.clock(), new RefundWebhookHandler(inbox, repository, refunds));
     }

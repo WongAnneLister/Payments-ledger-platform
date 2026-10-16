@@ -7,6 +7,7 @@ import com.paymentsledger.bank.repository.BankMatchRepository;
 import com.paymentsledger.common.error.*;
 import com.paymentsledger.dispute.DisputeService;
 import com.paymentsledger.ledger.*;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.pr18.Pr18Artifacts;
 import com.paymentsledger.revenueshare.RevenueShareService;
 import com.paymentsledger.testsupport.SqlTrace;
@@ -328,8 +329,9 @@ class Pr18ConcurrencyIT extends Pr18Fixture {
                     jdbc, tx, json, ledger, true, p -> dispute[0] == null || !dispute[0].blocks(p));
             disputes = new DisputeService(jdbc, tx, json, ledger, shares);
             dispute[0] = disputes;
-            repository = new PaymentRepository(jdbc, tx, json, fake.clock(), shares);
-            refunds = new RefundRepository(jdbc, tx, json, fake.clock(), repository, shares, disputes);
+            repository = new PaymentRepository(new PaymentRepositories(jdbc), tx, json, fake.clock(), shares);
+            refunds = new RefundRepository(
+                    new PaymentRepositories(jdbc), tx, json, fake.clock(), repository, shares, disputes);
             matcher = new BankMatcher(new BankMatchRepository(jdbc), tx, json, ledger);
         }
 

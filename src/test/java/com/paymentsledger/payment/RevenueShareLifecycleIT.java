@@ -7,6 +7,7 @@ import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.ledger.LedgerPostingService;
 import com.paymentsledger.payment.domain.PaymentFacts;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.FakeControls;
@@ -82,8 +83,8 @@ class RevenueShareLifecycleIT extends PaymentCoreFixture {
                     external ? "PAYMENTS" : null);
         }
         shares = new RevenueShareService(jdbc, tx, json, new LedgerPostingService(jdbc, json), true);
-        repository = new PaymentRepository(jdbc, tx, json, fake.clock(), shares);
-        refunds = new RefundRepository(jdbc, tx, json, fake.clock(), repository, shares);
+        repository = new PaymentRepository(new PaymentRepositories(jdbc), tx, json, fake.clock(), shares);
+        refunds = new RefundRepository(new PaymentRepositories(jdbc), tx, json, fake.clock(), repository, shares);
         importer = new FinancialImportService(jdbc, tx, json, fake, fake.clock(), shares);
         replay = new FinancialReplayService(
                 jdbc, tx, json, new LedgerPostingService(jdbc, json), new RefundFinancialEvidence(refunds), shares);
