@@ -11,7 +11,7 @@ Four fields answer four different questions. [PaymentStateMerger.java:50](../../
 | Certainty | `resolution_status` | KNOWN, UNKNOWN, CONFLICT |
 | Accounting | `financial_status` | NOT_APPLICABLE, PENDING_EVIDENCE, PARTIALLY_POSTED, POSTED, CONFLICT |
 
-The diagram is a source-derived overview of evidence-driven transitions, not an exhaustive product-state certification. Session/query merging is implemented at [PaymentStateMerger.java:36](../../src/main/java/com/paymentsledger/payment/PaymentStateMerger.java#L36), timeout marking at [PaymentRepository.java:669](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L669), and unsent cancellation at [line 765](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L765).
+The diagram is a source-derived overview of evidence-driven transitions, not an exhaustive product-state certification. Session/query merging is implemented at [PaymentStateMerger.java:36](../../src/main/java/com/paymentsledger/payment/PaymentStateMerger.java#L36), timeout marking at [PaymentRepository.java:480](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L480), and unsent cancellation at [line 576](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L576).
 
 ```mermaid
 stateDiagram-v2
