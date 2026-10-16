@@ -15,7 +15,6 @@ import com.paymentsledger.payment.repository.RefundIntentRepository.StoredIntent
 import com.paymentsledger.provider.ProviderModels.CreateRefundCommand;
 import com.paymentsledger.provider.ProviderScope;
 import com.paymentsledger.revenueshare.RevenueShareService;
-import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
@@ -32,7 +31,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 final class RefundIntentService {
     private final RefundIntentRepository intents;
     private final TransactionTemplate tx;
-    private final Clock clock;
+    private final Supplier<Instant> now;
     private final BiConsumer<TenantContext, String> binding;
     private final Function<Object, String> encoder;
     private final Supplier<RefundEligibilityPolicy> eligibility;
@@ -41,14 +40,14 @@ final class RefundIntentService {
     RefundIntentService(
             RefundIntentRepository intents,
             TransactionTemplate tx,
-            Clock clock,
+            Supplier<Instant> now,
             BiConsumer<TenantContext, String> binding,
             Function<Object, String> encoder,
             Supplier<RefundEligibilityPolicy> eligibility,
             Supplier<RevenueShareService> shares) {
         this.intents = intents;
         this.tx = tx;
-        this.clock = clock;
+        this.now = now;
         this.binding = binding;
         this.encoder = encoder;
         this.eligibility = eligibility;
@@ -91,7 +90,7 @@ final class RefundIntentService {
                     null,
                     request.amountMinor(),
                     RefundReservationRules.providerReason(request.reason()));
-            Instant now = clock.instant();
+            Instant reservedAt = now.get();
             intents.reserve(
                     tenant,
                     new NewRefund(
@@ -107,8 +106,8 @@ final class RefundIntentService {
                             payment.latestChargeId(),
                             command.operationIdempotencyKey(),
                             encoder.apply(command),
-                            now.plus(Duration.ofDays(1)),
-                            now));
+                            reservedAt.plus(Duration.ofDays(1)),
+                            reservedAt));
             intents.insertIdempotency(
                     tenant, request.currency(), key, new StoredIntent(request.fingerprint(), refund, operation));
             shares.get().reconcile(request.paymentId(), "refund.reserve:" + refund);

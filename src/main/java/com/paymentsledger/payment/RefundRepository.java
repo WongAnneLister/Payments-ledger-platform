@@ -49,7 +49,8 @@ public class RefundRepository {
         this.intents = new RefundIntentService(
                 new RefundIntentRepository(jdbc),
                 tx,
-                operations.clock,
+                // A method reference, not the field: Spring proxies PaymentRepository and a proxy's fields are unset.
+                operations::now,
                 operations::checkBinding,
                 operations::encode,
                 () -> eligibility,
