@@ -11,7 +11,7 @@ Four fields answer four different questions. [PaymentStateMerger.java:50](../../
 | Certainty | `resolution_status` | KNOWN, UNKNOWN, CONFLICT |
 | Accounting | `financial_status` | NOT_APPLICABLE, PENDING_EVIDENCE, PARTIALLY_POSTED, POSTED, CONFLICT |
 
-The diagram is a source-derived overview of evidence-driven transitions, not an exhaustive product-state certification. Session/query merging is implemented at [PaymentStateMerger.java:36](../../src/main/java/com/paymentsledger/payment/PaymentStateMerger.java#L36), timeout marking at [PaymentRepository.java:480](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L480), and unsent cancellation at [line 576](../../src/main/java/com/paymentsledger/payment/PaymentRepository.java#L576).
+The diagram is a source-derived overview of evidence-driven transitions, not an exhaustive product-state certification. Session/query merging is implemented at [PaymentStateMerger.java:36](../../src/main/java/com/paymentsledger/payment/PaymentStateMerger.java#L36), timeout marking at [ProviderResults.java:198](../../src/main/java/com/paymentsledger/payment/ProviderResults.java#L198), and unsent cancellation at [line 257](../../src/main/java/com/paymentsledger/payment/ProviderResults.java#L257).
 
 ```mermaid
 stateDiagram-v2
@@ -47,7 +47,7 @@ flowchart LR
     Query -->|"contradictory evidence"| Conflict["CONFLICT"]
 ```
 
-[OperationRecoveryCoordinator.java:110](../../src/main/java/com/paymentsledger/payment/OperationRecoveryCoordinator.java#L110) prioritizes queries; [line 131](../../src/main/java/com/paymentsledger/payment/OperationRecoveryCoordinator.java#L131) requires a nonzero verified window for uncertain resend. A safe local retry is not a claim that the real Stripe idempotency window was measured.
+[OperationRecoveryCoordinator.java:108](../../src/main/java/com/paymentsledger/payment/OperationRecoveryCoordinator.java#L108) prioritizes queries; [line 129](../../src/main/java/com/paymentsledger/payment/OperationRecoveryCoordinator.java#L129) requires a nonzero verified window for uncertain resend. A safe local retry is not a claim that the real Stripe idempotency window was measured.
 
 The UI should display, for example, `SUCCEEDED / KNOWN / PENDING_EVIDENCE`: payment confirmed, accounting evidence still pending. Customer return URLs, HTTP success and payout `paid` status supply no substitute for BTs or bank confirmation. See [PR17 customer screenshots](../evidence/pr17/README.md).
 

@@ -14,7 +14,6 @@ public class OperationRecoveryCoordinator {
     private static final Logger LOG = LoggerFactory.getLogger(OperationRecoveryCoordinator.class);
     private final PaymentRepository repository;
     private final PaymentExecutor executor;
-    private final OperationLeaseService leases;
     private final RecoveryPolicy policy;
     private final RefundExecutor refunds;
 
@@ -40,7 +39,6 @@ public class OperationRecoveryCoordinator {
         executor = e;
         this.refunds = refunds;
         policy = p;
-        leases = new OperationLeaseService(r);
         r.recoveryPolicy(p);
     }
 
@@ -48,7 +46,7 @@ public class OperationRecoveryCoordinator {
         outsideTransaction();
         for (UUID operation : repository.due(limit, providerName())) {
             try {
-                var claim = leases.acquire(operation, providerName());
+                var claim = repository.claimRecovery(operation, providerName(), true);
                 if (claim != null) recover(claim);
             } catch (com.paymentsledger.common.error.ApiException bindingChanged) {
                 /* Binding disabled after listing: durable task remains queued. */
