@@ -8,6 +8,7 @@ import com.paymentsledger.common.error.ErrorCode;
 import com.paymentsledger.identity.TenantContext;
 import com.paymentsledger.payment.repository.PaymentRepositories;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 import java.util.Set;
@@ -158,29 +159,40 @@ class RecoveryTaskWakeCharacterizationIT extends ReconciliationRecoveryFixture {
 
     @Test
     void leasedResolvedOrExpiredUncertainOperationsAreNotWoken() {
-        UUID task = paymentTask("wake-operation");
-        UUID operation = operationOf(task);
+        UUID task = paymentTask("wake-leased-operation");
         waiting(task);
         admin.update(
-                "UPDATE platform.provider_operation SET lease_until=now()+interval '1 hour' WHERE id=?", operation);
-        refused(task, ErrorCode.EVIDENCE_CONFLICT);
-        admin.update("""
-                UPDATE platform.provider_operation
-                SET lease_until=NULL,status='UNKNOWN',first_send_at=now()-interval '2 days',
-                    retry_until=now()-interval '1 day'
-                WHERE id=?""", operation);
-        refused(task, ErrorCode.EVIDENCE_CONFLICT);
-        admin.update("UPDATE platform.provider_operation SET retry_until=NULL WHERE id=?", operation);
+                "UPDATE platform.provider_operation SET lease_until=now()+interval '1 hour' WHERE id=?",
+                operationOf(task));
         refused(task, ErrorCode.EVIDENCE_CONFLICT);
 
-        // An uncertain operation still inside its retry horizon may be woken.
+        refused(
+                uncertain("wake-expired-horizon", fake.clock().instant().minusSeconds(86400)),
+                ErrorCode.EVIDENCE_CONFLICT);
+        refused(uncertain("wake-no-horizon", null), ErrorCode.EVIDENCE_CONFLICT);
+
+        // An uncertain operation still inside its retry horizon may be woken, but not once it is resolved.
+        UUID open = uncertain("wake-open-horizon", fake.clock().instant().plusSeconds(3600));
+        assertAwake(open, wake(open));
+        admin.update("UPDATE platform.provider_operation SET status='RESOLVED' WHERE id=?", operationOf(open));
+        refused(open, ErrorCode.EVIDENCE_CONFLICT);
+    }
+
+    /**
+     * A waiting task whose create was sent with an unknown outcome. The horizon is written once, together with the
+     * first send, because the database keeps both immutable afterwards.
+     */
+    UUID uncertain(String key, Instant retryUntil) {
+        UUID task = paymentTask(key);
+        waiting(task);
         admin.update(
-                "UPDATE platform.provider_operation SET retry_until=? WHERE id=?",
-                Timestamp.from(fake.clock().instant().plusSeconds(3600)),
-                operation);
-        assertAwake(task, wake(task));
-
-        admin.update("UPDATE platform.provider_operation SET status='RESOLVED' WHERE id=?", operation);
-        refused(task, ErrorCode.EVIDENCE_CONFLICT);
+                """
+                UPDATE platform.provider_operation
+                SET status='UNKNOWN',first_send_at=?,retry_until=?
+                WHERE id=?""",
+                Timestamp.from(fake.clock().instant().minusSeconds(2 * 86400)),
+                retryUntil == null ? null : Timestamp.from(retryUntil),
+                operationOf(task));
+        return task;
     }
 }
