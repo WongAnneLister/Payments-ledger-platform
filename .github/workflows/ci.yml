@@ -121,6 +121,9 @@ jobs:
       - name: Validate relative documentation links
         run: python scripts/ci/check_doc_links.py
 
+      - name: Test refactoring tools
+        run: python -m unittest discover -s scripts/tests -p 'test_refactor_tools.py'
+
   pr18-nightly:
     name: PR18 extended budget (1000 seeds, max 300 steps)
     if: github.event_name == 'workflow_dispatch' && inputs.pr18_nightly

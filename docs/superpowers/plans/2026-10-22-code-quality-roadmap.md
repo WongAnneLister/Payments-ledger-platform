@@ -49,10 +49,7 @@ payment 模块的结果：`PaymentRepository` 从约 1055 行降到 337 行，`R
 
 ### 2.3 零散遗留
 
-- `Pr18FailureIdentityTest` 在 Windows 上失败：AssertJ 的失败信息以 `System.lineSeparator()` 开头，Windows 上是 `\r\n`，测试写死了 `\n`。CI 在 Linux 上是绿的。
-- 本地备份分支 `backup/before-email-rewrite`（10-16 改写提交作者前的历史）还没删。
-- 审计时说过要加 `.git-blame-ignore-revs`，让 `git blame` 跳过全量格式化那几个提交，还没加。
-- 重构用的对比工具（`trace_compare.py`、文档锚点重映射脚本）还放在本机临时目录，不在仓库里。换台机器就没了。
+- 已在阶段 A 解决：`Pr18FailureIdentityTest` 在 Windows 上失败；本地备份分支未删；缺 `.git-blame-ignore-revs`；重构用的对比工具只在本机临时目录。
 - `PaymentRepository.Claim` 里的 `operation` 和 `payment` 还是 `Map<String, Object>`，执行器和恢复协调器按列名读取。
 - `PaymentRepository` 现在已经没有 SQL，只是服务门面，类名里的 "Repository" 会误导读者。
 
@@ -74,12 +71,12 @@ payment 模块的结果：`PaymentRepository` 从约 1055 行降到 337 行，`R
 - **已知的轨迹噪声**：3 个并发竞态测试、`ReconciliationRecoveryIT` 按随机 UUID 排序的报表数组、`persistentAccountLimit…` 里两个操作到期时间相同、先认领哪个是随机的。
 - **提交身份**：本仓库用 gmail 身份提交，否则不算进 GitHub 贡献图。
 
-## 4. 阶段 A：快速修复（预计半天，一次提交）
+## 4. 阶段 A：快速修复（2026-10-22 完成）
 
-- [ ] 修 `Pr18FailureIdentityTest`：断言改成以 `System.lineSeparator()` 开头，或者先确认 `Pr18FailureIdentity` 本身能正确处理 `\r\n`。
-- [ ] 把 `trace_compare.py` 和锚点重映射脚本放进 `scripts/refactor/`，补上用法说明。
-- [ ] 加 `.git-blame-ignore-revs`，列出全量格式化和 SQL 文本块那几个提交（10-16 改写作者后的新哈希）。
-- [ ] 删除本地备份分支 `backup/before-email-rewrite`（需要你确认贡献图已经正常）。
+- [x] 修 `Pr18FailureIdentityTest`：断言改成以 `System.lineSeparator()` 开头。`Pr18FailureIdentity` 本身用 `strip()`，`\r\n` 和 `\n` 都能处理，不需要改。
+- [x] 把轨迹对比和锚点重映射脚本放进 `scripts/refactor/`，补上用法说明和单元测试，CI 的文档检查任务会跑这些测试。对比脚本现在会单独列出已知噪声以外的差异，有这类差异时以退出码 1 结束。
+- [x] 加 `.git-blame-ignore-revs`，列出全量格式化、SQL 文本块和关键字排版修正这 3 个提交。本地要执行一次 `git config blame.ignoreRevsFile .git-blame-ignore-revs`，GitHub 网页会自动读取。
+- [x] 删除本地备份分支 `backup/before-email-rewrite`。删除前核对过：GitHub 已把改写作者后的提交计入 10-15、10-16 的贡献。
 
 ## 5. 阶段 B：剩余模块分层迁移（预计 20 轮左右）
 

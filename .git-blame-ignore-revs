@@ -1,0 +1,10 @@
+# Whitespace-only rewrites of the whole code base. `git blame` skips them when configured with
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+# (GitHub's blame view reads this file automatically.) Hashes are after the 2026-10-16 author rewrite.
+
+# style: format all Java sources with palantir-java-format via Spotless
+0ba5d4320719534c7fefbe8f575a36efaa0ddbe7
+# style: rewrite inline SQL as multi-line text blocks
+68190034a88132f4041ad796c1bea515b779bfcb
+# fix(style): keep SQL keyword phrases on one line in text blocks
+e120957ac1f112a4d7bfd3a49a635f35ee8f35ae

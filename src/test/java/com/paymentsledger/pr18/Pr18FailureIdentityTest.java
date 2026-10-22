@@ -11,8 +11,9 @@ class Pr18FailureIdentityTest {
     void realNewlinePrefixedEqualityAndMembershipFailuresStayDistinct() {
         var equality = equalityFailure();
         var membership = membershipFailure("refund");
-        assertThat(equality.getMessage()).startsWith("\n");
-        assertThat(membership.getMessage()).startsWith("\n");
+        // AssertJ starts multi-line messages with the platform line separator (\r\n on Windows).
+        assertThat(equality.getMessage()).startsWith(System.lineSeparator());
+        assertThat(membership.getMessage()).startsWith(System.lineSeparator());
         assertThat(Pr18FailureIdentity.of(equality)).isNotEqualTo(Pr18FailureIdentity.of(membership));
     }
 
