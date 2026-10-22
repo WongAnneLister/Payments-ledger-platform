@@ -8,6 +8,7 @@ import com.paymentsledger.bank.repository.BankMatchRepository;
 import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.ledger.*;
 import com.paymentsledger.notification.*;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.payout.PayoutService;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
@@ -78,7 +79,8 @@ abstract class ReconciliationRecoveryFixture extends PaymentCoreFixture {
 
     /** A source recovery over this fixture's run; null ports model a deployment without provider reads. */
     ReconciliationSourceRecovery sources(ChargePort charges, PaymentIntentPort intents) {
-        return new ReconciliationSourceRecovery(jdbc, tx, json, charges, intents, repository, replay, clock);
+        return new ReconciliationSourceRecovery(
+                new PaymentRepositories(jdbc), tx, json, charges, intents, repository, replay, clock);
     }
 
     static Class<?> require(String name) {

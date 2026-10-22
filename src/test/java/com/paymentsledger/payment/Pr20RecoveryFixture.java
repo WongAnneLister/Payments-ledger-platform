@@ -426,7 +426,8 @@ abstract class Pr20RecoveryFixture extends Pr20RecoveryBaseFixture {
         useDurableProviderReads();
         UUID run = reconciliation.createBackfill(scope, "USD", from, until, ZoneOffset.UTC);
         reconciliation.advance(run, 100);
-        new ReconciliationSourceRecovery(jdbc, tx, json, fake, fake, repository, replay, fake.clock())
+        new ReconciliationSourceRecovery(
+                        new PaymentRepositories(jdbc), tx, json, fake, fake, repository, replay, fake.clock())
                 .drain(scope, run, 100);
         return run;
     }

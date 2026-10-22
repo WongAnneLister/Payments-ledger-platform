@@ -36,7 +36,7 @@ PR19's final [42-experiment index](../evidence/pr19/experiment-index.json) and [
 
 The isolated restore exposed a production defect: reconciliation source recovery sent a verified provider read into `mergeWebhook`. When the read timestamp equaled the already confirmed query timestamp, the webhook stale guard rejected it and the task did not complete. The [actual baseline RED](../evidence/pr20/history/) was reproduced against the original PR19 source, with source hashes retained; the corrected query regression passed in focused replay and the [complete clean verification](../evidence/pr20/verified-all-result.json).
 
-[ProviderResults.mergeReconciliationQuery](../../src/main/java/com/paymentsledger/payment/ProviderResults.java#L229) now applies the existing query merge ordering, and [ReconciliationSourceRecovery](../../src/main/java/com/paymentsledger/payment/ReconciliationSourceRecovery.java#L312) calls it for the verified read. Webhook ordering remains unchanged. The regression checks task DONE, identical payment/journal/effect counts, unchanged query watermark and no invented webhook timestamp.
+[ProviderResults.mergeReconciliationQuery](../../src/main/java/com/paymentsledger/payment/ProviderResults.java#L229) now applies the existing query merge ordering, and [ReconciliationSourceRecovery](../../src/main/java/com/paymentsledger/payment/ReconciliationSourceRecovery.java#L178) calls it for the verified read. Webhook ordering remains unchanged. The regression checks task DONE, identical payment/journal/effect counts, unchanged query watermark and no invented webhook timestamp.
 
 ## PR20 experiment-driver failures and remaining measurements
 

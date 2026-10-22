@@ -2,6 +2,7 @@ package com.paymentsledger.payment;
 
 import static org.assertj.core.api.Assertions.*;
 
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.FakeControls;
@@ -212,7 +213,8 @@ class Pr20DemoIT extends Pr20RecoveryFixture {
                     .isEqualTo("RECONCILIATION");
             assertThat(count("reconciliation_payment_provenance")).isEqualTo(1);
             assertThat(balance("PSP_FUNDS")).isEqualTo(9700);
-            new ReconciliationSourceRecovery(jdbc, tx, json, fake, fake, repository, replay, fake.clock())
+            new ReconciliationSourceRecovery(
+                            new PaymentRepositories(jdbc), tx, json, fake, fake, repository, replay, fake.clock())
                     .drain(scope, run, 100);
             assertThat(count("payment")).isEqualTo(1);
             assertThat(count("journal")).isEqualTo(1);

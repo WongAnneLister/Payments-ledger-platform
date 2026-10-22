@@ -58,8 +58,6 @@ class LayeringArchitectureTest {
             "com.paymentsledger.ops.OpsAuditService",
             "com.paymentsledger.ops.OpsCommandService",
             "com.paymentsledger.ops.OpsQueryService",
-            "com.paymentsledger.payment.ReconciliationSourceRecovery",
-            "com.paymentsledger.payment.RecoveryTaskOperations",
             "com.paymentsledger.payout.PayoutIngestionService",
             "com.paymentsledger.payout.PayoutRecoveryWorker",
             "com.paymentsledger.payout.PayoutService",

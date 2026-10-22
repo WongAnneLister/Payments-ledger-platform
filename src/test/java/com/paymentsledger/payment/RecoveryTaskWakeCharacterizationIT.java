@@ -27,7 +27,7 @@ class RecoveryTaskWakeCharacterizationIT extends ReconciliationRecoveryFixture {
 
     @BeforeEach
     void operations() {
-        operations = new RecoveryTaskOperations(jdbc, fake.clock());
+        operations = new RecoveryTaskOperations(new PaymentRepositories(jdbc), fake.clock());
     }
 
     Map<String, Object> wake(UUID environment, UUID task) {

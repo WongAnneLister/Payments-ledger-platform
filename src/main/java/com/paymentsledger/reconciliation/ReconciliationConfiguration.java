@@ -5,6 +5,7 @@ import com.paymentsledger.bank.BankMatcher;
 import com.paymentsledger.financialingestion.*;
 import com.paymentsledger.ledger.BalanceRebuildService;
 import com.paymentsledger.payment.*;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.*;
 import java.time.*;
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class ReconciliationConfiguration {
 
     @Bean
     ReconciliationSourceRecovery reconciliationSourceRecovery(
-            JdbcTemplate jdbc,
+            PaymentRepositories store,
             PlatformTransactionManager tx,
             ObjectMapper json,
             ObjectProvider<ChargePort> charges,
@@ -44,7 +45,7 @@ public class ReconciliationConfiguration {
             FinancialReplayService replay,
             Clock clock) {
         return new ReconciliationSourceRecovery(
-                jdbc, tx, json, charges.getIfAvailable(), intents.getIfAvailable(), payments, replay, clock);
+                store, tx, json, charges.getIfAvailable(), intents.getIfAvailable(), payments, replay, clock);
     }
 
     @Bean

@@ -30,7 +30,7 @@ The [report writer](../../src/test/java/com/paymentsledger/payment/Pr20RecoveryR
 
 ## Expected checkpoints to compare with the replay
 
-The source of these fixture amounts and branches is [Pr20DemoIT.java:63](../../src/test/java/com/paymentsledger/payment/Pr20DemoIT.java#L63). Compare each checkpoint's `expected`, `actual` and independent `audit` in the produced report; do not copy this table into an “actual results” column.
+The source of these fixture amounts and branches is [Pr20DemoIT.java:64](../../src/test/java/com/paymentsledger/payment/Pr20DemoIT.java#L64). Compare each checkpoint's `expected`, `actual` and independent `audit` in the produced report; do not copy this table into an “actual results” column.
 
 | Selected branch | Expected synthetic outcome in USD minor units |
 |---|---|

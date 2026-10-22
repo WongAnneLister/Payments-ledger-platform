@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.*;
 import com.paymentsledger.common.error.GlobalExceptionHandler;
 import com.paymentsledger.financialingestion.FinancialImportService;
 import com.paymentsledger.notification.FulfillmentEligibility;
+import com.paymentsledger.payment.repository.PaymentRepositories;
 import com.paymentsledger.provider.ProviderModels.*;
 import com.paymentsledger.provider.fake.*;
 import com.paymentsledger.webhook.*;
@@ -321,7 +322,7 @@ class Pr19WebhookFaultIT extends Pr19FaultFixture {
                             0));
                     recovery(e, ignored -> {
                         var l3 = new ReconciliationSourceRecovery(
-                                jdbc, tx, json, fake, fake, repository, replay, fake.clock());
+                                new PaymentRepositories(jdbc), tx, json, fake, fake, repository, replay, fake.clock());
                         l3.drain(scope, run, 100);
                         l3.drain(scope, run, 100);
                     });

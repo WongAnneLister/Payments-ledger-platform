@@ -17,6 +17,8 @@ public final class PaymentRepositories {
     private final RefundIntentRepository refundIntents;
     private final RefundRecordRepository refundRecords;
     private final RefundFactRepository refundFacts;
+    private final RecoveryTaskRepository recoveryTasks;
+    private final ReconciliationSourceRepository reconciliationSources;
 
     public PaymentRepositories(JdbcTemplate jdbc) {
         this.states = new PaymentStateRepository(jdbc);
@@ -27,6 +29,8 @@ public final class PaymentRepositories {
         this.refundIntents = new RefundIntentRepository(jdbc);
         this.refundRecords = new RefundRecordRepository(jdbc);
         this.refundFacts = new RefundFactRepository(jdbc);
+        this.recoveryTasks = new RecoveryTaskRepository(jdbc);
+        this.reconciliationSources = new ReconciliationSourceRepository(jdbc);
     }
 
     public PaymentStateRepository states() {
@@ -59,5 +63,13 @@ public final class PaymentRepositories {
 
     public RefundFactRepository refundFacts() {
         return refundFacts;
+    }
+
+    public RecoveryTaskRepository recoveryTasks() {
+        return recoveryTasks;
+    }
+
+    public ReconciliationSourceRepository reconciliationSources() {
+        return reconciliationSources;
     }
 }
