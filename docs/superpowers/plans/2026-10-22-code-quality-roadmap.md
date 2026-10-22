@@ -14,12 +14,14 @@
 | bank 模块 | 拆成 domain / repository / service | 已合并 |
 | payment 模块 | 支付意图、读模型、操作租约、服务商结果写回、退款预留、退款事实写回，共 6 轮 | 至 1af9831 |
 | 白名单收尾 | `PaymentRepository`、`RefundRepository` 不再依赖 JDBC，移出 `NOT_YET_MIGRATED` | 0b2414e |
+| 阶段 A | 快速修复，见第 4 节 | c04a814 |
+| B1 payment 收尾 | `ReconciliationSourceRecovery`、`RecoveryTaskOperations` 拆成规则 / 仓储 / 服务，移出白名单；payment 模块全部完成 | cd36aab、0b779de（基线），2172d02 |
 
 payment 模块的结果：`PaymentRepository` 从约 1055 行降到 337 行，`RefundRepository` 从 920 行降到 192 行，两者都不再含 SQL。拆出了 8 个规则类，配有 70 多个不需要数据库的单元测试。
 
 ## 2. 还剩下什么
 
-### 2.1 分层迁移：白名单里还有 37 个类，约 1 万行
+### 2.1 分层迁移：白名单里还有 35 个类，约 9300 行
 
 | 模块 | 类数 | 行数 | 主要的类 |
 |---|---|---|---|
@@ -28,7 +30,6 @@ payment 模块的结果：`PaymentRepository` 从约 1055 行降到 337 行，`R
 | financialingestion（财务数据导入） | 4 | 1026 | `FinancialImportService` 457 行 |
 | payout（结算出款） | 4 | 891 | `PayoutService`、`PayoutIngestionService` |
 | notification（商户通知） | 7 | 772 | 7 个小类，含一个测试用的模拟商户服务器 |
-| payment（剩余部分） | 2 | 664 | `ReconciliationSourceRecovery` 555 行 |
 | dispute（争议） | 2 | 638 | `DisputeService` 579 行 |
 | webhook（回调收件箱） | 2 | 585 | `WebhookProcessor`、`WebhookInboxRepository` |
 | observability（监控） | 1 | 392 | `ObservabilityService` |
@@ -70,6 +71,7 @@ payment 模块的结果：`PaymentRepository` 从约 1055 行降到 337 行，`R
 - **基线和重构要在同一个 UTC 日运行**，否则 `ReconciliationRecoveryIT` 的业务日期会整体偏移。
 - **已知的轨迹噪声**：3 个并发竞态测试、`ReconciliationRecoveryIT` 按随机 UUID 排序的报表数组、`persistentAccountLimit…` 里两个操作到期时间相同、先认领哪个是随机的。
 - **提交身份**：本仓库用 gmail 身份提交，否则不算进 GitHub 贡献图。
+- **特征测试改数据要绕开不变性触发器**：数据库有很多"写一次"的触发器，例如 `pr07_recovery_guard` 不允许首次发送后再改重试期限。测试里每种状态用一份独立的数据，不要在同一行上反复改（B1 轮出过一次，0b779de 修复）。
 
 ## 4. 阶段 A：快速修复（2026-10-22 完成）
 
@@ -84,7 +86,7 @@ payment 模块的结果：`PaymentRepository` 从约 1055 行降到 337 行，`R
 
 | 顺序 | 模块 | 预计轮数 | 要点 |
 |---|---|---|---|
-| B1 | payment 收尾：`ReconciliationSourceRecovery`、`RecoveryTaskOperations` | 2 | 夹具已有追踪；仓储并入 `PaymentRepositories` |
+| B1 ✅ | payment 收尾：`ReconciliationSourceRecovery`、`RecoveryTaskOperations` | 1 | 2172d02 完成；轨迹对比意外差异 0 |
 | B2 | dispute | 2 | 和退款共享额度控制锁；`DisputeLifecycleIT` 已经录轨迹 |
 | B3 | revenueshare | 1 | 被支付、退款、争议共同调用，改完 payment 系列才稳 |
 | B4 | payout | 2 | 和 bank 模块相邻，可复用 `PayoutBankFixture` 的追踪 |
